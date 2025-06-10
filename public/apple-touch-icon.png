@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Blue background with rounded corners -->
+  <rect width="64" height="64" rx="12" fill="#4285f4"/>
+  
+  <!-- WHP text in white, larger and centered -->
+  <text x="32" y="42" 
+        font-family="Arial, -apple-system, BlinkMacSystemFont, sans-serif" 
+        font-size="22" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="white"
+        letter-spacing="1px">WHP</text>
+</svg>
