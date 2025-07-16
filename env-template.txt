@@ -8,4 +8,10 @@ DATABASE_URL="postgresql://username:password@localhost:5432/your_database_name"
 
 # NextAuth Configuration (if using authentication)
 NEXTAUTH_SECRET="your-nextauth-secret-here"
-NEXTAUTH_URL="http://localhost:3000" 
+NEXTAUTH_URL="http://localhost:3000"
+
+# Vercel Cron Jobs Security
+CRON_SECRET="your-secure-random-string-for-cron-authentication"
+
+# Google Analytics (optional)
+NEXT_PUBLIC_GA_ID="your-google-analytics-id" 

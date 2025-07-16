@@ -4,8 +4,11 @@ export async function GET() {
   const baseUrl = 'https://whpcodes.com';
   
   try {
-    // Get all whops
+    // Get all published whops
     const whops = await prisma.whop.findMany({
+      where: {
+        publishedAt: { not: null }
+      },
       select: {
         slug: true,
         updatedAt: true

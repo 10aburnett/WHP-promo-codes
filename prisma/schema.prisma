@@ -91,6 +91,7 @@ model Whop {
   displayOrder        Int             @default(0)
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
+  publishedAt         DateTime?
   affiliateLink       String
   screenshots         String[]        @default([])
   website             String?

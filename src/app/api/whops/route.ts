@@ -431,7 +431,11 @@ export async function GET(request: Request) {
       // Get a specific whop by slug
       console.log(`Fetching specific whop with slug: ${slug}`);
       const whop = await prisma.whop.findFirst({
-        where: { slug: slug },
+        where: { 
+          slug: slug,
+          // Only show published whops (unless admin)
+          publishedAt: isAdmin ? undefined : { not: null }
+        },
         include: { 
           promoCodes: true,
           reviews: {
@@ -449,7 +453,10 @@ export async function GET(request: Request) {
     }
     
     // Build where clause for filtering
-    const whereClause: any = {};
+    const whereClause: any = {
+      // Only show published whops (unless admin)
+      publishedAt: isAdmin ? undefined : { not: null }
+    };
     
     if (search) {
       whereClause.OR = [
