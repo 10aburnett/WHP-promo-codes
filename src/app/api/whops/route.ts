@@ -418,6 +418,7 @@ export async function GET(request: Request) {
     const promoType = url.searchParams.get('promoType') || '';
     const whopName = url.searchParams.get('whop') || '';
     const sortBy = url.searchParams.get('sortBy') || '';
+    const whopCategory = url.searchParams.get('whopCategory') || '';
     
     // Add cache control headers to prevent caching
     const headers = {
@@ -461,6 +462,10 @@ export async function GET(request: Request) {
     
     if (whopName) {
       whereClause.name = { contains: whopName, mode: 'insensitive' };
+    }
+    
+    if (whopCategory) {
+      whereClause.whopCategory = whopCategory;
     }
     
     // Get total count for pagination
@@ -578,7 +583,7 @@ export async function GET(request: Request) {
     // Calculate offset for pagination
     const offset = (page - 1) * limit;
     
-    console.log(`Fetching whops - page: ${page}, limit: ${limit}, offset: ${offset}, search: "${search}"`);
+    console.log(`Fetching whops - page: ${page}, limit: ${limit}, offset: ${offset}, search: "${search}", whopCategory: "${whopCategory}"`);
     
     // Get whops with pagination
     const whops = await prisma.whop.findMany({
