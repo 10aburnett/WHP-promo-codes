@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendContactEmail, sendAutoReply } from '@/lib/email';
 import { z } from 'zod';
 
 // Validation schema for contact submissions
@@ -72,6 +73,22 @@ export async function POST(request: Request) {
     });
     
     console.log('Contact submission saved:', submission.id);
+    
+    // Send emails
+    try {
+      // Send notification email to whpcodes@gmail.com
+      await sendContactEmail({ name, email, subject, message });
+      console.log('Contact notification email sent');
+      
+      // Send auto-reply to user
+      await sendAutoReply({ name, email, subject, message });
+      console.log('Auto-reply email sent');
+      
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Don't fail the request if email fails, just log it
+      // The contact form submission was successful in the database
+    }
     
     return NextResponse.json({
       success: true,

@@ -216,11 +216,11 @@ export default function Contact() {
                       {t('contact.emailSupportDesc')}
                     </p>
                     <a 
-                      href="mailto:support@whpcodes.com" 
+                      href="mailto:whpcodes@gmail.com" 
                       className="transition-colors duration-200 hover:opacity-80"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      support@whpcodes.com
+                      whpcodes@gmail.com
                     </a>
                   </div>
                 </div>
@@ -240,11 +240,11 @@ export default function Contact() {
                       {t('contact.businessInquiriesDesc')}
                     </p>
                     <a 
-                      href="mailto:business@whpcodes.com" 
+                      href="mailto:whpcodes@gmail.com" 
                       className="transition-colors duration-200 hover:opacity-80"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      business@whpcodes.com
+                      whpcodes@gmail.com
                     </a>
                   </div>
                 </div>
