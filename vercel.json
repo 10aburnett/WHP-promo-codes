@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/publish-whops",
-      "schedule": "0 9 * * *"
+      "schedule": "30 22 * * *"
     }
   ]
 }

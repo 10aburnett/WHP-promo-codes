@@ -142,7 +142,7 @@ export default function PublishingManagementPage() {
       <div className="bg-gray-50 rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Automatic Publishing</h2>
         <div className="space-y-2 text-gray-700">
-          <p>• <strong>Schedule:</strong> Daily at 9:00 AM UTC</p>
+          <p>• <strong>Schedule:</strong> Daily at 10:30 PM UTC</p>
           <p>• <strong>Batch Size:</strong> 250 whops per day</p>
           <p>• <strong>Method:</strong> Oldest unpublished whops first</p>
           <p>• <strong>Endpoint:</strong> /api/cron/publish-whops</p>
