@@ -8,6 +8,8 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ConditionalLayout } from '@/components/ConditionalLayout';
 import { prisma } from '@/lib/prisma';
 import { unstable_cache } from 'next/cache';
+import Script from 'next/script';
+import { GA_TRACKING_ID } from '@/lib/analytics';
 
 const inter = Inter({ subsets: ['latin'] });
 const currentYear = new Date().getFullYear();
@@ -47,22 +49,32 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    title: `Best Whop Promo Codes & Digital Product Discounts ${currentYear}`,
-    description: `Find the best Whop promo codes, exclusive discount codes, and digital product offers. Get access to premium communities, courses, and digital products at discounted prices.`,
-    keywords: 'whop promo codes, whop discount codes, digital product discounts, community access codes, course promo codes',
+    title: `Best Whop Promo Codes & Discount Codes ${currentYear} - Exclusive Digital Product Deals`,
+    description: `🎯 Find verified Whop promo codes & discount codes for ${currentYear}. Get exclusive access to premium digital products, courses, and communities at discounted prices. Updated daily!`,
+    keywords: 'whop promo codes, whop discount codes, whop coupons, digital product discounts, community access codes, course promo codes, whop deals, exclusive discounts',
     metadataBase: new URL('https://whpcodes.com'),
     openGraph: {
-      title: `Best Whop Promo Codes & Digital Product Discounts ${currentYear}`,
-      description: `Find the best Whop promo codes, exclusive discount codes, and digital product offers. Get access to premium communities, courses, and digital products at discounted prices.`,
+      title: `Best Whop Promo Codes & Discount Codes ${currentYear} - Exclusive Digital Product Deals`,
+      description: `🎯 Find verified Whop promo codes & discount codes for ${currentYear}. Get exclusive access to premium digital products, courses, and communities at discounted prices. Updated daily!`,
       url: 'https://whpcodes.com',
       type: 'website',
-      images: ['/logo.png'],
+      siteName: 'WHPCodes',
+      images: [
+        {
+          url: '/logo.png',
+          width: 1200,
+          height: 630,
+          alt: 'WHPCodes - Best Whop Promo Codes & Discount Codes'
+        }
+      ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `Best Whop Promo Codes & Digital Product Discounts ${currentYear}`,
-      description: `Find the best Whop promo codes, exclusive discount codes, and digital product offers. Get access to premium communities, courses, and digital products at discounted prices.`,
+      title: `Best Whop Promo Codes & Discount Codes ${currentYear} - Exclusive Digital Product Deals`,
+      description: `🎯 Find verified Whop promo codes & discount codes for ${currentYear}. Get exclusive access to premium digital products, courses, and communities at discounted prices. Updated daily!`,
       images: ['/logo.png'],
+      creator: '@whpcodes',
+      site: '@whpcodes'
     },
     robots: {
       index: true,
@@ -70,10 +82,16 @@ export async function generateMetadata(): Promise<Metadata> {
       googleBot: {
         index: true,
         follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1,
       },
     },
     alternates: {
       canonical: 'https://whpcodes.com',
+    },
+    verification: {
+      google: 'your-google-verification-code',
     },
     icons: {
       icon: [
@@ -113,6 +131,18 @@ export default async function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#6366f1" />
+        <meta name="author" content="WHPCodes" />
+        <meta name="language" content="en" />
+        <meta name="distribution" content="global" />
+        <meta name="rating" content="general" />
+        <meta name="revisit-after" content="1 days" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="geo.region" content="US" />
+        <meta name="geo.placename" content="United States" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//whpcodes.com" />
         {/* Force favicon refresh with multiple formats */}
         <link rel="icon" type="image/svg+xml" href={faviconUrl} />
         <link rel="icon" type="image/x-icon" href={faviconUrl.replace('.svg', '.ico')} />
@@ -130,6 +160,26 @@ export default async function RootLayout({
           </LanguageProvider>
         </AuthProvider>
         <Toaster position="top-right" />
+        
+        {/* Google Analytics */}
+        {GA_TRACKING_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

@@ -2,19 +2,32 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us - WHPCodes',
-  description: 'Learn about WHPCodes - your go-to hub for exclusive Whop promo codes, discounts, and course insights. We curate 8,000+ verified Whop listings with daily updates.',
-  keywords: ['about whpcodes', 'whop promo codes', 'digital course discounts', 'whop affiliate', 'course reviews'],
+  title: 'About WHPCodes - Best Whop Promo Codes & Digital Product Discounts',
+  description: 'Learn about WHPCodes - your trusted source for verified Whop promo codes, discount codes, and exclusive digital product deals. We curate 8,000+ verified Whop listings with daily updates.',
+  keywords: 'about whpcodes, whop promo codes, whop discount codes, digital course discounts, whop affiliate, course reviews, verified promo codes, whop coupons',
   openGraph: {
-    title: 'About Us - WHPCodes',
-    description: 'Learn about WHPCodes - your go-to hub for exclusive Whop promo codes, discounts, and course insights.',
+    title: 'About WHPCodes - Best Whop Promo Codes & Digital Product Discounts',
+    description: 'Learn about WHPCodes - your trusted source for verified Whop promo codes, discount codes, and exclusive digital product deals. We curate 8,000+ verified Whop listings with daily updates.',
     url: 'https://whpcodes.com/about',
     type: 'website',
+    siteName: 'WHPCodes',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'WHPCodes - About Us'
+      }
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About Us - WHPCodes',
-    description: 'Learn about WHPCodes - your go-to hub for exclusive Whop promo codes, discounts, and course insights.',
+    title: 'About WHPCodes - Best Whop Promo Codes & Digital Product Discounts',
+    description: 'Learn about WHPCodes - your trusted source for verified Whop promo codes, discount codes, and exclusive digital product deals. We curate 8,000+ verified Whop listings with daily updates.',
+    images: ['/logo.png'],
+  },
+  alternates: {
+    canonical: 'https://whpcodes.com/about',
   },
 };
 

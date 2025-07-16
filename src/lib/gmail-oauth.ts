@@ -1,14 +1,5 @@
-import nodemailer from 'nodemailer';
-
-interface EmailConfig {
-  host: string;
-  port: number;
-  secure: boolean;
-  auth: {
-    user: string;
-    pass: string;
-  };
-}
+import { google } from 'googleapis';
+import * as nodemailer from 'nodemailer';
 
 interface ContactEmailData {
   name: string;
@@ -17,27 +8,53 @@ interface ContactEmailData {
   message: string;
 }
 
-// Create email transporter
-const createTransporter = () => {
-  const config: EmailConfig = {
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.SMTP_USER || '',
-      pass: process.env.SMTP_PASSWORD || '',
-    },
-  };
+// Create OAuth2 client
+const createOAuth2Client = () => {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GMAIL_CLIENT_ID,
+    process.env.GMAIL_CLIENT_SECRET,
+    'https://developers.google.com/oauthplayground' // redirect URI
+  );
 
-  return nodemailer.createTransport(config);
+  oauth2Client.setCredentials({
+    refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+  });
+
+  return oauth2Client;
+};
+
+// Create nodemailer transporter with OAuth2
+const createTransporter = async () => {
+  const oauth2Client = createOAuth2Client();
+  
+  try {
+    const accessToken = await oauth2Client.getAccessToken();
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: 'whpcodes@gmail.com',
+        clientId: process.env.GMAIL_CLIENT_ID,
+        clientSecret: process.env.GMAIL_CLIENT_SECRET,
+        refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+        accessToken: accessToken.token,
+      },
+    } as any);
+
+    return transporter;
+  } catch (error) {
+    console.error('Error creating transporter:', error);
+    throw error;
+  }
 };
 
 // Send contact form email
 export const sendContactEmail = async (data: ContactEmailData): Promise<void> => {
-  const transporter = createTransporter();
+  const transporter = await createTransporter();
   
   const mailOptions = {
-    from: process.env.SMTP_FROM || 'whpcodes@gmail.com',
+    from: 'whpcodes@gmail.com',
     to: 'whpcodes@gmail.com',
     subject: `Contact Form: ${data.subject}`,
     html: `
@@ -69,19 +86,25 @@ export const sendContactEmail = async (data: ContactEmailData): Promise<void> =>
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Contact email sent successfully');
+    console.log('Contact email sent successfully via Gmail OAuth2');
   } catch (error) {
-    console.error('Error sending contact email:', error);
-    throw new Error('Failed to send email');
+    console.error('Error sending contact email:', error); // This is good!
+    if (error && error.response) {
+      console.error('Gmail response:', error.response);
+    }
+    if (error && error.stack) {
+      console.error('Stack:', error.stack);
+    }
+    throw error; // Throw the original error so you see the real message in your logs
   }
 };
 
 // Send auto-reply email to the user
 export const sendAutoReply = async (data: ContactEmailData): Promise<void> => {
-  const transporter = createTransporter();
+  const transporter = await createTransporter();
   
   const mailOptions = {
-    from: process.env.SMTP_FROM || 'whpcodes@gmail.com',
+    from: 'whpcodes@gmail.com',
     to: data.email,
     subject: `Thank you for contacting WHPCodes - We've received your message`,
     html: `
@@ -122,7 +145,7 @@ export const sendAutoReply = async (data: ContactEmailData): Promise<void> => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Auto-reply email sent successfully');
+    console.log('Auto-reply email sent successfully via Gmail OAuth2');
   } catch (error) {
     console.error('Error sending auto-reply email:', error);
     // Don't throw here as auto-reply is not critical
@@ -132,12 +155,12 @@ export const sendAutoReply = async (data: ContactEmailData): Promise<void> => {
 // Test email configuration
 export const testEmailConfig = async (): Promise<boolean> => {
   try {
-    const transporter = createTransporter();
+    const transporter = await createTransporter();
     await transporter.verify();
-    console.log('Email configuration is valid');
+    console.log('Gmail OAuth2 email configuration is valid');
     return true;
   } catch (error) {
-    console.error('Email configuration test failed:', error);
+    console.error('Gmail OAuth2 configuration test failed:', error);
     return false;
   }
 };

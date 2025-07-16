@@ -168,12 +168,60 @@ export default function Home() {
         '@type': 'Organization',
         'name': 'WHPCodes',
         'url': 'https://whpcodes.com',
-        'logo': '/logo.png',
+        'logo': {
+          '@type': 'ImageObject',
+          'url': 'https://whpcodes.com/logo.png',
+          'width': 400,
+          'height': 400
+        },
         'description': `We review and compare the best Whop promo codes and digital product discounts in ${currentYear}.`,
         'sameAs': [
           'https://twitter.com/whpcodes',
           'https://www.facebook.com/whpcodes'
-        ]
+        ],
+        'contactPoint': {
+          '@type': 'ContactPoint',
+          'contactType': 'customer service',
+          'url': 'https://whpcodes.com/contact'
+        }
+      })}} />
+
+      {/* Schema.org JSON-LD structured data for offers */}
+      <Script id="offers-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': `Best Whop Promo Codes ${currentYear}`,
+        'description': `Curated list of the best Whop promo codes and discount codes for ${currentYear}`,
+        'numberOfItems': data.totalCount,
+        'itemListElement': data.whops.slice(0, 10).map((whop, index) => ({
+          '@type': 'ListItem',
+          'position': index + 1,
+          'item': {
+            '@type': 'Product',
+            'name': whop.name,
+            'description': whop.description,
+            'url': `https://whpcodes.com/whop/${whop.slug}`,
+            'image': whop.logo,
+            'aggregateRating': {
+              '@type': 'AggregateRating',
+              'ratingValue': whop.rating,
+              'bestRating': 5,
+              'worstRating': 1
+            },
+            'offers': whop.promoCodes.map(promo => ({
+              '@type': 'Offer',
+              'name': promo.title,
+              'description': promo.description,
+              'url': `https://whpcodes.com/whop/${whop.slug}`,
+              'availability': 'https://schema.org/InStock',
+              'validFrom': new Date().toISOString(),
+              'priceSpecification': {
+                '@type': 'PriceSpecification',
+                'price': promo.value && promo.value !== '0' ? `${promo.value}% off` : 'Exclusive Access'
+              }
+            }))
+          }
+        }))
       })}} />
 
       {/* Suspense wrapper for HomePage component */}

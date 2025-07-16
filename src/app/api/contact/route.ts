@@ -6,7 +6,13 @@ import { z } from 'zod';
 // Validation schema for contact submissions
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.string().min(1, "Email is required").refine(
+    (email) => {
+      // Very permissive email validation - just needs @ and some characters
+      return email.includes('@') && email.length > 3;
+    },
+    "Please enter a valid email address"
+  ),
   subject: z.string().min(1, "Subject is required"),
   message: z.string().min(10, "Message must be at least 10 characters"),
 });

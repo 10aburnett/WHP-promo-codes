@@ -38,6 +38,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/uuid": "^10.0.0",
     "csv-parse": "^5.6.0",
+    "googleapis": "^153.0.0",
     "jsonwebtoken": "^9.0.2",
     "next": "^14.2.3",
     "next-auth": "^4.24.11",
@@ -49,6 +50,7 @@
     "react-hook-form": "^7.56.1",
     "react-hot-toast": "^2.5.2",
     "recharts": "^2.15.3",
+    "resend": "^4.6.0",
     "uuid": "^11.1.0",
     "zod": "^3.24.3"
   },
