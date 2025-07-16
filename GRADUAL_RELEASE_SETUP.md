@@ -23,7 +23,7 @@ CRON_SECRET="your-secure-random-string"
 - Admin panel shows all whops regardless of publication status
 
 ### 4. Automatic Publishing
-- **Schedule**: Daily at 10:30 PM UTC
+- **Schedule**: Daily at 9:30 PM UTC
 - **Batch Size**: 250 whops per day
 - **Order**: Oldest whops first (by `createdAt`)
 - **Endpoint**: `/api/cron/publish-whops`
