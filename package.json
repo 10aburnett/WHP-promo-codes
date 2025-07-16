@@ -21,7 +21,10 @@
     "categorize-whops": "ts-node scripts/categorize-all-whops.ts",
     "categorize-whops:apply": "ts-node scripts/categorize-all-whops.ts --apply",
     "categorize-whops-holistic": "ts-node scripts/categorize-all-whops-holistic.ts",
-    "categorize-whops-holistic:apply": "ts-node scripts/categorize-all-whops-holistic.ts --apply"
+    "categorize-whops-holistic:apply": "ts-node scripts/categorize-all-whops-holistic.ts --apply",
+    "check-affiliate-links": "node scripts/check-current-affiliate-links.js",
+    "update-affiliate-links": "node scripts/update-whop-affiliate-links.js",
+    "import-csv": "node scripts/import-and-fix-csv.js"
   },
   "prisma": {
     "schema": "prisma/schema.prisma",
