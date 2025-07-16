@@ -8,19 +8,14 @@ export type WhopCategory =
   | 'TRADING'
   | 'RECREATION'
   | 'FITNESS'
-  | 'AGENCIES'
-  | 'SPIRITUALITY'
   | 'REAL_ESTATE'
   | 'TRAVEL'
-  | 'GAME_SHOW'
   | 'SPORTS_BETTING'
   | 'ECOMMERCE'
   | 'BUSINESS'
   | 'RESELLING'
-  | 'PODCASTS'
   | 'DATING'
   | 'COMPUTER_SCIENCE'
-  | 'NEWSLETTERS'
   | 'PERSONAL_FINANCE'
   | 'OTHER';
 
@@ -69,19 +64,14 @@ export function getCategoryLabel(category: WhopCategory): string {
     TRADING: 'Trading',
     RECREATION: 'Recreation',
     FITNESS: 'Fitness',
-    AGENCIES: 'Agencies',
-    SPIRITUALITY: 'Spirituality',
     REAL_ESTATE: 'Real Estate',
     TRAVEL: 'Travel',
-    GAME_SHOW: 'Game Show',
     SPORTS_BETTING: 'Sports Betting',
     ECOMMERCE: 'E-commerce',
     BUSINESS: 'Business',
     RESELLING: 'Reselling',
-    PODCASTS: 'Podcasts',
     DATING: 'Dating',
     COMPUTER_SCIENCE: 'Computer Science',
-    NEWSLETTERS: 'Newsletters',
     PERSONAL_FINANCE: 'Personal Finance',
     OTHER: 'Other'
   };
