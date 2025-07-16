@@ -192,7 +192,18 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
 
   return (
     <section className="rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-      <div className="flex justify-between items-start mb-6">
+      {/* Write Review Button - Mobile First */}
+      <div className="block sm:hidden mb-4">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
+          style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+        >
+          Write Review
+        </button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: 'var(--text-color)' }}>User Reviews</h2>
           {reviewCount > 0 ? (
@@ -220,13 +231,16 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
           )}
         </div>
         
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
-          style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
-        >
-          Write Review
-        </button>
+        {/* Write Review Button - Desktop Only */}
+        <div className="hidden sm:block">
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
+            style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+          >
+            Write Review
+          </button>
+        </div>
       </div>
 
       {/* Review Form */}
