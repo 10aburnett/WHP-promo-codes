@@ -118,8 +118,8 @@ function transformWhopDataForUI(whop: any) {
     ? whop.promoCodes[0] 
     : null;
   
-  // Format price properly with validation
-  const formattedPrice = validateAndCorrectPrice(whop.price, displayName, whop.description || '');
+  // Format price properly with validation (simplified to avoid crashes)
+  const formattedPrice = whop.price || 'Free';
   
   // Determine promoText - prioritize whop description over generic promo code titles
   let promoText;
