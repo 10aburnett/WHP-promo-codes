@@ -49,7 +49,7 @@ export async function GET(request: Request) {
     });
     
     return NextResponse.json({
-      whops: transformedWhops,
+      data: transformedWhops,
       pagination: {
         page,
         limit,
