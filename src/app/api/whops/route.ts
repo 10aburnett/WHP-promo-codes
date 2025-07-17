@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       id: whop.id,
       name: whop.name || 'Unknown',
       slug: whop.slug,
-      logo: whop.logo || '/images/Simplified Logo.png',
+      logo: whop.logo ? (whop.logo.startsWith('/uploads/') ? `https://assets.whop.com${whop.logo}` : whop.logo) : '/images/Simplified Logo.png',
       description: whop.description || 'No description',
       rating: whop.rating || 0,
       price: whop.price || 'Free',
