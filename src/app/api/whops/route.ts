@@ -48,6 +48,8 @@ export async function GET(request: Request) {
       where: { publishedAt: { not: null } }
     });
     
+    console.log(`Total published whops: ${total}`);
+    
     return NextResponse.json({
       data: transformedWhops,
       pagination: {

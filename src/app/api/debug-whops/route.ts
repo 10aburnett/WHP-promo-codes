@@ -15,6 +15,12 @@ export async function GET() {
     });
     console.log(`Debug: Published whops: ${publishedWhops}`);
     
+    // Check unpublished whops
+    const unpublishedWhops = await prisma.whop.count({
+      where: { publishedAt: null }
+    });
+    console.log(`Debug: Unpublished whops: ${unpublishedWhops}`);
+    
     // Get first published whop
     const firstPublishedWhop = await prisma.whop.findFirst({
       where: { publishedAt: { not: null } },
@@ -29,6 +35,7 @@ export async function GET() {
     return NextResponse.json({
       totalWhops,
       publishedWhops,
+      unpublishedWhops,
       firstPublishedWhop,
       status: 'success'
     });
