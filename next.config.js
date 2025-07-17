@@ -24,6 +24,29 @@ const nextConfig = {
   // Disable React strict mode to avoid double renders in development
   // This helps react-beautiful-dnd work properly in development
   reactStrictMode: false,
+  // Bundle optimization for better performance
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Modern JavaScript output
+  swcMinify: true,
+  // Optimize bundle size
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      // Split chunks more efficiently
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;

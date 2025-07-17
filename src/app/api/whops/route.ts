@@ -7,9 +7,108 @@ import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "@/lib/auth-utils";
 import { normalizeImagePath } from "@/lib/image-utils";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = 'force-dynamic'; // Explicitly mark this route as dynamic
-export const revalidate = 0; // Never cache the result
+export const revalidate = 300; // Cache for 5 minutes
+
+// Cached function for fetching published whops with basic filters
+const getCachedWhops = unstable_cache(
+  async (isAdmin: boolean, whereClause: any, sortBy: string = '', page: number = 1, limit: number = 20) => {
+    console.log('Cache miss - fetching whops from database');
+    
+    if (sortBy === 'highest' || sortBy === 'lowest' || sortBy === 'alpha-asc' || sortBy === 'alpha-desc') {
+      // For custom sorting, fetch all whops first
+      const allWhops = await prisma.whop.findMany({
+        where: whereClause,
+        include: { 
+          promoCodes: true,
+          reviews: {
+            where: { verified: true },
+            orderBy: { createdAt: 'desc' }
+          }
+        }
+      });
+      
+      return allWhops;
+    } else {
+      // For database-level sorting
+      const orderBy: any = {};
+      switch (sortBy) {
+        case 'rating':
+          orderBy.rating = 'desc';
+          break;
+        case 'newest':
+          orderBy.createdAt = 'desc';
+          break;
+        case 'oldest':
+          orderBy.createdAt = 'asc';
+          break;
+        default:
+          orderBy.displayOrder = 'asc';
+      }
+      
+      const whops = await prisma.whop.findMany({
+        where: whereClause,
+        include: { 
+          promoCodes: true,
+          reviews: {
+            where: { verified: true },
+            orderBy: { createdAt: 'desc' }
+          }
+        },
+        orderBy,
+        skip: (page - 1) * limit,
+        take: limit
+      });
+      
+      return whops;
+    }
+  },
+  ['whops-list'],
+  { 
+    revalidate: 300, // Cache for 5 minutes
+    tags: ['whops', 'whops-list']
+  }
+);
+
+// Cached function for counting whops
+const getCachedWhopCount = unstable_cache(
+  async (whereClause: any) => {
+    console.log('Cache miss - counting whops from database');
+    return await prisma.whop.count({ where: whereClause });
+  },
+  ['whops-count'],
+  { 
+    revalidate: 300, // Cache for 5 minutes
+    tags: ['whops', 'whops-count']
+  }
+);
+
+// Cached function for fetching single whop by slug
+const getCachedWhopBySlug = unstable_cache(
+  async (slug: string, isAdmin: boolean) => {
+    console.log(`Cache miss - fetching whop by slug: ${slug}`);
+    return await prisma.whop.findFirst({
+      where: { 
+        slug: slug,
+        publishedAt: isAdmin ? undefined : { not: null }
+      },
+      include: { 
+        promoCodes: true,
+        reviews: {
+          where: { verified: true },
+          orderBy: { createdAt: 'desc' }
+        }
+      }
+    });
+  },
+  ['whop-by-slug'],
+  { 
+    revalidate: 600, // Cache for 10 minutes (individual whops change less frequently)
+    tags: ['whops', 'whop-detail']
+  }
+);
 
 // Define a type for decoded JWT token
 interface DecodedToken {
@@ -466,30 +565,16 @@ export async function GET(request: Request) {
     const sortBy = url.searchParams.get('sortBy') || '';
     const whopCategory = url.searchParams.get('whopCategory') || '';
     
-    // Add cache control headers to prevent caching
+    // Optimized cache control headers for better performance
     const headers = {
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
+      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // Cache for 5 minutes, serve stale for 10 minutes
+      'Vary': 'Accept-Encoding'
     };
     
     if (slug) {
-      // Get a specific whop by slug
+      // Get a specific whop by slug using cached function
       console.log(`Fetching specific whop with slug: ${slug}`);
-      const whop = await prisma.whop.findFirst({
-        where: { 
-          slug: slug,
-          // Only show published whops (unless admin)
-          publishedAt: isAdmin ? undefined : { not: null }
-        },
-        include: { 
-          promoCodes: true,
-          reviews: {
-            where: { verified: true }, // Only include verified reviews
-            orderBy: { createdAt: 'desc' }
-          }
-        }
-      });
+      const whop = await getCachedWhopBySlug(slug, isAdmin);
       
       if (!whop) {
         return NextResponse.json({ error: "Whop not found" }, { status: 404, headers });
@@ -521,8 +606,8 @@ export async function GET(request: Request) {
       whereClause.whopCategory = whopCategory;
     }
     
-    // Get total count for pagination
-    const totalCount = await prisma.whop.count({ where: whereClause });
+    // Get total count for pagination using cached function
+    const totalCount = await getCachedWhopCount(whereClause);
     
     // For price-based sorting and alphabetical sorting, we need to fetch ALL whops first, then sort and paginate
     if (sortBy === 'highest' || sortBy === 'lowest' || sortBy === 'alpha-asc' || sortBy === 'alpha-desc') {

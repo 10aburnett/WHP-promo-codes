@@ -161,20 +161,25 @@ export default async function RootLayout({
         </AuthProvider>
         <Toaster position="top-right" />
         
-        {/* Google Analytics */}
+        {/* Google Analytics - Optimized for performance */}
         {GA_TRACKING_ID && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', '${GA_TRACKING_ID}', {
                   page_path: window.location.pathname,
+                  send_page_view: false
+                });
+                gtag('event', 'page_view', {
+                  page_path: window.location.pathname,
+                  page_title: document.title
                 });
               `}
             </Script>

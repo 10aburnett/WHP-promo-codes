@@ -26,6 +26,11 @@ model OfferTracking {
   whopId      String?
   promoCode   PromoCode? @relation(fields: [promoCodeId], references: [id])
   whop        Whop?      @relation(fields: [whopId], references: [id])
+
+  @@index([whopId])
+  @@index([promoCodeId])
+  @@index([createdAt])
+  @@index([actionType])
 }
 
 model Review {
@@ -38,6 +43,11 @@ model Review {
   verified  Boolean  @default(false)
   whopId    String
   whop      Whop     @relation(fields: [whopId], references: [id])
+
+  @@index([whopId])
+  @@index([verified])
+  @@index([createdAt])
+  @@index([rating])
 }
 
 model Settings {
@@ -79,6 +89,10 @@ model PromoCode {
   updatedAt      DateTime        @updatedAt
   offerTrackings OfferTracking[]
   whop           Whop            @relation(fields: [whopId], references: [id])
+
+  @@index([whopId])
+  @@index([type])
+  @@index([createdAt])
 }
 
 model Whop {
@@ -107,6 +121,14 @@ model Whop {
   offerTrackings      OfferTracking[]
   promoCodes          PromoCode[]
   reviews             Review[]
+
+  @@index([publishedAt])
+  @@index([displayOrder])
+  @@index([rating])
+  @@index([whopCategory])
+  @@index([name])
+  @@index([createdAt])
+  @@index([updatedAt])
 }
 
 model BulkImport {
