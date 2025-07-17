@@ -24,20 +24,25 @@ export async function GET(request: Request) {
     
     console.log(`Found ${whops.length} published whops`);
     
-    // Simple transformation
+    // Simple transformation to match frontend expectations
     const transformedWhops = whops.map(whop => ({
       id: whop.id,
-      name: whop.name || 'Unknown',
+      whopName: whop.name || 'Unknown',
       slug: whop.slug,
-      logo: whop.logo ? (whop.logo.startsWith('/uploads/') ? `https://assets.whop.com${whop.logo}` : whop.logo) : '/images/Simplified Logo.png',
+      logoUrl: whop.logo || '/images/Simplified Logo.png',
+      promoText: whop.description || 'N/A',
+      promoType: whop.promoCodes?.[0]?.type || 'FREE',
+      promoValue: parseFloat(whop.price?.replace(/[^0-9.]/g, '') || '0'),
+      promoCode: whop.promoCodes?.[0]?.code || null,
+      affiliateLink: whop.affiliateLink,
+      isActive: true,
+      price: whop.price || 'Free',
+      whopId: whop.id,
+      promoCodeId: whop.promoCodes?.[0]?.id || null,
+      // Additional fields for compatibility
+      name: whop.name || 'Unknown',
       description: whop.description || 'No description',
       rating: whop.rating || 0,
-      price: whop.price || 'Free',
-      promoText: whop.description || 'N/A',
-      promoCode: whop.promoCodes?.[0]?.code || null,
-      promoType: whop.promoCodes?.[0]?.type || null,
-      promoValue: whop.promoCodes?.[0]?.value || null,
-      affiliateLink: whop.affiliateLink,
       createdAt: whop.createdAt,
       promoCodes: whop.promoCodes || [],
       website: whop.website,

@@ -16,6 +16,11 @@ export function normalizeImagePath(imagePath: string | null): string {
     return imagePath;
   }
   
+  // Handle Whop asset URLs specifically
+  if (imagePath.includes('assets.whop.com') || imagePath.includes('img-v2-prod.whop.com')) {
+    return imagePath;
+  }
+  
   // Fix ONLY clearly broken paths that include 'public/images'
   if (imagePath.includes('public/images/')) {
     return imagePath.replace('/images/public/images/', '/images/').replace('public/images/', '/images/');

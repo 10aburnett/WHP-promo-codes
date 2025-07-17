@@ -2,7 +2,7 @@
 
 A modern web application for discovering and comparing cryptocurrency casino bonuses. Built with Next.js, TypeScript, and Tailwind CSS.
 
-## Features 
+## Features
 
 - Browse and search through various cryptocurrency casino bonuses
 - Filter bonuses by type (deposit, free, free spins, etc.)
