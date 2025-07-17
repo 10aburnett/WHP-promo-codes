@@ -100,12 +100,13 @@ const LEGITIMATE_COURSE_PRICES = [
 
 // Transform whop data for UI presentation
 function transformWhopDataForUI(whop: any) {
-  if (!whop) {
-    console.log("Warning: Received null or undefined whop object");
-    return null; // Still return null for truly invalid data
-  }
-  
-  console.log(`Transforming whop data for UI, whop ID: ${whop.id}`);
+  try {
+    if (!whop) {
+      console.log("Warning: Received null or undefined whop object");
+      return null; // Still return null for truly invalid data
+    }
+    
+    console.log(`Transforming whop data for UI, whop ID: ${whop.id}`);
   
   // Clean up fields
   const displayName = whop.name || 'Unknown Whop';
@@ -174,6 +175,30 @@ function transformWhopDataForUI(whop: any) {
     website: whop.website,
     category: whop.category
   };
+  
+  } catch (error) {
+    console.error('Error transforming whop data:', error);
+    // Return a safe fallback object
+    return {
+      id: whop?.id || 'unknown',
+      name: whop?.name || 'Unknown Whop',
+      slug: whop?.slug || 'unknown',
+      logo: whop?.logo || '/images/Simplified Logo.png',
+      description: whop?.description || 'No description available',
+      price: 'N/A',
+      promoText: 'N/A',
+      promoCode: null,
+      promoType: null,
+      promoValue: null,
+      rating: 0,
+      affiliateLink: whop?.affiliateLink || null,
+      createdAt: whop?.createdAt || new Date(),
+      promoCodes: [],
+      reviews: [],
+      website: whop?.website || null,
+      category: whop?.category || null
+    };
+  }
 }
 
 // Helper function to validate and correct obviously incorrect prices
