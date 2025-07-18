@@ -143,6 +143,11 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//whpcodes.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onLoad="this.media='all'" />
+        <link rel="preload" href="/logo.png" as="image" />
+        <link rel="preload" href="/api/whops?page=1&limit=15" as="fetch" crossOrigin="anonymous" />
         {/* Force favicon refresh with multiple formats */}
         <link rel="icon" type="image/svg+xml" href={faviconUrl} />
         <link rel="icon" type="image/x-icon" href={faviconUrl.replace('.svg', '.ico')} />

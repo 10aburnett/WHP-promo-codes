@@ -6,6 +6,7 @@ import { FilterState } from '@/types/whop';
 import WhopCard from '@/components/WhopCard';
 import FilterControls from '@/components/FilterControls';
 import StatisticsSection from '@/components/StatisticsSection';
+import VirtualizedWhopList from '@/components/VirtualizedWhopList';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Define the types for our data
@@ -322,15 +323,7 @@ export default function HomePage({ initialWhops, initialTotal, whopNames, totalU
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {whops.map((promo, index) => (
-          <WhopCard
-            key={`${promo.id}-${index}`}
-            promo={promo}
-            priority={index < 6} // Priority loading for first 6 images (above-the-fold)
-          />
-        ))}
-      </div>
+      <VirtualizedWhopList whops={whops} loading={loading} />
       
       {/* Loading indicator */}
       {loading && (

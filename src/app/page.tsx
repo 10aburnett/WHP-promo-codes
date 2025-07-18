@@ -4,8 +4,11 @@ import Script from 'next/script';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import HomePage from '@/components/HomePage';
-import StatisticsSection from '@/components/StatisticsSection';
-import CallToAction from '@/components/CallToAction';
+import { lazy } from 'react';
+
+// Lazy load non-critical components (SEO-safe only)
+const StatisticsSection = lazy(() => import('@/components/StatisticsSection'));
+const CallToAction = lazy(() => import('@/components/CallToAction'));
 
 // Define the types for our data
 interface PromoCode {
@@ -238,7 +241,9 @@ export default function Home() {
       </Suspense>
 
       {/* Statistics Section */}
-      <StatisticsSection />
+      <Suspense fallback={<div className="py-16 text-center" style={{ color: 'var(--text-secondary)' }}>Loading statistics...</div>}>
+        <StatisticsSection />
+      </Suspense>
 
       <div className="mx-auto w-[90%] md:w-[95%] max-w-[1280px]">
         <div className="mt-24 mb-16">
@@ -307,7 +312,7 @@ export default function Home() {
           </div>
 
           {/* Call to Action */}
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div className="py-8 text-center" style={{ color: 'var(--text-secondary)' }}>Loading...</div>}>
             <CallToAction />
           </Suspense>
         </div>
