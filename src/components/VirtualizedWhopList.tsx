@@ -42,21 +42,21 @@ export default function VirtualizedWhopList({ whops, loading }: VirtualizedWhopL
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Loading skeleton */}
+        {/* Enhanced loading skeleton */}
         {Array.from({ length: 6 }).map((_, index) => (
           <div
             key={`skeleton-${index}`}
             className="relative p-5 rounded-xl shadow-lg border animate-pulse"
-            style={{ background: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+            style={{ background: 'linear-gradient(135deg, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}
           >
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-16 h-16 rounded-lg bg-gray-300" style={{ backgroundColor: 'var(--text-secondary)' }}></div>
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-gray-300 to-gray-400 animate-pulse" style={{ backgroundColor: 'var(--text-secondary)', opacity: 0.3 }}></div>
               <div className="min-w-0 flex-1">
-                <div className="h-6 bg-gray-300 rounded mb-2" style={{ backgroundColor: 'var(--text-secondary)' }}></div>
-                <div className="h-4 bg-gray-300 rounded w-3/4" style={{ backgroundColor: 'var(--text-secondary)' }}></div>
+                <div className="h-6 bg-gradient-to-r from-gray-300 to-gray-400 rounded mb-2 animate-pulse" style={{ backgroundColor: 'var(--text-secondary)', opacity: 0.3 }}></div>
+                <div className="h-4 bg-gradient-to-r from-gray-300 to-gray-400 rounded w-3/4 animate-pulse" style={{ backgroundColor: 'var(--text-secondary)', opacity: 0.3 }}></div>
               </div>
             </div>
-            <div className="h-10 bg-gray-300 rounded" style={{ backgroundColor: 'var(--text-secondary)' }}></div>
+            <div className="h-10 bg-gradient-to-r from-gray-300 to-gray-400 rounded animate-pulse" style={{ backgroundColor: 'var(--text-secondary)', opacity: 0.3 }}></div>
           </div>
         ))}
       </div>
