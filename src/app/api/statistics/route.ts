@@ -15,8 +15,10 @@ export async function GET() {
     `;
     const totalUsers = Number((uniqueUsersResult as any)[0]?.unique_users || 0);
     
-    // Get total number of active whops
-    const activeWhops = await prisma.whop.count();
+    // Get total number of active whops (only published ones)
+    const activeWhops = await prisma.whop.count({
+      where: { publishedAt: { not: null } }
+    });
 
     // Get total number of active promo codes
     const totalOffersAvailable = await prisma.promoCode.count();
