@@ -151,15 +151,14 @@ export default async function RootLayout({
         <link rel="preload" href="/logo.png" as="image" />
         <link rel="preload" href="/api/whops?page=1&limit=15" as="fetch" crossOrigin="anonymous" />
         <link rel="preload" href="/api/statistics" as="fetch" crossOrigin="anonymous" />
-        {/* Comprehensive favicon setup for maximum compatibility */}
+        {/* Simplified favicon setup - prioritize SVG for modern browsers */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <meta name="msapplication-TileColor" content="#6366f1" />
-        <meta name="theme-color" content="#6366f1" />
+        <link rel="icon" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <meta name="msapplication-TileColor" content="#4285f4" />
+        <meta name="theme-color" content="#4285f4" />
+        <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={`${inter.className} overflow-x-hidden`} style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
         <AuthProvider>

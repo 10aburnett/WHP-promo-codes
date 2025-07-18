@@ -1,0 +1,16 @@
+{
+  "name": "WHPCodes",
+  "short_name": "WHPCodes",
+  "description": "Find verified Whop promo codes, discount codes & coupons",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#4285f4",
+  "background_color": "#1a1b23",
+  "display": "standalone",
+  "start_url": "/"
+}
