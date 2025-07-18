@@ -166,6 +166,7 @@ export default function WhopCard({ promo, priority = false }: WhopCardProps) {
     // If the current path has @avif, try without it first
     if (imagePath.includes('@avif')) {
       const pathWithoutAvif = imagePath.replace('@avif', '');
+      console.log(`Trying without @avif: ${pathWithoutAvif}`);
       setImagePath(pathWithoutAvif);
       return;
     }
@@ -176,6 +177,7 @@ export default function WhopCard({ promo, priority = false }: WhopCardProps) {
         imagePath.includes('placeholder') ||
         imagePath.includes('no-image') ||
         imagePath.includes('missing')) {
+      console.log(`Placeholder detected, showing initials for ${promo.whopName}`);
       setImageError(true);
       return;
     }
@@ -187,9 +189,11 @@ export default function WhopCard({ promo, priority = false }: WhopCardProps) {
     if (currentIndex < alternativePaths.length - 1) {
       // Try next alternative
       const nextPath = alternativePaths[currentIndex + 1];
+      console.log(`Trying alternative path: ${nextPath}`);
       setImagePath(nextPath);
     } else {
       // All alternatives failed, show initials
+      console.log(`All image paths failed for ${promo.whopName}, showing initials`);
       setImageError(true);
     }
   };
@@ -266,6 +270,7 @@ export default function WhopCard({ promo, priority = false }: WhopCardProps) {
                   style={{ maxWidth: '100%', maxHeight: '100%' }}
                   onError={handleImageError}
                   priority={priority}
+                  unoptimized={imagePath.includes('@avif')}
                   sizes="64px"
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAEAAQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyytN5cFrKDsRXSJfAhvT7WinYGCvchOjJAMfNIXGiULZQ8qEzJQdEKKRjFiYqKJKEJxZJXiEH0RRN6mJzN5hJ8tP/Z"
