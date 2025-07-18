@@ -233,13 +233,13 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
         
         {/* Write Review Button - Desktop Only */}
         <div className="hidden sm:block">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
-            style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
-          >
-            Write Review
-          </button>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
+          style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+        >
+          Write Review
+        </button>
         </div>
       </div>
 

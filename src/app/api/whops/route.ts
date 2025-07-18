@@ -606,8 +606,8 @@ export async function GET(request: Request) {
       whereClause.whopCategory = whopCategory;
     }
     
-    // Get total count for pagination using cached function
-    const totalCount = await getCachedWhopCount(whereClause);
+    // Get total count for pagination using direct database query
+    const totalCount = await prisma.whop.count({ where: whereClause });
     
     // For price-based sorting and alphabetical sorting, we need to fetch ALL whops first, then sort and paginate
     if (sortBy === 'highest' || sortBy === 'lowest' || sortBy === 'alpha-asc' || sortBy === 'alpha-desc') {
