@@ -50,12 +50,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: `Best Whop Promo Codes & Discount Codes ${currentYear} - Exclusive Digital Product Deals`,
-    description: `🎯 Find verified Whop promo codes & discount codes for ${currentYear}. Get exclusive access to premium digital products, courses, and communities at discounted prices. Updated daily!`,
+    description: `Find verified Whop promo codes, discount codes & coupons for ${currentYear}. Get exclusive access to premium digital products, courses, & communities at discounted prices. Each code updated daily!`,
     keywords: 'whop promo codes, whop discount codes, whop coupons, digital product discounts, community access codes, course promo codes, whop deals, exclusive discounts',
     metadataBase: new URL('https://whpcodes.com'),
     openGraph: {
       title: `Best Whop Promo Codes & Discount Codes ${currentYear} - Exclusive Digital Product Deals`,
-      description: `🎯 Find verified Whop promo codes & discount codes for ${currentYear}. Get exclusive access to premium digital products, courses, and communities at discounted prices. Updated daily!`,
+      description: `Find verified Whop promo codes, discount codes & coupons for ${currentYear}. Get exclusive access to premium digital products, courses, & communities at discounted prices. Each code updated daily!`,
       url: 'https://whpcodes.com',
       type: 'website',
       siteName: 'WHPCodes',
@@ -71,7 +71,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: `Best Whop Promo Codes & Discount Codes ${currentYear} - Exclusive Digital Product Deals`,
-      description: `🎯 Find verified Whop promo codes & discount codes for ${currentYear}. Get exclusive access to premium digital products, courses, and communities at discounted prices. Updated daily!`,
+      description: `Find verified Whop promo codes, discount codes & coupons for ${currentYear}. Get exclusive access to premium digital products, courses, & communities at discounted prices. Each code updated daily!`,
       images: ['/logo.png'],
       creator: '@whpcodes',
       site: '@whpcodes'
