@@ -99,26 +99,42 @@ export default function Home() {
   useEffect(() => {
     async function fetchInitialData() {
       try {
-        // Fetch initial whops data
-        const whopsResponse = await fetch('/api/whops?page=1&limit=15');
+        // Fetch critical data in parallel for faster loading
+        const [whopsResponse, statsResponse] = await Promise.all([
+          fetch('/api/whops?page=1&limit=15'),
+          fetch('/api/statistics')
+        ]);
+
         if (!whopsResponse.ok) throw new Error('Failed to fetch whops');
         const whopsResult = await whopsResponse.json();
 
-        // Fetch statistics for total users
-        const statsResponse = await fetch('/api/statistics');
-        if (!statsResponse.ok) throw new Error('Failed to fetch statistics');
-        const statsResult = await statsResponse.json();
+        let statsResult = { totalUsers: 0 };
+        if (statsResponse.ok) {
+          statsResult = await statsResponse.json();
+        }
 
-        // Fetch all whop names for filtering
-        const allWhopsResponse = await fetch('/api/whops?limit=1000'); // Get more for filter options
-        if (!allWhopsResponse.ok) throw new Error('Failed to fetch all whops');
-        const allWhopsResult = await allWhopsResponse.json();
-        const whopNames = [...new Set(allWhopsResult.data.map((whop: any) => whop.whopName || whop.name))].filter(Boolean);
+        // Fetch whop names separately and non-blocking
+        setTimeout(async () => {
+          try {
+            const allWhopsResponse = await fetch('/api/whops?limit=1000');
+            if (allWhopsResponse.ok) {
+              const allWhopsResult = await allWhopsResponse.json();
+              const whopNames = [...new Set(allWhopsResult.data.map((whop: any) => whop.whopName || whop.name))].filter(Boolean);
+              
+              setData(prev => ({
+                ...prev,
+                whopNames: whopNames
+              }));
+            }
+          } catch (error) {
+            console.error('Error fetching whop names:', error);
+          }
+        }, 0);
 
         setData({
           whops: whopsResult.data,
           totalUsers: statsResult.totalUsers || 0,
-          whopNames: whopNames,
+          whopNames: [],
           totalCount: whopsResult.pagination.total
         });
       } catch (error) {

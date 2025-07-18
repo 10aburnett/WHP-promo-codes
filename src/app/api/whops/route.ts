@@ -10,7 +10,7 @@ import { normalizeImagePath } from "@/lib/image-utils";
 import { unstable_cache } from "next/cache";
 
 export const dynamic = 'force-dynamic'; // Explicitly mark this route as dynamic
-export const revalidate = 300; // Cache for 5 minutes
+export const revalidate = 60; // Cache for 1 minute
 
 // Cached function for fetching published whops with basic filters
 const getCachedWhops = unstable_cache(
@@ -67,7 +67,7 @@ const getCachedWhops = unstable_cache(
   },
   ['whops-list'],
   { 
-    revalidate: 300, // Cache for 5 minutes
+    revalidate: 60, // Cache for 1 minute
     tags: ['whops', 'whops-list']
   }
 );
@@ -567,7 +567,7 @@ export async function GET(request: Request) {
     
     // Optimized cache control headers for better performance
     const headers = {
-      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // Cache for 5 minutes, serve stale for 10 minutes
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120', // Cache for 1 minute, serve stale for 2 minutes
       'Vary': 'Accept-Encoding'
     };
     
