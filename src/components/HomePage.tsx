@@ -327,6 +327,7 @@ export default function HomePage({ initialWhops, initialTotal, whopNames, totalU
           <WhopCard
             key={`${promo.id}-${index}`}
             promo={promo}
+            priority={index < 6} // Priority loading for first 6 images (above-the-fold)
           />
         ))}
       </div>
