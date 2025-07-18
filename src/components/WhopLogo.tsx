@@ -17,18 +17,20 @@ interface WhopLogoProps {
 
 export default function WhopLogo({ whop }: WhopLogoProps) {
   const [imageError, setImageError] = useState(false);
+  const imagePath = normalizeImagePath(whop.logo || '');
   
   return (
     <>
       {!imageError ? (
         <Image
-          src={normalizeImagePath(whop.logo || '')}
+          src={imagePath}
           alt={`${whop.name} logo`}
           width={80}
           height={80}
           className="w-full h-full object-contain"
           style={{ maxWidth: '100%', maxHeight: '100%' }}
           priority
+          unoptimized={imagePath.includes('@avif')}
           onError={() => setImageError(true)}
         />
       ) : (
