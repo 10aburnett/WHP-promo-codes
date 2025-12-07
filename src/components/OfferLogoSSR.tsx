@@ -1,5 +1,5 @@
 // SSR-safe logo component that works without JavaScript
-export function WhopLogoSSR({
+export function OfferLogoSSR({
   src = '',
   alt,
   width = 56,

@@ -121,7 +121,7 @@ export async function GET(request: Request) {
       // Process trackings data to get statistics
       const transformedTrackings = trackings.map(tracking => ({
         id: tracking.id,
-        whopId: tracking.whopId,
+        offerId: tracking.whopId,
         promoCodeId: tracking.promoCodeId,
         actionType: tracking.actionType,
         createdAt: tracking.createdAt,
@@ -187,7 +187,7 @@ export async function GET(request: Request) {
       
       // For single whop view
       return NextResponse.json({
-        whopDetails: {
+        offerDetails: {
           id: whop.id,
           name: whop.name,
           slug: whop.slug,
@@ -247,7 +247,7 @@ export async function GET(request: Request) {
       if (trackings.length > 0) {
         console.log("📊 ANALYTICS API: First tracking record:", {
           id: trackings[0].id,
-          whopId: trackings[0].whopId,
+          offerId: trackings[0].whopId,
           promoCodeId: trackings[0].promoCodeId,
           actionType: trackings[0].actionType,
           createdAt: trackings[0].createdAt
@@ -261,7 +261,7 @@ export async function GET(request: Request) {
         
         return {
           id: tracking.id,
-          whopId: tracking.whopId,
+          offerId: tracking.whopId,
           promoCodeId: tracking.promoCodeId,
           actionType: tracking.actionType,
           createdAt: tracking.createdAt,
@@ -275,7 +275,7 @@ export async function GET(request: Request) {
       
       // Calculate whop-specific analytics
       const whopAnalytics = whops.map(whop => {
-        const whopTrackings = transformedTrackings.filter(t => t.whopId === whop.id);
+        const whopTrackings = transformedTrackings.filter(t => t.offerId === whop.id);
         const totalActions = whopTrackings.length;
         const copies = whopTrackings.filter(t => t.actionType === 'code_copy').length;
         const clicks = whopTrackings.filter(t => t.actionType === 'offer_click').length;

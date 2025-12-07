@@ -65,7 +65,7 @@ export default function PublishingManagementPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Whop Publishing Management</h1>
+      <h1 className="text-3xl font-bold mb-6">Offer Publishing Management</h1>
       
       {/* Status Card */}
       {status && (
@@ -102,7 +102,7 @@ export default function PublishingManagementPage() {
             disabled={loading}
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
           >
-            {loading ? 'Publishing...' : 'Publish 250 Whops'}
+            {loading ? 'Publishing...' : 'Publish 250 Offers'}
           </button>
           
           <button
@@ -110,7 +110,7 @@ export default function PublishingManagementPage() {
             disabled={loading}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
           >
-            {loading ? 'Publishing...' : 'Publish 50 Whops'}
+            {loading ? 'Publishing...' : 'Publish 50 Offers'}
           </button>
           
           <button
@@ -118,7 +118,7 @@ export default function PublishingManagementPage() {
             disabled={loading}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
           >
-            {loading ? 'Unpublishing...' : 'Unpublish 250 Whops'}
+            {loading ? 'Unpublishing...' : 'Unpublish 250 Offers'}
           </button>
           
           <button

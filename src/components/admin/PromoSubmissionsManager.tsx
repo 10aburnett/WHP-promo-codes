@@ -7,7 +7,7 @@ interface PromoCodeSubmission {
   description: string
   code: string
   value: string
-  whopId: string | null
+  offerId: string | null
   whop?: {
     id: string
     name: string

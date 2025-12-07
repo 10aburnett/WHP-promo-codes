@@ -27,9 +27,9 @@ const whopSchema = z.object({
   promoValue: z.string().optional(),
 });
 
-type WhopForm = z.infer<typeof whopSchema>;
+type OfferForm = z.infer<typeof whopSchema>;
 
-interface Whop {
+interface Offer {
   id: string;
   name: string;
   PromoCode?: PromoCode[];
@@ -44,7 +44,7 @@ interface PromoCode {
   value: string;
 }
 
-export default function EditWhopPage({
+export default function EditOfferPage({
   params,
 }: {
   params: { id: string };
@@ -69,7 +69,7 @@ export default function EditWhopPage({
     setValue,
     watch,
     formState: { errors },
-  } = useForm<WhopForm>({
+  } = useForm<OfferForm>({
     resolver: zodResolver(whopSchema),
     defaultValues: {
       promoType: "DISCOUNT",
@@ -81,13 +81,13 @@ export default function EditWhopPage({
 
   useEffect(() => {
     if (params.id !== "new") {
-      fetchWhop();
+      fetchOffer();
     } else {
       setLoading(false);
     }
   }, [params.id]);
 
-  const fetchWhop = async () => {
+  const fetchOffer = async () => {
     try {
       // Trust Next.js params as-is (they're already properly encoded for URLs)
       const idFromPath = params.id;
@@ -211,7 +211,7 @@ export default function EditWhopPage({
     setValue("screenshots", updatedScreenshots);
   };
 
-  const onSubmit = async (data: WhopForm) => {
+  const onSubmit = async (data: OfferForm) => {
     try {
       setFormError(null);
       
@@ -232,7 +232,7 @@ export default function EditWhopPage({
       }
 
       // Prepare whop data including promo code data
-      const whopData = {
+      const offerData = {
         name: data.name,
         slug: data.slug,
         logo: data.logo,
@@ -253,7 +253,7 @@ export default function EditWhopPage({
       };
 
       // Debug: Log what we're sending
-      console.log('📤 CLIENT: Sending whop data:', JSON.stringify(whopData, null, 2));
+      console.log('📤 CLIENT: Sending whop data:', JSON.stringify(offerData, null, 2));
       console.log('📤 CLIENT: Promo fields check:', {
         promoCodeId: promoCodeId,
         promoTitle: data.promoTitle,
@@ -270,7 +270,7 @@ export default function EditWhopPage({
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(whopData),
+        body: JSON.stringify(offerData),
       });
 
       if (!response.ok) {
@@ -284,7 +284,7 @@ export default function EditWhopPage({
         }
       }
 
-      const savedWhop = await response.json();
+      const savedOffer = await response.json();
 
       // Only create a separate promo code if we're creating a new whop, there's no promoCodeId, 
       // AND the user has filled in the required promo fields
@@ -295,7 +295,7 @@ export default function EditWhopPage({
           code: data.promoCode || null,
           type: data.promoType,
           value: data.promoValue,
-          whopId: savedWhop.id
+          offerId: savedOffer.id
         };
 
         const promoResponse = await fetch("/api/promo-codes", {
@@ -315,7 +315,7 @@ export default function EditWhopPage({
       }
 
       // On success, navigate back to the whops list
-      router.push("/admin/whops");
+      router.push("/admin/offers");
     } catch (error) {
       console.error("Failed to save whop:", error);
       setFormError("Failed to save whop. Please try again.");
@@ -333,7 +333,7 @@ export default function EditWhopPage({
   return (
     <div className="space-y-8">
       <h2 className="admin-heading">
-        {params.id === "new" ? "Add New Whop" : "Edit Whop"}
+        {params.id === "new" ? "Add New Offer" : "Edit Offer"}
       </h2>
 
       <div className="admin-container">
@@ -364,7 +364,7 @@ export default function EditWhopPage({
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="border-b border-[#404055] pb-6">
-            <h3 className="text-xl font-semibold mb-4">Whop Information</h3>
+            <h3 className="text-xl font-semibold mb-4">Offer Information</h3>
             
             <div className="form-group">
               <label htmlFor="name" className="form-label">Name</label>
@@ -542,7 +542,7 @@ export default function EditWhopPage({
           <div className="flex justify-end space-x-4 pt-4">
             <button
               type="button"
-              onClick={() => router.push("/admin/whops")}
+              onClick={() => router.push("/admin/offers")}
               className="btn-secondary"
             >
               Cancel

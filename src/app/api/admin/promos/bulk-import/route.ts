@@ -126,7 +126,7 @@ function generatePromoId(): string {
   return `promo_${timestamp}_${random}`;
 }
 
-/** Fuzzy match Whop by URL variants (handles hyphens, path differences, etc.) */
+/** Fuzzy match Offer by URL variants (handles hyphens, path differences, etc.) */
 async function fuzzyFindWhop(rawUrl: string) {
   // Normalize, then create relaxed variants
   let norm = normalizeUrl(rawUrl);
@@ -237,7 +237,7 @@ export async function POST(req: Request) {
             }
           } else {
             summary.missing++;
-            summary.errors.push(`Row ${i + 2}: No Whop match for URL: ${r.whopUrl}`);
+            summary.errors.push(`Row ${i + 2}: No Offer match for URL: ${r.whopUrl}`);
             continue;
           }
         }

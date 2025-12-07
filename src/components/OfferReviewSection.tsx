@@ -14,8 +14,8 @@ interface Review {
   verified?: boolean;
 }
 
-interface WhopReviewSectionProps {
-  whopId: string;
+interface OfferReviewSectionProps {
+  offerId: string;
   whopName: string;
   reviews?: Review[];
 }
@@ -51,7 +51,7 @@ const calculateAverageRating = (reviews: Review[]): number => {
   return Math.round((sum / reviews.length) * 10) / 10;
 };
 
-const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName, reviews: initialReviews = [] }) => {
+const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopName, reviews: initialReviews = [] }) => {
   // Initialize reviews state with processed initial reviews if available
   const [reviews, setReviews] = useState<Review[]>(() => {
     if (initialReviews && initialReviews.length > 0) {
@@ -69,7 +69,7 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
 
   // Normalize and set initial reviews - ALWAYS prioritize server data
   useEffect(() => {
-    const storageKey = `whop_reviews_${whopId}`;
+    const storageKey = `offer_reviews_${offerId}`;
     
     // ALWAYS use server data if available (including empty array)
     if (initialReviews !== undefined) {
@@ -98,7 +98,7 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
       console.error('Error loading reviews from localStorage:', error);
       setReviews([]);
     }
-  }, [whopId, initialReviews]);
+  }, [offerId, initialReviews]);
 
   const averageRating = calculateAverageRating(reviews);
   const reviewCount = reviews.length;
@@ -132,7 +132,7 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
         author: newReview.username || 'Anonymous',
         content: newReview.text || '',
         rating: newReview.rating || 5,
-        whopId: whopId,
+        offerId: offerId,
       };
       
       // Submit to API for moderation
@@ -392,4 +392,4 @@ const WhopReviewSection: React.FC<WhopReviewSectionProps> = ({ whopId, whopName,
   );
 };
 
-export default WhopReviewSection; 
+export default OfferReviewSection; 

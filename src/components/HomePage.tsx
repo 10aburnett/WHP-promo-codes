@@ -20,7 +20,7 @@ interface PromoCode {
   value: string;
 }
 
-interface Whop {
+interface Offer {
   id: string;
   name: string;
   slug: string;
@@ -44,13 +44,13 @@ interface PaginationResponse {
 }
 
 interface HomePageProps {
-  initialWhops: any[];
+  initialOffers: any[];
   initialTotal: number;
   totalUsers: number;
   key?: number;
 }
 
-export default function HomePage({ initialWhops, initialTotal, totalUsers, key }: HomePageProps) {
+export default function HomePage({ initialOffers, initialTotal, totalUsers, key }: HomePageProps) {
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -65,7 +65,7 @@ export default function HomePage({ initialWhops, initialTotal, totalUsers, key }
     sortBy: ''
   });
   
-  const [whops, setWhops] = useState<any[]>(initialWhops);
+  const [whops, setWhops] = useState<any[]>(initialOffers);
   const [pagination, setPagination] = useState({
     page: parseInt(searchParams.get('page') || '1'),
     totalPages: Math.ceil(initialTotal / 15),
@@ -84,7 +84,7 @@ export default function HomePage({ initialWhops, initialTotal, totalUsers, key }
         whop: searchParams.get('whop') || '',
         sortBy: (searchParams.get('sortBy') || '') as "" | "highest" | "lowest" | "alpha-asc" | "alpha-desc" | "newest" | "highest-rated"
       });
-      setWhops(initialWhops);
+      setWhops(initialOffers);
       setPagination({
         page: parseInt(searchParams.get('page') || '1'),
         totalPages: Math.ceil(initialTotal / 15),
@@ -99,7 +99,7 @@ export default function HomePage({ initialWhops, initialTotal, totalUsers, key }
         setSearchTimeout(null);
       }
     }
-  }, [key, searchParams, initialWhops, initialTotal, searchTimeout]);
+  }, [key, searchParams, initialOffers, initialTotal, searchTimeout]);
 
   // Update URL with current filter and pagination state
   const updateURL = useCallback((newFilters: FilterState, newPage: number = 1) => {
@@ -117,7 +117,7 @@ export default function HomePage({ initialWhops, initialTotal, totalUsers, key }
   }, [router]);
 
   // Fetch whops data with pagination and filters
-  const fetchWhops = useCallback(async (page: number = 1, newFilters?: FilterState) => {
+  const fetchOffers = useCallback(async (page: number = 1, newFilters?: FilterState) => {
     if (loading) return;
     
     setLoading(true);
@@ -174,22 +174,22 @@ export default function HomePage({ initialWhops, initialTotal, totalUsers, key }
     
       // Set new timeout for search
       const timeout = setTimeout(() => {
-        fetchWhops(1, updatedFilters);
+        fetchOffers(1, updatedFilters);
       }, 300); // 300ms debounce
       
       setSearchTimeout(timeout);
     } else {
       // For other filters (category, sort, etc.), fetch immediately
-      fetchWhops(1, updatedFilters);
+      fetchOffers(1, updatedFilters);
     }
-  }, [filters, router, searchTimeout, fetchWhops]);
+  }, [filters, router, searchTimeout, fetchOffers]);
 
   // Handle page changes
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= pagination.totalPages && !loading) {
       // Scroll to top IMMEDIATELY before any DOM updates
       window.scrollTo({ top: 0, behavior: 'instant' });
-      fetchWhops(newPage);
+      fetchOffers(newPage);
     }
   };
 
@@ -211,12 +211,12 @@ export default function HomePage({ initialWhops, initialTotal, totalUsers, key }
       
       if (hasURLFilters) {
         setFilters(urlFilters);
-        fetchWhops(urlPage, urlFilters);
+        fetchOffers(urlPage, urlFilters);
       }
       
       setIsInitialized(true);
     }
-  }, [isInitialized, searchParams, fetchWhops]);
+  }, [isInitialized, searchParams, fetchOffers]);
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {

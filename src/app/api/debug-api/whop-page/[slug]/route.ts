@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getWhopBySlugCached } from '@/data/offers';
+import { getOfferBySlugCached } from '@/data/offers';
 import { prisma } from '@/lib/prisma';
 import { canonicalSlugForDB } from '@/lib/slug-utils';
 
@@ -26,7 +26,7 @@ export async function GET(_req: Request, { params }: { params: { slug: string } 
   let cached: any = null;
   let cacheError: string | null = null;
   try {
-    cached = await getWhopBySlugCached(canonical);
+    cached = await getOfferBySlugCached(canonical);
   } catch (e: any) {
     cacheError = String(e?.message || e);
   }

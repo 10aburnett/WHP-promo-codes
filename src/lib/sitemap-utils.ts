@@ -31,7 +31,7 @@ const toIso = (v: unknown): string =>
  * @param rangeEnd - Ending letter (e.g., 'f')
  * @returns Array of sitemap entries
  */
-export async function generateWhopSitemap(
+export async function generateOfferSitemap(
   rangeStart: string,
   rangeEnd: string
 ): Promise<SitemapEntry[]> {

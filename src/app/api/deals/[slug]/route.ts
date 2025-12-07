@@ -1,6 +1,6 @@
 import "server-only";
 import { NextResponse } from "next/server";
-import { getWhopBySlug } from '@/lib/data';
+import { getOfferBySlug } from '@/lib/data';
 
 // Cache for 5 minutes
 export const revalidate = 300;
@@ -13,27 +13,27 @@ export async function GET(
 
   try {
     // Fetch from database using the existing data function
-    const whopData = await getWhopBySlug(slug);
+    const offerData = await getOfferBySlug(slug);
 
-    if (!whopData) {
+    if (!offerData) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
     // Transform to only the fields needed for the hero section first paint
     const heroData = {
-      id: whopData.id,
-      name: whopData.name,
-      logo: whopData.logo,
-      price: whopData.price,
-      category: whopData.category,
-      affiliateLink: whopData.affiliateLink,
+      id: offerData.id,
+      name: offerData.name,
+      logo: offerData.logo,
+      price: offerData.price,
+      category: offerData.category,
+      affiliateLink: offerData.affiliateLink,
       // Include first promo code for instant display
-      firstPromo: whopData.PromoCode?.[0] ? {
-        id: whopData.PromoCode[0].id,
-        title: whopData.PromoCode[0].title,
-        code: whopData.PromoCode[0].code,
-        type: whopData.PromoCode[0].type,
-        value: whopData.PromoCode[0].value,
+      firstPromo: offerData.PromoCode?.[0] ? {
+        id: offerData.PromoCode[0].id,
+        title: offerData.PromoCode[0].title,
+        code: offerData.PromoCode[0].code,
+        type: offerData.PromoCode[0].type,
+        value: offerData.PromoCode[0].value,
       } : null,
     };
 

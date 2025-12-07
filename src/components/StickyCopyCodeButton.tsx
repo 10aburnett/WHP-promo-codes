@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 
 interface StickyCopyCodeButtonProps {
   code: string;
-  whopId?: string;
+  offerId?: string;
   promoCodeId?: string;
 }
 
-export default function StickyCopyCodeButton({ 
-  code, 
-  whopId, 
+export default function StickyCopyCodeButton({
+  code,
+  offerId,
   promoCodeId
 }: StickyCopyCodeButtonProps) {
   const [copied, setCopied] = useState(false);
@@ -29,7 +29,7 @@ export default function StickyCopyCodeButton({
         fetchUsageCount();
       }
     }, 60000);
-    
+
     return () => clearInterval(interval);
   }, [promoCodeId]);
 
@@ -49,14 +49,14 @@ export default function StickyCopyCodeButton({
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      
-      // Track the copy action if whopId and promoCodeId are provided
-      if (whopId && promoCodeId) {
+
+      // Track the copy action if offerId and promoCodeId are provided
+      if (offerId && promoCodeId) {
         trackCopyCode();
         // Update the usage count immediately after tracking
         setTimeout(fetchUsageCount, 500);
       }
-      
+
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Failed to copy text:', error);
@@ -71,7 +71,7 @@ export default function StickyCopyCodeButton({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          casinoId: whopId, // Using whopId as casinoId for API compatibility
+          casinoId: offerId, // Using offerId as casinoId for API compatibility
           bonusId: promoCodeId, // Using promoCodeId as bonusId for API compatibility
           actionType: 'code_copy',
         }),
@@ -101,4 +101,4 @@ export default function StickyCopyCodeButton({
       </button>
     </div>
   );
-} 
+}

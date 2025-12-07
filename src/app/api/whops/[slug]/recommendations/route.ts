@@ -123,16 +123,16 @@ function getTopicCategories(text: string, whopName: string = ''): string[] {
 }
 
 // Enhanced similarity scoring with stricter requirements
-function calculateSimilarityScore(currentWhop: any, candidateWhop: any): number {
+function calculateSimilarityScore(currentOffer: any, candidateWhop: any): number {
   let score = 0;
   
   // Get topic categories for both whops
-  const currentTopics = getTopicCategories(currentWhop.description || '', currentWhop.name || '');
+  const currentTopics = getTopicCategories(currentOffer.description || '', currentOffer.name || '');
   const candidateTopics = getTopicCategories(candidateWhop.description || '', candidateWhop.name || '');
   
   // Exact category match (if both have categories set)
-  if (currentWhop.category && candidateWhop.category) {
-    if (currentWhop.category.toLowerCase() === candidateWhop.category.toLowerCase()) {
+  if (currentOffer.category && candidateWhop.category) {
+    if (currentOffer.category.toLowerCase() === candidateWhop.category.toLowerCase()) {
       score += 100; // Very high score for exact category match
     }
   }
@@ -152,13 +152,13 @@ function calculateSimilarityScore(currentWhop: any, candidateWhop: any): number 
   score += commonTopics.length * 25; // 25 points per common topic
   
   // Price range similarity (lower priority)
-  if (currentWhop.price && candidateWhop.price && currentWhop.price === candidateWhop.price) {
+  if (currentOffer.price && candidateWhop.price && currentOffer.price === candidateWhop.price) {
     score += 10;
   }
   
   // Advanced keyword matching with domain-specific terms
-  if (currentWhop.description && candidateWhop.description) {
-    const currentKeywords = extractDomainKeywords(currentWhop.description, currentWhop.name);
+  if (currentOffer.description && candidateWhop.description) {
+    const currentKeywords = extractDomainKeywords(currentOffer.description, currentOffer.name);
     const candidateKeywords = extractDomainKeywords(candidateWhop.description, candidateWhop.name);
     
     const commonKeywords = currentKeywords.filter(keyword => 
@@ -209,29 +209,29 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     }
 
     // Try slug first; if not found and it looks like an id, try id.
-    let currentWhop = await prisma.deal.findUnique({
+    let currentOffer = await prisma.deal.findUnique({
       where: { slug: key },
       select: { id: true, slug: true, name: true, description: true, category: true, price: true },
     });
 
-    if (!currentWhop && looksLikeCuid(key)) {
-      currentWhop = await prisma.deal.findUnique({
+    if (!currentOffer && looksLikeCuid(key)) {
+      currentOffer = await prisma.deal.findUnique({
         where: { id: key },
         select: { id: true, slug: true, name: true, description: true, category: true, price: true },
       });
     }
 
-    if (!currentWhop) {
+    if (!currentOffer) {
       return new Response(JSON.stringify({ error: 'Whop not found' }), { status: 404 });
     }
 
     // Get current whop's primary topics
-    const currentTopics = getTopicCategories(currentWhop.description || '', currentWhop.name || '');
+    const currentTopics = getTopicCategories(currentOffer.description || '', currentOffer.name || '');
     
     // Get all potential candidate whops
     const candidateWhops = await prisma.deal.findMany({
       where: {
-        id: { not: currentWhop.id }
+        id: { not: currentOffer.id }
       },
       include: {
         PromoCode: {
@@ -260,7 +260,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     const scoredCandidates = filteredCandidates
       .map(candidate => ({
         ...candidate,
-        similarityScore: calculateSimilarityScore(currentWhop, candidate)
+        similarityScore: calculateSimilarityScore(currentOffer, candidate)
       }))
       .filter(candidate => candidate.similarityScore >= 20); // Only include candidates with meaningful similarity
 
@@ -279,13 +279,13 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     const recommendations = sortedCandidates.slice(0, 4);
 
     return new Response(JSON.stringify({
-      whop: currentWhop,
+      whop: currentOffer,
       recommendations,
       total: recommendations.length,
       debug: process.env.NODE_ENV === 'development' ? {
-        currentWhopName: currentWhop.name,
-        currentWhopCategory: currentWhop.category,
-        currentWhopTopics: currentTopics,
+        currentOfferName: currentOffer.name,
+        currentOfferCategory: currentOffer.category,
+        currentOfferTopics: currentTopics,
         topScores: recommendations.map(r => ({
           name: r.name,
           score: r.similarityScore,

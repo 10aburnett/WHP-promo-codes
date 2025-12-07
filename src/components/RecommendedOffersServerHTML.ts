@@ -1,4 +1,4 @@
-// src/components/RecommendedWhopsServerHTML.ts
+// src/components/RecommendedOffersServerHTML.ts
 import 'server-only';
 
 type DealData = {

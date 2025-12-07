@@ -1,6 +1,6 @@
 // Server-safe list of recommended whops (no next/link, no client state)
 import 'server-only';
-import WhopMiniPreview from './WhopMiniPreview';
+import OfferMiniPreview from './OfferMiniPreview';
 import { resolveLogoUrl } from '@/lib/image-url';
 
 type Item = {
@@ -14,7 +14,7 @@ type Item = {
   ratingCount?: number;
 };
 
-export default function RecommendedWhopsServer({ items }: { items?: Item[] }) {
+export default function RecommendedOffersServer({ items }: { items?: Item[] }) {
   const list = (items ?? [])
     .filter((w): w is Item & { slug: string } => !!w && !!w.slug)
     .slice()
@@ -27,7 +27,7 @@ export default function RecommendedWhopsServer({ items }: { items?: Item[] }) {
       <h2 className="text-xl font-bold mb-4">You Might Also Like</h2>
       <ul className="flex flex-col gap-4" suppressHydrationWarning>
         {list.map((w, i) => (
-          <WhopMiniPreview
+          <OfferMiniPreview
             key={`${w.slug}#${i}`}
             slug={w.slug}
             name={w.name}

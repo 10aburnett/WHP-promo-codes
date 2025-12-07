@@ -2,10 +2,10 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { normalizeImagePath } from '@/lib/image-utils';
 import InitialsAvatar from '@/components/InitialsAvatar';
-import WhopPageClient from '@/components/WhopPageClient';
-import WhopLogo from '@/components/WhopLogo';
-import WhopReviewSection from '@/components/WhopReviewSection';
-import RecommendedWhops from '@/components/RecommendedWhops';
+import OfferPageClient from '@/components/OfferPageClient';
+import OfferLogo from '@/components/OfferLogo';
+import OfferReviewSection from '@/components/OfferReviewSection';
+import RecommendedOffers from '@/components/RecommendedOffers';
 import { getTranslation } from '@/lib/i18n';
 
 interface PromoCode {
@@ -26,7 +26,7 @@ interface Review {
   verified: boolean;
 }
 
-interface Whop {
+interface Offer {
   id: string;
   name: string;
   whopName?: string;
@@ -42,7 +42,7 @@ interface Whop {
   reviews?: Review[];
 }
 
-async function getWhop(slug: string) {
+async function getOffer(slug: string) {
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/whops?slug=${slug}`, {
       cache: 'no-store'
@@ -59,26 +59,26 @@ async function getWhop(slug: string) {
   }
 }
 
-export default async function WhopPage({ params }: { params: { slug: string, locale?: string } }) {
+export default async function OfferPage({ params }: { params: { slug: string, locale?: string } }) {
   const locale = params.locale || 'en';
-  const whopData = await getWhop(params.slug);
+  const offerData = await getOffer(params.slug);
   
-  if (!whopData) {
+  if (!offerData) {
     notFound();
   }
 
   // Use the processed data from the API which includes smart promoText logic
   const whop = {
-    id: whopData.whopId,
-    name: whopData.whopName,
-    description: whopData.description,
-    logo: whopData.logo,
-    affiliateLink: whopData.affiliateLink,
-    website: whopData.website || null,
-    price: whopData.price,
-    category: whopData.category || null,
-    promoCodes: whopData.promoCodes || [],
-    reviews: whopData.reviews || []
+    id: offerData.whopId,
+    name: offerData.whopName,
+    description: offerData.description,
+    logo: offerData.logo,
+    affiliateLink: offerData.affiliateLink,
+    website: offerData.website || null,
+    price: offerData.price,
+    category: offerData.category || null,
+    promoCodes: offerData.promoCodes || [],
+    reviews: offerData.reviews || []
   };
   
   const firstPromo = whop.promoCodes[0] || null;
@@ -95,10 +95,10 @@ export default async function WhopPage({ params }: { params: { slug: string, loc
           {/* Hero Section */}
           <div className="rounded-xl px-7 py-6 sm:p-8 shadow-lg border transition-theme" style={{ background: 'linear-gradient(to bottom right, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}>
             <div className="flex flex-col gap-4">
-              {/* Whop Info */}
+              {/* Offer Info */}
               <div className="flex items-center gap-4 sm:gap-6">
                 <div className="relative w-16 sm:w-20 h-16 sm:h-20 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--background-color)' }}>
-                  <WhopLogo whop={whop} />
+                  <OfferLogo offer={whop} />
                 </div>
                 <div className="min-w-0">
                   <h1 className="text-2xl sm:text-3xl font-bold mb-2">{whop.name} {getTranslation('whop.promoCode', locale as any)}</h1>
@@ -121,7 +121,7 @@ export default async function WhopPage({ params }: { params: { slug: string, loc
               </div>
 
               {/* Interactive Button - Force remount with key */}
-              <WhopPageClient 
+              <OfferPageClient 
                 key={`client-${pageKey}`}
                 whop={{
                   id: whop.id,
@@ -289,11 +289,11 @@ export default async function WhopPage({ params }: { params: { slug: string, loc
             </div>
           </section>
 
-          {/* Recommended Whops Section */}
-          <RecommendedWhops currentWhopSlug={params.slug} />
+          {/* Recommended Offers Section */}
+          <RecommendedOffers currentOfferSlug={params.slug} />
 
           {/* Reviews Section */}
-          <WhopReviewSection 
+          <OfferReviewSection 
             whopId={whop.id}
             whopName={whop.name}
             reviews={whop.reviews || []}

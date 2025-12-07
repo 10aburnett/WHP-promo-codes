@@ -98,7 +98,7 @@ export default function ClientStickyWrapper({ casinoData }: ClientStickyWrapperP
         <div className="w-full sm:w-auto flex justify-center">
           <StickyCallToAction
             whopName={casinoData.name}
-            whopId={casinoData.id}
+            offerId={casinoData.id}
             promoCodeId={casinoData.bonusId}
             promoTitle={casinoData.bonusTitle}
             promoCode={casinoData.bonusCode}

@@ -17,7 +17,7 @@ interface DecodedToken {
   role: string;
 }
 
-interface WhopImportData {
+interface OfferImportData {
   name: string;
   description?: string;
   logo?: string;

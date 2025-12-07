@@ -33,8 +33,8 @@ export function canonicalSlugForPath(raw: string): string {
 }
 
 // Legacy exports for backward compatibility
-export const canonicalizeWhopSlugForPath = canonicalSlugForPath;
-export const canonicalizeWhopSlugForDB = canonicalSlugForDB;
+export const canonicalizeOfferSlugForPath = canonicalSlugForPath;
+export const canonicalizeOfferSlugForDB = canonicalSlugForDB;
 
 /**
  * Check if a slug needs canonical normalization

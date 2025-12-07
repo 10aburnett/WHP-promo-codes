@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import dynamicImport from 'next/dynamic';
 import { normalizeImagePath } from '@/lib/image-utils';
-import { getWhopBySlugCached } from '@/data/offers'; // NEW: Use cached version
-import { getWhopBySlug, getWhopBySlugUnfiltered } from '@/lib/data'; // Keep for metadata generation
+import { getOfferBySlugCached } from '@/data/offers'; // NEW: Use cached version
+import { getOfferBySlug, getOfferBySlugUnfiltered } from '@/lib/data'; // Keep for metadata generation
 import { prisma } from '@/lib/prisma';
 import { whereIndexable } from '@/lib/where-indexable';
 import { Suspense } from 'react';
@@ -20,16 +20,16 @@ export const dynamicParams = true; // Enable dynamic params for all slugs
 export const runtime = 'nodejs'; // required for Prisma database access
 
 import InitialsAvatar from '@/components/InitialsAvatar';
-import WhopLogo from '@/components/WhopLogo';
-import WhopPageInteractive from '@/components/WhopPageInteractive';
+import OfferLogo from '@/components/OfferLogo';
+import OfferPageInteractive from '@/components/OfferPageInteractive';
 import PromoCodeSubmissionButton from '@/components/PromoCodeSubmissionButton';
 
 // Below-the-fold components: dynamically import to reduce initial bundle size
-const WhopReviewSection = dynamicImport(() => import('@/components/WhopReviewSection'), {
+const OfferReviewSection = dynamicImport(() => import('@/components/OfferReviewSection'), {
   loading: () => null,
 });
 import FAQSectionServer from '@/components/FAQSectionServer'; // Server component for SEO
-import RecommendedWhopsServer from '@/components/RecommendedOffersServer'; // Server component for recommendations
+import RecommendedOffersServer from '@/components/RecommendedOffersServer'; // Server component for recommendations
 import AlternativesServer from '@/components/AlternativesServer'; // Server component for alternatives
 import { getRecommendations, getAlternatives } from '@/data/recommendations'; // Data fetching for recommendations/alternatives
 import { getPromoStatsForSlug } from '@/data/promo-stats'; // Server-side promo usage statistics
@@ -50,10 +50,10 @@ import { djb2 } from '@/lib/hydration-debug';
 import 'server-only';
 import { jsonLdScript } from '@/lib/jsonld';
 import { buildPrimaryEntity, buildBreadcrumbList, buildOffers, buildFAQ, buildHowTo, buildItemList, buildReviews } from '@/lib/buildSchema';
-import type { WhopViewModel } from '@/lib/buildSchema';
-import { getWhopViewModel } from './vm';
+import type { OfferViewModel } from '@/lib/buildSchema';
+import { getOfferViewModel } from './vm';
 import { LOCALES, isLocaleEnabled, getSchemaLocale } from '@/lib/schema-locale';
-import { whopAbsoluteUrl } from '@/lib/urls';
+import { offerAbsoluteUrl } from '@/lib/urls';
 import { getPageClassification, getRobotsForClassification, shouldIncludeInHreflang } from '@/lib/seo-classification';
 
 // Prebuild top 800 quality pages at build time, use ISR for long tail
@@ -89,7 +89,7 @@ interface Review {
   verified: boolean;
 }
 
-interface Whop {
+interface Offer {
   id: string;
   name: string;
   whopName?: string;
@@ -125,7 +125,7 @@ async function getDeal(slug: string) {
   } catch (error) {
     // Fallback to direct database query if API fails
     console.warn('API fetch failed, falling back to direct DB query:', error);
-    return await getWhopBySlug(slug);
+    return await getOfferBySlug(slug);
   }
 }
 
@@ -215,8 +215,8 @@ function getPopularityLabel(codeCount: number): string {
 }
 
 // Async component for heavy sections that can be streamed
-async function RecommendedSection({ currentWhopSlug }: { currentWhopSlug: string }) {
-  const { items } = await getRecommendations(currentWhopSlug);
+async function RecommendedSection({ currentOfferSlug }: { currentOfferSlug: string }) {
+  const { items } = await getRecommendations(currentOfferSlug);
   // Freeze data to ensure deterministic server/client rendering
   const frozen = (items ?? [])
     .filter(Boolean)
@@ -232,11 +232,11 @@ async function RecommendedSection({ currentWhopSlug }: { currentWhopSlug: string
     .sort((a,b) => a.slug.localeCompare(b.slug));
 
   // Server-rendered recommendations with normal React hydration
-  return <RecommendedWhopsServer items={frozen} />;
+  return <RecommendedOffersServer items={frozen} />;
 }
 
-async function AlternativesSection({ currentWhopSlug }: { currentWhopSlug: string }) {
-  const { items, explore } = await getAlternatives(currentWhopSlug);
+async function AlternativesSection({ currentOfferSlug }: { currentOfferSlug: string }) {
+  const { items, explore } = await getAlternatives(currentOfferSlug);
   // Freeze data to ensure deterministic server/client rendering
   const frozen = (items ?? [])
     .filter(Boolean)
@@ -255,13 +255,13 @@ async function AlternativesSection({ currentWhopSlug }: { currentWhopSlug: strin
   return <AlternativesServer items={frozen} explore={explore} />;
 }
 
-async function ReviewsSection({ whopId, whopName, reviews }: { whopId: string; whopName: string; reviews: any[] }) {
+async function ReviewsSection({ offerId, whopName, reviews }: { offerId: string; whopName: string; reviews: any[] }) {
   // Simulate a small delay to show streaming effect in development
   await new Promise(resolve => setTimeout(resolve, 150));
-  
+
   return (
-    <WhopReviewSection 
-      whopId={whopId}
+    <OfferReviewSection
+      offerId={offerId}
       whopName={whopName}
       reviews={reviews}
     />
@@ -281,14 +281,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const canon = canonicalSlugForPath(decoded);
     // Use lowercase decoded slug for DB lookup (DB stores literal colons, not %3a)
     const dbSlug = decoded.toLowerCase();
-    console.log('[WHOP META] Generating metadata for:', { slug: params.slug, dbSlug });
+    console.log('[OFFER META] Generating metadata for:', { slug: params.slug, dbSlug });
 
     // Use unfiltered fetch - show full content for noindex pages with robots meta
-    const whopData = await getWhopBySlugUnfiltered(dbSlug, 'en');
-    console.log('[WHOP META] Data fetched:', { found: !!whopData, name: whopData?.name });
+    const offerData = await getOfferBySlugUnfiltered(dbSlug, 'en');
+    console.log('[OFFER META] Data fetched:', { found: !!offerData, name: offerData?.name });
 
-    if (!whopData) {
-      console.warn('[WHOP META] No data found, returning 404 metadata');
+    if (!offerData) {
+      console.warn('[OFFER META] No data found, returning 404 metadata');
       return {
         title: 'Offer Not Found',
         description: 'The requested offer could not be found.',
@@ -297,12 +297,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     }
 
     // Check if whop should be indexed
-    const shouldIndex = !whopData.retired && isIndexable(whopData.indexingStatus);
+    const shouldIndex = !offerData.retired && isIndexable(offerData.indexingStatus);
 
     if (!shouldIndex) {
-      console.warn('[WHOP META] Whop is not indexable (but will show full content):', {
-        retired: whopData.retired,
-        indexingStatus: whopData.indexingStatus
+      console.warn('[OFFER META] Whop is not indexable (but will show full content):', {
+        retired: offerData.retired,
+        indexingStatus: offerData.indexingStatus
       });
     }
 
@@ -312,15 +312,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const currentYear = currentDate.getFullYear();
   const monthYear = `(${currentMonth} ${currentYear})`;
 
-  const title = `${whopData.name} Promo Code ${monthYear}`;
+  const title = `${offerData.name} Promo Code ${monthYear}`;
   
   // Build dynamic meta description
   let description = '';
-  const whopName = whopData.name;
-  const promoCodes = whopData.PromoCode || [];
+  const whopName = offerData.name;
+  const promoCodes = offerData.PromoCode || [];
   const firstPromo = promoCodes[0];
-  const price = whopData.price;
-  const category = whopData.category;
+  const price = offerData.price;
+  const category = offerData.category;
 
   // Start with base call-to-action
   if (firstPromo && firstPromo.code) {
@@ -401,15 +401,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title,
     description,
     keywords: [
-      `${whopData.name} promo code`,
-      `${whopData.name} discount`,
-      `${whopData.name} coupon`,
+      `${offerData.name} promo code`,
+      `${offerData.name} discount`,
+      `${offerData.name} coupon`,
       firstPromo?.value ?
         (firstPromo.value.includes('$') || firstPromo.value.includes('%') || firstPromo.value.includes('off')
           ? firstPromo.value
           : `${firstPromo.value}% off`)
         : 'exclusive access',
-      whopData.category,
+      offerData.category,
       price === 'Free' ? 'free' : 'premium',
       currentMonth,
       currentYear.toString()
@@ -420,10 +420,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         languages: (() => {
           const languages: Record<string, string> = {};
           for (const locale of LOCALES) {
-            languages[locale] = whopAbsoluteUrl(canon, locale);
+            languages[locale] = offerAbsoluteUrl(canon, locale);
           }
           // x-default → default page for unmatched locales
-          languages['x-default'] = whopAbsoluteUrl(canon, 'en');
+          languages['x-default'] = offerAbsoluteUrl(canon, 'en');
           return languages;
         })()
       })
@@ -441,10 +441,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title,
       description,
       type: 'website',
-      images: whopData.logo ? [
+      images: offerData.logo ? [
         {
-          url: whopData.logo,
-          alt: `${whopData.name} Logo`,
+          url: offerData.logo,
+          alt: `${offerData.name} Logo`,
           width: 1200,
           height: 630,
         }
@@ -454,11 +454,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       card: 'summary_large_image',
       title,
       description,
-      images: whopData.logo ? [whopData.logo] : []
+      images: offerData.logo ? [offerData.logo] : []
     }
   };
   } catch (error) {
-    console.error('[WHOP META] Error generating metadata:', error);
+    console.error('[OFFER META] Error generating metadata:', error);
     // Return safe fallback metadata instead of crashing
     return {
       title: 'Offer',
@@ -476,7 +476,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
   const canonSlug = canonicalSlugForPath(decoded);
 
   // Phase 1 instrumentation: Log inputs (searchParams removed to allow ISR)
-  dlog('whop', 'WhopPage params', { raw, decoded, dbSlug, canonSlug });
+  dlog('whop', 'OfferPage params', { raw, decoded, dbSlug, canonSlug });
 
   // Step 8: Determine SEO classification for this page
   const classification = getPageClassification(canonSlug);
@@ -489,16 +489,16 @@ export default async function DealPage({ params }: { params: { slug: string } })
   console.time('[PERF] Parallel data fetch');
 
   // Parallelize all data fetches for faster load time
-  const [vm, dealData, finalWhopData, verificationData] = await Promise.all([
+  const [vm, dealData, finalOfferData, verificationData] = await Promise.all([
     // Load view model for schema (reuse existing data path)
-    getWhopViewModel(raw, undefined).catch((error) => {
+    getOfferViewModel(raw, undefined).catch((error) => {
       console.warn('Failed to load view model for schema:', error);
       return null;
     }),
     // Get deal data
     getDeal(dbSlug),
     // Use cached, tagged data (D1) - no fallback needed
-    getWhopBySlugCached(dbSlug),
+    getOfferBySlugCached(dbSlug),
     // Load verification data for Screenshot B
     getVerificationData(dbSlug),
   ]);
@@ -507,19 +507,19 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
   console.log('[WHOP DETAIL] getDeal result:', { found: !!dealData, id: dealData?.id });
   console.log('[WHOP DETAIL] Final data chosen:', {
-    found: !!finalWhopData,
-    name: finalWhopData?.name,
-    indexingStatus: (finalWhopData as any)?.indexingStatus,
-    retirement: (finalWhopData as any)?.retirement,
-    promoCount: (finalWhopData as any)?.PromoCode?.length
+    found: !!finalOfferData,
+    name: finalOfferData?.name,
+    indexingStatus: (finalOfferData as any)?.indexingStatus,
+    retirement: (finalOfferData as any)?.retirement,
+    promoCount: (finalOfferData as any)?.PromoCode?.length
   });
 
   // Debug logging for production troubleshooting
   console.log('Verification data loaded for', dbSlug, ':', verificationData);
 
   // 3) 404 handling: Not found, retired, or not indexed
-  if (!finalWhopData) {
-    console.error('[WHOP DETAIL] 404 - No data found:', { raw, dbSlug, reason: 'finalWhopData is null/undefined' });
+  if (!finalOfferData) {
+    console.error('[WHOP DETAIL] 404 - No data found:', { raw, dbSlug, reason: 'finalOfferData is null/undefined' });
     if (process.env.SEO_DEBUG === '1') {
       return (
         <pre style={{ padding: 16 }}>
@@ -532,19 +532,19 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
   // 4) Relaxed quality check per ChatGPT fix - only block GONE pages
   // Use isIndexable helper for consistent indexability checks
-  const pageIsIndexable = !finalWhopData.retired && isIndexable(finalWhopData.indexingStatus);
-  const isGone = finalWhopData.retirement === 'GONE';
+  const pageIsIndexable = !finalOfferData.retired && isIndexable(finalOfferData.indexingStatus);
+  const isGone = finalOfferData.retirement === 'GONE';
 
   // T3: Build trace array for future 404 debugging
   const trace: string[] = [];
-  trace.push(`slug=${dbSlug}, id=${finalWhopData.id ?? 'null'}`);
-  trace.push(`retired=${finalWhopData.retirement} indexing=${finalWhopData.indexingStatus}`);
+  trace.push(`slug=${dbSlug}, id=${finalOfferData.id ?? 'null'}`);
+  trace.push(`retired=${finalOfferData.retirement} indexing=${finalOfferData.indexingStatus}`);
 
   console.log('[WHOP DETAIL] Quality check (relaxed):', {
     dbSlug,
-    indexingStatus: finalWhopData.indexingStatus,
+    indexingStatus: finalOfferData.indexingStatus,
     pageIsIndexable,
-    retirement: finalWhopData.retirement,
+    retirement: finalOfferData.retirement,
     isGone,
     nodeEnv: process.env.NODE_ENV
   });
@@ -554,7 +554,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
   if (isGone) {
     trace.push('gate:retired_or_gone');
     console.log('[DBG:reasons:page]', new Date().toISOString(), trace);
-    return notFoundWithReason('retired_or_gone', { raw, decoded, dbSlug, retirement: finalWhopData.retirement, isGone });
+    return notFoundWithReason('retired_or_gone', { raw, decoded, dbSlug, retirement: finalOfferData.retirement, isGone });
   }
 
   // Log successful render decision
@@ -563,12 +563,12 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
   // Soft warning in dev for non-indexed pages (but don't 404)
   if (process.env.NODE_ENV !== 'production' && !pageIsIndexable) {
-    dlog('reasons', 'indexingStatus not indexed - still rendering', { dbSlug, indexingStatus: finalWhopData.indexingStatus });
+    dlog('reasons', 'indexingStatus not indexed - still rendering', { dbSlug, indexingStatus: finalOfferData.indexingStatus });
   }
 
   // 5) Handle redirects
-  if (finalWhopData.retirement === 'REDIRECT' && finalWhopData.redirectToPath) {
-    return permanentRedirect(finalWhopData.redirectToPath); // 308
+  if (finalOfferData.retirement === 'REDIRECT' && finalOfferData.redirectToPath) {
+    return permanentRedirect(finalOfferData.redirectToPath); // 308
   }
 
 
@@ -589,26 +589,26 @@ export default async function DealPage({ params }: { params: { slug: string } })
     : null;
 
   // Transform raw Prisma data to match expected format
-  const whopFormatted = {
-    id: finalWhopData.id,
-    name: finalWhopData.name,
-    description: finalWhopData.description,
-    logo: finalWhopData.logo,
-    affiliateLink: finalWhopData.affiliateLink,
-    website: finalWhopData.website || null,
-    price: finalWhopData.price,
-    category: finalWhopData.category || null,
-    aboutContent: finalWhopData.aboutContent,
-    howToRedeemContent: finalWhopData.howToRedeemContent,
-    promoDetailsContent: finalWhopData.promoDetailsContent,
-    featuresContent: finalWhopData.featuresContent,
-    termsContent: finalWhopData.termsContent,
-    faqContent: finalWhopData.faqContent,
-    updatedAt: finalWhopData.updatedAt,
-    createdAt: finalWhopData.createdAt,
+  const offerFormatted = {
+    id: finalOfferData.id,
+    name: finalOfferData.name,
+    description: finalOfferData.description,
+    logo: finalOfferData.logo,
+    affiliateLink: finalOfferData.affiliateLink,
+    website: finalOfferData.website || null,
+    price: finalOfferData.price,
+    category: finalOfferData.category || null,
+    aboutContent: finalOfferData.aboutContent,
+    howToRedeemContent: finalOfferData.howToRedeemContent,
+    promoDetailsContent: finalOfferData.promoDetailsContent,
+    featuresContent: finalOfferData.featuresContent,
+    termsContent: finalOfferData.termsContent,
+    faqContent: finalOfferData.faqContent,
+    updatedAt: finalOfferData.updatedAt,
+    createdAt: finalOfferData.createdAt,
     usageStats,
     freshnessData,
-    promoCodes: (finalWhopData.PromoCode ?? []).map(code => ({
+    promoCodes: (finalOfferData.PromoCode ?? []).map(code => ({
       id: code.id,
       title: code.title,
       description: code.description,
@@ -617,7 +617,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
       value: code.value,
       createdAt: code.createdAt
     })),
-    reviews: (finalWhopData.Review ?? []).map(review => ({
+    reviews: (finalOfferData.Review ?? []).map(review => ({
       id: review.id,
       author: review.author,
       content: review.content,
@@ -630,22 +630,22 @@ export default async function DealPage({ params }: { params: { slug: string } })
   };
 
   
-  const firstPromo = whopFormatted.promoCodes[0] || null;
+  const firstPromo = offerFormatted.promoCodes[0] || null;
   const promoCode = firstPromo?.code || null;
   const promoTitle = "Exclusive Access"; // Always show "Exclusive Access" on detail pages
 
   // TASK 1: Helper boolean for hiding promo-code UI when no codes
   const hasPromoCodes =
-    Array.isArray(whopFormatted.promoCodes) &&
-    whopFormatted.promoCodes.length > 0;
+    Array.isArray(offerFormatted.promoCodes) &&
+    offerFormatted.promoCodes.length > 0;
 
   // TASK 2: Helper booleans for conditional jump links
   const hasOverview =
-    isMeaningful(whopFormatted.aboutContent) ||
-    isMeaningful(whopFormatted.description);
+    isMeaningful(offerFormatted.aboutContent) ||
+    isMeaningful(offerFormatted.description);
   const hasRedemption = true; // Always show - has fallback content
   const hasDetails = true; // Always show - has fallback content
-  const hasFeatures = isMeaningful(whopFormatted.featuresContent);
+  const hasFeatures = isMeaningful(offerFormatted.featuresContent);
   const hasTerms = true; // Always show - has fallback content
 
   // Helper function to check if whop has a promo code
@@ -666,16 +666,16 @@ export default async function DealPage({ params }: { params: { slug: string } })
   // Prepare fallback FAQ data for the collapsible component (used only if no database FAQ content)
   const fallbackFaqData = [
     {
-      question: `How do I use the ${whopFormatted.name} promo code?`,
-      answer: `To use the ${promoTitle} for ${whopFormatted.name}, simply click "Reveal Code" above to visit their website.${hasPromoCode(whopFormatted.name) ? ' Copy the promo code and enter it during checkout.' : ' The discount will be automatically applied when you purchase through our link.'}`
+      question: `How do I use the ${offerFormatted.name} promo code?`,
+      answer: `To use the ${promoTitle} for ${offerFormatted.name}, simply click "Reveal Code" above to visit their website.${hasPromoCode(offerFormatted.name) ? ' Copy the promo code and enter it during checkout.' : ' The discount will be automatically applied when you purchase through our link.'}`
     },
     {
-      question: `What type of product is ${whopFormatted.name}?`,
-      answer: `${whopFormatted.name} is ${whopFormatted.category ? `in the ${whopFormatted.category.toLowerCase()} category and provides` : 'an exclusive platform that provides'} premium content and resources for its members. It's designed to help users achieve their goals through expert guidance and community support.`
+      question: `What type of product is ${offerFormatted.name}?`,
+      answer: `${offerFormatted.name} is ${offerFormatted.category ? `in the ${offerFormatted.category.toLowerCase()} category and provides` : 'an exclusive platform that provides'} premium content and resources for its members. It's designed to help users achieve their goals through expert guidance and community support.`
     },
     {
       question: 'How long is this offer valid?',
-      answer: `This exclusive offer for ${whopFormatted.name} is available for a limited time. We recommend claiming it as soon as possible as these deals can expire or change without notice.`
+      answer: `This exclusive offer for ${offerFormatted.name} is available for a limited time. We recommend claiming it as soon as possible as these deals can expire or change without notice.`
     }
   ];
 
@@ -740,9 +740,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
       {/* HowTo Schema for SEO */}
       <HowToSchema
         slug={params.slug}
-        brand={whopFormatted.name}
-        currency={extractCurrency(whopFormatted.price)}
-        hasTrial={hasTrial(whopFormatted.price)}
+        brand={offerFormatted.name}
+        currency={extractCurrency(offerFormatted.price)}
+        hasTrial={hasTrial(offerFormatted.price)}
         siteOrigin={siteOrigin()}
       />
 
@@ -776,10 +776,10 @@ export default async function DealPage({ params }: { params: { slug: string } })
             <header className="dpc-offer-header rounded-xl px-7 py-6 sm:p-8 shadow-lg border transition-theme" style={{ background: 'linear-gradient(to bottom right, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}>
               <div className="flex items-center gap-4 sm:gap-6 mb-4">
                 <figure className="relative w-16 sm:w-20 h-16 sm:h-20 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--background-color)' }}>
-                  <WhopLogo whop={whopFormatted} />
+                  <OfferLogo offer={offerFormatted} />
                 </figure>
                 <div className="min-w-0">
-                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">{whopFormatted.name} Promo Code</h1>
+                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">{offerFormatted.name} Promo Code</h1>
                   <p className="text-base sm:text-lg" style={{ color: 'var(--accent-color)' }}>
                     {promoTitle}
                   </p>
@@ -790,19 +790,19 @@ export default async function DealPage({ params }: { params: { slug: string } })
               <div className="dpc-offer-cta mt-4">
                 <hr className="mb-4" style={{ borderColor: 'var(--border-color)', borderWidth: '1px', opacity: 0.3 }} />
                 <CommunityPromoSection
-                  key={`community-${whopFormatted.id}-${whopFormatted.promoCodes?.length || 0}`}
-                  whop={{
-                    id: whopFormatted.id,
-                    name: whopFormatted.name,
-                    affiliateLink: whopFormatted.affiliateLink
+                  key={`community-${offerFormatted.id}-${offerFormatted.promoCodes?.length || 0}`}
+                  offer={{
+                    id: offerFormatted.id,
+                    name: offerFormatted.name,
+                    affiliateLink: offerFormatted.affiliateLink
                   }}
-                  promoCodes={whopFormatted.promoCodes || []}
+                  promoCodes={offerFormatted.promoCodes || []}
                   slug={params.slug}
                 />
                 <div className="mt-6">
                   <PromoCodeSubmissionButton
-                    whopId={whopFormatted.id}
-                    whopName={whopFormatted.name}
+                    offerId={offerFormatted.id}
+                    whopName={offerFormatted.name}
                   />
                 </div>
               </div>
@@ -833,8 +833,8 @@ export default async function DealPage({ params }: { params: { slug: string } })
             {/* Overview Section */}
             {(() => {
               const aboutVal =
-                isMeaningful(whopFormatted.aboutContent) ? whopFormatted.aboutContent
-                : (isMeaningful(whopFormatted.description) ? whopFormatted.description : null);
+                isMeaningful(offerFormatted.aboutContent) ? offerFormatted.aboutContent
+                : (isMeaningful(offerFormatted.description) ? offerFormatted.description : null);
 
               return aboutVal && (
                 <section id="overview" className="dpc-offer-overview rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
@@ -856,22 +856,22 @@ export default async function DealPage({ params }: { params: { slug: string } })
             {/* Redemption Steps Section */}
             <section id="redemption" className="dpc-offer-redemption rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <h2 className="text-xl sm:text-2xl font-bold mb-4">Redemption Steps</h2>
-              {isMeaningful(whopFormatted.howToRedeemContent) ? (
+              {isMeaningful(offerFormatted.howToRedeemContent) ? (
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(whopFormatted.howToRedeemContent!) ? (
+                  {looksLikeHtml(offerFormatted.howToRedeemContent!) ? (
                     <div
                       className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: whopFormatted.howToRedeemContent! }}
+                      dangerouslySetInnerHTML={{ __html: offerFormatted.howToRedeemContent! }}
                     />
                   ) : (
-                    <RenderPlain text={whopFormatted.howToRedeemContent!} />
+                    <RenderPlain text={offerFormatted.howToRedeemContent!} />
                   )}
                 </div>
               ) : (
                 <ol className="dpc-steps-list space-y-2 text-base sm:text-lg" style={{ color: 'var(--text-secondary)' }}>
                   <li className="flex items-start">
                     <span className="mr-2 font-semibold">1.</span>
-                    <span>Click &quot;Reveal Code&quot; above to visit {whopFormatted.name} and get your exclusive offer</span>
+                    <span>Click &quot;Reveal Code&quot; above to visit {offerFormatted.name} and get your exclusive offer</span>
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2 font-semibold">2.</span>
@@ -892,15 +892,15 @@ export default async function DealPage({ params }: { params: { slug: string } })
             {/* Deal Specifics Section */}
             <section id="details" className="dpc-offer-details rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <h2 className="text-xl sm:text-2xl font-bold mb-4">Deal Specifics</h2>
-              {isMeaningful(whopFormatted.promoDetailsContent) ? (
+              {isMeaningful(offerFormatted.promoDetailsContent) ? (
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(whopFormatted.promoDetailsContent!) ? (
+                  {looksLikeHtml(offerFormatted.promoDetailsContent!) ? (
                     <div
                       className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: whopFormatted.promoDetailsContent! }}
+                      dangerouslySetInnerHTML={{ __html: offerFormatted.promoDetailsContent! }}
                     />
                   ) : (
-                    <RenderPlain text={whopFormatted.promoDetailsContent!} />
+                    <RenderPlain text={offerFormatted.promoDetailsContent!} />
                   )}
                 </div>
               ) : (
@@ -921,17 +921,17 @@ export default async function DealPage({ params }: { params: { slug: string } })
             </section>
 
             {/* What's Included Section */}
-            {isMeaningful(whopFormatted.featuresContent) && (
+            {isMeaningful(offerFormatted.featuresContent) && (
               <section id="features" className="dpc-offer-features rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
                 <h2 className="text-xl sm:text-2xl font-bold mb-4">What&apos;s Included</h2>
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(whopFormatted.featuresContent!) ? (
+                  {looksLikeHtml(offerFormatted.featuresContent!) ? (
                     <div
                       className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: whopFormatted.featuresContent! }}
+                      dangerouslySetInnerHTML={{ __html: offerFormatted.featuresContent! }}
                     />
                   ) : (
-                    <RenderPlain text={whopFormatted.featuresContent!} />
+                    <RenderPlain text={offerFormatted.featuresContent!} />
                   )}
                 </div>
               </section>
@@ -941,9 +941,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
             <section className="dpc-offer-howto rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <HowToSection
                 slug={params.slug}
-                brand={whopFormatted.name}
-                currency={extractCurrency(whopFormatted.price)}
-                hasTrial={hasTrial(whopFormatted.price)}
+                brand={offerFormatted.name}
+                currency={extractCurrency(offerFormatted.price)}
+                hasTrial={hasTrial(offerFormatted.price)}
                 lastTestedISO={verificationData?.best?.computedAt ?? null}
                 beforeCents={verificationData?.best?.beforeCents ?? null}
                 afterCents={verificationData?.best?.afterCents ?? null}
@@ -953,31 +953,31 @@ export default async function DealPage({ params }: { params: { slug: string } })
             {/* FAQ Section */}
             <section id="faq" className="dpc-offer-faq" aria-labelledby="faq-heading">
               <FAQSectionServer
-                faqContent={whopFormatted.faqContent}
+                faqContent={offerFormatted.faqContent}
                 faqs={fallbackFaqData}
-                whopName={whopFormatted.name}
+                whopName={offerFormatted.name}
               />
             </section>
 
             {/* Fine Print Section */}
             <section id="terms" className="dpc-offer-terms rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <h2 className="text-xl sm:text-2xl font-bold mb-4">Fine Print</h2>
-              {isMeaningful(whopFormatted.termsContent) ? (
+              {isMeaningful(offerFormatted.termsContent) ? (
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(whopFormatted.termsContent!) ? (
+                  {looksLikeHtml(offerFormatted.termsContent!) ? (
                     <div
                       className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: whopFormatted.termsContent! }}
+                      dangerouslySetInnerHTML={{ __html: offerFormatted.termsContent! }}
                     />
                   ) : (
-                    <RenderPlain text={whopFormatted.termsContent!} />
+                    <RenderPlain text={offerFormatted.termsContent!} />
                   )}
                 </div>
               ) : (
                 <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  This exclusive offer for {whopFormatted.name} is available through our partnership.
-                  {hasPromoCode(whopFormatted.name) ? ' Use the promo code during checkout to get your discount.' : ' The discount will be automatically applied when you click through our link.'}
-                  {' '}Terms and conditions apply as set by {whopFormatted.name}. Offer subject to availability and may be modified or discontinued at any time.
+                  This exclusive offer for {offerFormatted.name} is available through our partnership.
+                  {hasPromoCode(offerFormatted.name) ? ' Use the promo code during checkout to get your discount.' : ' The discount will be automatically applied when you click through our link.'}
+                  {' '}Terms and conditions apply as set by {offerFormatted.name}. Offer subject to availability and may be modified or discontinued at any time.
                 </p>
               )}
             </section>
@@ -1004,7 +1004,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                     >
                       Category
                     </dt>
-                    <dd>{whopFormatted.category ?? "Not specified"}</dd>
+                    <dd>{offerFormatted.category ?? "Not specified"}</dd>
                   </div>
 
                   <div>
@@ -1015,7 +1015,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                       Listing type
                     </dt>
                     <dd>
-                      {whopFormatted.price === "Free"
+                      {offerFormatted.price === "Free"
                         ? "Free digital resource"
                         : "Paid digital product"}
                     </dd>
@@ -1042,7 +1042,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                     >
                       Popularity
                     </dt>
-                    <dd>{getPopularityLabel(whopFormatted.promoCodes.length)}</dd>
+                    <dd>{getPopularityLabel(offerFormatted.promoCodes.length)}</dd>
                   </div>
                 </dl>
               </div>
@@ -1057,9 +1057,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
               >
                 <ServerSectionGuard label="PromoUsageStats">
                   <PromoStatsDisplay
-                    whopId={whopFormatted.id}
+                    offerId={offerFormatted.id}
                     slug={params.slug}
-                    initialStats={whopFormatted.usageStats}
+                    initialStats={offerFormatted.usageStats}
                   />
                 </ServerSectionGuard>
               </div>
@@ -1074,9 +1074,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
               >
                 <h3 className="text-lg font-bold mb-4">Key Facts</h3>
                 {(() => {
-                  const hasPrice = !!whopFormatted.price;
+                  const hasPrice = !!offerFormatted.price;
                   const hasDiscount = !!(firstPromo?.value && firstPromo.value !== "0");
-                  const hasCategory = !!whopFormatted.category;
+                  const hasCategory = !!offerFormatted.category;
                   const hasAnyFact = hasPrice || hasDiscount || hasCategory;
 
                   if (!hasAnyFact) {
@@ -1099,12 +1099,12 @@ export default async function DealPage({ params }: { params: { slug: string } })
                             className="mb-2 font-semibold"
                             style={{
                               color:
-                                whopFormatted.price === "Free"
+                                offerFormatted.price === "Free"
                                   ? "var(--success-color)"
                                   : "var(--text-color)",
                             }}
                           >
-                            {whopFormatted.price}
+                            {offerFormatted.price}
                           </dd>
                         </>
                       )}
@@ -1138,7 +1138,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                           >
                             Category
                           </dt>
-                          <dd className="mb-2">{whopFormatted.category}</dd>
+                          <dd className="mb-2">{offerFormatted.category}</dd>
                         </>
                       )}
                     </dl>
@@ -1161,14 +1161,14 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 >
                   <li>
                     Solid option in the{" "}
-                    {whopFormatted.category ?? "online"} space.
+                    {offerFormatted.category ?? "online"} space.
                   </li>
                   <li>
                     Clear value for users looking for {promoTitle.toLowerCase()}.
                   </li>
                   <li>
                     Simple sign-up flow with transparent pricing from{" "}
-                    {whopFormatted.name}.
+                    {offerFormatted.name}.
                   </li>
                   <li>
                     Good choice if you want to try something new before
@@ -1190,7 +1190,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                   className="text-sm mb-3"
                   style={{ color: "var(--text-secondary)" }}
                 >
-                  Not sure if {whopFormatted.name} is the right fit? We&apos;ve
+                  Not sure if {offerFormatted.name} is the right fit? We&apos;ve
                   listed a few similar deals further down this page.
                 </p>
                 <a
@@ -1203,7 +1203,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
               </div>
 
               {/* 6. Discount Summary Cards - Only show when hasPromoCodes */}
-              {hasPromoCodes && whopFormatted.promoCodes.map((promo, idx) => {
+              {hasPromoCodes && offerFormatted.promoCodes.map((promo, idx) => {
                 const isCommunity = promo.id.startsWith("community_");
                 return (
                   <div
@@ -1256,8 +1256,8 @@ export default async function DealPage({ params }: { params: { slug: string } })
               {/* 7. Verification Info */}
               <div className="dpc-verification-card">
                 <ServerSectionGuard label="VerificationStatus">
-                  {whopFormatted.freshnessData && (
-                    <VerificationStatus freshnessData={whopFormatted.freshnessData} />
+                  {offerFormatted.freshnessData && (
+                    <VerificationStatus freshnessData={offerFormatted.freshnessData} />
                   )}
                 </ServerSectionGuard>
               </div>
@@ -1270,14 +1270,14 @@ export default async function DealPage({ params }: { params: { slug: string } })
           {/* Other Options */}
           <section id="alternatives" className="dpc-offer-alternatives max-w-4xl mx-auto">
             <Suspense fallback={<SectionSkeleton />}>
-              <AlternativesSection currentWhopSlug={dbSlug} />
+              <AlternativesSection currentOfferSlug={dbSlug} />
             </Suspense>
           </section>
 
           {/* You Might Also Like */}
           <section className="dpc-offer-recommended max-w-4xl mx-auto">
             <Suspense fallback={<SectionSkeleton />}>
-              <RecommendedSection currentWhopSlug={dbSlug} />
+              <RecommendedSection currentOfferSlug={dbSlug} />
             </Suspense>
           </section>
 
@@ -1285,9 +1285,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
           <section className="dpc-offer-reviews max-w-4xl mx-auto">
             <Suspense fallback={<SectionSkeleton />}>
               <ReviewsSection
-                whopId={whopFormatted.id}
-                whopName={whopFormatted.name}
-                reviews={whopFormatted.reviews || []}
+                offerId={offerFormatted.id}
+                whopName={offerFormatted.name}
+                reviews={offerFormatted.reviews || []}
               />
             </Suspense>
           </section>

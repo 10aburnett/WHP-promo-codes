@@ -5,7 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 // Asset origin for proxying uploads in dev
-const ASSET_ORIGIN = process.env.ASSET_ORIGIN || 'https://whpcodes.com';
+const ASSET_ORIGIN = process.env.ASSET_ORIGIN || 'https://digitalpromocodes.com';
 
 const nextConfig = {
   // Explicitly set output mode for Vercel (not static export)
@@ -15,7 +15,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'whpcodes.com',
+        hostname: 'digitalpromocodes.com',
       },
       {
         protocol: 'https',

@@ -17,15 +17,15 @@ export type PageClassification = 'indexable' | 'noindex' | 'private';
  * Uses the generated SEO indexes as single source of truth
  */
 export function getPageClassification(slug: string): PageClassification {
-  const whopPath = `/whop/${slug}`;
+  const offerPath = `/whop/${slug}`;
 
   // Retired pages are effectively private (noindex, nofollow)
-  if (RETIRED_PATHS.has(whopPath)) {
+  if (RETIRED_PATHS.has(offerPath)) {
     return 'private';
   }
 
   // Explicitly marked noindex pages (thin/duplicates) - noindex, follow
-  if (NOINDEX_PATHS.has(whopPath)) {
+  if (NOINDEX_PATHS.has(offerPath)) {
     return 'noindex';
   }
 

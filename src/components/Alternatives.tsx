@@ -29,7 +29,7 @@ interface AlternativeDeal {
 
 type AltLink = { slug: string; anchorText: string };
 
-export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: string }) {
+export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: string }) {
   const [alternatives, setAlternatives] = useState<AlternativeDeal[]>([]);
   const [anchorTexts, setAnchorTexts] = useState<Map<string, string>>(new Map());
   const [desc, setDesc] = useState<string>('');
@@ -42,7 +42,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
     s.replace(/[-_]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
 
   // Base URL helper for SSR compatibility
-  async function fetchWhopDetails(slugs: string[]) {
+  async function fetchOfferDetails(slugs: string[]) {
     const base = getBaseUrl();
     const unique = Array.from(new Set(slugs.filter(Boolean)));
     if (!unique.length) return [];
@@ -58,11 +58,11 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
     }
   }
 
-  async function hydrateViaGraph(currentWhopSlug: string) {
+  async function hydrateViaGraph(currentOfferSlug: string) {
     const reasons: string[] = [];
     try {
       const neighbors = await loadNeighbors();
-      const raw = getNeighborSlugsFor(neighbors, currentWhopSlug, 'alternatives');
+      const raw = getNeighborSlugsFor(neighbors, currentOfferSlug, 'alternatives');
       const slugs = Array.from(new Set(raw.filter(Boolean))).slice(0, 12);
       if (slugs.length === 0) {
         reasons.push('graph: no slugs');
@@ -70,7 +70,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
       }
 
       // batch hydrate
-      const batched = await fetchWhopDetails(slugs);
+      const batched = await fetchOfferDetails(slugs);
       if (Array.isArray(batched) && batched.length > 0) {
         return { items: batched.slice(0, 5), reasons };
       }
@@ -130,11 +130,11 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
         setLoading(true);
 
         // Fix double encoding: decode once, normalize, then encode once for API
-        const raw = currentWhopSlug || '';
+        const raw = currentOfferSlug || '';
         const canonicalSlug = normalizeSlug(raw);  // This handles decoding + normalization
         const apiSlug = encodeSlugForAPI(canonicalSlug);
 
-        if (DEBUG) console.log('slug check (Alternatives)', { currentWhopSlug, canonicalSlug, apiSlug });
+        if (DEBUG) console.log('slug check (Alternatives)', { currentOfferSlug, canonicalSlug, apiSlug });
 
         const base = getBaseUrl();
         const useGraph =
@@ -160,9 +160,9 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
 
             if (slugs.length) {
               // Hydrate with batch API to get full whop details
-              const whopDetails = await fetchWhopDetails(slugs);
+              const offerDetails = await fetchOfferDetails(slugs);
 
-              if (whopDetails.length > 0) {
+              if (offerDetails.length > 0) {
                 // Also try to get editorial descriptions and anchor texts from API
                 try {
                   const res = await fetch(
@@ -182,7 +182,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
                 }
 
                 // Transform whop details to alternatives format (slice to 5 after hydration)
-                hydratedAlternatives = whopDetails.slice(0, 5).map((whop: any) => {
+                hydratedAlternatives = offerDetails.slice(0, 5).map((whop: any) => {
                   const r = Number(whop.rating ?? whop.averageRating);
                   return {
                     id: whop.id,
@@ -238,15 +238,15 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
 
           if (altSlugs.length > 0) {
             // Try to hydrate these with batch API too
-            const whopDetails = await fetchWhopDetails(altSlugs);
+            const offerDetails = await fetchOfferDetails(altSlugs);
 
-            if (whopDetails.length > 0) {
+            if (offerDetails.length > 0) {
               // Map anchor texts from API data
               for (const a of data?.alternatives ?? []) {
                 if (a?.slug) anchorBySlug.set(a.slug, a.anchorText || a.name || pretty(a.slug));
               }
 
-              hydratedAlternatives = whopDetails.map((whop: any) => {
+              hydratedAlternatives = offerDetails.map((whop: any) => {
                 const r = Number(whop.rating ?? whop.averageRating);
                 return {
                   id: whop.id,
@@ -286,8 +286,8 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
             const slugs = Array.from(new Set(rawAltSlugs.filter(Boolean).filter(slug => !fallbackRecSet.has(slug)))).slice(0, 15);
 
             if (slugs.length) {
-              const whopDetails = await fetchWhopDetails(slugs);
-              hydratedAlternatives = whopDetails.slice(0, 5).map((whop: any) => {
+              const offerDetails = await fetchOfferDetails(slugs);
+              hydratedAlternatives = offerDetails.slice(0, 5).map((whop: any) => {
                 const r = Number(whop.rating ?? whop.averageRating);
                 return {
                   id: whop.id,
@@ -339,7 +339,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
           const altSlugsForLog = hydratedAlternatives.map(a => a.slug);
           const overlap = altSlugsForLog.filter(slug => recSlugsForLog.includes(slug));
 
-          console.log(`🔄 Alternatives for "${currentWhopSlug}": ${loadTime}ms`, {
+          console.log(`🔄 Alternatives for "${currentOfferSlug}": ${loadTime}ms`, {
             useGraph,
             graphUsed,
             count: hydratedAlternatives.length,
@@ -373,7 +373,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
         // Debug hook for troubleshooting
         if (typeof window !== 'undefined') {
           (window as any).__dpcAltDebug = {
-            slug: currentWhopSlug,
+            slug: currentOfferSlug,
             canonicalSlug,
             count: hydratedAlternatives.length,
             hydrated: hydratedAlternatives.map(w => w.slug),
@@ -391,7 +391,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
           // Avoid duplicates: if explore equals a shown alternative, skip
           const shownSlugs = new Set(hydratedAlternatives.map(r => r.slug));
           if (exploreSlug && !shownSlugs.has(exploreSlug)) {
-            const details = await fetchWhopDetails([exploreSlug]);
+            const details = await fetchOfferDetails([exploreSlug]);
             if (details && details.length > 0) {
               const item = details[0];
               setExplore({
@@ -412,7 +412,7 @@ export default function Alternatives({ currentWhopSlug }: { currentWhopSlug: str
         setLoading(false);
       }
     })();
-  }, [currentWhopSlug]);
+  }, [currentOfferSlug]);
 
   if (loading) {
     return (

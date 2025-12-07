@@ -34,8 +34,8 @@ export async function PUT(req: Request, { params }: { params: { slug: string } }
 
     revalidatePath(`/whop/${updated.slug}`);
     revalidatePath(`/whops`);
-    revalidatePath(`/admin/whops/${updated.slug}`);
-    revalidatePath(`/admin/whops/${updated.slug}/content`);
+    revalidatePath(`/admin/offers/${updated.slug}`);
+    revalidatePath(`/admin/offers/${updated.slug}/content`);
 
     return NextResponse.json({ ok: true });
   } catch (err: any) {

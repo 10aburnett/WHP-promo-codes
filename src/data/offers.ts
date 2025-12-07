@@ -14,7 +14,7 @@ const logCache = (...args: any[]) => {
 };
 
 // Direct fetch without whereIndexable() to match page.tsx relaxed gate
-async function fetchWhopDirect(slug: string) {
+async function fetchOfferDirect(slug: string) {
   // Use lowercase decoded slug for DB lookup (DB stores literal colons, not %3a)
   const decoded = decodeURIComponent(slug);
   const dbSlug = decoded.toLowerCase();
@@ -33,11 +33,11 @@ async function fetchWhopDirect(slug: string) {
  * Tags: whop:<slug>
  * NOTE: Does NOT apply whereIndexable() - page.tsx applies relaxed gate allowing NOINDEX
  */
-export const getWhopBySlugCached = (slug: string) =>
+export const getOfferBySlugCached = (slug: string) =>
   unstable_cache(
     async () => {
-      logCache('MISS fetchWhopDirect', { slug });
-      const whop = await fetchWhopDirect(slug);
+      logCache('MISS fetchOfferDirect', { slug });
+      const whop = await fetchOfferDirect(slug);
 
       // Preview debugging log
       if (process.env.VERCEL_ENV === 'preview') {
@@ -58,10 +58,10 @@ export const getWhopBySlugCached = (slug: string) =>
  * Tags: hubs
  * You can add pagination keys to cache different pages distinctly.
  */
-export const getWhopsOptimizedCached = (page = 1, limit = 15) =>
+export const getOffersOptimizedCached = (page = 1, limit = 15) =>
   unstable_cache(
     async () => {
-      logCache('MISS getWhopsOptimized', { page, limit });
+      logCache('MISS getOffersOptimized', { page, limit });
 
       // Fetch whops with pagination
       const whops = await prisma.deal.findMany({
@@ -106,10 +106,10 @@ export const getWhopsOptimizedCached = (page = 1, limit = 15) =>
  * Used for homepage to show total count and list.
  * Tags: hubs
  */
-export const getWhopsAllCached = (page = 1, limit = 15) =>
+export const getOffersAllCached = (page = 1, limit = 15) =>
   unstable_cache(
     async () => {
-      logCache('MISS getWhopsAll', { page, limit });
+      logCache('MISS getOffersAll', { page, limit });
 
       // NOTE: no whereIndexable() — show every whop in DB
       const whops = await prisma.deal.findMany({

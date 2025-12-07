@@ -20,7 +20,7 @@ function take<T>(arr: T[], n: number) {
 import fs from 'node:fs';
 import path from 'node:path';
 import * as seoIndexes from '../src/app/_generated/seo-indexes';
-import { getWhopViewModel } from '../src/app/(public)/offer/[slug]/vm';
+import { getOfferViewModel } from '../src/app/(public)/offer/[slug]/vm';
 import {
   buildPrimaryEntity,
   buildBreadcrumbList,
@@ -29,7 +29,7 @@ import {
   buildHowTo,
   buildItemList,
   buildReviews,
-  type WhopViewModel
+  type OfferViewModel
 } from '../src/lib/buildSchema';
 
 // ---------- main ----------
@@ -98,7 +98,7 @@ async function run() {
   // 2) Proceed with your existing rigorous validations for each slug…
   for (const slug of slugs) {
     // 2) Build the same VM your page uses (no new loaders beyond page path)
-    const vm: WhopViewModel = await getWhopViewModel(slug, 'en');
+    const vm: OfferViewModel = await getOfferViewModel(slug, 'en');
 
     // 3) Assemble schema nodes exactly like the page
     const primary = buildPrimaryEntity(vm);

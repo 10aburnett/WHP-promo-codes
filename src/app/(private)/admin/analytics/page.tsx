@@ -75,17 +75,17 @@ export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState("today");
-  const [selectedWhopId, setSelectedWhopId] = useState<string | null>(null);
-  const [whopDetailData, setWhopDetailData] = useState<any | null>(null);
-  const [whopDetailLoading, setWhopDetailLoading] = useState<boolean>(false);
+  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
+  const [whopDetailData, setOfferDetailData] = useState<any | null>(null);
+  const [whopDetailLoading, setOfferDetailLoading] = useState<boolean>(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
   const [wipingData, setWipingData] = useState<boolean>(false);
   const [visibleActivityItems, setVisibleActivityItems] = useState<number>(5);
-  const [visibleWhopActivityItems, setVisibleWhopActivityItems] = useState<number>(5);
+  const [visibleOfferActivityItems, setVisibleOfferActivityItems] = useState<number>(5);
   const [activityPage, setActivityPage] = useState<number>(1);
-  const [whopActivityPage, setWhopActivityPage] = useState<number>(1);
+  const [whopActivityPage, setOfferActivityPage] = useState<number>(1);
   const [activityPageSize, setActivityPageSize] = useState<number>(5);
-  const [whopActivityPageSize, setWhopActivityPageSize] = useState<number>(5);
+  const [whopActivityPageSize, setOfferActivityPageSize] = useState<number>(5);
   const [customStartDate, setCustomStartDate] = useState<Date>(new Date(new Date().setDate(new Date().getDate() - 7)));
   const [customEndDate, setCustomEndDate] = useState<Date>(new Date());
   const [imageStates, setImageStates] = useState<{[key: string]: { imagePath: string; imageError: boolean }}>({});
@@ -202,8 +202,8 @@ export default function AnalyticsPage() {
     fetchData();
 
     // Reset whop detail view when timeframe changes
-    setSelectedWhopId(null);
-    setWhopDetailData(null);
+    setSelectedOfferId(null);
+    setOfferDetailData(null);
 
     // Set up visibility change listener to refresh when tab becomes visible
     const handleVisibilityChange = () => {
@@ -220,8 +220,8 @@ export default function AnalyticsPage() {
     };
   }, [timeframe, customStartDate, customEndDate]);
 
-  const fetchWhopDetails = async (whopId: string) => {
-    setWhopDetailLoading(true);
+  const fetchOfferDetails = async (offerId: string) => {
+    setOfferDetailLoading(true);
     try {
       const timestamp = Date.now();
       // Add custom date parameters if using custom timeframe
@@ -234,26 +234,26 @@ export default function AnalyticsPage() {
       if (!response.ok) {
         throw new Error("Failed to fetch whop analytics data");
       }
-      const whopData = await response.json();
-      setWhopDetailData(whopData);
-      setSelectedWhopId(whopId);
+      const offerData = await response.json();
+      setOfferDetailData(offerData);
+      setSelectedOfferId(whopId);
       setLastRefreshed(new Date());
       
       // Initialize image state for whop detail
-      if (whopData.whopDetails) {
-        const whopKey = `whop_detail_${whopData.whopDetails.id || 'current'}`;
-        if (!whopData.whopDetails.logo || 
-            whopData.whopDetails.logo.trim() === '' || 
-            whopData.whopDetails.logo === 'null' || 
-            whopData.whopDetails.logo === 'undefined' ||
-            whopData.whopDetails.logo === 'NULL' ||
-            whopData.whopDetails.logo === 'UNDEFINED') {
+      if (offerData.offerDetails) {
+        const whopKey = `whop_detail_${offerData.offerDetails.id || 'current'}`;
+        if (!offerData.offerDetails.logo || 
+            offerData.offerDetails.logo.trim() === '' || 
+            offerData.offerDetails.logo === 'null' || 
+            offerData.offerDetails.logo === 'undefined' ||
+            offerData.offerDetails.logo === 'NULL' ||
+            offerData.offerDetails.logo === 'UNDEFINED') {
           setImageStates(prev => ({
             ...prev,
             [whopKey]: { imagePath: '', imageError: true }
           }));
         } else {
-          const normalizedPath = normalizeImagePath(whopData.whopDetails.logo);
+          const normalizedPath = normalizeImagePath(offerData.offerDetails.logo);
           
           if (!normalizedPath || 
               normalizedPath.trim() === '' ||
@@ -281,15 +281,15 @@ export default function AnalyticsPage() {
       }
       
       // Reset pagination when new data is loaded
-      setWhopActivityPage(1);
-      setVisibleWhopActivityItems(DEFAULT_ACTIVITY_ITEMS);
+      setOfferActivityPage(1);
+      setVisibleOfferActivityItems(DEFAULT_ACTIVITY_ITEMS);
       
       // Auto-scroll to the top of the page when showing whop details
       window.scrollTo({ top: 0, behavior: 'instant' });
     } catch (error) {
       console.error("Error fetching whop analytics data:", error);
     } finally {
-      setWhopDetailLoading(false);
+      setOfferDetailLoading(false);
     }
   };
 
@@ -308,8 +308,8 @@ export default function AnalyticsPage() {
     // Reset pagination when timeframe changes
     setActivityPage(1);
     setVisibleActivityItems(DEFAULT_ACTIVITY_ITEMS);
-    setWhopActivityPage(1);
-    setVisibleWhopActivityItems(DEFAULT_ACTIVITY_ITEMS);
+    setOfferActivityPage(1);
+    setVisibleOfferActivityItems(DEFAULT_ACTIVITY_ITEMS);
   };
 
   const handleCustomDateChange = (startDate: Date, endDate: Date) => {
@@ -335,7 +335,7 @@ export default function AnalyticsPage() {
   };
 
   // Try next image in case of error
-  const handleImageError = (whopId: string, whopName: string) => {
+  const handleImageError = (offerId: string, whopName: string) => {
     const currentState = imageStates[whopId];
     if (!currentState) return;
     
@@ -390,8 +390,8 @@ export default function AnalyticsPage() {
   };
 
   const handleRefresh = () => {
-    if (selectedWhopId) {
-      fetchWhopDetails(selectedWhopId);
+    if (selectedOfferId) {
+      fetchOfferDetails(selectedOfferId);
     } else {
       fetchData();
     }
@@ -433,10 +433,10 @@ export default function AnalyticsPage() {
   };
 
   const handleBackToDashboard = () => {
-    setSelectedWhopId(null);
-    setWhopDetailData(null);
+    setSelectedOfferId(null);
+    setOfferDetailData(null);
     setVisibleActivityItems(DEFAULT_ACTIVITY_ITEMS); // Reset when going back to dashboard
-    setVisibleWhopActivityItems(DEFAULT_ACTIVITY_ITEMS); // Reset when going back to dashboard
+    setVisibleOfferActivityItems(DEFAULT_ACTIVITY_ITEMS); // Reset when going back to dashboard
     fetchData(); // Refresh the main dashboard data
   };
 
@@ -476,7 +476,7 @@ export default function AnalyticsPage() {
     );
   };
 
-  const renderWhopTable = () => {
+  const renderOfferTable = () => {
     if (!data?.whopAnalytics || data.whopAnalytics.length === 0) {
       return <p className="text-gray-400">No whop data available</p>;
     }
@@ -498,7 +498,7 @@ export default function AnalyticsPage() {
               <tr 
                 key={whop.id} 
                 className="border-b border-[#404055] hover:bg-[#2b2d36] cursor-pointer"
-                onClick={() => fetchWhopDetails(whop.id)}
+                onClick={() => fetchOfferDetails(whop.id)}
               >
                 <td className="p-3">
                   <div className="flex items-center space-x-3">
@@ -540,7 +540,7 @@ export default function AnalyticsPage() {
                     className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      fetchWhopDetails(whop.id);
+                      fetchOfferDetails(whop.id);
                     }}
                   >
                     View
@@ -768,9 +768,9 @@ export default function AnalyticsPage() {
     );
   };
 
-  const renderWhopDetail = () => {
+  const renderOfferDetail = () => {
     if (!whopDetailData) return null;
-    const whopDetails = whopDetailData.whopDetails;
+    const offerDetails = whopDetailData.offerDetails;
     const bonuses = whopDetailData.bonusDetails;
     const analytics = whopDetailData.analytics;
     
@@ -781,14 +781,14 @@ export default function AnalyticsPage() {
     };
 
     // Calculate pagination values for whop activity
-    const totalWhopItems = analytics.recentActivity ? analytics.recentActivity.length : 0;
-    const totalWhopPages = Math.ceil(totalWhopItems / whopActivityPageSize);
-    const startWhopIndex = (whopActivityPage - 1) * whopActivityPageSize;
-    const endWhopIndex = Math.min(startWhopIndex + whopActivityPageSize, totalWhopItems);
+    const totalOfferItems = analytics.recentActivity ? analytics.recentActivity.length : 0;
+    const totalOfferPages = Math.ceil(totalOfferItems / whopActivityPageSize);
+    const startOfferIndex = (whopActivityPage - 1) * whopActivityPageSize;
+    const endOfferIndex = Math.min(startOfferIndex + whopActivityPageSize, totalOfferItems);
     
     // Get current page items for whop activity
-    const displayedWhopActivity = analytics.recentActivity ? 
-      analytics.recentActivity.slice(startWhopIndex, endWhopIndex) : [];
+    const displayedOfferActivity = analytics.recentActivity ? 
+      analytics.recentActivity.slice(startOfferIndex, endOfferIndex) : [];
 
     return (
       <div className="space-y-6">
@@ -796,12 +796,12 @@ export default function AnalyticsPage() {
           <div className="flex items-center gap-4">
             <button 
               onClick={() => {
-                setSelectedWhopId(null);
-                setWhopDetailData(null);
+                setSelectedOfferId(null);
+                setOfferDetailData(null);
                 setVisibleActivityItems(DEFAULT_ACTIVITY_ITEMS);
-                setVisibleWhopActivityItems(DEFAULT_ACTIVITY_ITEMS);
+                setVisibleOfferActivityItems(DEFAULT_ACTIVITY_ITEMS);
                 setActivityPage(1);
-                setWhopActivityPage(1);
+                setOfferActivityPage(1);
               }}
               className="bg-[#373946] p-2 rounded-lg hover:bg-[#3c3f4a]"
             >
@@ -811,8 +811,8 @@ export default function AnalyticsPage() {
             </button>
             <div className="bg-[#2b2d36] p-2 rounded-lg">
               <Image
-                src={whopDetails.logo}
-                alt={whopDetails.name}
+                src={offerDetails.logo}
+                alt={offerDetails.name}
                 width={64}
                 height={64}
                 className="w-16 h-16 object-contain"
@@ -820,9 +820,9 @@ export default function AnalyticsPage() {
               />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white">{whopDetails.name}</h3>
+              <h3 className="text-xl font-bold text-white">{offerDetails.name}</h3>
               <div className="text-[#a7a9b4] text-sm">
-                Rating: {whopDetails.rating ? `${whopDetails.rating.toFixed(1)}/5` : '0.0/5'} | {whopDetails.website || "No website provided"}
+                Rating: {offerDetails.rating ? `${offerDetails.rating.toFixed(1)}/5` : '0.0/5'} | {offerDetails.website || "No website provided"}
               </div>
             </div>
           </div>
@@ -850,7 +850,7 @@ export default function AnalyticsPage() {
             <div className="space-y-3">
               <div className="flex justify-between items-center mb-3">
                 <div className="text-sm text-gray-400">
-                  Showing {startWhopIndex + 1}-{endWhopIndex} of {totalWhopItems} events
+                  Showing {startOfferIndex + 1}-{endOfferIndex} of {totalOfferItems} events
                 </div>
                 <div className="flex items-center space-x-2">
                   <select 
@@ -858,8 +858,8 @@ export default function AnalyticsPage() {
                     value={whopActivityPageSize}
                     onChange={(e) => {
                       const newSize = parseInt(e.target.value);
-                      setWhopActivityPageSize(newSize);
-                      setWhopActivityPage(1); // Reset to first page when changing page size
+                      setOfferActivityPageSize(newSize);
+                      setOfferActivityPage(1); // Reset to first page when changing page size
                     }}
                   >
                     <option value="5">5 per page</option>
@@ -871,7 +871,7 @@ export default function AnalyticsPage() {
                 </div>
               </div>
             
-              {displayedWhopActivity.map((activity) => (
+              {displayedOfferActivity.map((activity) => (
                 <div 
                   key={activity.id}
                   className="flex items-center justify-between bg-[#2b2d36] p-3 rounded-lg"
@@ -879,24 +879,24 @@ export default function AnalyticsPage() {
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 relative rounded-md overflow-hidden flex-shrink-0 bg-gray-800">
                       {(() => {
-                        const whopKey = `whop_detail_${whopDetails.id || 'current'}`;
+                        const whopKey = `whop_detail_${offerDetails.id || 'current'}`;
                         const imageState = imageStates[whopKey];
                         if (!imageState || imageState.imageError || !imageState.imagePath || imageState.imagePath.trim() === '') {
                           return (
                             <div className="w-full h-full bg-gray-700 flex items-center justify-center rounded-md">
-                              <span className="text-xs">{whopDetails.name.charAt(0)}</span>
+                              <span className="text-xs">{offerDetails.name.charAt(0)}</span>
                             </div>
                           );
                         }
                         return (
                           <Image
                             src={imageState.imagePath}
-                            alt={whopDetails.name}
+                            alt={offerDetails.name}
                             width={40}
                             height={40}
                             className="w-full h-full object-contain"
                             style={{ maxWidth: '100%', maxHeight: '100%' }}
-                            onError={() => handleImageError(whopKey, whopDetails.name)}
+                            onError={() => handleImageError(whopKey, offerDetails.name)}
                             unoptimized={imageState.imagePath.includes('@avif')}
                             sizes="40px"
                             placeholder="blur"
@@ -906,7 +906,7 @@ export default function AnalyticsPage() {
                       })()}
                     </div>
                     <div>
-                      <div className="text-white font-medium">{whopDetails.name}</div>
+                      <div className="text-white font-medium">{offerDetails.name}</div>
                       <div className="text-sm text-[#a7a9b4]">
                         {renderActionType(activity.actionType)}:
                         {activity.promoCode ? ` ${activity.promoCode}` : ` ${activity.promoTitle}`}
@@ -920,22 +920,22 @@ export default function AnalyticsPage() {
               ))}
               
               {/* Pagination controls for whop activity */}
-              {totalWhopPages > 1 && (
+              {totalOfferPages > 1 && (
                 <div className="flex justify-between items-center mt-4">
                   <button 
-                    onClick={() => setWhopActivityPage(prev => Math.max(prev - 1, 1))}
+                    onClick={() => setOfferActivityPage(prev => Math.max(prev - 1, 1))}
                     disabled={whopActivityPage === 1}
                     className={`px-3 py-1 rounded ${whopActivityPage === 1 ? 'bg-[#2b2d36] text-gray-500' : 'bg-[#373946] hover:bg-[#444657] text-white'}`}
                   >
                     Previous
                   </button>
                   <div className="text-sm text-white">
-                    Page {whopActivityPage} of {totalWhopPages}
+                    Page {whopActivityPage} of {totalOfferPages}
                   </div>
                   <button 
-                    onClick={() => setWhopActivityPage(prev => Math.min(prev + 1, totalWhopPages))}
-                    disabled={whopActivityPage === totalWhopPages}
-                    className={`px-3 py-1 rounded ${whopActivityPage === totalWhopPages ? 'bg-[#2b2d36] text-gray-500' : 'bg-[#373946] hover:bg-[#444657] text-white'}`}
+                    onClick={() => setOfferActivityPage(prev => Math.min(prev + 1, totalOfferPages))}
+                    disabled={whopActivityPage === totalOfferPages}
+                    className={`px-3 py-1 rounded ${whopActivityPage === totalOfferPages ? 'bg-[#2b2d36] text-gray-500' : 'bg-[#373946] hover:bg-[#444657] text-white'}`}
                   >
                     Next
                   </button>
@@ -1075,8 +1075,8 @@ export default function AnalyticsPage() {
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
-      ) : selectedWhopId && whopDetailData ? (
-        renderWhopDetail()
+      ) : selectedOfferId && whopDetailData ? (
+        renderOfferDetail()
       ) : (
         <div className="space-y-6">
           {renderOverviewStats()}
@@ -1096,7 +1096,7 @@ export default function AnalyticsPage() {
           {/* Performance Section */}
           <div className="bg-[#1e1f28] p-5 rounded-lg border border-[#343747]">
             <h2 className="text-xl font-semibold text-white mb-4">Performance</h2>
-            {renderWhopTable()}
+            {renderOfferTable()}
           </div>
         </div>
       )}

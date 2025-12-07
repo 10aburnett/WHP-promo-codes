@@ -133,29 +133,29 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     }
 
     // Find current whop (try slug first, then ID)
-    let currentWhop = await prisma.deal.findUnique({
+    let currentOffer = await prisma.deal.findUnique({
       where: { slug: key },
       select: { id: true, slug: true, name: true, description: true, category: true, price: true },
     });
 
-    if (!currentWhop && looksLikeCuid(key)) {
-      currentWhop = await prisma.deal.findUnique({
+    if (!currentOffer && looksLikeCuid(key)) {
+      currentOffer = await prisma.deal.findUnique({
         where: { id: key },
         select: { id: true, slug: true, name: true, description: true, category: true, price: true },
       });
     }
 
-    if (!currentWhop) {
+    if (!currentOffer) {
       return new Response(JSON.stringify({ error: 'Whop not found' }), { status: 404 });
     }
 
     // Extract topics from current whop
-    const currentTopics = extractTopics(currentWhop.name, currentWhop.description || '');
+    const currentTopics = extractTopics(currentOffer.name, currentOffer.description || '');
 
     // Get candidate whops for alternatives
     const candidateWhops = await prisma.deal.findMany({
       where: {
-        id: { not: currentWhop.id }
+        id: { not: currentOffer.id }
       },
       include: {
         PromoCode: {
@@ -185,7 +185,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
       .map(candidate => {
         const candidateTopics = extractTopics(candidate.name, candidate.description || '');
         const topicSimilarity = jaccard(currentTopics, candidateTopics);
-        const priceSimilarity = priceAffinity(currentWhop.price, candidate.price);
+        const priceSimilarity = priceAffinity(currentOffer.price, candidate.price);
 
         // Combined score: topic similarity is primary, price is secondary
         const combinedScore = (topicSimilarity * 0.8) + (priceSimilarity * 0.2);
@@ -195,7 +195,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
 
         return {
           ...candidate,
-          anchorText: generateAnchorText(currentWhop, candidate, commonTopics),
+          anchorText: generateAnchorText(currentOffer, candidate, commonTopics),
           similarityScore: combinedScore,
           commonTopics
         };
@@ -215,16 +215,16 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
       .map(({ commonTopics, ...alt }) => alt); // Remove commonTopics from response
 
     // Generate editorial description
-    const editorialDescription = generateEditorialDescription(currentWhop, scoredAlternatives);
+    const editorialDescription = generateEditorialDescription(currentOffer, scoredAlternatives);
 
     return new Response(JSON.stringify({
-      whop: currentWhop,
+      whop: currentOffer,
       alternatives: scoredAlternatives,
       editorialDescription,
       total: scoredAlternatives.length,
       debug: process.env.NODE_ENV === 'development' ? {
-        currentWhopName: currentWhop.name,
-        currentWhopTopics: currentTopics,
+        currentOfferName: currentOffer.name,
+        currentOfferTopics: currentTopics,
         totalCandidates: candidateWhops.length,
         filteredCandidates: filteredCandidates.length,
         relevantAlternatives: scoredAlternatives.length

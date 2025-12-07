@@ -6,7 +6,7 @@ interface LayoutProps {
   etypes?: ReactNode;
 }
 
-export default function WhopDetailLayout({
+export default function OfferDetailLayout({
   children,
   types,
   etypes,

@@ -13,7 +13,7 @@ const startOfTodayUTC = () => {
   return d;
 };
 
-export async function getWhopBySlug(slug: string, locale: string = 'en') {
+export async function getOfferBySlug(slug: string, locale: string = 'en') {
   noStore();
 
   // Try multiple slug variants to handle encoding mismatches
@@ -169,9 +169,9 @@ export async function getWhopBySlug(slug: string, locale: string = 'en') {
 /**
  * Unfiltered version for page rendering - fetches whop regardless of indexingStatus/retired.
  * Used for pages that should be visible to users but have noindex meta tag.
- * For lists/sitemap, use getWhopBySlug() which applies whereIndexable().
+ * For lists/sitemap, use getOfferBySlug() which applies whereIndexable().
  */
-export async function getWhopBySlugUnfiltered(slug: string, locale: string = 'en') {
+export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'en') {
   noStore();
 
   // Try multiple slug variants to handle encoding mismatches

@@ -11,7 +11,7 @@ interface PromoCode {
   code: string | null;
 }
 
-interface WhopItem {
+interface OfferItem {
   id: string;
   name: string;
   slug: string;
@@ -60,12 +60,12 @@ interface ExploreLink {
 /**
  * Server-side fetch for recommendations using graph neighbors
  */
-export async function getRecommendations(currentWhopSlug: string): Promise<{
-  items: WhopItem[];
+export async function getRecommendations(currentOfferSlug: string): Promise<{
+  items: OfferItem[];
   explore: ExploreLink | null;
 }> {
   try {
-    const canonicalSlug = normalizeSlug(currentWhopSlug);
+    const canonicalSlug = normalizeSlug(currentOfferSlug);
 
     // Load graph neighbors
     const neighbors = await loadNeighbors();
@@ -74,15 +74,15 @@ export async function getRecommendations(currentWhopSlug: string): Promise<{
 
     // Fallback: if graph has no neighbors, use category-based recommendations
     if (slugs.length === 0) {
-      const currentWhop = await prisma.deal.findFirst({
+      const currentOffer = await prisma.deal.findFirst({
         where: { slug: canonicalSlug },
         select: { category: true }
       });
 
-      if (currentWhop?.category) {
+      if (currentOffer?.category) {
         const categoryWhops = await prisma.deal.findMany({
           where: {
-            category: currentWhop.category,
+            category: currentOffer.category,
             slug: { not: canonicalSlug }
           },
           select: { slug: true },
@@ -137,7 +137,7 @@ export async function getRecommendations(currentWhopSlug: string): Promise<{
     });
 
     // Transform to expected format - use second sentence from aboutContent as blurb
-    const items: WhopItem[] = whops.map(whop => ({
+    const items: OfferItem[] = whops.map(whop => ({
       id: whop.id,
       name: whop.name,
       slug: normalizeSlug(whop.slug), // Ensure canonical slug for links
@@ -205,12 +205,12 @@ export async function getRecommendations(currentWhopSlug: string): Promise<{
 /**
  * Server-side fetch for alternatives using graph neighbors
  */
-export async function getAlternatives(currentWhopSlug: string): Promise<{
-  items: WhopItem[];
+export async function getAlternatives(currentOfferSlug: string): Promise<{
+  items: OfferItem[];
   explore: ExploreLink | null;
 }> {
   try {
-    const canonicalSlug = normalizeSlug(currentWhopSlug);
+    const canonicalSlug = normalizeSlug(currentOfferSlug);
 
     // Load graph neighbors
     const neighbors = await loadNeighbors();
@@ -225,16 +225,16 @@ export async function getAlternatives(currentWhopSlug: string): Promise<{
 
     // Fallback: if graph has no alternatives, use category-based alternatives
     if (slugs.length === 0) {
-      const currentWhop = await prisma.deal.findFirst({
+      const currentOffer = await prisma.deal.findFirst({
         where: { slug: canonicalSlug },
         select: { category: true }
       });
 
-      if (currentWhop?.category) {
+      if (currentOffer?.category) {
         const excludeSlugs = [canonicalSlug, ...Array.from(recSet)];
         const categoryWhops = await prisma.deal.findMany({
           where: {
-            category: currentWhop.category,
+            category: currentOffer.category,
             slug: { notIn: excludeSlugs } // Exclude current whop and recommendations
           },
           select: { slug: true },
@@ -289,7 +289,7 @@ export async function getAlternatives(currentWhopSlug: string): Promise<{
     });
 
     // Transform to expected format - use second sentence from aboutContent as blurb
-    const items: WhopItem[] = whops.map(whop => ({
+    const items: OfferItem[] = whops.map(whop => ({
       id: whop.id,
       name: whop.name,
       slug: normalizeSlug(whop.slug), // Ensure canonical slug for links

@@ -2,27 +2,27 @@
 // IMPORTANT: This function reuses existing data paths and includes DB access for SSR.
 // This is acceptable since this is view-model mapping, not schema generation.
 import 'server-only';
-import { absoluteUrl, whopAbsoluteUrl } from '@/lib/urls';
+import { absoluteUrl, offerAbsoluteUrl } from '@/lib/urls';
 import { getSchemaLocale } from '@/lib/schema-locale';
-import type { WhopViewModel } from '@/lib/buildSchema';
-import { getWhopBySlug } from '@/lib/data';
+import type { OfferViewModel } from '@/lib/buildSchema';
+import { getOfferBySlug } from '@/lib/data';
 import { prisma } from '@/lib/prisma';
 import { canonicalSlugForDB, canonicalSlugForPath } from '@/lib/slug-utils';
 import { parseFaqContent } from '@/lib/faq-types';
 import { loadNeighbors, getNeighborSlugsFor } from '@/lib/graph';
 
 // Safe locale support - maintains existing behavior when feature flag is off
-export async function getWhopViewModel(slug: string, localeParam?: string): Promise<WhopViewModel> {
+export async function getOfferViewModel(slug: string, localeParam?: string): Promise<OfferViewModel> {
   const locale = getSchemaLocale(localeParam); // Safe: returns 'en' when flag is off
   // Use lowercase decoded slug for DB lookup (DB stores literal colons, not %3a)
   const decoded = decodeURIComponent(slug);
   const dbSlug = decoded.toLowerCase();
 
   // Reuse the same data path as the existing page component
-  const whopData = await getWhopBySlug(dbSlug, 'en');
+  const offerData = await getOfferBySlug(dbSlug, 'en');
 
   // Fallback fetch (same as existing page logic)
-  const whopDbRecord = !whopData
+  const whopDbRecord = !offerData
     ? await prisma.deal.findUnique({
         where: { slug: dbSlug },
         include: { PromoCode: true, Review: true },
@@ -30,29 +30,29 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
     : null;
 
   // Choose final data (same as existing page logic)
-  const finalWhopData = whopData || whopDbRecord;
+  const finalOfferData = offerData || whopDbRecord;
 
-  if (!finalWhopData) {
-    throw new Error(`Whop not found: ${slug}`);
+  if (!finalOfferData) {
+    throw new Error(`Offer not found: ${slug}`);
   }
 
   // Transform raw Prisma data to match expected format (same as existing page)
-  const whopFormatted = {
-    id: finalWhopData.id,
-    name: finalWhopData.name,
-    description: finalWhopData.description,
-    logo: finalWhopData.logo,
-    affiliateLink: finalWhopData.affiliateLink,
-    website: finalWhopData.website || null,
-    price: finalWhopData.price,
-    category: finalWhopData.category || null,
-    aboutContent: finalWhopData.aboutContent,
-    howToRedeemContent: finalWhopData.howToRedeemContent,
-    promoDetailsContent: finalWhopData.promoDetailsContent,
-    featuresContent: finalWhopData.featuresContent,
-    termsContent: finalWhopData.termsContent,
-    faqContent: finalWhopData.faqContent,
-    promoCodes: (finalWhopData.PromoCode ?? []).map(code => ({
+  const offerFormatted = {
+    id: finalOfferData.id,
+    name: finalOfferData.name,
+    description: finalOfferData.description,
+    logo: finalOfferData.logo,
+    affiliateLink: finalOfferData.affiliateLink,
+    website: finalOfferData.website || null,
+    price: finalOfferData.price,
+    category: finalOfferData.category || null,
+    aboutContent: finalOfferData.aboutContent,
+    howToRedeemContent: finalOfferData.howToRedeemContent,
+    promoDetailsContent: finalOfferData.promoDetailsContent,
+    featuresContent: finalOfferData.featuresContent,
+    termsContent: finalOfferData.termsContent,
+    faqContent: finalOfferData.faqContent,
+    promoCodes: (finalOfferData.PromoCode ?? []).map(code => ({
       id: code.id,
       title: code.title,
       description: code.description,
@@ -61,7 +61,7 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
       value: code.value,
       createdAt: code.createdAt
     })),
-    reviews: (finalWhopData.Review ?? []).map(review => ({
+    reviews: (finalOfferData.Review ?? []).map(review => ({
       id: review.id,
       author: review.author,
       content: review.content,
@@ -72,26 +72,26 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
   };
 
   // Decide primary type based on category or fields already exposed to UI
-  const primaryType = determinePrimaryType(whopFormatted.category);
+  const primaryType = determinePrimaryType(offerFormatted.category);
 
   const canonSlug = canonicalSlugForPath(slug);
-  const url = whopAbsoluteUrl(canonSlug, locale); // Safe: uses non-locale path when flag is off
+  const url = offerAbsoluteUrl(canonSlug, locale); // Safe: uses non-locale path when flag is off
 
   // Extract images from logo
-  const images = [whopFormatted.logo].filter(Boolean).map(String);
+  const images = [offerFormatted.logo].filter(Boolean).map(String);
 
   // Calculate rating values if reviews exist
-  const reviews = whopFormatted.reviews || [];
+  const reviews = offerFormatted.reviews || [];
   const ratingValue = reviews.length > 0
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
     : null;
   const reviewCount = reviews.length > 0 ? reviews.length : null;
 
   // Build breadcrumbs matching visible UI
-  const breadcrumbs = buildBreadcrumbs(whopFormatted.category, whopFormatted.name, url);
+  const breadcrumbs = buildBreadcrumbs(offerFormatted.category, offerFormatted.name, url);
 
   // Extract price information from existing UI data
-  const priceStr = whopFormatted.price;
+  const priceStr = offerFormatted.price;
   let price: number | null = null;
   let promoPrice: number | null = null;
   let currency: string | null = null;
@@ -118,7 +118,7 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
         price = parsedPrice;
 
         // Check if there's a promo discount from the first promo code
-        const firstPromo = whopFormatted.promoCodes?.[0];
+        const firstPromo = offerFormatted.promoCodes?.[0];
         if (firstPromo?.value && firstPromo.value !== '0') {
           const discount = parseFloat(firstPromo.value);
           if (!isNaN(discount)) {
@@ -141,8 +141,8 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
 
   // Step 4: Map FAQ data (exact UI parity)
   let faqData: Array<{ question: string; answer: string }> | undefined = undefined;
-  if (whopFormatted.faqContent) {
-    const parsedFaq = parseFaqContent(whopFormatted.faqContent);
+  if (offerFormatted.faqContent) {
+    const parsedFaq = parseFaqContent(offerFormatted.faqContent);
     if (Array.isArray(parsedFaq)) {
       // Convert from FaqItem[] to our schema format
       faqData = parsedFaq.map(item => ({
@@ -155,15 +155,15 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
 
   // Step 4: Map HowTo steps (only if real steps are shown)
   let howToSteps: Array<{ title: string; text: string }> | undefined = undefined;
-  if (whopFormatted.howToRedeemContent) {
+  if (offerFormatted.howToRedeemContent) {
     // Only include if content looks like actual steps (contains numbers, lists, or step indicators)
-    const content = whopFormatted.howToRedeemContent.toLowerCase();
+    const content = offerFormatted.howToRedeemContent.toLowerCase();
     const hasStepIndicators = /\b(step|1\.|2\.|3\.|first|second|third|then|next|finally|\n\d+\.|\n•|\n-)/i.test(content);
 
-    if (hasStepIndicators && whopFormatted.howToRedeemContent.length > 50) {
+    if (hasStepIndicators && offerFormatted.howToRedeemContent.length > 50) {
       // Parse basic step structure - this is a simple implementation
       // In a real scenario, you might want more sophisticated parsing
-      const lines = whopFormatted.howToRedeemContent.split('\n').filter(line => line.trim());
+      const lines = offerFormatted.howToRedeemContent.split('\n').filter(line => line.trim());
       const steps: Array<{ title: string; text: string }> = [];
 
       let currentStep = 1;
@@ -210,10 +210,10 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
     slug: canonSlug,
     url,
     inLanguage: locale, // Safe: returns 'en' when feature flag is off
-    name: whopFormatted.name,
-    description: whopFormatted.description ?? null,
+    name: offerFormatted.name,
+    description: offerFormatted.description ?? null,
     images,
-    brand: whopFormatted.name, // Use whop name as brand
+    brand: offerFormatted.name, // Use whop name as brand
 
     // Commerce mapping (must mirror UI)
     price: price,
@@ -226,7 +226,7 @@ export async function getWhopViewModel(slug: string, localeParam?: string): Prom
 
     ratingValue: ratingValue && ratingValue > 0 ? ratingValue : null,
     reviewCount: reviewCount && reviewCount > 0 ? reviewCount : null,
-    category: whopFormatted.category ?? null,
+    category: offerFormatted.category ?? null,
     breadcrumbs,
     primaryType,
 

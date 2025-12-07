@@ -6,15 +6,15 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 interface OfferButtonProps {
   affiliateLink: string | null;
-  whopId: string;
+  offerId: string;
   promoCodeId: string | undefined;
   size?: 'default' | 'small' | 'large';
   isSticky?: boolean;
 }
 
-export default function OfferButton({ 
-  affiliateLink, 
-  whopId, 
+export default function OfferButton({
+  affiliateLink,
+  offerId,
   promoCodeId,
   size = 'default',
   isSticky = false
@@ -22,23 +22,23 @@ export default function OfferButton({
   const { t } = useLanguage();
 
   const trackOfferClick = async () => {
-    if (!whopId) return;
-    
+    if (!offerId) return;
+
     try {
       const trackingData = JSON.stringify({
-        casinoId: whopId, // Using whopId as casinoId for API compatibility
+        casinoId: offerId, // Using offerId as casinoId for API compatibility
         bonusId: promoCodeId || null, // Using promoCodeId as bonusId for API compatibility (can be null)
         actionType: 'offer_click',
       });
-      
+
       // Use sendBeacon API if available for better reliability when page unloads
       if (navigator.sendBeacon) {
         const blob = new Blob([trackingData], { type: 'application/json' });
         const success = navigator.sendBeacon('/api/tracking', blob);
-        
+
         if (success) return;
       }
-      
+
       // Fall back to fetch if sendBeacon is not available or failed
       await fetch('/api/tracking', {
         method: 'POST',
@@ -53,7 +53,7 @@ export default function OfferButton({
   };
 
   const handleClick = () => {
-    if (whopId) {
+    if (offerId) {
       trackOfferClick();
     }
   };

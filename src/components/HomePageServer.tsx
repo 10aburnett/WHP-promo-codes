@@ -270,7 +270,7 @@ export default function HomePageServer({
               price: whop.price,
               priceText: whop.priceText,
               priceBadge: whop.priceBadge,
-              whopId: whop.id,
+              offerId: whop.id,
               promoCodeId: whop.promoCodes[0]?.id
             }}
           />

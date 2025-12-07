@@ -21,12 +21,12 @@ interface DealContent {
   faqContent?: string;
 }
 
-export default function WhopContentEditor() {
+export default function OfferContentEditor() {
   const [whop, setWhop] = useState<DealContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [actualWhopId, setActualWhopId] = useState<string | null>(null);
+  const [actualOfferId, setActualOfferId] = useState<string | null>(null);
   const router = useRouter();
   const params = useParams();
   const whopId = params.id as string;
@@ -46,7 +46,7 @@ export default function WhopContentEditor() {
 
   useEffect(() => {
     if (isAuthenticated && whopId) {
-      fetchWhop();
+      fetchOffer();
     }
   }, [isAuthenticated, whopId]);
 
@@ -70,7 +70,7 @@ export default function WhopContentEditor() {
     }
   };
 
-  const fetchWhop = async () => {
+  const fetchOffer = async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/whops/${encodeURIComponent(whopId)}`);
@@ -79,7 +79,7 @@ export default function WhopContentEditor() {
         console.log("Fetched whop data:", data);
         setWhop(data);
         // Cache the UUID for writes
-        setActualWhopId(data.id);
+        setActualOfferId(data.id);
         
         // Set content with better fallback handling
         setAboutContent(data.aboutContent || "");
@@ -109,12 +109,12 @@ export default function WhopContentEditor() {
       } else {
         const errorData = await response.json();
         toast.error(errorData.error || "Failed to fetch whop data");
-        router.push('/admin/whops');
+        router.push('/admin/offers');
       }
     } catch (error) {
       console.error("Error fetching whop:", error);
       toast.error("Error fetching whop data");
-      router.push('/admin/whops');
+      router.push('/admin/offers');
     } finally {
       setLoading(false);
     }
@@ -131,7 +131,7 @@ export default function WhopContentEditor() {
       }
       
       // Use the cached UUID for writes, fallback to URL param
-      const idForPut = actualWhopId || whopId;
+      const idForPut = actualOfferId || whopId;
       const response = await fetch(`/api/whops/${encodeURIComponent(idForPut)}/content`, {
         method: 'PUT',
         headers: {
@@ -148,7 +148,7 @@ export default function WhopContentEditor() {
       });
 
       if (response.ok) {
-        toast.success("Whop content updated successfully!");
+        toast.success("Offer content updated successfully!");
       } else {
         const errorData = await response.json();
         toast.error(errorData.error || "Failed to update whop content");
@@ -179,16 +179,16 @@ export default function WhopContentEditor() {
           <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33" />
           </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Whop Not Found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Offer Not Found</h3>
           <p className="text-gray-500 mb-4">The whop you're looking for doesn't exist or has been removed.</p>
           <Link
-            href="/admin/whops"
+            href="/admin/offers"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to Whops
+            Back to Offers
           </Link>
         </div>
       </div>
@@ -200,7 +200,7 @@ export default function WhopContentEditor() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Edit Whop Content</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Edit Offer Content</h1>
           <p className="text-gray-600">{whop.name}</p>
         </div>
         <div className="flex gap-3">
@@ -212,10 +212,10 @@ export default function WhopContentEditor() {
             Preview Page
           </Link>
           <Link
-            href="/admin/whops"
+            href="/admin/offers"
             className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            Back to Whops
+            Back to Offers
           </Link>
         </div>
       </div>

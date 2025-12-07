@@ -34,7 +34,7 @@ const getRandomName = (): string => {
 };
 
 // Function to format course/whop name with proper capitalization
-const formatWhopName = (name: string): string => {
+const formatOfferName = (name: string): string => {
   if (!name) return name;
   
   // Split by common separators and capitalize each word
@@ -102,7 +102,7 @@ export function SocialProofProvider({ children }: { children: React.ReactNode })
       id: `notification-${++idCounter}`,
       name: '', // Not used in new message format
       amount: '', // Not used in new message format
-      whopName: formatWhopName(data.whopName),
+      whopName: formatOfferName(data.whopName),
       // NEVER show actual promo codes for revenue protection
       code: '',
     };
@@ -140,7 +140,7 @@ export function useSocialProof() {
 
 // Helper function to create social proof notification data from whop data
 // This should only be called after hydration
-export function createSocialProofFromWhop(whopData: {
+export function createSocialProofFromOffer(offerData: {
   whopName: string;
   promoCode?: string | null;
   promoValue?: number;
@@ -151,6 +151,6 @@ export function createSocialProofFromWhop(whopData: {
     name: '', // Not used in new message format
     amount: '', // Not used in new message format
     code: '', // Not shown for security
-    whopName: whopData.whopName,
+    whopName: offerData.whopName,
   };
 } 

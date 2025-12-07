@@ -41,7 +41,7 @@ interface PromoStats {
 }
 
 interface PromoStatsDisplayProps {
-  whopId: string;
+  offerId: string;
   promoCodeId?: string;
   slug?: string;
   compact?: boolean;
@@ -58,7 +58,7 @@ export interface PromoStatsDisplayHandle {
 }
 
 const PromoStatsDisplay = forwardRef<PromoStatsDisplayHandle, PromoStatsDisplayProps>(
-  ({ whopId, promoCodeId, slug, compact = false, initialStats }, ref) => {
+  ({ offerId, promoCodeId, slug, compact = false, initialStats }, ref) => {
     // Initialize with server-rendered stats for SSR/SSG support
     const [stats, setStats] = useState<PromoStats | null>(
       initialStats ? {
@@ -96,7 +96,7 @@ const PromoStatsDisplay = forwardRef<PromoStatsDisplayHandle, PromoStatsDisplayP
         if (derivedSlug) params.set('slug', derivedSlug);
         else if (slug) params.set('slug', slug);
         else if (promoCodeId) params.set('promoCodeId', String(promoCodeId));
-        else if (whopId) params.set('whopId', String(whopId));
+        else if (offerId) params.set('offerId', String(offerId));
 
         if (params.toString() === '') return; // nothing to query
 
@@ -143,7 +143,7 @@ const PromoStatsDisplay = forwardRef<PromoStatsDisplayHandle, PromoStatsDisplayP
       if (!initialStats) {
         fetchStats();
       }
-    }, [whopId, promoCodeId, slug, initialStats]);
+    }, [offerId, promoCodeId, slug, initialStats]);
 
     // Listen for custom refresh events in compact mode
     useEffect(() => {

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 
-export default function WhopDomInit() {
+export default function OfferDomInit() {
   useEffect(() => {
     const el = document.querySelector('#coupon'); // replace with your actual selector
     if (!el || !el.parentNode) return;            // hard guard

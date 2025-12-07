@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic'; // Explicitly mark this route as dynamic
 export const revalidate = 0; // Disable caching completely for debugging
 
 // Lightweight function for homepage list (only essential fields)
-const getWhopsOptimized = async (isAdmin: boolean, whereClause: any, sortBy: string = '', page: number = 1, limit: number = 20) => {
+const getOffersOptimized = async (isAdmin: boolean, whereClause: any, sortBy: string = '', page: number = 1, limit: number = 20) => {
   console.log('Fetching whops with optimized query for homepage');
   
   // For homepage list, we only need basic fields + promo count
@@ -58,10 +58,10 @@ const getWhopsOptimized = async (isAdmin: boolean, whereClause: any, sortBy: str
   if (sortBy === 'highest' || sortBy === 'lowest' || sortBy === 'alpha-asc' || sortBy === 'alpha-desc') {
     // For price/alphabetical sorting, fetch all whops first (but with lightweight fields)
     console.log(`Optimized query for custom sorting (${sortBy})...`);
-    const allWhops = await prisma.deal.findMany(baseQuery);
-    console.log('Optimized query successful, found', allWhops.length, 'whops');
+    const allOffers = await prisma.deal.findMany(baseQuery);
+    console.log('Optimized query successful, found', allOffers.length, 'whops');
     
-    return allWhops;
+    return allOffers;
   } else {
     // For database-level sorting with proper pagination
     let orderBy: any = [];
@@ -102,11 +102,11 @@ const getWhopsOptimized = async (isAdmin: boolean, whereClause: any, sortBy: str
 };
 
 // Original heavy function for detailed views (when full data is needed)
-const getWhopsFull = async (isAdmin: boolean, whereClause: any, sortBy: string = '', page: number = 1, limit: number = 20) => {
+const getOffersFull = async (isAdmin: boolean, whereClause: any, sortBy: string = '', page: number = 1, limit: number = 20) => {
   console.log('Fetching whops with full data (admin/detailed views)');
   
   if (sortBy === 'highest' || sortBy === 'lowest' || sortBy === 'alpha-asc' || sortBy === 'alpha-desc' || sortBy === 'default' || sortBy === 'newest' || sortBy === 'highest-rated') {
-    const allWhops = await prisma.deal.findMany({
+    const allOffers = await prisma.deal.findMany({
       where: whereClause,
       include: { 
         PromoCode: true,
@@ -117,7 +117,7 @@ const getWhopsFull = async (isAdmin: boolean, whereClause: any, sortBy: string =
       }
     });
     
-    return allWhops;
+    return allOffers;
   } else {
     const orderBy: any = {};
     switch (sortBy) {
@@ -153,13 +153,13 @@ const getWhopsFull = async (isAdmin: boolean, whereClause: any, sortBy: string =
 };
 
 // Direct function for counting whops (cache disabled)
-const getWhopCount = async (whereClause: any) => {
+const getOfferCount = async (whereClause: any) => {
   console.log('Counting whops from database (cache disabled)');
   return await prisma.deal.count({ where: whereClause });
 };
 
 // Direct function for fetching single whop by slug (cache disabled)
-const getWhopBySlug = async (slug: string, isAdmin: boolean) => {
+const getOfferBySlug = async (slug: string, isAdmin: boolean) => {
   console.log(`Fetching whop by slug: ${slug} (cache disabled)`);
   
   const whop = await prisma.deal.findFirst({
@@ -235,7 +235,7 @@ interface DecodedToken {
   role: string;
 }
 
-// Define a simplified Whop interface for our transformation function
+// Define a simplified Offer interface for our transformation function
 interface SimplifiedWhop {
   id: string;
   name: string;
@@ -258,7 +258,7 @@ interface SimplifiedWhop {
     code: string | null;
     type: string;
     value: string;
-    whopId: string;
+    offerId: string;
     createdAt: Date;
     updatedAt: Date;
   }[];
@@ -316,7 +316,7 @@ const LEGITIMATE_COURSE_PRICES = [
 ];
 
 // Transform whop data for UI presentation
-function transformWhopDataForUI(whop: any) {
+function transformOfferDataForUI(whop: any) {
   try {
     if (!whop) {
       console.log("Warning: Received null or undefined whop object");
@@ -470,7 +470,7 @@ function transformWhopDataForUI(whop: any) {
       reviews: [],
       website: whop?.website || null,
       category: whop?.category || null,
-      whopId: whop?.id || null,
+      offerId: whop?.id || null,
       promoCodeId: null
     };
   }
@@ -780,13 +780,13 @@ export async function GET(request: Request) {
     if (slug) {
       // Get a specific whop by slug using direct function
       console.log(`Fetching specific whop with slug: ${slug}`);
-      const whop = await getWhopBySlug(slug, isAdmin);
+      const whop = await getOfferBySlug(slug, isAdmin);
       
       if (!whop) {
         return NextResponse.json({ error: "Whop not found" }, { status: 404, headers });
       }
       
-      return NextResponse.json(transformWhopDataForUI(whop), { headers });
+      return NextResponse.json(transformOfferDataForUI(whop), { headers });
     }
     
     // Build where clause for filtering
@@ -820,15 +820,15 @@ export async function GET(request: Request) {
       console.log(`Fetching ALL whops for custom sorting - sortBy: ${sortBy}`);
       
       // Fetch ALL whops that match the filter criteria
-      const allWhops = await prisma.deal.findMany({
+      const allOffers = await prisma.deal.findMany({
         where: whereClause,
         include: { PromoCode: true }
       });
       
-      console.log(`Found ${allWhops.length} whops for custom sorting`);
+      console.log(`Found ${allOffers.length} whops for custom sorting`);
       
       // Transform all whops
-      let transformedWhops = allWhops.map(whop => transformWhopDataForUI(whop)).filter(whop => whop !== null);
+      let transformedWhops = allOffers.map(whop => transformOfferDataForUI(whop)).filter(whop => whop !== null);
       
       // Apply promo type filter after transformation (since it depends on promo codes)
       if (promoType) {
@@ -999,12 +999,12 @@ export async function GET(request: Request) {
     console.log(`Fetching whops - page: ${page}, limit: ${limit}, offset: ${offset}, search: "${search}", whopCategory: "${whopCategory}"`);
     
     // Get whops with pagination - use optimized query for better performance
-    const whops = await getWhopsOptimized(isAdmin, whereClause, sortBy, page, limit);
+    const whops = await getOffersOptimized(isAdmin, whereClause, sortBy, page, limit);
     
     console.log(`Found ${whops.length} whops out of ${totalCount} total`);
     
     // Transform the database data into the format expected by the UI
-    let transformedWhops = whops.map(whop => transformWhopDataForUI(whop)).filter(whop => whop !== null); // Remove only null results, keep all valid whops
+    let transformedWhops = whops.map(whop => transformOfferDataForUI(whop)).filter(whop => whop !== null); // Remove only null results, keep all valid whops
     
     // Apply promo type filter after transformation (since it depends on promo codes)
     if (promoType) {
@@ -1225,7 +1225,7 @@ export async function POST(request: Request) {
     return NextResponse.json(response);
   } catch (err: unknown) {
     // Log everything while in dev
-    console.error("🚨 Whop create error:", err);
+    console.error("🚨 Offer create error:", err);
     console.error("🚨 Error stack:", err instanceof Error ? err.stack : "No stack trace");
 
     // Prisma-known errors (schema/constraint)

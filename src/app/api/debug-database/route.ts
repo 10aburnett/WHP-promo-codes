@@ -68,7 +68,7 @@ export async function GET() {
         ids: communityPromos.map(p => p.id)
       },
       ayecon: ayeconData,
-      ayeconWhopsFound: ayeconWhops,
+      ayeconOffersFound: ayeconWhops,
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV
     });

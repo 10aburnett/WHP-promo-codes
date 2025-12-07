@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     });
 
     if (!whopExists) {
-      console.error("❌ TRACKING API: Whop not found:", data.casinoId);
+      console.error("❌ TRACKING API: Offer not found:", data.casinoId);
       return NextResponse.json(
         { error: "Whop not found" },
         { status: 404 }
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     
     console.log("📝 TRACKING API: Inserting tracking record:", {
       trackingId,
-      whopId: data.casinoId,
+      offerId: data.casinoId,
       promoCodeId: validPromoCodeId,
       actionType: data.actionType,
       path

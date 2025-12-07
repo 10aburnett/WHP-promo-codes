@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
-import WhopPageClient from './WhopPageClient'
+import OfferPageClient from './OfferPageClient'
 
 interface PromoCode {
   id: string
@@ -13,7 +13,7 @@ interface PromoCode {
 }
 
 interface CommunityPromoSectionProps {
-  whop: {
+  offer: {
     id: string
     name: string
     affiliateLink: string | null
@@ -22,7 +22,7 @@ interface CommunityPromoSectionProps {
   slug?: string
 }
 
-export default function CommunityPromoSection({ whop, promoCodes, slug }: CommunityPromoSectionProps) {
+export default function CommunityPromoSection({ offer, promoCodes, slug }: CommunityPromoSectionProps) {
 
   // Separate community codes from original codes
   const communityPromoCodes = promoCodes.filter(code => code.id.startsWith('community_'))
@@ -55,8 +55,8 @@ export default function CommunityPromoSection({ whop, promoCodes, slug }: Commun
       <div className="space-y-4">
         <div className="space-y-3">
           <div className="mb-3">
-            <WhopPageClient
-              whop={whop}
+            <OfferPageClient
+              offer={offer}
               firstPromo={fakePromo}
               promoCode={null}
               promoTitle="Exclusive Access"
@@ -98,8 +98,8 @@ export default function CommunityPromoSection({ whop, promoCodes, slug }: Commun
                   #{index + 1}
                 </span>
               </div>
-              <WhopPageClient
-                whop={whop}
+              <OfferPageClient
+                offer={offer}
                 firstPromo={promo}
                 promoCode={promo.code}
                 promoTitle={promo.title}
@@ -136,8 +136,8 @@ export default function CommunityPromoSection({ whop, promoCodes, slug }: Commun
                   #{communityPromoCodes.length + index + 1}
                 </span>
               </div>
-              <WhopPageClient
-                whop={whop}
+              <OfferPageClient
+                offer={offer}
                 firstPromo={promo}
                 promoCode={promo.code}
                 promoTitle={promo.title}

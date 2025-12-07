@@ -5,7 +5,7 @@ import OfferButton from '@/components/OfferButton';
 
 interface StickyCallToActionProps {
   whopName: string;
-  whopId: string;
+  offerId: string;
   promoCodeId?: string;
   promoTitle: string;
   promoCode: string | null;
@@ -15,7 +15,7 @@ interface StickyCallToActionProps {
 
 export default function StickyCallToAction({
   whopName,
-  whopId,
+  offerId,
   promoCodeId,
   promoTitle,
   promoCode,
@@ -25,17 +25,17 @@ export default function StickyCallToAction({
     <div className="flex flex-col sm:flex-row items-center w-full sm:w-auto gap-[10px]">
       {promoCode ? (
         <div className="w-full sm:w-auto">
-          <StickyCopyCodeButton 
-            code={promoCode} 
-            whopId={whopId}
+          <StickyCopyCodeButton
+            code={promoCode}
+            offerId={offerId}
             promoCodeId={promoCodeId}
           />
         </div>
       ) : null}
       <div className="w-full sm:w-auto">
-        <OfferButton 
+        <OfferButton
           affiliateLink={affiliateLink}
-          whopId={whopId}
+          offerId={offerId}
           promoCodeId={promoCodeId}
           size="default"
           isSticky={true}
@@ -43,4 +43,4 @@ export default function StickyCallToAction({
       </div>
     </div>
   );
-} 
+}

@@ -1,5 +1,5 @@
 import 'server-only';
-import WhopMiniPreview from './WhopMiniPreview';
+import OfferMiniPreview from './OfferMiniPreview';
 import { resolveLogoUrl } from '@/lib/image-url';
 
 type Item = {
@@ -41,7 +41,7 @@ export default function AlternativesServer({
       <h2 className="text-xl font-bold mb-4">Other Options</h2>
       <ul className="flex flex-col gap-4" suppressHydrationWarning>
         {list.map((w, i) => (
-          <WhopMiniPreview
+          <OfferMiniPreview
             key={`${w.slug}#${i}`}
             slug={w.slug}
             name={w.name}
@@ -55,7 +55,7 @@ export default function AlternativesServer({
 
         {/* Render explore link as a special preview card */}
         {explore && (
-          <WhopMiniPreview
+          <OfferMiniPreview
             key={`explore-${explore.slug}`}
             slug={explore.slug}
             name={explore.name}

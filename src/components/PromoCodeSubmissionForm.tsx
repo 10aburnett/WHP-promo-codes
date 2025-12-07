@@ -8,15 +8,15 @@ interface DealSearchResult {
 }
 
 interface PromoCodeSubmissionFormProps {
-  preselectedWhopId?: string // For deal-specific submissions
-  preselectedWhopName?: string // For displaying the preselected deal name
+  preselectedOfferId?: string // For deal-specific submissions
+  preselectedOfferName?: string // For displaying the preselected deal name
   onClose?: () => void
   onSuccess?: () => void
 }
 
 export default function PromoCodeSubmissionForm({
-  preselectedWhopId,
-  preselectedWhopName,
+  preselectedOfferId,
+  preselectedOfferName,
   onClose,
   onSuccess
 }: PromoCodeSubmissionFormProps) {
@@ -36,19 +36,19 @@ export default function PromoCodeSubmissionForm({
     submitterName: '',
     submitterEmail: '',
     submitterMessage: '',
-    isGeneral: !preselectedWhopId, // Default to general if no preselected course
-    whopId: preselectedWhopId || '',
+    isGeneral: !preselectedOfferId, // Default to general if no preselected course
+    offerId: preselectedOfferId || '',
     customCourseName: '', // For new courses
     isNewCourse: false
   })
 
   // Initialize search term with preselected course name only once
   useEffect(() => {
-    if (preselectedWhopName && !searchTerm) {
-      setSearchTerm(preselectedWhopName)
-      setDebouncedSearchTerm(preselectedWhopName)
+    if (preselectedOfferName && !searchTerm) {
+      setSearchTerm(preselectedOfferName)
+      setDebouncedSearchTerm(preselectedOfferName)
     }
-  }, [preselectedWhopName])
+  }, [preselectedOfferName])
 
   // Optimized debounce with shorter delay for instant feel
   useEffect(() => {
@@ -104,9 +104,9 @@ export default function PromoCodeSubmissionForm({
   // Get selected course name efficiently
   const selectedCourseName = useMemo(() => {
     if (formData.isNewCourse) return formData.customCourseName
-    const selectedWhop = searchResults.find(w => w.id === formData.whopId)
-    return selectedWhop?.name || ''
-  }, [searchResults, formData.whopId, formData.isNewCourse, formData.customCourseName])
+    const selectedOffer = searchResults.find(w => w.id === formData.offerId)
+    return selectedOffer?.name || ''
+  }, [searchResults, formData.offerId, formData.isNewCourse, formData.customCourseName])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -127,7 +127,7 @@ export default function PromoCodeSubmissionForm({
     }
 
     // Validate course selection for non-general submissions
-    if (!formData.isGeneral && !formData.whopId && !formData.isNewCourse) {
+    if (!formData.isGeneral && !formData.offerId && !formData.isNewCourse) {
       alert('Please select a course or mark it as a new course for course-specific submissions.')
       setIsSubmitting(false)
       return
@@ -146,7 +146,7 @@ export default function PromoCodeSubmissionForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          whopId: formData.isGeneral ? null : (formData.isNewCourse ? null : formData.whopId),
+          offerId: formData.isGeneral ? null : (formData.isNewCourse ? null : formData.offerId),
           customCourseName: formData.isNewCourse ? formData.customCourseName : null
         })
       })
@@ -165,8 +165,8 @@ export default function PromoCodeSubmissionForm({
             submitterName: '',
             submitterEmail: '',
             submitterMessage: '',
-            isGeneral: !preselectedWhopId,
-            whopId: preselectedWhopId || '',
+            isGeneral: !preselectedOfferId,
+            offerId: preselectedOfferId || '',
             customCourseName: '',
             isNewCourse: false
           })
@@ -188,7 +188,7 @@ export default function PromoCodeSubmissionForm({
   const handleCourseSelect = useCallback((whop: DealSearchResult) => {
     setFormData(prev => ({ 
       ...prev, 
-      whopId: whop.id, 
+      offerId: whop.id, 
       isNewCourse: false, 
       customCourseName: '' 
     }))
@@ -205,7 +205,7 @@ export default function PromoCodeSubmissionForm({
     setFormData(prev => ({ 
       ...prev, 
       isNewCourse: true, 
-      whopId: '',
+      offerId: '',
       customCourseName: searchTerm 
     }))
     setShowDropdown(false)
@@ -300,7 +300,7 @@ export default function PromoCodeSubmissionForm({
                   <input
                     type="radio"
                     checked={formData.isGeneral}
-                    onChange={() => setFormData(prev => ({ ...prev, isGeneral: true, whopId: '' }))}
+                    onChange={() => setFormData(prev => ({ ...prev, isGeneral: true, offerId: '' }))}
                     className="mr-2"
                   />
                   General Promo
@@ -328,7 +328,7 @@ export default function PromoCodeSubmissionForm({
                       if (value !== searchTerm) {
                         setFormData(prev => ({ 
                           ...prev, 
-                          whopId: '', 
+                          offerId: '', 
                           isNewCourse: false, 
                           customCourseName: '' 
                         }))

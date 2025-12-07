@@ -78,13 +78,13 @@ export async function PUT(req: Request, { params }: { params: { slug: string } }
       promoCode,
       promoType,
       promoValue,
-      ...whopData
+      ...offerData
     } = data;
 
     // 2) Update the whop itself
     const updatedWhop = await prisma.deal.update({
       where: { id: whop.id },
-      data: { ...whopData, updatedAt: new Date() },
+      data: { ...offerData, updatedAt: new Date() },
       include: { PromoCode: true },
     });
 

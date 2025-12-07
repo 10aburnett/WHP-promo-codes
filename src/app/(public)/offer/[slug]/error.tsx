@@ -1,6 +1,6 @@
 'use client';
 
-export default function WhopRouteError({ error, reset }: { error: any; reset: () => void }) {
+export default function OfferRouteError({ error, reset }: { error: any; reset: () => void }) {
   // This renders server errors instead of a permanent skeleton.
   return (
     <div style={{ padding: 16, background: '#2b1a1a', color: '#ffd2d2', borderRadius: 8 }}>

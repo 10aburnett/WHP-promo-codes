@@ -14,7 +14,7 @@ export interface Review {
   verified: boolean;
 }
 
-export interface WhopPromo {
+export interface OfferPromo {
   id: string;
   whopName: string;
   promoType: PromoType;

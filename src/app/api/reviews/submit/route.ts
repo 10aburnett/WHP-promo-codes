@@ -7,7 +7,7 @@ const reviewSchema = z.object({
   author: z.string().min(1, "Name is required"),
   content: z.string().min(3, "Review content must be at least 3 characters"),
   rating: z.number().min(1).max(5),
-  whopId: z.string().min(1, "Whop ID is required"),
+  offerId: z.string().min(1, "Whop ID is required"),
 });
 
 export async function POST(request: Request) {

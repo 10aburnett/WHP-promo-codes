@@ -19,7 +19,7 @@ const reviewSchema = z.object({
   rating: z.union([z.number(), z.string()]).transform((val) =>
     typeof val === 'string' ? parseFloat(val) : val
   ),
-  whopId: z.string().min(1, "Deal is required"),
+  offerId: z.string().min(1, "Deal is required"),
   verified: z.boolean().optional().default(false)
 });
 
@@ -29,8 +29,8 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [whops, setWhops] = useState<DealItem[]>([]);
   const [filteredWhops, setFilteredWhops] = useState<DealItem[]>([]);
-  const [whopSearch, setWhopSearch] = useState("");
-  const [showWhopDropdown, setShowWhopDropdown] = useState(false);
+  const [whopSearch, setOfferSearch] = useState("");
+  const [showOfferDropdown, setShowOfferDropdown] = useState(false);
   const [selectedWhop, setSelectedWhop] = useState<DealItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +42,7 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
       author: "",
       content: "",
       rating: 5,
-      whopId: "",
+      offerId: "",
       verified: false
     }
   });
@@ -60,18 +60,18 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
   }, [whopSearch, whops]);
 
   // Handle whop selection
-  const handleWhopSelect = (whop: DealItem) => {
+  const handleOfferSelect = (whop: DealItem) => {
     setSelectedWhop(whop);
-    setWhopSearch(whop.name);
+    setOfferSearch(whop.name);
     setValue("whopId", whop.id);
-    setShowWhopDropdown(false);
+    setShowOfferDropdown(false);
   };
 
   // Handle search input - completely independent from selection
-  const handleWhopSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOfferSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setWhopSearch(value);
-    setShowWhopDropdown(true);
+    setOfferSearch(value);
+    setShowOfferDropdown(true);
     
     // Don't auto-select anything, let user type freely
     // Only clear selection if they completely clear the input
@@ -83,14 +83,14 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
 
   // Handle clearing the search
   const handleClearSearch = () => {
-    setWhopSearch("");
+    setOfferSearch("");
     setSelectedWhop(null);
     setValue("whopId", "");
-    setShowWhopDropdown(false);
+    setShowOfferDropdown(false);
   };
 
   useEffect(() => {
-    const fetchWhops = async () => {
+    const fetchOffers = async () => {
       try {
         const response = await fetch('/api/whops?limit=1000'); // Get all whops for the dropdown
         if (!response.ok) {
@@ -126,7 +126,7 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
           // Set selected whop for display (only if not already typing)
           if (review.whop && whopSearch === "") {
             setSelectedWhop(review.whop);
-            setWhopSearch(review.whop.name);
+            setOfferSearch(review.whop.name);
           }
         } else {
           // For new reviews, check if whopId is provided in URL parameters
@@ -144,7 +144,7 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
       }
     };
 
-    Promise.all([fetchWhops(), fetchReview()])
+    Promise.all([fetchOffers(), fetchReview()])
       .then(() => setLoading(false))
       .catch(err => {
         console.error("Error during initialization:", err);
@@ -162,7 +162,7 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
         const whop = whops.find(w => w.id === whopId);
         if (whop) {
           setSelectedWhop(whop);
-          setWhopSearch(whop.name);
+          setOfferSearch(whop.name);
         }
       }
     }
@@ -179,7 +179,7 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
       
       // Ensure we have proper whop data
       const payload = {
-        whopId: data.whopId || selectedWhop?.id,
+        offerId: data.whopId || selectedWhop?.id,
         whopSlug: selectedWhop?.slug,
         author: data.author,
         rating: Number(data.rating),
@@ -260,8 +260,8 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
             <input
               type="text"
               value={whopSearch}
-              onChange={handleWhopSearchChange}
-              onFocus={() => setShowWhopDropdown(true)}
+              onChange={handleOfferSearchChange}
+              onFocus={() => setShowOfferDropdown(true)}
               placeholder={selectedWhop ? "Search for a different whop course..." : "Search for a whop course..."}
               className="w-full p-2 pr-10 border rounded bg-gray-800 border-gray-700 text-white"
             />
@@ -277,13 +277,13 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
               </button>
             )}
             
-            {showWhopDropdown && (
+            {showOfferDropdown && (
               <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
                 {filteredWhops.length > 0 ? (
                   filteredWhops.map(whop => (
                     <div
                       key={whop.id}
-                      onClick={() => handleWhopSelect(whop)}
+                      onClick={() => handleOfferSelect(whop)}
                       className={`px-3 py-2 cursor-pointer hover:bg-gray-700 text-white ${
                         selectedWhop?.id === whop.id ? 'bg-blue-700' : ''
                       }`}
@@ -303,10 +303,10 @@ export default function EditReviewPage({ params }: { params: { id: string } }) {
             )}
             
             {/* Click outside to close dropdown */}
-            {showWhopDropdown && (
+            {showOfferDropdown && (
               <div 
                 className="fixed inset-0 z-5"
-                onClick={() => setShowWhopDropdown(false)}
+                onClick={() => setShowOfferDropdown(false)}
               />
             )}
           </div>

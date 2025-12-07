@@ -1,4 +1,4 @@
-// src/components/WhopMetaServer.tsx
+// src/components/OfferMetaServer.tsx
 // Server component for usage metrics and code status display
 
 export const dynamic = 'force-dynamic'; // this block computes per-request stats
@@ -31,7 +31,7 @@ interface FreshnessData {
   ledger: LedgerEntry[];
 }
 
-interface WhopMetaServerProps {
+interface OfferMetaServerProps {
   usageStats: UsageStats;
   freshnessData?: FreshnessData | null;
   debugOnly?: string; // 'last', 'today', 'total', 'verified', 'ledger'
@@ -63,7 +63,7 @@ function getStatusLabel(status: string): string {
   }
 }
 
-export default function WhopMetaServer({ usageStats, freshnessData, debugOnly }: WhopMetaServerProps) {
+export default function OfferMetaServer({ usageStats, freshnessData, debugOnly }: OfferMetaServerProps) {
   // Compute stable snapshot + hash for debugging
   const snapshot = stableNormalize({
     usage: {

@@ -11,20 +11,20 @@ interface DealLogo {
   logo: string | null;
 }
 
-interface WhopLogoProps {
-  whop: DealLogo;
+interface OfferLogoProps {
+  offer: DealLogo;
 }
 
-export default function WhopLogo({ whop }: WhopLogoProps) {
+export default function OfferLogo({ offer }: OfferLogoProps) {
   const [imageError, setImageError] = useState(false);
-  const imagePath = normalizeImagePath(whop.logo || '');
-  
+  const imagePath = normalizeImagePath(offer.logo || '');
+
   return (
     <>
       {!imageError ? (
         <Image
           src={imagePath}
-          alt={`${whop.name} logo`}
+          alt={`${offer.name} logo`}
           width={80}
           height={80}
           className="w-full h-full object-contain"
@@ -37,8 +37,8 @@ export default function WhopLogo({ whop }: WhopLogoProps) {
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyytN5cFrKDsRXSJfAhvT7WinYGCvchOjJAMfNIXGiULZQ8qEzJQdEKKRjFiYqKJKEJxZJXiEH0RRN6mJzN5hJ8tP/Z"
         />
       ) : (
-        <InitialsAvatar 
-          name={whop.name} 
+        <InitialsAvatar
+          name={offer.name} 
           size="xl" 
           shape="square"
           className="w-full h-full"

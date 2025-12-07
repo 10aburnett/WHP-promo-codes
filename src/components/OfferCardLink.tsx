@@ -7,7 +7,7 @@ import { normalizeImagePath } from '@/lib/image-utils';
 import InitialsAvatar from './InitialsAvatar';
 import { whopHref } from '@/lib/paths';
 
-interface WhopCardLinkProps {
+interface OfferCardLinkProps {
   slug: string;
   title: string;          // what users see (use anchorText for Alternatives; use whop.name for Recs)
   subtitle?: string;      // short description
@@ -19,7 +19,7 @@ interface WhopCardLinkProps {
   priority?: boolean;     // for prefetch optimization
 }
 
-export default function WhopCardLink({
+export default function OfferCardLink({
   slug,
   title,
   subtitle,
@@ -29,11 +29,11 @@ export default function WhopCardLink({
   category,
   rating,
   priority = false
-}: WhopCardLinkProps) {
+}: OfferCardLinkProps) {
 
   // Debug logging to find the mystery "0"
   if (process.env.NODE_ENV === 'development' && rating === 0) {
-    console.log('WhopCardLink received rating=0 for:', title, { rating, slug });
+    console.log('OfferCardLink received rating=0 for:', title, { rating, slug });
   }
   const [imageState, setImageState] = useState<{ imagePath: string; imageError: boolean }>({
     imagePath: '',

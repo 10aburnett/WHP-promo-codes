@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef } from 'react';
-import WhopPageClient from './WhopPageClient';
+import OfferPageClient from './OfferPageClient';
 import PromoStatsDisplay, { PromoStatsDisplayHandle } from './PromoStatsDisplay';
 
-interface WhopPageInteractiveProps {
-  whop: {
+interface OfferPageInteractiveProps {
+  offer: {
     id: string;
     name: string;
     slug: string;
@@ -23,10 +23,10 @@ interface WhopPageInteractiveProps {
 }
 
 // Standalone compact stats component
-export function WhopPageCompactStats({ whopId, promoCodeId, slug }: { whopId: string; promoCodeId: string; slug?: string }) {
+export function OfferPageCompactStats({ offerId, promoCodeId, slug }: { offerId: string; promoCodeId: string; slug?: string }) {
   return (
-    <PromoStatsDisplay 
-      whopId={whopId} 
+    <PromoStatsDisplay
+      offerId={offerId}
       promoCodeId={promoCodeId}
       slug={slug}
       compact={true}
@@ -34,20 +34,20 @@ export function WhopPageCompactStats({ whopId, promoCodeId, slug }: { whopId: st
   );
 }
 
-export default function WhopPageInteractive({ whop, firstPromo, promoCode, promoTitle }: WhopPageInteractiveProps) {
+export default function OfferPageInteractive({ offer, firstPromo, promoCode, promoTitle }: OfferPageInteractiveProps) {
   return (
     <>
       {/* Interactive Button */}
-      <WhopPageClient
-        whop={whop}
+      <OfferPageClient
+        offer={offer}
         firstPromo={firstPromo}
         promoCode={promoCode}
         promoTitle={promoTitle}
         onTrackingComplete={() => {
-          // Stats are now server-rendered via WhopMetaServer, no need to refresh client component
+          // Stats are now server-rendered via OfferMetaServer, no need to refresh client component
           console.log('🔄 Tracking complete - stats will update on next page load');
         }}
       />
     </>
   );
-} 
+}

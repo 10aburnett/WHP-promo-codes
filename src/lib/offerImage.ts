@@ -9,7 +9,7 @@
  *
  * This extracts the real asset URL (assets.whop.com/uploads/...) from the ImgProxy wrapper.
  */
-export function coerceWhopLogoUrl(src?: string | null): string | null {
+export function coerceOfferLogoUrl(src?: string | null): string | null {
   if (!src) return null;
 
   try {
@@ -32,7 +32,7 @@ export function coerceWhopLogoUrl(src?: string | null): string | null {
 /**
  * Check if a URL is from an allowed Whop CDN host
  */
-export function isAllowedWhopHost(u?: string | null): boolean {
+export function isAllowedOfferHost(u?: string | null): boolean {
   if (!u) return false;
 
   try {
@@ -55,8 +55,8 @@ export function isAllowedWhopHost(u?: string | null): boolean {
  * Safely resolve a Whop logo URL for rendering
  * Returns the coerced URL if it's from an allowed host, otherwise returns a fallback
  */
-export function resolveWhopLogoUrl(src?: string | null, fallback: string = '/logo.png'): string {
-  const coerced = coerceWhopLogoUrl(src);
+export function resolveOfferLogoUrl(src?: string | null, fallback: string = '/logo.png'): string {
+  const coerced = coerceOfferLogoUrl(src);
 
   if (!coerced) return fallback;
 
@@ -64,7 +64,7 @@ export function resolveWhopLogoUrl(src?: string | null, fallback: string = '/log
   if (!coerced.startsWith('http')) return coerced;
 
   // If it's an allowed Whop host, return the coerced URL
-  if (isAllowedWhopHost(coerced)) return coerced;
+  if (isAllowedOfferHost(coerced)) return coerced;
 
   // Otherwise, return fallback
   return fallback;

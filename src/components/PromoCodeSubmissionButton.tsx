@@ -3,11 +3,11 @@ import { useState } from 'react'
 import PromoCodeSubmissionForm from './PromoCodeSubmissionForm'
 
 interface PromoCodeSubmissionButtonProps {
-  whopId: string
+  offerId: string
   whopName: string
 }
 
-export default function PromoCodeSubmissionButton({ whopId, whopName }: PromoCodeSubmissionButtonProps) {
+export default function PromoCodeSubmissionButton({ offerId, whopName }: PromoCodeSubmissionButtonProps) {
   const [showForm, setShowForm] = useState(false)
 
   return (
@@ -44,8 +44,8 @@ export default function PromoCodeSubmissionButton({ whopId, whopName }: PromoCod
       {/* Submission Form Modal */}
       {showForm && (
         <PromoCodeSubmissionForm
-          preselectedWhopId={whopId}
-          preselectedWhopName={whopName}
+          preselectedOfferId={offerId}
+          preselectedOfferName={whopName}
           onClose={() => setShowForm(false)}
           onSuccess={() => setShowForm(false)}
         />

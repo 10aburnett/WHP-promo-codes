@@ -15,7 +15,7 @@ interface PromoCode {
   value: string;
 }
 
-interface Whop {
+interface Offer {
   id: string;
   name: string;
   slug: string;
@@ -44,21 +44,21 @@ async function getInitialData() {
   
   try {
     // Fetch initial whops data
-    const whopsResponse = await fetch(`${baseUrl}/api/whops?page=1&limit=15`, {
+    const offersResponse = await fetch(`${baseUrl}/api/whops?page=1&limit=15`, {
       cache: 'no-store'
     });
     
-    if (!whopsResponse.ok) {
-      console.error('Failed to fetch whops:', whopsResponse.status);
+    if (!offersResponse.ok) {
+      console.error('Failed to fetch whops:', offersResponse.status);
       return {
-        initialWhops: [],
+        initialOffers: [],
         totalUsers: 0,
         whopNames: [],
         totalCount: 0
       };
     }
     
-    const whopsResult: PaginationResponse = await whopsResponse.json();
+    const offersResult: PaginationResponse = await offersResponse.json();
 
     // Fetch statistics for total users
     const statsResponse = await fetch(`${baseUrl}/api/statistics`, {
@@ -68,43 +68,43 @@ async function getInitialData() {
     if (!statsResponse.ok) {
       console.error('Failed to fetch statistics:', statsResponse.status);
       return {
-        initialWhops: whopsResult.data,
+        initialOffers: offersResult.data,
         totalUsers: 0,
         whopNames: [],
-        totalCount: whopsResult.pagination.total
+        totalCount: offersResult.pagination.total
       };
     }
     
     const statsResult = await statsResponse.json();
 
     // Fetch all whop names for filtering
-    const allWhopsResponse = await fetch(`${baseUrl}/api/whops?limit=1000`, {
+    const allOffersResponse = await fetch(`${baseUrl}/api/whops?limit=1000`, {
       cache: 'no-store'
     });
     
-    if (!allWhopsResponse.ok) {
-      console.error('Failed to fetch all whops:', allWhopsResponse.status);
+    if (!allOffersResponse.ok) {
+      console.error('Failed to fetch all whops:', allOffersResponse.status);
       return {
-        initialWhops: whopsResult.data,
+        initialOffers: offersResult.data,
         totalUsers: statsResult.totalUsers || 0,
         whopNames: [],
-        totalCount: whopsResult.pagination.total
+        totalCount: offersResult.pagination.total
       };
     }
     
-    const allWhopsResult: PaginationResponse = await allWhopsResponse.json();
-    const whopNames = [...new Set(allWhopsResult.data.map((whop: any) => whop.whopName || whop.name))].filter(Boolean);
+    const allOffersResult: PaginationResponse = await allOffersResponse.json();
+    const whopNames = [...new Set(allOffersResult.data.map((whop: any) => whop.whopName || whop.name))].filter(Boolean);
 
     return {
-      initialWhops: whopsResult.data,
+      initialOffers: offersResult.data,
       totalUsers: statsResult.totalUsers || 0,
       whopNames: whopNames as string[],
-      totalCount: whopsResult.pagination.total
+      totalCount: offersResult.pagination.total
     };
   } catch (error) {
     console.error('Error in getInitialData:', error);
     return {
-      initialWhops: [],
+      initialOffers: [],
       totalUsers: 0,
       whopNames: [],
       totalCount: 0
@@ -121,7 +121,7 @@ const HomePageLoading = () => (
 );
 
 export default async function LocalizedHome({ params }: { params: { locale: string } }) {
-  const { initialWhops, totalUsers, whopNames, totalCount } = await getInitialData();
+  const { initialOffers, totalUsers, whopNames, totalCount } = await getInitialData();
   const currentYear = new Date().getFullYear();
   const locale = params.locale as any; // Type assertion for i18n
 
@@ -162,7 +162,7 @@ export default async function LocalizedHome({ params }: { params: { locale: stri
       <Suspense fallback={<HomePageLoading />}>
         <HomePage 
           key={`homepage-${pageKey}`}
-          initialWhops={initialWhops}
+          initialOffers={initialOffers}
           initialTotal={totalCount}
           whopNames={whopNames}
           totalUsers={totalUsers}

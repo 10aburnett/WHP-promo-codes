@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
     }
     
-    console.log('Found submission:', { id: submission.id, status: submission.status, whopId: submission.whopId })
+    console.log('Found submission:', { id: submission.id, status: submission.status, offerId: submission.whopId })
 
     // Start transaction for atomic operations
     const result = await prisma.$transaction(async (tx) => {

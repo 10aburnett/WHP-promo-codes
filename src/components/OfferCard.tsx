@@ -4,9 +4,9 @@ import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useSocialProof, createSocialProofFromWhop } from '@/contexts/SocialProofContext';
+import { useSocialProof, createSocialProofFromOffer } from '@/contexts/SocialProofContext';
 import InitialsAvatar from './InitialsAvatar';
-import { WhopLogoSSR } from './WhopLogoSSR';
+import { OfferLogoSSR } from './OfferLogoSSR';
 import { offerHref } from '@/lib/paths';
 import { resolveLogoUrl } from '@/lib/image-url';
 
@@ -25,7 +25,7 @@ interface Promo {
   price?: string | null;
   priceText?: string;
   priceBadge?: string;
-  whopId?: string;
+  offerId?: string;
   promoCodeId?: string;
 }
 
@@ -95,27 +95,27 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
   };
 
   const handleGetPromoClick = (e: React.MouseEvent) => {
-    console.log("🔥 WhopCard: Get Promo button clicked!", {
-      whopName: promo.whopName,
-      whopId: promo.whopId,
+    console.log("🔥 OfferCard: Get Promo button clicked!", {
+      offerName: promo.whopName,
+      offerId: promo.offerId,
       promoCodeId: promo.promoCodeId,
-      hasWhopId: !!promo.whopId,
+      hasOfferId: !!promo.offerId,
       hasPromoCodeId: !!promo.promoCodeId,
       timestamp: new Date().toISOString()
     });
-    
+
     // Don't stop propagation - allow the link to work normally
-    
+
     // Track the click event - now works even without promo code ID
-    if (promo.whopId) {
-      console.log("✅ WhopCard: Whop ID present, calling trackOfferClick");
-      trackOfferClick(promo.whopId, promo.promoCodeId || null);
+    if (promo.offerId) {
+      console.log("✅ OfferCard: Offer ID present, calling trackOfferClick");
+      trackOfferClick(promo.offerId, promo.promoCodeId || null);
     } else {
-      console.warn("⚠️ WhopCard: Missing whop ID:", promo.whopId);
+      console.warn("⚠️ OfferCard: Missing offer ID:", promo.offerId);
     }
 
     // Trigger social proof notification
-    const socialProofData = createSocialProofFromWhop({
+    const socialProofData = createSocialProofFromOffer({
       whopName: promo.whopName,
       promoCode: promo.promoCode,
       promoValue: promo.promoValue,
@@ -130,22 +130,22 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
     // (User will see their own action on the same website)
   };
 
-  const trackOfferClick = async (whopId: string, promoCodeId: string | null) => {
-    console.log("🔥 WhopCard: trackOfferClick called with:", {
-      whopId,
+  const trackOfferClick = async (offerId: string, promoCodeId: string | null) => {
+    console.log("🔥 OfferCard: trackOfferClick called with:", {
+      offerId,
       promoCodeId,
-      whopName: promo.whopName,
+      offerName: promo.whopName,
       timestamp: new Date().toISOString()
     });
-    
+
     try {
       const requestBody = {
-        casinoId: whopId, // Using whopId as casinoId for compatibility
+        casinoId: offerId, // Using offerId as casinoId for compatibility
         bonusId: promoCodeId, // Using promoCodeId as bonusId for compatibility (can be null)
         actionType: 'code_copy',
       };
       
-      console.log("📤 WhopCard: Sending tracking request:", requestBody);
+      console.log("📤 OfferCard: Sending tracking request:", requestBody);
       
       const response = await fetch('/api/tracking', {
         method: 'POST',
@@ -157,13 +157,13 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
       
       if (response.ok) {
         const result = await response.json();
-        console.log("✅ WhopCard: Tracking successful:", result);
+        console.log("✅ OfferCard: Tracking successful:", result);
       } else {
         const errorData = await response.text();
-        console.error("❌ WhopCard: Tracking failed:", response.status, errorData);
+        console.error("❌ OfferCard: Tracking failed:", response.status, errorData);
       }
     } catch (error) {
-      console.error("❌ WhopCard: Error tracking offer click:", error);
+      console.error("❌ OfferCard: Error tracking offer click:", error);
     }
   };
 
@@ -212,7 +212,7 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
                   className="w-full h-full"
                 />
               ) : (
-                <WhopLogoSSR
+                <OfferLogoSSR
                   src={logoUrl}
                   alt={`${promo.whopName} logo`}
                   width={64}

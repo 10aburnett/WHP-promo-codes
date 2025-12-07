@@ -1,9 +1,9 @@
 // app/sitemap/whops-g-m.xml/route.ts
 import { NextResponse } from 'next/server';
-import { generateWhopSitemap, entriesToXML } from '@/lib/sitemap-utils';
+import { generateOfferSitemap, entriesToXML } from '@/lib/sitemap-utils';
 
 /**
- * Whops G-M Sitemap Shard (Phase F3)
+ * Offers G-M Sitemap Shard (Phase F3)
  *
  * Returns a sitemap of all whop pages with slugs starting G-M.
  * Applies quality gates via whereIndexable().
@@ -14,7 +14,7 @@ export const dynamic = 'force-static';
 export const revalidate = 3600; // 1 hour cache
 
 export async function GET() {
-  const entries = await generateWhopSitemap('g', 'm');
+  const entries = await generateOfferSitemap('g', 'm');
   const xml = entriesToXML(entries);
 
   return new NextResponse(xml, {

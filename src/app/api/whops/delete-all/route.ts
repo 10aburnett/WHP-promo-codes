@@ -67,13 +67,13 @@ export async function DELETE(request: Request) {
     const trackingResult = await prisma.offerTracking.deleteMany();
 
     // Finally, delete all whops
-    const whopResult = await prisma.deal.deleteMany();
+    const offerResult = await prisma.deal.deleteMany();
     
     return NextResponse.json({ 
-      message: `Successfully deleted all ${whopResult.count} whops and their associated data`,
-      deletedCount: whopResult.count,
+      message: `Successfully deleted all ${offerResult.count} whops and their associated data`,
+      deletedCount: offerResult.count,
       details: {
-        whops: whopResult.count,
+        whops: offerResult.count,
         promoCodes: promoCodeResult.count,
         reviews: reviewResult.count,
         trackingRecords: trackingResult.count

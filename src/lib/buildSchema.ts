@@ -3,7 +3,7 @@
 import 'server-only';
 import { absoluteUrl } from '@/lib/urls';
 
-export type WhopViewModel = {
+export type OfferViewModel = {
   // identity
   slug: string;
   url: string;                   // absolute canonical for this locale page
@@ -61,7 +61,7 @@ export type WhopViewModel = {
   alternativeUrls?: string[];   // absolute URLs, ordered exactly like UI
 };
 
-function brandNode(brand: WhopViewModel['brand']) {
+function brandNode(brand: OfferViewModel['brand']) {
   if (!brand) return undefined;
   if (typeof brand === 'string') return brand;
   if (brand.name) {
@@ -72,7 +72,7 @@ function brandNode(brand: WhopViewModel['brand']) {
   return undefined;
 }
 
-export function buildPrimaryEntity(vm: WhopViewModel) {
+export function buildPrimaryEntity(vm: OfferViewModel) {
   const type = vm.primaryType ?? 'Product'; // default
   const idSuffix =
     type === 'Product' ? 'product'
@@ -111,7 +111,7 @@ export function buildPrimaryEntity(vm: WhopViewModel) {
   return entity;
 }
 
-export function buildBreadcrumbList(vm: WhopViewModel) {
+export function buildBreadcrumbList(vm: OfferViewModel) {
   const crumbs = vm.breadcrumbs && vm.breadcrumbs.length
     ? vm.breadcrumbs
     : [
@@ -134,7 +134,7 @@ export function buildBreadcrumbList(vm: WhopViewModel) {
   };
 }
 
-export function buildOffers(vm: WhopViewModel) {
+export function buildOffers(vm: OfferViewModel) {
   const offers: any[] = [];
 
   // Guard: need currency + at least one visible price
@@ -205,7 +205,7 @@ function toPlain(x?: string | null) {
   return x.replace(/<[^>]*>/g, '').trim();
 }
 
-export function buildFAQ(vm: WhopViewModel) {
+export function buildFAQ(vm: OfferViewModel) {
   const qa = vm.faq?.filter(q => q?.question && q?.answer).map(q => ({
     "@type": "Question",
     name: toPlain(q.question),
@@ -224,7 +224,7 @@ export function buildFAQ(vm: WhopViewModel) {
   return node;
 }
 
-export function buildHowTo(vm: WhopViewModel) {
+export function buildHowTo(vm: OfferViewModel) {
   const steps = vm.steps?.filter(s => s?.title || s?.text).map((s, i) => ({
     "@type": "HowToStep",
     position: i + 1,
@@ -291,7 +291,7 @@ function clampRating(n: number) {
   return Math.max(0, Math.min(5, n));
 }
 
-export function buildReviews(vm: WhopViewModel) {
+export function buildReviews(vm: OfferViewModel) {
   const list = vm.reviews?.filter(r =>
     r &&
     typeof r.ratingValue === 'number' &&

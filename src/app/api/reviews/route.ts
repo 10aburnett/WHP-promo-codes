@@ -65,14 +65,14 @@ const Rating = z.preprocess(v => Number(v), z.number().int().min(1).max(5))
 
 const ReviewSchema = z.object({
   whopSlug: z.string().trim().optional(),
-  whopId: z.string().trim().optional(),
+  offerId: z.string().trim().optional(),
   author: z.string().trim().min(2, 'Name must be at least 2 characters').max(100),
   content: z.string().trim().min(1, 'Review must be at least 1 character').max(2000),
   rating: Rating,
   website: z.string().max(0).optional().or(z.literal(''))
 }).refine((data) => {
-  return data.whopId || data.whopSlug;
-}, { message: "Either whopId or whopSlug is required" });
+  return data.offerId || data.whopSlug;
+}, { message: "Either offerId or whopSlug is required" });
 
 async function parseRequest(req: Request) {
   const ct = req.headers.get('content-type') || '';
@@ -84,7 +84,7 @@ async function parseRequest(req: Request) {
     const form = await req.formData();
     return ReviewSchema.parse({
       whopSlug: String(form.get('whopSlug') ?? ''),
-      whopId: String(form.get('whopId') ?? ''),
+      offerId: String(form.get('whopId') ?? ''),
       author: String(form.get('author') ?? form.get('name') ?? ''),
       content: String(form.get('content') ?? form.get('review') ?? ''),
       rating: form.get('rating'),
@@ -105,11 +105,11 @@ export async function POST(request: NextRequest) {
     
     // Parse and validate the data
     const data = await parseRequest(request);
-    console.log('Processing review submission:', { 
-      author: data.author, 
-      whopId: data.whopId,
+    console.log('Processing review submission:', {
+      author: data.author,
+      offerId: data.offerId,
       whopSlug: data.whopSlug,
-      rating: data.rating 
+      rating: data.rating
     });
     
     // Check honeypot (spam protection)
@@ -121,18 +121,18 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
     
-    const { whopSlug, whopId, author, content, rating } = data;
+    const { whopSlug, offerId, author, content, rating } = data;
 
-    // Resolve whop - prefer whopSlug, fallback to whopId
+    // Resolve whop - prefer whopSlug, fallback to offerId
     let whop;
     if (whopSlug) {
       whop = await prisma.deal.findUnique({
         where: { slug: whopSlug },
         select: { id: true, name: true }
       });
-    } else if (whopId) {
+    } else if (offerId) {
       whop = await prisma.deal.findUnique({
-        where: { id: whopId },
+        where: { id: offerId },
         select: { id: true, name: true }
       });
     }

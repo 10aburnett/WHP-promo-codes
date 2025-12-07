@@ -100,7 +100,7 @@ export function LanguageProvider({ children, locale }: LanguageProviderProps) {
     }
     
     // Check if we're currently on a whop detail page
-    const isWhopDetailPage = () => {
+    const isOfferDetailPage = () => {
       // English whop page: /whop/[slug]
       if (pathSegments.length === 2 && pathSegments[0] === 'whop') {
         return { type: 'english-whop', slug: pathSegments[1] };
@@ -147,18 +147,18 @@ export function LanguageProvider({ children, locale }: LanguageProviderProps) {
       return null;
     };
 
-    const whopPageInfo = isWhopDetailPage();
+    const offerPageInfo = isOfferDetailPage();
     const legalPageInfo = isLegalPage();
     const contactPageInfo = isContactPage();
 
-    if (whopPageInfo) {
+    if (offerPageInfo) {
       // Handle whop detail page language switching
       if (newLanguage === 'en') {
         // Switching to English: use /whop/[slug] format (canonical slug)
-        newPath = `/whop/${canonicalSlugForPath(whopPageInfo.slug)}`;
+        newPath = `/whop/${canonicalSlugForPath(offerPageInfo.slug)}`;
       } else {
         // Switching to other language: use /[locale]/[slug] format (canonical slug)
-        newPath = `/${newLanguage}/${canonicalSlugForPath(whopPageInfo.slug)}`;
+        newPath = `/${newLanguage}/${canonicalSlugForPath(offerPageInfo.slug)}`;
       }
     } else if (legalPageInfo) {
       // Handle legal page language switching

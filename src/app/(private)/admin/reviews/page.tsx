@@ -9,7 +9,7 @@ interface Review {
   author: string;
   content: string;
   rating: number;
-  whopId: string;
+  offerId: string;
   whop: {
     id: string;
     name: string;

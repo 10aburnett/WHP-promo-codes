@@ -3,12 +3,12 @@
 import React, { useMemo } from 'react';
 import OfferCard from './OfferCard';
 
-interface VirtualizedWhopListProps {
+interface VirtualizedOfferListProps {
   whops: any[];
   loading: boolean;
 }
 
-export default function VirtualizedWhopList({ whops, loading }: VirtualizedWhopListProps) {
+export default function VirtualizedOfferList({ whops, loading }: VirtualizedOfferListProps) {
   // Only virtualize if we have more than 12 items to improve performance
   const shouldVirtualize = whops.length > 12;
 

@@ -1,6 +1,6 @@
 import 'server-only';
 
-interface WhopMiniPreviewProps {
+interface OfferMiniPreviewProps {
   slug: string;
   name: string;
   logo?: string | null;
@@ -11,7 +11,7 @@ interface WhopMiniPreviewProps {
   isExploreLink?: boolean;
 }
 
-export default function WhopMiniPreview({
+export default function OfferMiniPreview({
   slug,
   name,
   logo,
@@ -20,7 +20,7 @@ export default function WhopMiniPreview({
   rating,
   ratingCount = 0,
   isExploreLink = false
-}: WhopMiniPreviewProps) {
+}: OfferMiniPreviewProps) {
   const href = `/offer/${encodeURIComponent(slug)}`;
 
   // Compute display values with safe fallbacks

@@ -27,7 +27,7 @@ const BodySchema = z.object({
   submitterEmail: z.string().email().max(320).optional(),  // Legacy format  
   submitterMessage: z.string().max(4000).optional(),       // Legacy format
   isGeneral: z.boolean().optional(),
-  whopId: z.string().optional().nullable(),
+  offerId: z.string().optional().nullable(),
   customCourseName: z.string().max(200).optional().nullable(),
 }).refine((data) => {
   // Require either new format (name + email) or legacy format (submitterName + submitterEmail)
@@ -89,17 +89,17 @@ export async function POST(req: Request) {
     
     // If not general, validate course selection
     if (!isGeneralPromo) {
-      if (!parsed.whopId && !parsed.customCourseName) {
+      if (!parsed.offerId && !parsed.customCourseName) {
         return NextResponse.json({
           ok: false,
           error: 'Course selection required for course-specific promo codes'
         }, { status: 400 })
       }
 
-      // If whopId is provided, verify the course exists
-      if (parsed.whopId) {
+      // If offerId is provided, verify the course exists
+      if (parsed.offerId) {
         const whopExists = await prisma.deal.findUnique({
-          where: { id: parsed.whopId },
+          where: { id: parsed.offerId },
           select: { id: true }
         })
 
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
         submitterEmail: email,
         submitterMessage: message || null,
         isGeneral: isGeneralPromo,
-        whopId: isGeneralPromo ? null : parsed.whopId,
+        whopId: isGeneralPromo ? null : parsed.offerId,
         customCourseName: parsed.customCourseName || null,
         ipAddress: ip || null,
         userAgent: userAgent || null,

@@ -69,10 +69,10 @@ export async function PUT(request: Request) {
       select: { whopId: true }
     });
     
-    const uniqueWhopIds = [...new Set(updatedReviews.map(r => r.whopId))];
+    const uniqueOfferIds = [...new Set(updatedReviews.map(r => r.whopId))];
     
     // Update each whop's rating based on verified reviews
-    for (const whopId of uniqueWhopIds) {
+    for (const whopId of uniqueOfferIds) {
       const verifiedReviews = await prisma.review.findMany({
         where: { 
           whopId: whopId,

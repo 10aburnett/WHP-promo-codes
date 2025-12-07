@@ -20,7 +20,7 @@ interface DealAdmin {
   }>;
 }
 
-export default function WhopsAdmin() {
+export default function OffersAdmin() {
   const [whops, setWhops] = useState<DealAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
@@ -46,10 +46,10 @@ export default function WhopsAdmin() {
 
   // Fetch whops when debounced search term or page changes
   useEffect(() => {
-    fetchWhops();
+    fetchOffers();
   }, [debouncedSearchTerm, currentPage]);
 
-  const fetchWhops = async () => {
+  const fetchOffers = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -71,15 +71,15 @@ export default function WhopsAdmin() {
     }
   };
 
-  const deleteWhop = async (whopId: string, whopName: string) => {
+  const deleteWhop = async (offerId: string, whopName: string) => {
     try {
-      const response = await fetch(`/api/whops/${whopId}`, {
+      const response = await fetch(`/api/whops/${offerId}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
         // Remove the whop from the local state
-        setWhops(whops.filter(whop => whop.id !== whopId));
+        setWhops(whops.filter(whop => whop.id !== offerId));
         alert(`Successfully deleted "${whopName}"`);
       } else {
         const error = await response.json();
@@ -178,12 +178,12 @@ export default function WhopsAdmin() {
     }
   };
 
-  const handleSelectWhop = (whopId: string) => {
+  const handleSelectWhop = (offerId: string) => {
     const newSelected = new Set(selectedWhops);
-    if (newSelected.has(whopId)) {
-      newSelected.delete(whopId);
+    if (newSelected.has(offerId)) {
+      newSelected.delete(offerId);
     } else {
-      newSelected.add(whopId);
+      newSelected.add(offerId);
     }
     setSelectedWhops(newSelected);
     setSelectAll(newSelected.size === whops.length);
@@ -238,7 +238,7 @@ export default function WhopsAdmin() {
       
       if (response.ok) {
         setImportResult(`Success: ${result.message}`);
-        fetchWhops(); // Refresh the list
+        fetchOffers(); // Refresh the list
       } else {
         setImportResult(`Error: ${result.error}`);
       }
@@ -265,10 +265,10 @@ export default function WhopsAdmin() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Whops Management</h1>
         <button
-          onClick={() => router.push('/admin/whops/new')}
+          onClick={() => router.push('/admin/offers/new')}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
         >
-          Add New Whop
+          Add New Offer
         </button>
       </div>
 
@@ -437,13 +437,13 @@ export default function WhopsAdmin() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
-                      onClick={() => router.push(`/admin/whops/${whop.id}`)}
+                      onClick={() => router.push(`/admin/offers/${whop.id}`)}
                       className="text-blue-600 hover:text-blue-900 mr-4"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => router.push(`/admin/whops/${whop.id}/content`)}
+                      onClick={() => router.push(`/admin/offers/${whop.id}/content`)}
                       className="text-green-600 hover:text-green-900 mr-4"
                     >
                       Content

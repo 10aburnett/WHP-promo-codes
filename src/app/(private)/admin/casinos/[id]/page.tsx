@@ -620,7 +620,7 @@ export default function EditCasinoPage({
           </div>
           
           <div>
-            <h3 className="text-xl font-semibold mb-4">Whop Promo</h3>
+            <h3 className="text-xl font-semibold mb-4">Offer Promo</h3>
             
             <div className="form-group">
               <label

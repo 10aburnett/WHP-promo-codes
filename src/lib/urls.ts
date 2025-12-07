@@ -23,8 +23,6 @@ export function offerAbsoluteUrl(slug: string, locale?: string | null) {
   return absoluteUrl(base); // e.g., /offer/slug
 }
 
-// Legacy alias for backwards compatibility during migration
-export const whopAbsoluteUrl = offerAbsoluteUrl;
 
 /**
  * Normalize URL for comparison - removes query params, hash, and trailing slash

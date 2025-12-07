@@ -23,7 +23,7 @@ function extractSlugsFromXml(xml: string): Set<string> {
   return slugs;
 }
 
-export async function getGoneWhopSlugs(): Promise<Set<string>> {
+export async function getGoneOfferSlugs(): Promise<Set<string>> {
   if (GONE_SLUGS_CACHE) return GONE_SLUGS_CACHE;
 
   // Try reading from public/sitemaps/gone.xml
@@ -40,6 +40,6 @@ export async function getGoneWhopSlugs(): Promise<Set<string>> {
 }
 
 export async function isGoneSlug(slug: string): Promise<boolean> {
-  const set = await getGoneWhopSlugs();
+  const set = await getGoneOfferSlugs();
   return set.has((slug || '').toLowerCase());
 }

@@ -29,8 +29,8 @@ interface RecommendedDeal {
   similarityScore?: number; // Optional since it's added by the API but not needed in display
 }
 
-export interface RecommendedWhopsProps {
-  currentWhopSlug: string;
+export interface RecommendedOffersProps {
+  currentOfferSlug: string;
 }
 
 async function fetchRecommendations(encodedSlug: string) {
@@ -41,7 +41,7 @@ async function fetchRecommendations(encodedSlug: string) {
   return res.json();
 }
 
-async function fetchWhopDetails(slugs: string[]) {
+async function fetchOfferDetails(slugs: string[]) {
   const base = getBaseUrl();
   const unique = Array.from(new Set(slugs.filter(Boolean)));
   if (!unique.length) return [];
@@ -57,11 +57,11 @@ async function fetchWhopDetails(slugs: string[]) {
   }
 }
 
-async function hydrateViaGraph(currentWhopSlug: string) {
+async function hydrateViaGraph(currentOfferSlug: string) {
   const reasons: string[] = [];
   try {
     const neighbors = await loadNeighbors();
-    const raw = getNeighborSlugsFor(neighbors, currentWhopSlug, 'recommendations');
+    const raw = getNeighborSlugsFor(neighbors, currentOfferSlug, 'recommendations');
     const slugs = Array.from(new Set(raw.filter(Boolean))).slice(0, 12);
     if (slugs.length === 0) {
       reasons.push('graph: no slugs');
@@ -69,7 +69,7 @@ async function hydrateViaGraph(currentWhopSlug: string) {
     }
 
     // batch hydrate
-    const batched = await fetchWhopDetails(slugs);
+    const batched = await fetchOfferDetails(slugs);
     if (Array.isArray(batched) && batched.length > 0) {
       return { items: batched.slice(0, 4), reasons };
     }
@@ -99,7 +99,7 @@ async function hydrateViaGraph(currentWhopSlug: string) {
   }
 }
 
-export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsProps) {
+export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffersProps) {
   const [recommendations, setRecommendations] = useState<RecommendedDeal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -117,11 +117,11 @@ export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsPr
         setLoading(true);
 
         // Fix double encoding: decode once, normalize, then encode once for API
-        const raw = currentWhopSlug || '';
+        const raw = currentOfferSlug || '';
         const canonicalSlug = normalizeSlug(raw);  // This handles decoding + normalization
         const apiSlug = encodeSlugForAPI(canonicalSlug);
 
-        if (DEBUG) console.log('slug check', { currentWhopSlug, canonicalSlug, apiSlug });
+        if (DEBUG) console.log('slug check', { currentOfferSlug, canonicalSlug, apiSlug });
 
         // 1) Graph-first (if flag on)
         const useGraph = process.env.NEXT_PUBLIC_USE_GRAPH_LINKS === 'true' || process.env.USE_GRAPH_LINKS === 'true';
@@ -240,7 +240,7 @@ export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsPr
           // Avoid duplicates: if explore equals a shown recommendation, skip
           const shownSlugs = new Set(cleanedRecommendations.map(r => r.slug));
           if (exploreSlug && !shownSlugs.has(exploreSlug)) {
-            const details = await fetchWhopDetails([exploreSlug]);
+            const details = await fetchOfferDetails([exploreSlug]);
             if (details && details.length > 0) {
               const item = details[0];
               setExplore({
@@ -257,7 +257,7 @@ export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsPr
         // Debug hook for troubleshooting
         if (typeof window !== 'undefined') {
           (window as any).__dpcRecDebug = {
-            slug: currentWhopSlug,
+            slug: currentOfferSlug,
             dataSource,
             hydrated: cleanedRecommendations.map(w => w.slug),
             count: cleanedRecommendations.length,
@@ -270,8 +270,8 @@ export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsPr
         if (DEBUG) {
           const loadTime = (performance.now() - t0).toFixed(1);
           const graphUsed = dataSource.includes('graph');
-          console.log('slug check', { currentWhopSlug, canonicalSlug, apiSlug });
-          console.log(`🎯 RecommendedWhops for "${canonicalSlug}": ${loadTime}ms`, {
+          console.log('slug check', { currentOfferSlug, canonicalSlug, apiSlug });
+          console.log(`🎯 RecommendedOffers for "${canonicalSlug}": ${loadTime}ms`, {
             useGraph,
             graphUsed,
             count: cleanedRecommendations.length,
@@ -289,7 +289,7 @@ export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsPr
         // --- PRODUCTION GUARD (temporary logging for Vercel debugging)
         if (process.env.NODE_ENV === 'production' && cleanedRecommendations.length < 3) {
           console.warn('[rec-guard] under-minimum', {
-            slug: currentWhopSlug,
+            slug: currentOfferSlug,
             canonicalSlug,
             source: dataSource,
             graphUrl: '/data/graph/neighbors.json',
@@ -305,10 +305,10 @@ export default function RecommendedWhops({ currentWhopSlug }: RecommendedWhopsPr
       }
     };
 
-    if (currentWhopSlug) {
+    if (currentOfferSlug) {
       fetchRecommendationsData();
     }
-  }, [currentWhopSlug]);
+  }, [currentOfferSlug]);
 
   if (loading) {
     return (

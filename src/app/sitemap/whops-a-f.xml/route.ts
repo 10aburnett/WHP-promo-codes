@@ -1,9 +1,9 @@
 // app/sitemap/whops-a-f.xml/route.ts
 import { NextResponse } from 'next/server';
-import { generateWhopSitemap, entriesToXML } from '@/lib/sitemap-utils';
+import { generateOfferSitemap, entriesToXML } from '@/lib/sitemap-utils';
 
 /**
- * Whops A-F Sitemap Shard (Phase F3)
+ * Offers A-F Sitemap Shard (Phase F3)
  *
  * Returns a sitemap of all whop pages with slugs starting A-F.
  * Applies quality gates via whereIndexable().
@@ -14,7 +14,7 @@ export const dynamic = 'force-static';
 export const revalidate = 3600; // 1 hour cache
 
 export async function GET() {
-  const entries = await generateWhopSitemap('a', 'f');
+  const entries = await generateOfferSitemap('a', 'f');
   const xml = entriesToXML(entries);
 
   return new NextResponse(xml, {

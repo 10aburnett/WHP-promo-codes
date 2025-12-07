@@ -16,13 +16,13 @@ interface LedgerEntry {
   maskInLedger?: boolean;
 }
 
-interface WhopFreshnessData {
+interface OfferFreshnessData {
   whopUrl: string;
   lastUpdated: string;
   ledger: LedgerEntry[];
 }
 
-interface WhopFreshnessProps {
+interface OfferFreshnessProps {
   slug: string;
 }
 
@@ -49,12 +49,12 @@ function getStatusLabel(status: string): string {
   }
 }
 
-export default function WhopFreshness({ slug }: WhopFreshnessProps) {
-  const [freshnessData, setFreshnessData] = useState<WhopFreshnessData | null>(null);
+export default function OfferFreshness({ slug }: OfferFreshnessProps) {
+  const [freshnessData, setFreshnessData] = useState<OfferFreshnessData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log('WhopFreshness component rendered for slug:', slug);
+  console.log('OfferFreshness component rendered for slug:', slug);
 
   useEffect(() => {
     async function loadFreshnessData() {

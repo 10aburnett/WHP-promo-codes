@@ -14,7 +14,7 @@ function normalizeImg(url?: string | null) {
   return `${base}${url.startsWith('/') ? url : `/${url}`}`;
 }
 
-export function ServerWhopCard(props: {
+export function ServerOfferCard(props: {
   slug: string; title: string; subtitle?: string | null;
   imageUrl?: string | null; badgeText?: string | null;
   category?: string | null; rating?: number | null;

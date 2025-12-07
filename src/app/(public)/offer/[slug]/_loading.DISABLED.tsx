@@ -7,7 +7,7 @@ export default function Loading() {
           {/* Hero Section Skeleton */}
           <div className="rounded-xl px-7 py-6 sm:p-8 shadow-lg border transition-theme" style={{ background: 'linear-gradient(to bottom right, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}>
             <div className="flex flex-col gap-4">
-              {/* Whop Info Skeleton */}
+              {/* Offer Info Skeleton */}
               <div className="flex items-center gap-4 sm:gap-6">
                 <div className="w-16 sm:w-20 h-16 sm:h-20 rounded-lg bg-gray-200/40 dark:bg-white/10 animate-pulse flex-shrink-0"></div>
                 <div className="min-w-0 flex-1">

@@ -9,7 +9,7 @@ export default function AdminDashboard() {
         <h2 className="text-2xl font-bold text-white mb-4">Dashboard</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link
-            href="/admin/whops"
+            href="/admin/offers"
             className="block p-6 bg-[#373946] border border-[#404055] rounded-lg shadow-md hover:bg-[#3c3f4a] transition-colors"
           >
             <h3 className="text-lg font-semibold text-white">Whops</h3>

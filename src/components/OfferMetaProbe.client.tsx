@@ -1,5 +1,5 @@
 'use client';
-export default function WhopMetaProbe() {
+export default function OfferMetaProbe() {
   if (typeof window !== 'undefined') {
     const el = document.getElementById('dpc-meta-snapshot');
     if (el?.textContent) {

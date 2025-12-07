@@ -5,16 +5,16 @@ import React, { useState, useEffect } from 'react';
 interface CopyCodeButtonProps {
   code: string;
   size?: 'default' | 'large';
-  whopId?: string;
+  offerId?: string;
   promoCodeId?: string;
   showUsageCount?: boolean;
   isSticky?: boolean;
 }
 
-export default function CopyCodeButton({ 
-  code, 
-  size = 'default', 
-  whopId, 
+export default function CopyCodeButton({
+  code,
+  size = 'default',
+  offerId,
   promoCodeId,
   showUsageCount = false,
   isSticky = false
@@ -32,7 +32,7 @@ export default function CopyCodeButton({
 
   const fetchUsageCount = async () => {
     if (!promoCodeId) return;
-    
+
     try {
       const response = await fetch(`/api/tracking?bonusId=${promoCodeId}`);
       if (response.ok) {
@@ -47,18 +47,18 @@ export default function CopyCodeButton({
   const handleCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      
+
       // Track the copy event
-      if (whopId && promoCodeId) {
+      if (offerId && promoCodeId) {
         await trackCopyCode();
       }
-      
+
       setTimeout(() => setCopied(false), 2000);
-      
+
       // Refresh usage count after copy
       if (showUsageCount) {
         setTimeout(() => {
@@ -73,19 +73,19 @@ export default function CopyCodeButton({
   const trackCopyCode = async () => {
     try {
       const trackingData = JSON.stringify({
-        casinoId: whopId, // Using whopId as casinoId for API compatibility
+        casinoId: offerId, // Using offerId as casinoId for API compatibility
         bonusId: promoCodeId, // Using promoCodeId as bonusId for API compatibility
         actionType: 'code_copy',
       });
-      
+
       // Use sendBeacon API if available for better reliability when page unloads
       if (navigator.sendBeacon) {
         const blob = new Blob([trackingData], { type: 'application/json' });
         const success = navigator.sendBeacon('/api/tracking', blob);
-        
+
         if (success) return;
       }
-      
+
       // Fall back to fetch if sendBeacon is not available or failed
       await fetch('/api/tracking', {
         method: 'POST',
@@ -116,8 +116,8 @@ export default function CopyCodeButton({
         title={code}
       >
         <div className={`text-center ${size !== 'large' ? 'flex-1 mr-2' : ''}`}>
-          <span className={size === 'large' 
-            ? 'text-xl md:text-2xl font-medium text-white' 
+          <span className={size === 'large'
+            ? 'text-xl md:text-2xl font-medium text-white'
             : `text-sm md:text-base font-medium text-white ${isSticky ? 'text-base md:text-lg' : ''}`}>
             {copied ? 'Copied!' : displayCode}
           </span>
@@ -140,4 +140,4 @@ export default function CopyCodeButton({
       </button>
     </div>
   );
-} 
+}
