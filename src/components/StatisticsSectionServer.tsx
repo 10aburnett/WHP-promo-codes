@@ -8,10 +8,10 @@ interface StatisticsServerProps {
 
 export default function StatisticsSectionServer({ stats }: StatisticsServerProps) {
   const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
-    } else if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+    if (num >= 1_000_000) {
+      return (num / 1_000_000).toFixed(1) + 'M';
+    } else if (num >= 1_000) {
+      return (num / 1_000).toFixed(1) + 'K';
     }
     return num.toString();
   };
@@ -23,7 +23,7 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
     link = null,
     icon,
     showLogo = false,
-    logoUrl
+    logoUrl,
   }: {
     title: string;
     value: number | string;
@@ -36,36 +36,73 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
     const displayValue = typeof value === 'number' ? formatNumber(value) : value;
 
     const content = (
-      <div className="w-full h-[164px] md:h-auto rounded-2xl border p-4 md:p-6 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg" style={{
-        backgroundColor: 'var(--background-color)',
-        borderColor: 'var(--border-color)',
-      }}>
-        {showLogo && logoUrl ? (
-          <div className="w-8 h-8 mx-auto mb-1 rounded-md overflow-hidden flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--background-secondary)' }}>
-            <img
-              src={logoUrl.startsWith('http') ? `/api/img?src=${encodeURIComponent(logoUrl)}` : logoUrl}
-              alt={`${value} logo`}
-              width={32}
-              height={32}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
+      <div className="h-full">
+        <div
+          className="group relative h-full rounded-2xl border shadow-theme-promo bg-[color:var(--card-bg)] px-4 py-4 md:px-6 md:py-6 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)',
+          }}
+        >
+          {/* Thin fintech accent bar */}
+          <div
+            className="pointer-events-none absolute inset-x-4 top-0 h-0.5 rounded-full"
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(4,120,87,0.9), rgba(22,163,74,0.85))',
+            }}
+          />
+
+          {showLogo && logoUrl ? (
+            <div
+              className="mb-2 flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border"
+              style={{
+                backgroundColor: 'var(--background-secondary)',
+                borderColor: 'var(--border-color)',
+              }}
+            >
+              <img
+                src={
+                  logoUrl.startsWith('http')
+                    ? `/api/img?src=${encodeURIComponent(logoUrl)}`
+                    : logoUrl
+                }
+                alt={`${value} logo`}
+                width={32}
+                height={32}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            <div
+              className="mb-2 text-2xl md:text-3xl"
+              style={{ color: 'var(--accent-color)' }}
+            >
+              {typeof icon === 'string' ? icon : icon}
+            </div>
+          )}
+
+          <div
+            className="text-2xl font-semibold leading-tight md:text-3xl"
+            style={{ color: 'var(--text-color)' }}
+          >
+            {displayValue}
+            {suffix}
           </div>
-        ) : (
-          <div className="mb-1 shrink-0 text-2xl" style={{ color: 'var(--accent-color)' }}>
-            {typeof icon === 'string' ? icon : icon}
+          <div
+            className="mt-1 mb-1.5 text-xs leading-snug md:mb-4 md:text-sm line-clamp-2"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {title}
           </div>
-        )}
-        <div className="text-2xl font-semibold leading-tight" style={{ color: 'var(--text-color)' }}>
-          {displayValue}{suffix}
         </div>
-        <div className="mt-0.5 text-sm leading-snug line-clamp-2 mb-2 md:mb-6" style={{ color: 'var(--text-secondary)' }}>{title}</div>
       </div>
     );
 
     if (link) {
       return (
-        <Link href={link} className="block">
+        <Link href={link} className="block h-full">
           {content}
         </Link>
       );
@@ -80,21 +117,34 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
       className="
         stats-section
         -mt-8 md:mt-0
-        pt-5 md:pt-16
-        pb-10 md:pb-16 mb-2 md:mb-12
-        border-t-0 md:border-t md:border-white/10
+        pt-6 md:pt-16
+        pb-10 md:pb-16
+        mb-2 md:mb-12
+        border-t-0 md:border-t
       "
-      style={{ backgroundColor: 'var(--background-secondary)' }}
+      style={{
+        background:
+          'linear-gradient(180deg, var(--background-secondary), var(--background-tertiary))',
+        borderColor: 'rgba(15,23,42,0.08)',
+      }}
     >
-      <div className="mx-auto w-[90%] md:w-[95%] max-w-[1280px]">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>Platform Statistics</h2>
-          <p className="max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+      <div className="container mx-auto max-w-6xl px-3 md:px-4">
+        <div className="mb-8 text-center md:mb-12">
+          <h2
+            className="text-2xl font-semibold md:text-3xl lg:text-4xl"
+            style={{ color: 'var(--text-color)' }}
+          >
+            Platform Statistics
+          </h2>
+          <p
+            className="mt-3 max-w-2xl mx-auto text-sm md:text-base"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             Real-time data from our growing community
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-5 lg:gap-6">
           <StatCard
             title="Active Users"
             value={stats?.totalUsers || 0}
@@ -114,7 +164,11 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
             title="Most Popular"
             value={stats?.mostClaimedOffer?.name || 'N/A'}
             icon="⭐"
-            link={stats?.mostClaimedOffer?.slug ? `/whop/${stats.mostClaimedOffer.slug.toLowerCase()}` : undefined}
+            link={
+              stats?.mostClaimedOffer?.slug
+                ? `/offer/${stats.mostClaimedOffer.slug.toLowerCase()}`
+                : undefined
+            }
             logoUrl={stats?.mostClaimedOffer?.logoUrl}
             showLogo={true}
           />
