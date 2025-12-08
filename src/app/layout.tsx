@@ -119,7 +119,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#6366f1',
+  themeColor: [
+    // Light mode: fintech accent green
+    { media: '(prefers-color-scheme: light)', color: '#047857' }, // emerald-800
+    // Dark mode: deep slate background
+    { media: '(prefers-color-scheme: dark)', color: '#020617' },  // slate-950
+  ],
 };
 
 export default async function RootLayout({
@@ -154,96 +159,6 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://img-v2-prod.whop.com" crossOrigin="" />
         {/* dns-prefetch for dynamic origin handled by siteOrigin() */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-        <style dangerouslySetInnerHTML={{__html: `
-          :root {
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-            --border-radius-large: 12px;
-            --btn-border-radius: 6px;
-            --card-spacing: 30px;
-            --background-color: #ffffff;
-            --background-secondary: #f8fafc;
-            --background-tertiary: #e2e8f0;
-            --container-color: #f8fafc;
-            --text-color: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            --accent-color: #3b82f6;
-            --accent-hover: #2563eb;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --error-color: #dc2626;
-            --border-color: #e2e8f0;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --menu-item-color: #64748b;
-            --header-shadow: 2px 0 3px 0 #00000015;
-            --promo-bg: #ffffff;
-            --promo-bg-gradient: linear-gradient(45deg, #ffffff, #f8fafc);
-            --promo-border: 1px solid #e2e8f0;
-            --promo-shadow: 0 0 4px 0 #0000000d;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --input-bg: #ffffff;
-            --input-border: #d1d5db;
-            --input-focus: #3b82f6;
-          }
-          [data-theme="dark"] {
-            --background-color: #1a1b23;
-            --background-secondary: #2a2d3a;
-            --background-tertiary: #3f4451;
-            --container-color: #2a2d3a;
-            --text-color: #f1f1f1;
-            --text-secondary: #a4a5b0;
-            --text-muted: #6b7280;
-            --accent-color: #6366f1;
-            --accent-hover: #5855eb;
-            --success-color: #68D08B;
-            --warning-color: #f59e0b;
-            --error-color: #dc2626;
-            --border-color: #3f4451;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --menu-item-color: #a7a9b4;
-            --header-shadow: 2px 0 3px 0 #00000085;
-            --promo-bg: #2a2d3a;
-            --promo-bg-gradient: linear-gradient(45deg, #2a2d3a, #1f2937);
-            --promo-border: 1px solid #3f4451;
-            --promo-shadow: 0 0 4px 0 #0f0f14ad;
-            --card-bg: #2a2d3a;
-            --card-border: #3f4451;
-            --input-bg: #3e4050;
-            --input-border: #404055;
-            --input-focus: #68D08B;
-          }
-          * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-          }
-          html {
-            transition: var(--theme-transition);
-          }
-          body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            transition: var(--theme-transition);
-          }
-          .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-          }
-          @media (max-width: 640px) {
-            .container {
-              padding: 0 0.5rem;
-            }
-          }
-        `}} />
         <link rel="preload" href="/logo.png" as="image" />
         {/* Comprehensive favicon setup for all browsers */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -253,8 +168,8 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
-        <meta name="msapplication-TileColor" content="#4285f4" />
-        <meta name="theme-color" content="#4285f4" />
+        <meta name="msapplication-TileColor" content="#047857" />
+        <meta name="theme-color" content="#047857" />
         {/* Only include manifest in production to avoid 401s on Vercel protected previews */}
         {process.env.VERCEL_ENV === 'production' && (
           <link rel="manifest" href="/site.webmanifest" />

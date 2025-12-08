@@ -10,16 +10,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Legacy colors (keeping for backward compatibility)
-        background: '#1a1b23',
-        container: '#2a2d3a',
-        text: '#f1f1f1',
-        accent: '#6366f1',
-        'menu-item': '#a7a9b4',
-        'promo-bg': '#2a2d3a',
-        'promo-border': '#3f4451',
-        
-        // Theme-aware colors using CSS variables
+        /**
+         * LEGACY NAMED COLORS
+         * These are still here so any classes like `bg-background`, `text-text`,
+         * `text-accent` etc. don't explode – but they now point at the
+         * deep-green fintech palette instead of the old blue/purple scheme.
+         */
+        background: '#020617',      // deep slate – matches dark background
+        container: '#020617',       // same as background for simplicity
+        text: '#e5e7eb',            // slate-200/300 – good contrast on dark
+        accent: '#16a34a',          // green-600 – primary accent (no purple)
+        'menu-item': '#9ca3af',     // gray-400 – neutral nav text
+        'promo-bg': '#020617',      // dark surface
+        'promo-border': '#1f2937',  // slate-800 border
+
+        /**
+         * THEME-* TOKENS (preferred)
+         * These are the ones wired to CSS variables you set in globals.css.
+         * Anything that uses `bg-theme-*`, `text-theme-*`, etc. will stay in sync
+         * with the light/dark fintech palette from globals.css.
+         */
         theme: {
           primary: 'var(--background-color)',
           secondary: 'var(--background-secondary)',
@@ -52,22 +62,38 @@ const config: Config = {
           },
         },
       },
+
+      /**
+       * Shadows – tuned for a clean fintech feel
+       * Nothing neon, no heavy glows. Soft, directional shadows only.
+       */
       boxShadow: {
-        header: '2px 0 3px 0 #00000085',
-        promo: '0 0 4px 0 #1a1b27ad',
+        // Slight header separator – works on light & dark
+        header: '0 1px 0 rgba(15, 23, 42, 0.12)', // slate-900 at low opacity
+
+        // Deeper card / promo shadow – subtle elevation, not 2005 drop shadow
+        promo: '0 14px 35px rgba(15, 23, 42, 0.22)',
+
+        // Theme-driven variants (hooked to CSS vars in globals.css)
         'theme-header': 'var(--header-shadow)',
         'theme-promo': 'var(--promo-shadow)',
       },
+
+      /**
+       * Radii – keep your existing scale, these are used in components.
+       * We'll reshape cards/buttons via class usage later, not by nuking the scale.
+       */
       borderRadius: {
         large: '12px',
         button: '6px',
       },
+
       transitionProperty: {
-        'theme': 'background-color, color, border-color',
+        theme: 'background-color, color, border-color',
       },
     },
   },
   plugins: [],
 };
 
-export default config; 
+export default config;
