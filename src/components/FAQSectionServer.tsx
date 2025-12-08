@@ -41,7 +41,7 @@ function getFaqAnswerType(answerText: string): { text: string; isHtml: boolean }
 }
 
 export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FAQSectionServerProps) {
-  let displayFaqs: Array<{question: string, answer: string, isHtml: boolean}> = [];
+  let displayFaqs: Array<{ question: string; answer: string; isHtml: boolean }> = [];
   let jsonLd: any = null;
 
   // Priority 1: Use structured FAQ content if available
@@ -61,22 +61,22 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
 
       // Generate JSON-LD for structured FAQs (use plain text for schema)
       jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": parsed.map(faq => ({
-          "@type": "Question",
-          "name": faq.question,
-          "acceptedAnswer": {
-            "@type": "Answer",
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: parsed.map(faq => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
             // For JSON-LD, always use plain text
-            "text": toPlainText(faq.answerHtml)
+            text: toPlainText(faq.answerHtml)
           }
         }))
       };
     } else if (typeof parsed === 'string') {
       // Legacy text content
       displayFaqs = [{
-        question: "FAQ Information",
+        question: 'FAQ Information',
         answer: parsed,
         isHtml: false
       }];
@@ -102,8 +102,8 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
     return {
       question: q,
       // Normalize both HTML and plain text answers so bytes match on client
-      answer: f.isHtml ? normalizeText(String(f.answer)) : normalizeText(String(f.answer)),
-      isHtml: !!f.isHtml,
+      answer: normalizeText(String(f.answer)),
+      isHtml: !!f.isHtml
     };
   });
 
@@ -117,28 +117,48 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
         />
       )}
 
-      <section className="rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-        <h2 id="faq-heading" className="text-xl sm:text-2xl font-bold mb-4">Common Questions</h2>
-        <div className="space-y-3">
-          {safeFaqs.map((faq) => (
+      <section
+        className="dpc-faq-card rounded-2xl border shadow-theme-promo px-5 sm:px-7 py-6 sm:py-7 transition-theme"
+        style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+      >
+        <h2
+          id="faq-heading"
+          className="text-xl sm:text-2xl font-bold mb-4 sm:mb-5"
+        >
+          Common Questions
+        </h2>
+
+        <div className="space-y-3 sm:space-y-4">
+          {safeFaqs.map((faq, idx) => (
             <details
-              key={String(faq.question)}
-              className="rounded-lg border transition-all duration-200 overflow-hidden"
+              key={`${faq.question}-${idx}`}
+              className="group rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-sm"
               style={{
                 backgroundColor: 'var(--background-color)',
                 borderColor: 'var(--border-color)'
               }}
             >
               {/* Question Header - Native HTML summary with ONLY text content for stable hydration */}
-              <summary className="w-full p-4 pr-10 text-left cursor-pointer hover:opacity-80 transition-opacity list-none font-semibold text-lg [&::-webkit-details-marker]:hidden">
-                {faq.question}
+              <summary
+                className="w-full flex items-center justify-between gap-3 p-4 pr-5 text-left cursor-pointer hover:opacity-80 transition-opacity list-none font-semibold text-base sm:text-lg [&::-webkit-details-marker]:hidden"
+              >
+                <span>{faq.question}</span>
+                <span
+                  aria-hidden="true"
+                  className="text-sm opacity-60"
+                >
+                  ▾
+                </span>
               </summary>
 
               {/* Answer Content - Revealed by native details/summary */}
-              <div className="px-4 pb-4" style={{ color: 'var(--text-secondary)' }}>
+              <div
+                className="px-4 pb-4 pt-0 border-t text-sm sm:text-base leading-relaxed"
+                style={{ color: 'var(--text-secondary)', borderColor: 'var(--border-color)' }}
+              >
                 {faq.isHtml ? (
                   <div
-                    className="leading-relaxed prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                    className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
                     suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: faq.answer }}
                   />

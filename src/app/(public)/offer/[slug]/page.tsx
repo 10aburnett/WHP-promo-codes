@@ -159,7 +159,10 @@ async function getVerificationData(slug: string) {
 // Skeleton component for streaming sections
 function SectionSkeleton() {
   return (
-    <div className="h-48 w-full rounded animate-pulse bg-gray-200/40 dark:bg-white/10"></div>
+    <div
+      className="h-48 w-full rounded-xl animate-pulse"
+      style={{ backgroundColor: 'var(--background-secondary)' }}
+    />
   );
 }
 
@@ -727,7 +730,11 @@ export default async function DealPage({ params }: { params: { slug: string } })
   }
 
   return (
-    <main key={pageKey} className="dpc-offer-page min-h-screen py-12 pt-24 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
+    <main
+      key={pageKey}
+      className="dpc-offer-page min-h-screen pt-24 pb-16 transition-theme"
+      style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
+    >
       {/* HowTo Schema for SEO */}
       <HowToSchema
         slug={params.slug}
@@ -745,11 +752,11 @@ export default async function DealPage({ params }: { params: { slug: string } })
         />
       )}
 
-      <div className="dpc-offer-container mx-auto w-[90%] md:w-[95%] max-w-6xl">
+      <div className="dpc-offer-container container mx-auto max-w-6xl px-3 sm:px-4">
         {/* Noindex Notice Banner */}
         {!pageIsIndexable && (
           <div className="dpc-notice-banner max-w-4xl mx-auto mb-6">
-            <div className="rounded-lg border px-4 py-3 text-sm" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)', opacity: 0.8 }}>
+            <div className="rounded-full border px-4 py-3 text-sm" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)', opacity: 0.8 }}>
               <span style={{ color: 'var(--text-secondary)' }}>
                 ℹ️ This page is currently not indexed by search engines, but is available for viewing.
               </span>
@@ -764,9 +771,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
           <article className="dpc-offer-main flex-1 min-w-0 space-y-6 mb-8 lg:mb-0">
 
             {/* Hero Header */}
-            <header className="dpc-offer-header rounded-xl px-7 py-6 sm:p-8 shadow-lg border transition-theme" style={{ background: 'linear-gradient(to bottom right, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}>
+            <header className="dpc-offer-header rounded-2xl px-7 py-6 sm:p-8 shadow-theme-promo border transition-theme" style={{ background: 'linear-gradient(to bottom right, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}>
               <div className="flex items-center gap-4 sm:gap-6 mb-4">
-                <figure className="relative w-16 sm:w-20 h-16 sm:h-20 rounded-lg overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--background-color)' }}>
+                <figure className="relative w-16 sm:w-20 h-16 sm:h-20 rounded-xl border overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}>
                   <OfferLogo offer={offerFormatted} />
                 </figure>
                 <div className="min-w-0">
@@ -813,7 +820,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
             </header>
 
             {/* Jump Links Navigation - Only show links for sections that exist */}
-            <nav className="dpc-jump-links rounded-lg px-4 py-3 border" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }} aria-label="Page sections">
+            <nav className="dpc-jump-links rounded-full px-4 py-3 border shadow-theme-promo" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }} aria-label="Page sections">
               <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm font-medium">
                 {hasOverview && (
                   <li><a href="#overview" className="hover:underline" style={{ color: 'var(--accent-color)' }}>Overview</a></li>
@@ -841,7 +848,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 : (isMeaningful(offerFormatted.description) ? offerFormatted.description : null);
 
               return aboutVal && (
-                <section id="overview" className="dpc-offer-overview rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
+                <section id="overview" className="dpc-offer-overview rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
                   <h2 className="text-xl sm:text-2xl font-bold mb-4">Overview</h2>
                   <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                     {looksLikeHtml(aboutVal) ? (
@@ -858,7 +865,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
             })()}
 
             {/* Redemption Steps Section */}
-            <section id="redemption" className="dpc-offer-redemption rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
+            <section id="redemption" className="dpc-offer-redemption rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <h2 className="text-xl sm:text-2xl font-bold mb-4">Redemption Steps</h2>
               {isMeaningful(offerFormatted.howToRedeemContent) ? (
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -894,7 +901,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
             </section>
 
             {/* Deal Specifics Section */}
-            <section id="details" className="dpc-offer-details rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
+            <section id="details" className="dpc-offer-details rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <h2 className="text-xl sm:text-2xl font-bold mb-4">Deal Specifics</h2>
               {isMeaningful(offerFormatted.promoDetailsContent) ? (
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -926,7 +933,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
             {/* What's Included Section */}
             {isMeaningful(offerFormatted.featuresContent) && (
-              <section id="features" className="dpc-offer-features rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
+              <section id="features" className="dpc-offer-features rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
                 <h2 className="text-xl sm:text-2xl font-bold mb-4">What&apos;s Included</h2>
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   {looksLikeHtml(offerFormatted.featuresContent!) ? (
@@ -942,7 +949,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
             )}
 
             {/* Visual Guide Section */}
-            <section className="dpc-offer-howto rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
+            <section className="dpc-offer-howto rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <HowToSection
                 slug={params.slug}
                 brand={offerFormatted.name}
@@ -964,7 +971,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
             </section>
 
             {/* Fine Print Section */}
-            <section id="terms" className="dpc-offer-terms rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
+            <section id="terms" className="dpc-offer-terms rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
               <h2 className="text-xl sm:text-2xl font-bold mb-4">Fine Print</h2>
               {isMeaningful(offerFormatted.termsContent) ? (
                 <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
@@ -993,7 +1000,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
               {/* 1. Product Summary Card */}
               <div
-                className="dpc-summary-card rounded-xl px-6 py-5 border shadow-sm"
+                className="dpc-summary-card rounded-2xl px-6 py-5 border shadow-theme-promo"
                 style={{
                   backgroundColor: "var(--background-secondary)",
                   borderColor: "var(--border-color)",
@@ -1053,7 +1060,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
               {/* 2. Usage Statistics - moved ABOVE Key Facts */}
               <div
-                className="dpc-stats-card rounded-xl px-6 py-5 border shadow-sm"
+                className="dpc-stats-card rounded-2xl px-6 py-5 border shadow-theme-promo"
                 style={{
                   backgroundColor: "var(--background-secondary)",
                   borderColor: "var(--border-color)",
@@ -1070,7 +1077,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
               {/* 3. Key Facts Card - Only show Discount/Codes when hasPromoCodes */}
               <div
-                className="dpc-key-facts rounded-xl px-6 py-5 border shadow-sm"
+                className="dpc-key-facts rounded-2xl px-6 py-5 border shadow-theme-promo"
                 style={{
                   backgroundColor: "var(--background-secondary)",
                   borderColor: "var(--border-color)",
@@ -1152,7 +1159,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
               {/* 4. Why We Like This Card */}
               <div
-                className="dpc-why-card rounded-xl px-6 py-5 border shadow-sm"
+                className="dpc-why-card rounded-2xl px-6 py-5 border shadow-theme-promo"
                 style={{
                   backgroundColor: "var(--background-secondary)",
                   borderColor: "var(--border-color)",
@@ -1183,7 +1190,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
               {/* 5. Mini Alternatives Card */}
               <div
-                className="dpc-mini-alternatives rounded-xl px-6 py-5 border shadow-sm"
+                className="dpc-mini-alternatives rounded-2xl px-6 py-5 border shadow-theme-promo"
                 style={{
                   backgroundColor: "var(--background-secondary)",
                   borderColor: "var(--border-color)",
@@ -1212,7 +1219,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 return (
                   <div
                     key={promo.id}
-                    className="dpc-discount-card rounded-xl px-6 py-5 border"
+                    className="dpc-discount-card rounded-2xl px-6 py-5 border shadow-theme-promo"
                     style={{
                       backgroundColor: "var(--background-secondary)",
                       borderColor: "var(--border-color)",
@@ -1298,7 +1305,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
           {/* Back Link */}
           <nav className="dpc-back-link max-w-4xl mx-auto" aria-label="Back navigation">
-            <a href="/" className="hover:opacity-80 flex items-center gap-2 px-1 transition-colors" style={{ color: 'var(--text-secondary)' }}>
+            <a href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-full transition-colors hover:bg-[var(--background-secondary)]" style={{ color: 'var(--text-secondary)' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
