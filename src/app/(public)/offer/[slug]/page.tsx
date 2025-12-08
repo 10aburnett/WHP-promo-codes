@@ -771,9 +771,22 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 </figure>
                 <div className="min-w-0">
                   <h1 className="text-2xl sm:text-3xl font-bold mb-2">{offerFormatted.name} Promo Code</h1>
-                  <p className="text-base sm:text-lg" style={{ color: 'var(--accent-color)' }}>
-                    {promoTitle}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="text-base sm:text-lg" style={{ color: 'var(--accent-color)' }}>
+                      {promoTitle}
+                    </p>
+                    {offerFormatted.price && offerFormatted.price !== 'N/A' && (
+                      <span
+                        className="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold"
+                        style={{
+                          backgroundColor: offerFormatted.price === 'Free' ? 'var(--success-color)' : 'var(--success-color)',
+                          color: 'white',
+                        }}
+                      >
+                        {offerFormatted.price}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
