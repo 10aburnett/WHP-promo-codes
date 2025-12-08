@@ -131,37 +131,28 @@ async function getDeal(slug: string) {
 
 // Helper: load verification data (fetch-only, edge-safe)
 async function getVerificationData(slug: string) {
+  // In development, skip remote verification fetch to avoid timeouts
+  if (process.env.NODE_ENV === 'development') {
+    return null;
+  }
+
+  const origin = process.env.SITE_ORIGIN ?? 'https://digitalpromocodes.com';
+
   try {
-    const { fileSlug } = await import("@/lib/slug-utils");
-    const encoded = fileSlug(slug);
-    const base = resolveBaseUrl();
-
-    // main - use ISR caching aligned with page revalidation
-    let res = await fetch(`${base}/api/data/pages/${encoded}.json`, {
-      next: { revalidate: 300, tags: [`whop:${slug}:verification`] }
-    });
-
-    // fallback: legacy lowercase %XX if needed
-    if (!res.ok) {
-      const lower = encoded.replace(/%[0-9A-F]{2}/g, m => m.toLowerCase());
-      res = await fetch(`${base}/api/data/pages/${lower}.json`, {
-        next: { revalidate: 300, tags: [`whop:${slug}:verification`] }
-      });
-    }
+    const res = await fetch(
+      `${origin}/data/pages/${encodeURIComponent(slug)}.verification.json`,
+      { next: { revalidate: 300 } }
+    );
 
     if (!res.ok) {
-      console.error('VERIFICATION_FETCH_FAIL: HTTP', res.status, 'for', encoded);
+      console.warn('Verification fetch non-OK', slug, res.status);
       return null;
     }
 
-    const raw = await res.json();
-    console.log('VERIFICATION_DATA_RAW:', slug, JSON.stringify(raw).slice(0, 200));
-
-    // Return the full raw data including whopUrl, lastUpdated, and ledger
-    return raw;
+    return (await res.json()) as any | null;
   } catch (err) {
-    console.error('VERIFICATION_FETCH_FAIL', slug, err);
-    return null; // never throw
+    console.warn('Verification fetch failed', slug, err);
+    return null;
   }
 }
 

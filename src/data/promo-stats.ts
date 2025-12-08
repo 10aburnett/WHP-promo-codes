@@ -35,7 +35,7 @@ export const getPromoStatsForSlug = cache(async (slug: string): Promise<PromoUsa
 
     // Try whopId-based counting first (most accurate)
     if (whopId) {
-      const whereBase = { offerId: whopId, actionType: 'code_copy' as const };
+      const whereBase = { whopId: whopId, actionType: 'code_copy' as const };
 
       const [totalCount, todayCount, lastUsage] = await Promise.all([
         prisma.offerTracking.count({ where: whereBase }),

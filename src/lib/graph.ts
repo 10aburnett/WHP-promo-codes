@@ -13,7 +13,49 @@ const GRAPH_URL =
 
 const GRAPH_VER = process.env.NEXT_PUBLIC_GRAPH_VERSION || '';
 
+// Dev-only mock slugs for styling the recommendations/alternatives sections
+const DEV_MOCK_SLUGS = [
+  'ai-video-labs',
+  'korvato',
+  'goldboys-gold',
+  'deal-flip-formula-main',
+  'penny-stock-mafia',
+  'mf-capital',
+  'high-ticket-incubator',
+  'the-ai-agency-launchpad',
+];
+
 export async function loadNeighbors(): Promise<NeighborsMap> {
+  // In development, return mock data so we can style recs/alternatives without network timeouts
+  if (process.env.NODE_ENV === 'development') {
+    // Create a wildcard entry that getNeighborSlugsFor can match against any slug
+    // by using a Proxy that returns mock data for any key
+    const mockData: NeighborsMap = {};
+
+    // Pre-populate with known slugs, but also add a handler for unknown slugs
+    const baseMockEntry: NeighborData = {
+      recommendations: DEV_MOCK_SLUGS.slice(0, 4),
+      alternatives: DEV_MOCK_SLUGS.slice(4, 8),
+      explore: '/offers'
+    };
+
+    // Add mock entries for known slugs
+    DEV_MOCK_SLUGS.forEach(slug => {
+      mockData[slug] = baseMockEntry;
+    });
+
+    // Return a Proxy that returns mock data for ANY slug lookup
+    return new Proxy(mockData, {
+      get(target, prop: string) {
+        if (prop in target) {
+          return target[prop];
+        }
+        // Return mock data for any unknown slug too
+        return baseMockEntry;
+      }
+    });
+  }
+
   // Make URL absolute for server-side fetches
   const baseUrl = typeof window === 'undefined' ? siteOrigin() : '';
   const graphUrl = GRAPH_URL.startsWith('http') ? GRAPH_URL : `${baseUrl}${GRAPH_URL}`;
@@ -34,11 +76,10 @@ export async function loadNeighbors(): Promise<NeighborsMap> {
   const data = await res.json();
   const keys = Object.keys(data).length;
 
-  // Enhanced debugging for prod/dev consistency
-  const isDev = process.env.NODE_ENV === 'development';
+  // Debug logging (only when NEXT_PUBLIC_DEBUG is enabled)
   const isDebug = process.env.NEXT_PUBLIC_DEBUG === 'true';
 
-  if (isDev || isDebug) {
+  if (isDebug) {
     console.log('[graph] Loaded:', {
       url,
       keys,
