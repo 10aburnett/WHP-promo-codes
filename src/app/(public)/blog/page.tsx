@@ -64,23 +64,57 @@ export default async function BlogPage() {
               <div className="text-center">
                 <h1 className="text-4xl md:text-5xl font-bold py-1"
                     style={{ lineHeight: '1.3', marginBottom: '0.6rem' }}>
-                  <span style={{ color: 'var(--accent-color)' }}>DPC</span>
+                  <span style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</span>
                   <span className="ml-2" style={{ color: 'var(--text-color)' }}>
                     Blog
                   </span>
                 </h1>
-                <div className="w-20 h-1 mx-auto rounded-full" style={{ backgroundColor: 'var(--accent-color)' }}></div>
+                <div
+                  className="mx-auto h-1.5 w-28 rounded-full"
+                  style={{
+                    backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.6))'
+                  }}
+                ></div>
               </div>
 
               <div className="text-center -mt-2">
                 <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                  Stay updated with the latest insights, tips, and digital product news.
+                  Deep-dive guides, savings strategies, and digital product insights from the team behind DigitalPromoCodes.
                 </p>
               </div>
 
               <div className="text-center py-16">
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-8 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <p className="text-lg text-gray-900 dark:text-white">No blog posts published yet.</p>
+                <div
+                  className="inline-flex flex-col items-center justify-center rounded-2xl border px-8 py-10 shadow-sm"
+                  style={{
+                    backgroundColor: 'var(--background-secondary)',
+                    borderColor: 'var(--border-color)',
+                  }}
+                >
+                  <div
+                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-full"
+                    style={{ backgroundColor: 'rgba(5,150,105,0.12)', color: 'var(--accent-color)' }}
+                  >
+                    <svg
+                      className="h-6 w-6"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.8}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="11" cy="11" r="6" />
+                      <path d="m16 16 3.5 3.5" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                    No articles published yet
+                  </h2>
+                  <p className="text-sm max-w-md" style={{ color: 'var(--text-secondary)' }}>
+                    We're preparing in-depth guides on digital products, promo strategies, and savings tips.
+                    Check back soon for fresh content from the DigitalPromoCodes team.
+                  </p>
                 </div>
               </div>
             </div>
@@ -122,17 +156,22 @@ export default async function BlogPage() {
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold py-1"
                   style={{ lineHeight: '1.3', marginBottom: '0.6rem' }}>
-                <span style={{ color: 'var(--accent-color)' }}>DPC</span>
+                <span style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</span>
                 <span className="ml-2" style={{ color: 'var(--text-color)' }}>
                   Blog
                 </span>
               </h1>
-              <div className="w-20 h-1 mx-auto rounded-full" style={{ backgroundColor: 'var(--accent-color)' }}></div>
+              <div
+                className="mx-auto h-1.5 w-28 rounded-full"
+                style={{
+                  backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.6))'
+                }}
+              ></div>
             </div>
 
             <div className="text-center -mt-2">
               <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                Stay updated with the latest insights, tips, and digital product news.
+                Deep-dive guides, savings strategies, and digital product insights from the team behind DigitalPromoCodes.
               </p>
             </div>
 
@@ -140,53 +179,80 @@ export default async function BlogPage() {
               {(posts as BlogListItemWithDates[]).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <article
-                    className="blog-card rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border cursor-pointer relative"
-                    style={{ 
+                    className="group relative flex h-full cursor-pointer flex-col rounded-2xl border bg-[var(--card-bg)] p-6 shadow-sm transition-all duration-200 hover:shadow-lg"
+                    style={{
                       borderColor: 'var(--card-border)',
-                      boxShadow: 'var(--promo-shadow)'
+                      boxShadow: 'var(--promo-shadow)',
                     }}
                   >
                     {post.pinned && (
-                      <div className="absolute top-4 right-4 text-yellow-500 text-xl">
-                        📌
+                      <div className="absolute right-4 top-4">
+                        <span
+                          className="rounded-full px-2.5 py-1 text-xs font-medium"
+                          style={{
+                            backgroundColor: 'rgba(5,150,105,0.1)',
+                            color: 'var(--accent-color)',
+                          }}
+                        >
+                          Featured
+                        </span>
                       </div>
                     )}
-                    <div className="blog-card-content p-8">
-                      <div className="flex flex-col h-full">
-                        <div className="mb-4">
-                          <time className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric'
-                            }) : ''}
-                          </time>
-                        </div>
-                        
-                        <h2 className="blog-card-title text-2xl font-bold mb-4 group-hover:opacity-80 transition-colors" style={{ color: 'var(--text-color)' }}>
-                          {post.title}
-                        </h2>
-                        
-                        {post.excerpt && (
-                          <p className="blog-card-excerpt mb-6" style={{ color: 'var(--text-secondary)' }}>
-                            {post.excerpt}
-                          </p>
-                        )}
-                        
-                        <div className="flex items-center justify-between mt-auto">
-                          <span
-                            className="blog-accent inline-flex items-center font-medium group-hover:opacity-80 transition-opacity"
+                    <div className="flex h-full flex-col">
+                      <div className="mb-3">
+                        <time
+                          className="text-xs uppercase tracking-wide"
+                          style={{ color: 'var(--text-muted)' }}
+                        >
+                          {post.publishedAt
+                            ? new Date(post.publishedAt).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })
+                            : ''}
+                        </time>
+                      </div>
+
+                      <h2
+                        className="mb-3 line-clamp-2 text-xl font-semibold group-hover:opacity-85"
+                        style={{ color: 'var(--text-color)' }}
+                      >
+                        {post.title}
+                      </h2>
+
+                      {post.excerpt && (
+                        <p
+                          className="mb-6 line-clamp-3 text-sm"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
+                          {post.excerpt}
+                        </p>
+                      )}
+
+                      <div className="mt-auto flex items-center justify-between pt-2">
+                        <span
+                          className="inline-flex items-center text-sm font-medium transition-opacity group-hover:opacity-80"
+                          style={{ color: 'var(--accent-color)' }}
+                        >
+                          Read article
+                          <svg
+                            className="ml-2 h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={1.8}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           >
-                            Read More
-                            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </span>
-                          
-                          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                            By {post.authorName ?? post.author?.name ?? 'Unknown'}
-                          </span>
-                        </div>
+                            <path d="M5 12h14" />
+                            <path d="M13 5l7 7-7 7" />
+                          </svg>
+                        </span>
+
+                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          By {post.authorName ?? post.author?.name ?? 'Unknown'}
+                        </span>
                       </div>
                     </div>
                   </article>
@@ -207,31 +273,56 @@ export default async function BlogPage() {
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold py-1"
                   style={{ lineHeight: '1.3', marginBottom: '0.6rem' }}>
-                <span style={{ color: 'var(--accent-color)' }}>DPC</span>
+                <span style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</span>
                 <span className="ml-2" style={{ color: 'var(--text-color)' }}>
                   Blog
                 </span>
               </h1>
-              <div className="w-20 h-1 mx-auto rounded-full" style={{ backgroundColor: 'var(--accent-color)' }}></div>
+              <div
+                className="mx-auto h-1.5 w-28 rounded-full"
+                style={{
+                  backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.6))'
+                }}
+              ></div>
             </div>
 
             <div className="text-center -mt-2">
               <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                Stay updated with the latest insights, tips, and digital product news.
+                Deep-dive guides, savings strategies, and digital product insights from the team behind DigitalPromoCodes.
               </p>
             </div>
 
             <div className="text-center py-16">
-              <div className="p-8 rounded-lg border" style={{ 
-                backgroundColor: 'var(--background-secondary)', 
-                borderColor: 'var(--border-color)' 
-              }}>
-                <div className="mb-4 text-6xl">⚠️</div>
-                <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>
-                  Unable to Load Blog Posts
+              <div
+                className="inline-flex flex-col items-center justify-center rounded-2xl border px-8 py-10 shadow-sm"
+                style={{
+                  backgroundColor: 'var(--background-secondary)',
+                  borderColor: 'var(--border-color)',
+                }}
+              >
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-full"
+                  style={{ backgroundColor: 'rgba(248, 113, 113, 0.15)', color: '#ef4444' }}
+                >
+                  <svg
+                    className="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                    <path d="M10.29 3.86 1.82 18a1 1 0 0 0 .86 1.5h18.64a1 1 0 0 0 .86-1.5L13.71 3.86a1 1 0 0 0-1.72 0Z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-color)' }}>
+                  Unable to load blog posts
                 </h2>
-                <p className="text-lg mb-6" style={{ color: 'var(--text-secondary)' }}>
-                  We&apos;re experiencing technical difficulties. Please try again in a few moments.
+                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                  Something went wrong while loading the latest articles. Please refresh the page or try again in a few minutes.
                 </p>
               </div>
             </div>

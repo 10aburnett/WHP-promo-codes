@@ -127,7 +127,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
            boxShadow: 'var(--promo-shadow)'
          }}>
       <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-        {parentId ? `Reply to ${parentAuthor}` : 'Leave a Comment'}
+        {parentId ? `Reply to ${parentAuthor}` : 'Join the discussion'}
       </h3>
 
       {parentId && onCancel && (

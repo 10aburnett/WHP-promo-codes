@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     if (!post || !post.published) {
       return {
         title: `Blog Post Not Found - ${SITE_BRAND}`,
-        description: 'The requested blog post could not be found.',
+        description: 'This article is not available on DigitalPromoCodes.',
         robots: { index: false, follow: true }
       }
     }
@@ -116,7 +116,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     console.error('Error generating blog post metadata:', error)
     return {
       title: `Blog Post - ${SITE_BRAND}`,
-      description: 'Read the latest insights about deals and digital products.'
+      description: 'Explore practical guides and insights on digital products, promo strategies, and online savings.'
     }
   }
 }

@@ -87,30 +87,41 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
           {/* Article */}
           <article>
             <header className="text-center mb-12">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r bg-clip-text text-transparent py-2" 
-                  style={{ backgroundImage: `linear-gradient(to right, var(--text-color), var(--text-secondary))`, lineHeight: '1.3' }}>
+              <h1
+                className="mb-4 bg-gradient-to-r from-[var(--text-color)] to-[var(--text-secondary)] bg-clip-text text-4xl md:text-5xl font-bold text-transparent"
+                style={{ lineHeight: '1.3' }}
+              >
                 {post.title}
               </h1>
-              <div className="w-20 h-1 mx-auto rounded-full mb-6" style={{ backgroundColor: 'var(--accent-color)' }}></div>
-              
-              <div className="flex items-center justify-center space-x-6" style={{ color: 'var(--text-secondary)' }}>
+              <div
+                className="mx-auto mb-6 h-1.5 w-24 rounded-full"
+                style={{
+                  backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.7))',
+                }}
+              ></div>
+
+              <div
+                className="flex flex-wrap items-center justify-center gap-4 text-sm"
+                style={{ color: 'var(--text-secondary)' }}
+              >
                 {post.publishedAt && (
                   <time>
                     {new Date(post.publishedAt).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
-                      day: 'numeric'
+                      day: 'numeric',
                     })}
                   </time>
                 )}
-                
+
                 {(post.authorName || post.author?.name) && (
                   <span>By {post.authorName || post.author?.name}</span>
                 )}
-                
+
                 <span className="flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l3 3" />
                   </svg>
                   {post.readingTime} min read
                 </span>
@@ -122,22 +133,25 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
               {shouldShowToc && (
                 <div className="hidden lg:block lg:w-64 shrink-0">
                   <div className="sticky top-8">
-                    <div className="rounded-lg p-6 border" style={{ 
-                      backgroundColor: 'var(--background-secondary)', 
-                      borderColor: 'var(--border-color)'
-                    }}>
-                      <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
-                        Table of Contents
+                    <div
+                      className="rounded-xl border p-5 shadow-sm"
+                      style={{
+                        backgroundColor: 'var(--background-secondary)',
+                        borderColor: 'var(--border-color)',
+                      }}
+                    >
+                      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
+                        On this page
                       </h3>
-                      <nav className="space-y-2">
+                      <nav className="space-y-1.5">
                         {post.headings.map((heading, index) => (
                           <a
                             key={index}
                             href={`#${heading.id}`}
-                            className="block text-sm hover:opacity-80 transition-opacity"
-                            style={{ 
+                            className="block text-sm transition-opacity hover:opacity-80"
+                            style={{
                               color: 'var(--text-secondary)',
-                              paddingLeft: `${(heading.level - 1) * 12}px`
+                              paddingLeft: `${(heading.level - 1) * 12}px`,
                             }}
                           >
                             {heading.text}
@@ -154,37 +168,37 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                 <div className="lg:hidden mb-6">
                   <button
                     onClick={() => setShowToc(!showToc)}
-                    className="w-full flex items-center justify-between p-4 rounded-lg border"
-                    style={{ 
-                      backgroundColor: 'var(--background-secondary)', 
+                    className="flex w-full items-center justify-between rounded-xl border px-4 py-3"
+                    style={{
+                      backgroundColor: 'var(--background-secondary)',
                       borderColor: 'var(--border-color)',
-                      color: 'var(--text-color)'
+                      color: 'var(--text-color)',
                     }}
                   >
-                    <span className="font-medium">Table of Contents</span>
-                    <svg 
-                      className={`w-5 h-5 transition-transform ${showToc ? 'rotate-180' : ''}`} 
-                      fill="none" 
-                      stroke="currentColor" 
+                    <span className="font-medium text-sm">On this page</span>
+                    <svg
+                      className={`h-5 w-5 transition-transform ${showToc ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  
+
                   {showToc && (
-                    <div className="mt-4 p-4 rounded-lg border" style={{ 
-                      backgroundColor: 'var(--background-secondary)', 
+                    <div className="mt-4 p-4 rounded-xl border" style={{
+                      backgroundColor: 'var(--background-secondary)',
                       borderColor: 'var(--border-color)'
                     }}>
-                      <nav className="space-y-2">
+                      <nav className="space-y-1.5">
                         {post.headings.map((heading, index) => (
                           <a
                             key={index}
                             href={`#${heading.id}`}
                             onClick={() => setShowToc(false)}
                             className="block text-sm hover:opacity-80 transition-opacity"
-                            style={{ 
+                            style={{
                               color: 'var(--text-secondary)',
                               paddingLeft: `${(heading.level - 1) * 12}px`
                             }}
@@ -200,12 +214,14 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
               
               {/* Main Content */}
               <div className="flex-1">
-                <div className="rounded-2xl shadow-lg p-8 md:p-12 border" 
-                     style={{ 
-                       backgroundColor: 'var(--card-bg)', 
-                       borderColor: 'var(--card-border)',
-                       boxShadow: 'var(--promo-shadow)'
-                     }}>
+                <div
+                  className="rounded-2xl border px-6 py-7 md:px-10 md:py-10"
+                  style={{
+                    backgroundColor: 'var(--card-bg)',
+                    borderColor: 'var(--card-border)',
+                    boxShadow: 'var(--promo-shadow)',
+                  }}
+                >
                   <div
                     className="prose prose-lg max-w-none blog-content"
                     style={{
@@ -251,13 +267,13 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
             <div className="text-center">
               <Link
                 href="/blog"
-                className="inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg hover:opacity-80 transition-opacity"
-                style={{ 
-                  backgroundColor: 'var(--accent-color)', 
-                  color: 'white'
+                className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: 'var(--accent-color)',
+                  color: 'white',
                 }}
               >
-                View All Posts
+                Back to all articles
               </Link>
             </div>
           </div>

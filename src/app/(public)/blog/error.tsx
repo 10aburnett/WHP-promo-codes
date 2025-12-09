@@ -17,8 +17,8 @@ export default function BlogError({
   return (
     <ErrorState
       variant="error"
-      title="Blog temporarily unavailable"
-      description="We're experiencing technical difficulties with the blog. Our team has been notified and is working on a fix."
+      title="We couldn't load the blog"
+      description="An issue occurred while loading blog content on DigitalPromoCodes. Please refresh the page or try again shortly."
       onRetry={reset}
       secondaryCta={{ href: '/', label: 'Back to homepage' }}
     />

@@ -137,8 +137,8 @@ export default function MailingListPopup({
                 }}
               >
                 <p className="text-sm">
-                  🎯 <strong>What's next?</strong> Watch your inbox for the latest Whop promo codes, insider tips, and exclusive deals. 
-                  Your first VIP email is coming soon!
+                  🎯 <strong>What's next?</strong> Watch your inbox for the latest DigitalPromoCodes updates, insider tips, and curated digital deals.
+                  Your first VIP email is on the way!
                 </p>
               </div>
             </div>
@@ -164,8 +164,8 @@ export default function MailingListPopup({
           </h3>
           
           <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            Get exclusive access to the <strong style={{ color: 'var(--accent-color)' }}>newest Whop promo codes</strong>, 
-            insider tips, and deals before anyone else! Join thousands of savvy shoppers saving big.
+            Get exclusive access to the <strong style={{ color: 'var(--accent-color)' }}>newest digital promo codes</strong>,
+            savings strategies, and tools we discover — before they're widely shared.
           </p>
         </div>
 
@@ -189,7 +189,7 @@ export default function MailingListPopup({
               </svg>
             </div>
             <span style={{ color: 'var(--text-secondary)' }}>
-              <strong>Weekly insider tips</strong> on the best Whop deals
+              <strong>Weekly insider tips</strong> on the best digital product deals
             </span>
           </div>
           
@@ -220,7 +220,7 @@ export default function MailingListPopup({
               }}
             />
             <span style={{ color: 'var(--text-secondary)' }}>
-              Yes, I want to receive exclusive Whop promo codes and insider tips! 
+              Yes, I want to receive exclusive digital promo codes and insider tips!
               <span className="text-xs block mt-1" style={{ color: 'var(--text-muted)' }}>
                 (Unsubscribe anytime. We respect your privacy.)
               </span>

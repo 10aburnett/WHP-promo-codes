@@ -42,7 +42,7 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
     return (
       <div className="space-y-4">
         <h3 className="text-2xl font-bold" style={{ color: 'var(--text-color)' }}>
-          Related Articles
+          You might also like
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
@@ -69,18 +69,18 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
   return (
     <div className="space-y-6">
       <h3 className="text-2xl font-bold" style={{ color: 'var(--text-color)' }}>
-        Related Articles
+        You might also like
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {relatedPosts.map((post) => (
           <Link key={post.id} href={`/blog/${post.slug}`}>
             <article
-              className="group rounded-lg p-6 border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
-              style={{ 
-                backgroundColor: 'var(--card-bg)', 
+              className="group flex h-full cursor-pointer flex-col rounded-2xl border p-5 shadow-sm transition-all duration-200 hover:shadow-lg"
+              style={{
+                backgroundColor: 'var(--card-bg)',
                 borderColor: 'var(--card-border)',
-                boxShadow: 'var(--promo-shadow)'
+                boxShadow: 'var(--promo-shadow)',
               }}
             >
               <div className="flex-1">
@@ -116,13 +116,22 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
               </div>
               
               <div className="mt-3">
-                <span 
-                  className="inline-flex items-center text-sm font-medium group-hover:opacity-80 transition-opacity"
+                <span
+                  className="inline-flex items-center text-sm font-medium transition-opacity group-hover:opacity-80"
                   style={{ color: 'var(--accent-color)' }}
                 >
-                  Read More
-                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  Read article
+                  <svg
+                    className="ml-1.5 h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="M13 5l7 7-7 7" />
                   </svg>
                 </span>
               </div>
