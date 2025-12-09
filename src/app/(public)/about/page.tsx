@@ -9,8 +9,8 @@ export const dynamic = 'force-static'
 export const fetchCache = 'force-cache'
 export const revalidate = 86400 // 24h
 
-const title = `About ${SITE_BRAND} - Verified Promo Codes & Digital Product Discounts`;
-const description = `Learn about ${SITE_BRAND} - ${SITE_DESCRIPTION} We curate 8,000+ verified listings with daily updates.`;
+const title = `About ${SITE_BRAND} – Independent Digital Deals Directory`;
+const description = `Discover how ${SITE_BRAND} sources, reviews, and maintains thousands of live promo codes for digital tools, courses, and communities.`;
 
 export const metadata: Metadata = {
   title,
@@ -74,13 +74,13 @@ export default function AboutPage() {
               className="inline-block text-xs font-medium tracking-wider uppercase px-3 py-1 rounded-full mb-4"
               style={{ backgroundColor: 'rgba(22, 101, 52, 0.08)', color: 'var(--accent-color)' }}
             >
-              About DigitalPromoCodes
+              About this platform
             </span>
             <h1 className="text-3xl md:text-4xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
-              Verified savings for digital products
+              A structured way to find digital discounts
             </h1>
             <p className="text-lg max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
-              We aggregate and verify promotional offers across digital products, courses, and communities — providing accurate pricing and transparent affiliate disclosure.
+              We track promotional deals for software, online courses, and membership communities, presenting clear pricing information and straightforward affiliate disclosures.
             </p>
           </header>
 
@@ -90,11 +90,11 @@ export default function AboutPage() {
             {/* LEFT: Mission Narrative */}
             <div className="space-y-8">
               <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Finding legitimate discounts for digital products can be time-consuming. Promo codes expire, terms change, and many listings are outdated or inaccurate. We created {SITE_BRAND} to solve this problem.
+                Locating reliable discounts for digital products often takes longer than it should. Codes lapse, conditions are revised, and many deal pages are never updated. {SITE_BRAND} exists to reduce that friction.
               </p>
 
               <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Our team maintains one of the largest collections of verified digital product offers online. Each listing includes current pricing, applicable discounts, and straightforward product summaries — updated daily.
+                We maintain a large catalogue of current digital offers. Each entry is designed to show the live price, any available reduction, and a concise overview of the product or service behind the code.
               </p>
 
               {/* Horizontal Mission Banner */}
@@ -108,15 +108,15 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Our mission</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>What we focus on</span>
                   <p className="text-base font-medium" style={{ color: 'var(--text-color)' }}>
-                    Make digital product pricing more transparent and accessible.
+                    Improve the clarity and accessibility of pricing for digital products.
                   </p>
                 </div>
               </div>
 
               <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                We operate as independent affiliates. When you purchase through our links, we may earn a commission at no additional cost to you. This model allows us to maintain the site and continue verifying offers.
+                We work as independent affiliates. If you choose to buy through links on this site, we may receive a commission, but the amount you pay does not change. This revenue helps cover operating costs and ongoing review of the offers we list.
               </p>
             </div>
 
@@ -127,9 +127,9 @@ export default function AboutPage() {
                   <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
                   </svg>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Database</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Catalogue size</span>
                 </div>
-                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>8,000+ listings</p>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Over 8,000 entries</p>
               </div>
 
               <div className="py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
@@ -137,9 +137,9 @@ export default function AboutPage() {
                   <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Updates</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Refresh cycle</span>
                 </div>
-                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Daily verification</p>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Regular offer checks</p>
               </div>
 
               <div className="py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
@@ -147,9 +147,9 @@ export default function AboutPage() {
                   <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                   </svg>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Accuracy</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Code review</span>
                 </div>
-                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Verified codes</p>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Manually screened codes</p>
               </div>
 
               <div className="py-4">
@@ -158,9 +158,9 @@ export default function AboutPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Transparency</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Affiliate disclosure</span>
                 </div>
-                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Clear disclosure</p>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Upfront commission notes</p>
               </div>
             </aside>
           </div>
@@ -168,7 +168,7 @@ export default function AboutPage() {
           {/* Numbered Timeline: What Sets Us Apart */}
           <section className="mb-16">
             <h2 className="text-xl font-semibold mb-8" style={{ color: 'var(--text-color)' }}>
-              How we operate
+              How the site works
             </h2>
 
             <div className="relative pl-8">
@@ -188,10 +188,10 @@ export default function AboutPage() {
                     1
                   </div>
                   <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
-                    Comprehensive aggregation
+                    Collecting relevant offers
                   </h3>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    We collect promotional offers from digital product creators, course platforms, and online communities.
+                    We source promo codes directly from product creators, course providers, and community managers, as well as from user submissions.
                   </p>
                 </div>
 
@@ -204,10 +204,10 @@ export default function AboutPage() {
                     2
                   </div>
                   <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
-                    Daily verification
+                    Ongoing validation
                   </h3>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    Our systems check code validity and pricing accuracy to remove expired or incorrect listings.
+                    We routinely test codes and compare listed prices with live product pages, removing entries that are no longer valid or accurate.
                   </p>
                 </div>
 
@@ -220,10 +220,10 @@ export default function AboutPage() {
                     3
                   </div>
                   <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
-                    Transparent presentation
+                    Clear offer summaries
                   </h3>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    Each listing includes product summaries, current pricing, and clear affiliate disclosure.
+                    Each listing is structured to show what the product does, what it costs at the time of review, and whether an affiliate relationship is in place.
                   </p>
                 </div>
 
@@ -236,10 +236,10 @@ export default function AboutPage() {
                     4
                   </div>
                   <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
-                    Community contributions
+                    Community input
                   </h3>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    Users can submit promo codes they discover, which we verify before adding to the database.
+                    Visitors can propose new promo codes they find elsewhere; submissions are checked before being added to the public catalogue.
                   </p>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function AboutPage() {
           {/* Footer Links */}
           <footer className="pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
             <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-              Questions or feedback? We're here to help.
+              Have a question about how we list or review offers? Let us know.
             </p>
             <div className="flex flex-wrap gap-6">
               <Link
@@ -257,14 +257,14 @@ export default function AboutPage() {
                 className="text-sm font-medium hover:opacity-80 transition-opacity"
                 style={{ color: 'var(--accent-color)' }}
               >
-                Contact us <span aria-hidden="true">→</span>
+                Get in touch <span aria-hidden="true">→</span>
               </Link>
               <Link
                 href="/blog"
                 className="text-sm font-medium hover:opacity-80 transition-opacity"
                 style={{ color: 'var(--accent-color)' }}
               >
-                Read our insights <span aria-hidden="true">→</span>
+                View articles and updates <span aria-hidden="true">→</span>
               </Link>
             </div>
           </footer>

@@ -144,7 +144,7 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
             </Link>
 
             <span className="text-xs font-medium tracking-wider uppercase mb-3 block" style={{ color: 'var(--text-muted)' }}>
-              Legal Information
+              Site Policies
             </span>
 
             <h1 className="text-3xl md:text-4xl font-semibold mb-3" style={{ color: 'var(--text-color)' }}>
@@ -167,13 +167,13 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
           {/* Footer */}
           <footer className="mt-16 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Questions about this policy?{' '}
+              Need clarification on anything above?{' '}
               <Link
                 href="/contact"
                 className="hover:opacity-80 transition-opacity"
                 style={{ color: 'var(--accent-color)' }}
               >
-                Contact us
+                Reach out to us
               </Link>
             </p>
           </footer>

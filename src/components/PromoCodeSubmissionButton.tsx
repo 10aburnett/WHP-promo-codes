@@ -25,13 +25,13 @@ export default function PromoCodeSubmissionButton({ offerId, offerName }: PromoC
               className="text-lg font-semibold mb-1"
               style={{ color: 'var(--text-color)' }}
             >
-              Know a better code?
+              Got a code we don't have?
             </h4>
             <p
               className="text-sm"
               style={{ color: 'var(--text-secondary)' }}
             >
-              Help the community by submitting a promo code for {offerName}
+              Share a working promo code for {offerName} and help others save.
             </p>
           </div>
 
@@ -45,7 +45,7 @@ export default function PromoCodeSubmissionButton({ offerId, offerName }: PromoC
               border: '1px solid var(--accent-color)',
             }}
           >
-            Submit a promo code
+            Share a code
           </button>
         </div>
       </section>

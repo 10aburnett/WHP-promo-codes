@@ -54,10 +54,10 @@ export default function UnsubscribePage() {
           </div>
 
           <h1 className="text-2xl md:text-3xl font-semibold mb-3" style={{ color: 'var(--text-color)' }}>
-            Unsubscribe from emails
+            Remove yourself from the mailing list
           </h1>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Enter your email address to stop receiving updates.
+            Enter the address you used when signing up, and we'll stop sending emails to it.
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export default function UnsubscribePage() {
                 className="absolute left-0 top-3 text-sm transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-xs"
                 style={{ color: 'var(--text-muted)' }}
               >
-                Email address
+                Your email
               </label>
               <div
                 className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 peer-focus:w-full"
@@ -118,7 +118,7 @@ export default function UnsubscribePage() {
                 color: 'white'
               }}
             >
-              {isSubmitting ? 'Processing...' : 'Unsubscribe'}
+              {isSubmitting ? 'Processing...' : 'Remove me'}
             </button>
           </form>
         </div>
@@ -129,34 +129,34 @@ export default function UnsubscribePage() {
           style={{ backgroundColor: 'var(--background-secondary)' }}
         >
           <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-muted)' }}>
-            Your email will be removed from our mailing list within 48 hours. You may still receive emails that were already scheduled before your request was processed.
+            Your address will be removed within 48 hours. Any emails already queued at the time of your request may still arrive.
           </p>
           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            You can resubscribe at any time through our website. We do not share your email address with third parties.
+            You're welcome to rejoin the list at any point. We never share your information with outside parties.
           </p>
         </div>
 
         {/* Footer Links */}
         <div className="text-center space-y-4">
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Changed your mind?{' '}
+            Decided to stay?{' '}
             <Link
               href="/subscribe"
               className="hover:opacity-80 transition-opacity"
               style={{ color: 'var(--accent-color)' }}
             >
-              Subscribe again
+              Rejoin the list
             </Link>
           </p>
 
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            Need help?{' '}
+            Questions?{' '}
             <a
               href="mailto:digitalpromocodescontact@gmail.com"
               className="hover:opacity-80 transition-opacity underline"
               style={{ color: 'var(--text-muted)' }}
             >
-              Contact support
+              Get in touch
             </a>
           </p>
 
@@ -165,7 +165,7 @@ export default function UnsubscribePage() {
             className="inline-block text-sm hover:opacity-80 transition-opacity"
             style={{ color: 'var(--accent-color)' }}
           >
-            <span aria-hidden="true">←</span> Back to home
+            <span aria-hidden="true">←</span> Return to homepage
           </Link>
         </div>
 

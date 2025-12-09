@@ -44,16 +44,16 @@ export default function SubscribePage() {
 
   const faqs = [
     {
-      question: 'How often will I receive emails?',
-      answer: 'We send weekly digests with the latest verified promo codes. During major promotional periods, you may receive 2-3 emails per week.'
+      question: 'How often do you send emails?',
+      answer: 'Typically once a week with a digest of new codes. During busy promotional seasons, you might see up to two or three emails per week.'
     },
     {
-      question: 'Can I unsubscribe anytime?',
-      answer: 'Yes. Every email includes an unsubscribe link, or you can visit our unsubscribe page at any time.'
+      question: 'Can I opt out later?',
+      answer: 'Yes. Every email contains an unsubscribe link, or you can use the opt-out page on this site whenever you like.'
     },
     {
-      question: 'Is my email shared with third parties?',
-      answer: 'No. We do not sell or share your email address. Your information is used solely for sending promo code updates.'
+      question: 'Will my email be shared?',
+      answer: "No. We never sell or share your address with third parties. It's used only for sending deal updates."
     }
   ]
 
@@ -64,13 +64,13 @@ export default function SubscribePage() {
         {/* Left-aligned Header */}
         <header className="mb-12">
           <span className="text-xs font-medium tracking-wider uppercase mb-3 block" style={{ color: 'var(--text-muted)' }}>
-            Email Updates
+            Newsletter
           </span>
           <h1 className="text-3xl md:text-4xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
-            Get the latest digital savings
+            Stay informed on new deals
           </h1>
           <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
-            Join the list to receive verified digital promo codes, product updates, and savings insights.
+            Receive periodic emails featuring recently added promo codes, seasonal discounts, and useful buying guides.
           </p>
         </header>
 
@@ -87,9 +87,9 @@ export default function SubscribePage() {
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Verified codes</h3>
+              <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Checked codes</h3>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Receive promo codes tested for accuracy before we send them.
+                Every code is reviewed for accuracy before it reaches your inbox.
               </p>
             </div>
           </div>
@@ -104,9 +104,9 @@ export default function SubscribePage() {
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Early access</h3>
+              <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Timely alerts</h3>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Get notified about limited-time offers before they expire.
+                Hear about time-sensitive promotions while they're still active.
               </p>
             </div>
           </div>
@@ -121,9 +121,9 @@ export default function SubscribePage() {
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Savings insights</h3>
+              <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Buying tips</h3>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Practical tips on maximizing value from digital products.
+                Occasional advice on getting more value from digital tools and courses.
               </p>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function SubscribePage() {
                 className="absolute left-0 top-3 text-sm transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-xs"
                 style={{ color: 'var(--text-muted)' }}
               >
-                Your name
+                Name
               </label>
               <div
                 className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 peer-focus:w-full"
@@ -200,7 +200,7 @@ export default function SubscribePage() {
                 className="absolute left-0 top-3 text-sm transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-xs"
                 style={{ color: 'var(--text-muted)' }}
               >
-                Email address
+                Email
               </label>
               <div
                 className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 peer-focus:w-full"
@@ -218,11 +218,11 @@ export default function SubscribePage() {
                 color: 'white'
               }}
             >
-              {isSubmitting ? 'Subscribing...' : 'Subscribe to updates'}
+              {isSubmitting ? 'Subscribing...' : 'Join the mailing list'}
             </button>
 
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-              Unsubscribe anytime. No spam.
+              You can unsubscribe at any time. No spam, ever.
             </p>
           </form>
         </div>
@@ -230,7 +230,7 @@ export default function SubscribePage() {
         {/* FAQ Accordion */}
         <section>
           <h2 className="text-lg font-semibold mb-6" style={{ color: 'var(--text-color)' }}>
-            Common questions
+            Frequently asked
           </h2>
 
           <div className="space-y-0">
@@ -274,13 +274,13 @@ export default function SubscribePage() {
         {/* Footer Link */}
         <div className="mt-12 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Already subscribed?{' '}
+            Already on the list?{' '}
             <Link
               href="/unsubscribe"
               className="hover:opacity-80 transition-opacity"
               style={{ color: 'var(--accent-color)' }}
             >
-              Manage preferences
+              Manage your subscription
             </Link>
           </p>
         </div>

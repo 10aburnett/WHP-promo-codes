@@ -258,10 +258,10 @@ export default function PromoCodeSubmissionForm({
             </svg>
 
             <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-              Submission received
+              Thanks for the tip
             </h3>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Thanks for contributing. We'll review your promo code and add it once verified.
+              We've received your code and will check it before adding it to the catalogue.
             </p>
           </div>
 
@@ -298,10 +298,10 @@ export default function PromoCodeSubmissionForm({
         <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
           <div>
             <h2 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-              Submit a promo code
+              Suggest a promo code
             </h2>
             <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
-              Share a code for the community to use
+              Found a deal? Let others know about it.
             </p>
           </div>
           {onClose && (
@@ -334,7 +334,7 @@ export default function PromoCodeSubmissionForm({
                   borderColor: !formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
                 }}
               >
-                Product-specific
+                For a specific product
               </button>
               <button
                 type="button"
@@ -346,7 +346,7 @@ export default function PromoCodeSubmissionForm({
                   borderColor: formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
                 }}
               >
-                General promo
+                General code
               </button>
             </div>
 
@@ -354,7 +354,7 @@ export default function PromoCodeSubmissionForm({
             {!formData.isGeneral && (
               <div className="relative">
                 <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Select product
+                  Choose product
                 </label>
                 <div className="relative">
                   <input
@@ -369,7 +369,7 @@ export default function PromoCodeSubmissionForm({
                       setShowDropdown(true);
                       if (searchTerm.length >= 2) searchWhops(searchTerm);
                     }}
-                    placeholder="Search for a product..."
+                    placeholder="Start typing to search..."
                     className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 transition-colors"
                     style={{
                       borderBottomColor: 'var(--border-color)',
@@ -398,7 +398,7 @@ export default function PromoCodeSubmissionForm({
                     >
                       {searchTerm.length < 2 && (
                         <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-muted)' }}>
-                          Type at least 2 characters...
+                          Enter 2 or more letters...
                         </div>
                       )}
 
@@ -421,7 +421,7 @@ export default function PromoCodeSubmissionForm({
                           className="w-full px-3 py-2 text-left text-sm border-t transition-colors"
                           style={{ color: 'var(--accent-color)', borderColor: 'var(--border-color)' }}
                         >
-                          + Add "{searchTerm}" as new product
+                          + List "{searchTerm}" as a new product
                         </button>
                       )}
                     </div>
@@ -440,13 +440,13 @@ export default function PromoCodeSubmissionForm({
             {/* Title */}
             <div>
               <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Promo title
+                Deal headline
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                placeholder="e.g. 20% Off Summer Sale"
+                placeholder="e.g. 20% off annual plan"
                 className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
                 style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
                 required
@@ -457,7 +457,7 @@ export default function PromoCodeSubmissionForm({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Promo code
+                  Code
                 </label>
                 <input
                   type="text"
@@ -471,7 +471,7 @@ export default function PromoCodeSubmissionForm({
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Discount value
+                  Value
                 </label>
                 <input
                   type="text"
@@ -493,7 +493,7 @@ export default function PromoCodeSubmissionForm({
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                placeholder="Describe the promo and any conditions..."
+                placeholder="Briefly explain the offer and any restrictions..."
                 rows={2}
                 className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 resize-none"
                 style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
@@ -534,7 +534,7 @@ export default function PromoCodeSubmissionForm({
             {/* Optional Message */}
             <div>
               <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Additional notes (optional)
+                Anything else? (optional)
               </label>
               <textarea
                 value={formData.submitterMessage}
@@ -569,7 +569,7 @@ export default function PromoCodeSubmissionForm({
           </form>
 
           <p className="mt-4 text-xs" style={{ color: 'var(--text-muted)' }}>
-            All submissions are reviewed before publishing.
+            We review each submission before making it public.
           </p>
         </div>
       </div>
