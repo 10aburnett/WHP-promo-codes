@@ -70,7 +70,7 @@ export default function HomePageServer({
           <span style={{ color: 'var(--accent-color)' }}>{SITE_BRAND}</span>
           <span style={{ color: 'var(--text-color)' }}>
             {' '}
-            – Deals, Discounts &amp; Exclusive Offers
+            – Promo Codes for Digital Tools, Courses &amp; Memberships
           </span>
         </h1>
         {SITE_TAGLINE && (
@@ -99,8 +99,8 @@ export default function HomePageServer({
           className="mb-4 md:mb-6 text-center text-sm md:text-base"
           style={{ color: 'var(--text-secondary)' }}
         >
-          Showing {((currentPage - 1) * 15) + 1}-{Math.min(currentPage * 15, total)} of {total}{' '}
-          results
+          Displaying {((currentPage - 1) * 15) + 1}–{Math.min(currentPage * 15, total)} of {total}{' '}
+          available offers
         </p>
       )}
 
@@ -119,8 +119,8 @@ export default function HomePageServer({
                 color: 'var(--text-color)',
               }}
             >
-              <span className="hidden sm:inline">Previous</span>
-              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous page</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           ) : (
             <span
@@ -132,8 +132,8 @@ export default function HomePageServer({
               }}
               aria-disabled="true"
             >
-              <span className="hidden sm:inline">Previous</span>
-              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous page</span>
+              <span className="sm:hidden">Back</span>
             </span>
           )}
 
@@ -177,8 +177,8 @@ export default function HomePageServer({
                 color: 'var(--text-color)',
               }}
             >
-              <span className="hidden sm:inline">Next</span>
-              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next page</span>
+              <span className="sm:hidden">More</span>
             </Link>
           ) : (
             <span
@@ -190,8 +190,8 @@ export default function HomePageServer({
               }}
               aria-disabled="true"
             >
-              <span className="hidden sm:inline">Next</span>
-              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next page</span>
+              <span className="sm:hidden">More</span>
             </span>
           )}
         </div>
@@ -212,8 +212,8 @@ export default function HomePageServer({
                 color: 'var(--text-color)',
               }}
             >
-              <span className="hidden sm:inline">Previous</span>
-              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous page</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           ) : (
             <span
@@ -225,8 +225,8 @@ export default function HomePageServer({
               }}
               aria-disabled="true"
             >
-              <span className="hidden sm:inline">Previous</span>
-              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous page</span>
+              <span className="sm:hidden">Back</span>
             </span>
           )}
 
@@ -270,8 +270,8 @@ export default function HomePageServer({
                 color: 'var(--text-color)',
               }}
             >
-              <span className="hidden sm:inline">Next</span>
-              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next page</span>
+              <span className="sm:hidden">More</span>
             </Link>
           ) : (
             <span
@@ -283,8 +283,8 @@ export default function HomePageServer({
               }}
               aria-disabled="true"
             >
-              <span className="hidden sm:inline">Next</span>
-              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next page</span>
+              <span className="sm:hidden">More</span>
             </span>
           )}
         </div>
@@ -331,8 +331,8 @@ export default function HomePageServer({
                 color: 'var(--text-color)',
               }}
             >
-              <span className="hidden sm:inline">Previous</span>
-              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous page</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           ) : (
             <span
@@ -344,8 +344,8 @@ export default function HomePageServer({
               }}
               aria-disabled="true"
             >
-              <span className="hidden sm:inline">Previous</span>
-              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous page</span>
+              <span className="sm:hidden">Back</span>
             </span>
           )}
 
@@ -389,8 +389,8 @@ export default function HomePageServer({
                 color: 'var(--text-color)',
               }}
             >
-              <span className="hidden sm:inline">Next</span>
-              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next page</span>
+              <span className="sm:hidden">More</span>
             </Link>
           ) : (
             <span
@@ -402,8 +402,8 @@ export default function HomePageServer({
               }}
               aria-disabled="true"
             >
-              <span className="hidden sm:inline">Next</span>
-              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next page</span>
+              <span className="sm:hidden">More</span>
             </span>
           )}
         </div>
@@ -426,10 +426,10 @@ export default function HomePageServer({
               </svg>
             </div>
             <h3 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-              No matching deals found
+              We couldn&apos;t find any offers for that search
             </h3>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Try adjusting your filters or search for a different product, tool, or creator.
+              Update your filters or try searching for a different digital product, tool or creator name.
             </p>
           </div>
         </div>

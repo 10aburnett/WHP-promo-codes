@@ -193,8 +193,8 @@ async function getPagedWhops({
 // Metadata for SEO
 export async function generateMetadata(): Promise<Metadata> {
   const currentYear = new Date().getFullYear();
-  const title = `${SITE_BRAND} - Verified Promo Codes & Exclusive Deals ${currentYear}`;
-  const description = `${SITE_TAGLINE}. Browse 8,000+ verified promo codes for digital products, courses, communities, and memberships - updated daily for ${currentYear}.`;
+  const title = `${SITE_BRAND} - Digital Promo Codes & Savings on Online Products ${currentYear}`;
+  const description = `${SITE_BRAND} helps you uncover working promo codes for digital tools, courses, communities and memberships. Explore thousands of checked offers and discounts kept fresh throughout ${currentYear}.`;
 
   return {
     title,
@@ -300,8 +300,8 @@ export default async function Home({
   const offersSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `Top Deals & Discounts ${currentYear}`,
-    description: `Curated list of the best deals and discount codes for ${currentYear}`,
+    name: `Featured Digital Discounts & Promo Codes ${currentYear}`,
+    description: `Editorial selection of digital product offers and promo codes for ${currentYear}`,
     numberOfItems: data.total,
     itemListElement: data.items.slice(0, 10).map((whop, index) => ({
       '@type': 'ListItem',
@@ -402,8 +402,8 @@ export default async function Home({
                 />
                 <span>
                   {statistics.totalUsers > 0
-                    ? `Trusted by ${formatUserCount(statistics.totalUsers)} users`
-                    : 'Used by savvy digital buyers'}
+                    ? `${formatUserCount(statistics.totalUsers)} people have used us to find digital deals`
+                    : 'Used by people who compare prices before they buy'}
                 </span>
               </div>
             </div>
@@ -412,14 +412,14 @@ export default async function Home({
               className="mt-4 text-2xl sm:text-3xl font-bold text-center"
               style={{ color: 'var(--text-color)' }}
             >
-              Why people rely on {SITE_BRAND}
+              Why shoppers choose {SITE_BRAND} for digital deals
             </h2>
 
             <p
               className="mt-2 text-sm sm:text-base text-center max-w-2xl mx-auto"
               style={{ color: 'var(--text-secondary)' }}
             >
-              We focus on real savings for digital products, tools and memberships – without the usual coupon-site clutter or dead codes.
+              The focus is simple: working savings on digital products, tools and memberships – without pages of expired coupons and noisy clutter.
             </p>
           </div>
 
@@ -448,10 +448,10 @@ export default async function Home({
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-                  Curated, not scraped
+                  Hand-checked, not auto-scraped
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Every promo is reviewed before it goes live, so you're not wasting time trying random codes that never work.
+                  Every promo is reviewed before it appears on the site, so you spend less time testing random codes that were never going to work.
                 </p>
               </div>
             </div>
@@ -479,10 +479,10 @@ export default async function Home({
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-                  Better entry points
+                  Direct-from-creator deals
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Many codes are negotiated directly with creators, giving you exclusive or better-than-public discounts.
+                  Many offers come straight from creators or partners, which can mean extras or better-than-public discounts on digital products.
                 </p>
               </div>
             </div>
@@ -512,10 +512,10 @@ export default async function Home({
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-                  Kept up-to-date
+                  Actively maintained codes
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Codes are reviewed regularly and retired when they stop working – no more guessing if a deal is still valid.
+                  Codes are checked on a rolling basis and retired when they stop working, so you know whether a deal is still live before you click through.
                 </p>
               </div>
             </div>

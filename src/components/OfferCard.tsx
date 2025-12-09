@@ -46,7 +46,7 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
     (promo as any).title ??
     promo.whopName ??
     (promo as any).name ??
-    'Unknown Whop';
+    'Unlabelled offer';
 
   // Resolve logo URL to absolute path for SSR-safe rendering
   const logoUrl = resolveLogoUrl(promo.logoUrl);
@@ -235,7 +235,7 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
           onMouseEnter={() => router.prefetch(getDetailPageUrl())}
           onTouchStart={() => router.prefetch(getDetailPageUrl())}
           className="block px-5 pt-5 pb-3"
-          title={`${promo.whopName} Promo Code - ${promo.promoText} (${new Date().toLocaleDateString(
+          title={`${promo.whopName} discount – ${promo.promoText} (checked ${new Date().toLocaleDateString(
             'en-US',
             { month: 'long', year: 'numeric' },
           )})`}

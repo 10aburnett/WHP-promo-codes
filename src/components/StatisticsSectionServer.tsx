@@ -158,39 +158,39 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
             className="text-2xl font-bold sm:text-3xl"
             style={{ color: 'var(--text-color)' }}
           >
-            Live platform metrics
+            Real-time platform stats
           </h2>
           <p
             className="mt-2 text-sm sm:text-base max-w-2xl mx-auto"
             style={{ color: 'var(--text-secondary)' }}
           >
-            A snapshot of how people use DigitalPromoCodes to save on digital products and memberships.
+            How the DigitalPromoCodes community saves on digital products and memberships.
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-5 lg:gap-6">
           <StatCard
-            label="Active users"
+            label="Active visitors"
             value={stats?.totalUsers || 0}
-            caption="People browsing deals this month"
+            caption="Visitors browsing offers this month"
             icon={<UsersIcon />}
           />
           <StatCard
-            label="Verified offers"
+            label="Curated offers"
             value={stats?.totalOffersAvailable || 0}
-            caption="Verified offers currently listed"
+            caption="Hand-picked offers currently live"
             icon={<OffersIcon />}
           />
           <StatCard
-            label="Codes redeemed"
+            label="Codes used"
             value={stats?.promoCodesClaimed || 0}
-            caption="Promo codes successfully redeemed"
+            caption="Discount codes applied successfully"
             icon={<TicketIcon />}
           />
           <StatCard
-            label="Most clicked"
+            label="Trending offer"
             value={stats?.mostClaimedOffer?.name || 'N/A'}
-            caption="Most-clicked programme"
+            caption="Most popular this week"
             icon={<TrophyIcon />}
             link={
               stats?.mostClaimedOffer?.slug

@@ -112,7 +112,7 @@ export default function FilterControls({
             id="main-search-input"
             name="search"
             type="search"
-            placeholder="Search tools, courses & communities"
+            placeholder="Find digital products and deals"
             defaultValue={filters.searchTerm}
             onChange={
               submitMode === 'auto'
@@ -170,10 +170,10 @@ export default function FilterControls({
             }}
           >
             <option value="">Sort by</option>
-            <option value="newest">Newest added</option>
-            <option value="highest-rated">Highest rated</option>
-            <option value="highest">Highest value</option>
-            <option value="lowest">Lowest value</option>
+            <option value="newest">Recently added</option>
+            <option value="highest-rated">Top rated</option>
+            <option value="highest">Biggest discount</option>
+            <option value="lowest">Smallest discount</option>
             <option value="alpha-asc">A–Z</option>
             <option value="alpha-desc">Z–A</option>
           </select>
@@ -204,7 +204,7 @@ export default function FilterControls({
             id="main-search-input-mobile"
             name="search"
             type="search"
-            placeholder="Search tools, courses & communities"
+            placeholder="Find digital products and deals"
             defaultValue={filters.searchTerm}
             onChange={
               submitMode === 'auto'
@@ -262,10 +262,10 @@ export default function FilterControls({
             }}
           >
             <option value="">Sort by</option>
-            <option value="newest">Newest added</option>
-            <option value="highest-rated">Highest rated</option>
-            <option value="highest">Highest value</option>
-            <option value="lowest">Lowest value</option>
+            <option value="newest">Recently added</option>
+            <option value="highest-rated">Top rated</option>
+            <option value="highest">Biggest discount</option>
+            <option value="lowest">Smallest discount</option>
             <option value="alpha-asc">A–Z</option>
             <option value="alpha-desc">Z–A</option>
           </select>

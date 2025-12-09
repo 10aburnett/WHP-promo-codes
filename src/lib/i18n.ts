@@ -26,8 +26,8 @@ export const translations = {
     // Homepage
     'home.title': 'DigitalPromoCodes - Deals, Coupons & Discounts',
     'home.subtitle': 'Discover exclusive promo codes and deals for the best digital products',
-    'home.cta': 'Browse Deals',
-    'home.filterCodes': 'Filter Courses',
+    'home.cta': 'Explore Offers',
+    'home.filterCodes': 'Filter Products',
     'home.featured': 'Featured Deals',
     'home.statistics': 'Platform Statistics',
     'home.noResults': 'No promo codes found matching your filters. Try changing your filter criteria.',
@@ -37,7 +37,7 @@ export const translations = {
     'home.exclusiveAccessDesc': 'Get special promo codes and exclusive discounts that you won\'t find anywhere else, negotiated exclusively for our community.',
     'home.alwaysUpdated': 'Always Updated',
     'home.alwaysUpdatedDesc': 'Our promo code database is updated daily to ensure all offers are current, active, and provide maximum value to users.',
-    'home.readyToSave': 'Ready to save money? Browse our top-rated products above and start accessing premium content today.',
+    'home.readyToSave': 'Find a deal that works for you? Explore our curated offers above and unlock savings today.',
     
     // Statistics
     'stats.users': 'Total Users',
