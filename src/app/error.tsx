@@ -17,10 +17,10 @@ export default function GlobalError({
   return (
     <ErrorState
       variant="error"
-      title="We hit a snag loading this page"
-      description="An unexpected error occurred while loading this part of DigitalPromoCodes. Our team is automatically notified so we can look into it."
+      title="Something went wrong while loading this page"
+      description="We ran into an unexpected issue loading this area of DigitalPromoCodes. Our team has been alerted so we can investigate."
       onRetry={reset}
-      secondaryCta={{ href: '/', label: 'Back to homepage' }}
+      secondaryCta={{ href: '/', label: 'Return to the main page' }}
     />
   );
 }

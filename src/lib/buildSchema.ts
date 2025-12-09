@@ -115,7 +115,7 @@ export function buildBreadcrumbList(vm: OfferViewModel) {
   const crumbs = vm.breadcrumbs && vm.breadcrumbs.length
     ? vm.breadcrumbs
     : [
-        { name: 'Home', url: absoluteUrl('/') },
+        { name: 'Homepage', url: absoluteUrl('/') },
         ...(vm.category
           ? [{ name: vm.category, url: absoluteUrl(`/category/${encodeURIComponent(vm.category.toLowerCase().replace(/\s+/g, '-'))}`) }]
           : []),
@@ -238,7 +238,7 @@ export function buildHowTo(vm: OfferViewModel) {
     "@context": "https://schema.org",
     "@type": "HowTo",
     "@id": `${vm.url}#howto`,
-    name: `How to redeem ${toPlain(vm.name)}`,
+    name: `How to use the ${toPlain(vm.name)} offer`,
     step: steps
   };
   if (vm.inLanguage) node.inLanguage = vm.inLanguage;
@@ -277,7 +277,7 @@ export function buildItemList(
     "@context": "https://schema.org",
     "@type": "ItemList",
     "@id": `${selfUrl}#${idSuffix}`,
-    "name": idSuffix === 'recommended' ? "Recommended for You" : "You might also consider…",
+    "name": idSuffix === 'recommended' ? "Suggested offers for you" : "Other options to explore",
     "itemListElement": list.map((u, i) => ({
       "@type": "ListItem",
       "position": i + 1,

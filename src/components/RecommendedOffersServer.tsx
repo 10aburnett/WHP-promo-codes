@@ -23,8 +23,8 @@ export default function RecommendedOffersServer({ items }: { items?: Item[] }) {
   if (!list.length) return null;
 
   return (
-    <section aria-label="You might also like" className="mt-8">
-      <h2 className="text-xl font-bold mb-4">You Might Also Like</h2>
+    <section aria-label="Other offers you may like" className="mt-8">
+      <h2 className="text-xl font-bold mb-4">Other offers to explore</h2>
       <ul className="flex flex-col gap-4" suppressHydrationWarning>
         {list.map((w, i) => (
           <OfferMiniPreview

@@ -102,7 +102,7 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
 
   const getPromoText = (whop: AlternativeDeal) => {
     const firstPromo = whop.promoCodes?.[0];
-    if (!firstPromo) return 'Exclusive Access';
+    if (!firstPromo) return 'Special access';
 
     // If there's a promo code and a value > 0, show the discount
     if (firstPromo.code && firstPromo.value && firstPromo.value !== '0') {
@@ -113,7 +113,7 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
       return `${firstPromo.value}% Off`;
     }
 
-    return firstPromo.title || 'Exclusive Access';
+    return firstPromo.title || 'Special access';
   };
 
   useEffect(() => {
@@ -311,7 +311,7 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
 
               setAlternatives(hydratedAlternatives);
               setAnchorTexts(anchorBySlug);
-              setDesc('Alternative offers that might interest you');
+              setDesc('Other offers that could be relevant to you');
 
               if (DEBUG && hydratedAlternatives.length > 0) {
                 console.log('♻️ API empty; used graph fallback for alternatives.');
@@ -418,8 +418,8 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
     return (
       <div className="mt-12">
         <SectionPanel
-          title="You might also consider…"
-          subtitle="Alternative offers that might interest you"
+          title="Other deals to review"
+          subtitle="Additional offers that could suit what you're looking at"
         >
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
@@ -446,8 +446,8 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
   return (
     <div className="mt-12">
       <SectionPanel
-        title="You might also consider…"
-        subtitle={desc || "Alternative offers that might interest you"}
+        title="Other deals to review"
+        subtitle={desc || "Additional offers that could suit what you're viewing"}
       >
         <div className="space-y-4">
           {alternatives.map((whop, index) => {
@@ -479,7 +479,7 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
           >
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <span style={{ color: 'var(--text-secondary)' }}>
-                Explore another{explore.category ? ` in ${explore.category}` : ''}:
+                Look at another{explore.category ? ` in ${explore.category}` : ''}:
               </span>
               <Link
                 href={`/offer/${explore.slug}`}
@@ -503,7 +503,7 @@ export default function Alternatives({ currentOfferSlug }: { currentOfferSlug: s
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "ItemList",
-                "name": "You might also consider…",
+                "name": "Other deals to review",
                 "itemListElement": alternatives.map((whop, index) => ({
                   "@type": "ListItem",
                   "position": index + 1,

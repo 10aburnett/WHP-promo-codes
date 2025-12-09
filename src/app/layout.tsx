@@ -61,7 +61,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${SITE_BRAND} - Verified Promo Codes & Exclusive Deals ${currentYear}`,
     description: SITE_DESCRIPTION,
-    keywords: 'promo codes, discount codes, deals, coupons, digital product discounts, community access codes, course promo codes, exclusive discounts, verified codes',
+    keywords: 'digital promo codes, online discounts, coupon alternatives, savings on software, course discounts, membership offers, verified digital deals',
     metadataBase: new URL(origin),
     openGraph: {
       title: `${SITE_BRAND} - Verified Promo Codes & Exclusive Deals ${currentYear}`,
@@ -74,7 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: '/logo.png',
           width: 1200,
           height: 630,
-          alt: `${SITE_BRAND} - Verified Promo Codes & Exclusive Deals`
+          alt: `${SITE_BRAND} – Digital Deals & Discount Finder`
         }
       ],
     },
@@ -149,11 +149,11 @@ export default async function RootLayout({
         <meta name="author" content={SITE_AUTHOR} />
         <meta name="language" content="en" />
         <meta name="distribution" content="global" />
-        <meta name="rating" content="general" />
-        <meta name="revisit-after" content="1 days" />
+        <meta name="rating" content="safe for all audiences" />
+        <meta name="revisit-after" content="7 days" />
         <meta property="og:locale" content="en_US" />
-        <meta name="geo.region" content="US" />
-        <meta name="geo.placename" content="United States" />
+        <meta name="geo.region" content="GB" />
+        <meta name="geo.placename" content="United Kingdom" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://assets.whop.com" crossOrigin="" />
         <link rel="preconnect" href="https://img-v2-prod.whop.com" crossOrigin="" />

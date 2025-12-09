@@ -17,10 +17,10 @@ export default function OfferError({
   return (
     <ErrorState
       variant="error"
-      title="We couldn't load this offer"
-      description="An error occurred while loading this offer page on DigitalPromoCodes. Our team has been notified."
+      title="We were unable to load this offer"
+      description="Something went wrong while loading this offer page on DigitalPromoCodes. Our team has been notified to review it."
       onRetry={reset}
-      secondaryCta={{ href: '/', label: 'Browse all deals' }}
+      secondaryCta={{ href: '/', label: 'View all current deals' }}
     />
   );
 }

@@ -24,17 +24,17 @@ export const SITE_URL = 'https://digitalpromocodes.com';
 /**
  * Short tagline for the site - used in descriptions
  */
-export const SITE_TAGLINE = 'Verified Discounts for Digital Products, Tools & Online Memberships';
+export const SITE_TAGLINE = 'Reliable savings on digital tools, courses and online memberships';
 
 /**
  * Longer description for home/about pages
  */
-export const SITE_DESCRIPTION = 'Your trusted source for verified promo codes, discount codes & exclusive deals on digital products, online tools, courses, and memberships.';
+export const SITE_DESCRIPTION = 'A focused hub for discovering curated promo codes, discount offers and savings on digital products, software tools, online courses and memberships.';
 
 /**
  * Default author/publisher name for content
  */
-export const SITE_AUTHOR = 'DigitalPromoCodes Team';
+export const SITE_AUTHOR = 'DigitalPromoCodes Editorial Team';
 
 /**
  * Social media handles (without @)

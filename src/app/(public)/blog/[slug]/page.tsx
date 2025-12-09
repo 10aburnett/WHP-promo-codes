@@ -65,15 +65,15 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
     if (!post || !post.published) {
       return {
-        title: `Blog Post Not Found - ${SITE_BRAND}`,
-        description: 'This article is not available on DigitalPromoCodes.',
+        title: `Article unavailable - ${SITE_BRAND}`,
+        description: 'This article is no longer available on DigitalPromoCodes.',
         robots: { index: false, follow: true }
       }
     }
 
     const canonical = `${siteOrigin()}/blog/${post.slug}`;
     const currentYear = new Date().getFullYear();
-    const metaDescription = post.excerpt ?? `Practical insights on digital products, promo strategies, and online savings from ${SITE_BRAND}.`;
+    const metaDescription = post.excerpt ?? `Clear, practical guidance on digital products, discount strategies and online savings from ${SITE_BRAND}.`;
     const publishedDate = post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined;
 
     const authorName = post.User?.name || post.authorName || SITE_AUTHOR;
@@ -116,7 +116,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     console.error('Error generating blog post metadata:', error)
     return {
       title: `Blog Post - ${SITE_BRAND}`,
-      description: 'Explore practical guides and insights on digital products, promo strategies, and online savings.'
+      description: 'Browse guides and explanations on digital products, saving strategies, and getting more value online.'
     }
   }
 }
@@ -162,7 +162,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Insights',
+        name: 'Articles',
         item: `${siteOrigin()}/blog`
       },
       {

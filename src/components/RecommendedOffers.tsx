@@ -313,8 +313,8 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
   if (loading) {
     return (
       <SectionPanel
-        title="Recommended for You"
-        subtitle="Similar offers based on your current selection"
+        title="Suggestions for you"
+        subtitle="Related offers chosen from what you're viewing now"
       >
         <div className="space-y-4">
           {[1, 2, 3, 4].map((i) => (
@@ -346,7 +346,7 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
 
   const getPromoText = (whop: RecommendedDeal) => {
     const firstPromo = whop.promoCodes?.[0];
-    if (!firstPromo) return 'Exclusive Access';
+    if (!firstPromo) return 'Special access';
 
     // If there's a promo code and a value > 0, show the discount
     if (firstPromo.code && firstPromo.value && firstPromo.value !== '0') {
@@ -357,13 +357,13 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
       return `${firstPromo.value}% Off`;
     }
 
-    return firstPromo.title || 'Exclusive Access';
+    return firstPromo.title || 'Special access';
   };
 
   return (
     <SectionPanel
-      title="Recommended for You"
-      subtitle="Similar offers based on your current selection"
+      title="Suggestions for you"
+      subtitle="Related offers that align with this page"
     >
       {/* Single column layout for better alignment within constrained width */}
       <div className="space-y-4">
@@ -391,7 +391,7 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
         >
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span style={{ color: 'var(--text-secondary)' }}>
-              Explore another{explore.category ? ` in ${explore.category}` : ''}:
+              View another{explore.category ? ` in ${explore.category}` : ''}:
             </span>
             <Link
               href={`/offer/${explore.slug}`}
@@ -417,7 +417,7 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
             border: '1px solid var(--accent-color)'
           }}
         >
-          Explore All Offers
+          See all offers
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -432,7 +432,7 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "ItemList",
-              "name": "Recommended for You",
+              "name": "Suggestions for you",
               "itemListElement": recommendations.map((whop, index) => ({
                 "@type": "ListItem",
                 "position": index + 1,

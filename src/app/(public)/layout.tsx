@@ -49,12 +49,12 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const title = `${SITE_BRAND} - Verified Promo Codes & Exclusive Deals ${currentYear}`;
-  const description = `${SITE_DESCRIPTION} Find verified promo codes, discount codes & exclusive offers for ${currentYear}. Updated daily!`;
+  const description = `${SITE_DESCRIPTION} Discover fresh discount codes and curated digital offers for ${currentYear}, updated regularly.`;
 
   return {
     title,
     description,
-    keywords: 'promo codes, discount codes, deals, coupons, digital product discounts, community access, course discounts, exclusive offers, verified codes',
+    keywords: 'digital savings, online promo codes, software deals, course offers, membership discounts, trusted digital coupons, curated promo codes, verified codes',
     metadataBase: new URL(siteOrigin()),
     openGraph: {
       title,
@@ -67,7 +67,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: '/logo.png',
           width: 1200,
           height: 630,
-          alt: `${SITE_BRAND} - Verified Promo Codes & Exclusive Deals`
+          alt: `${SITE_BRAND} – Digital Deals & Savings Hub`
         }
       ],
     },
