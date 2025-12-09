@@ -10,24 +10,27 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative inline-flex items-center justify-center w-12 h-6 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+      className="relative inline-flex items-center w-12 h-6 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      style={{
+        backgroundColor: isDark ? 'var(--accent-color)' : 'var(--border-color)',
+        // @ts-ignore - CSS variable for focus ring
+        '--tw-ring-color': 'var(--accent-color)',
+      }}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
-      {/* Toggle Track */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 dark:from-indigo-500 dark:to-purple-600 transition-all duration-300 ease-in-out" />
-      
       {/* Toggle Thumb */}
       <div
-        className={`relative w-5 h-5 bg-white rounded-full shadow-lg transform transition-all duration-300 ease-in-out flex items-center justify-center ${
-          isDark ? 'translate-x-3' : '-translate-x-3'
+        className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out flex items-center justify-center ${
+          isDark ? 'translate-x-6' : 'translate-x-0.5'
         }`}
       >
         {/* Sun Icon */}
         <svg
-          className={`w-3 h-3 text-yellow-500 transition-all duration-300 ease-in-out ${
+          className={`w-3 h-3 transition-all duration-300 ease-in-out ${
             isDark ? 'opacity-0 scale-0 rotate-180' : 'opacity-100 scale-100 rotate-0'
           }`}
+          style={{ color: 'var(--accent-color)' }}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -37,12 +40,13 @@ export default function ThemeToggle() {
             clipRule="evenodd"
           />
         </svg>
-        
+
         {/* Moon Icon */}
         <svg
-          className={`absolute w-3 h-3 text-indigo-600 transition-all duration-300 ease-in-out ${
+          className={`absolute w-3 h-3 transition-all duration-300 ease-in-out ${
             isDark ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 -rotate-180'
           }`}
+          style={{ color: 'var(--accent-color)' }}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
