@@ -22,6 +22,14 @@ interface CommunityPromoSectionProps {
   slug?: string
 }
 
+// Helper to get tier label based on rank
+const getCodeTierLabel = (rank: number): string => {
+  if (rank === 1) return 'Main code'
+  if (rank === 2) return 'Secondary code'
+  if (rank === 3) return 'Tertiary code'
+  return 'Additional code'
+}
+
 export default function CommunityPromoSection({ offer, promoCodes, slug }: CommunityPromoSectionProps) {
 
   // Separate community codes from original codes
@@ -89,13 +97,33 @@ export default function CommunityPromoSection({ offer, promoCodes, slug }: Commu
           
           {communityPromoCodes.map((promo, index) => (
             <div key={promo.id} className="mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium px-2 py-1 rounded" 
-                      style={{ 
-                        backgroundColor: 'var(--accent-color)', 
-                        color: 'white' 
-                      }}>
-                  #{index + 1}
+              <div className="flex items-center gap-3 mb-2">
+                {/* Rank badge - vertical capsule style */}
+                <div
+                  className="inline-flex flex-col items-center justify-center rounded-full border px-2.5 py-1.5"
+                  style={{
+                    borderColor: 'var(--accent-color)',
+                    backgroundColor: 'rgba(5,150,105,0.08)',
+                  }}
+                  aria-label={`Rank ${index + 1} promo code`}
+                >
+                  <span className="text-[10px] uppercase tracking-wide font-medium" style={{ color: 'var(--text-secondary)' }}>
+                    Rank
+                  </span>
+                  <span className="text-sm font-bold" style={{ color: 'var(--accent-color)' }}>
+                    #{index + 1}
+                  </span>
+                </div>
+                {/* Community badge */}
+                <span
+                  className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
+                  style={{
+                    borderColor: 'rgba(5,150,105,0.28)',
+                    backgroundColor: 'rgba(5,150,105,0.06)',
+                    color: 'var(--accent-color)',
+                  }}
+                >
+                  Community
                 </span>
               </div>
               <OfferPageClient
@@ -123,17 +151,38 @@ export default function CommunityPromoSection({ offer, promoCodes, slug }: Commu
 
       {/* Original Promo Codes */}
       {originalPromoCodes.length > 0 && (
-        <div className="space-y-3">          
-          {originalPromoCodes.map((promo, index) => (
+        <div className="space-y-3">
+          {originalPromoCodes.map((promo, index) => {
+            const rank = communityPromoCodes.length + index + 1
+            return (
             <div key={promo.id} className="mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium px-2 py-1 rounded" 
-                      style={{ 
-                        backgroundColor: 'var(--background-color)', 
-                        color: 'var(--text-color)',
-                        border: '1px solid var(--border-color)'
-                      }}>
-                  #{communityPromoCodes.length + index + 1}
+              <div className="flex items-center gap-3 mb-2">
+                {/* Rank badge - vertical capsule style */}
+                <div
+                  className="inline-flex flex-col items-center justify-center rounded-full border px-2.5 py-1.5"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    backgroundColor: 'var(--background-secondary)',
+                  }}
+                  aria-label={`Rank ${rank} promo code`}
+                >
+                  <span className="text-[10px] uppercase tracking-wide font-medium" style={{ color: 'var(--text-secondary)' }}>
+                    Rank
+                  </span>
+                  <span className="text-sm font-bold" style={{ color: 'var(--text-color)' }}>
+                    #{rank}
+                  </span>
+                </div>
+                {/* Tier label badge */}
+                <span
+                  className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    backgroundColor: 'var(--background-color)',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  {getCodeTierLabel(rank)}
                 </span>
               </div>
               <OfferPageClient
@@ -144,7 +193,8 @@ export default function CommunityPromoSection({ offer, promoCodes, slug }: Commu
                 onTrackingComplete={handleTrackingComplete}
               />
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

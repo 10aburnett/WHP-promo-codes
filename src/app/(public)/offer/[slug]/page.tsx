@@ -208,6 +208,14 @@ function getPopularityLabel(codeCount: number): string {
   return "New listing";
 }
 
+// Helper to get tier label based on rank (1-indexed)
+function getCodeTierLabel(rank: number): string {
+  if (rank === 1) return "Main code";
+  if (rank === 2) return "Secondary code";
+  if (rank === 3) return "Tertiary code";
+  return "Additional code";
+}
+
 // Async component for heavy sections that can be streamed
 async function RecommendedSection({ currentOfferSlug }: { currentOfferSlug: string }) {
   const { items } = await getRecommendations(currentOfferSlug);
@@ -1208,6 +1216,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
               {/* 6. Discount Summary Cards - Only show when hasPromoCodes */}
               {hasPromoCodes && offerFormatted.promoCodes.map((promo, idx) => {
                 const isCommunity = promo.id.startsWith("community_");
+                const rank = idx + 1;
                 return (
                   <div
                     key={promo.id}
@@ -1217,21 +1226,23 @@ export default async function DealPage({ params }: { params: { slug: string } })
                       borderColor: "var(--border-color)",
                     }}
                   >
-                    <div className="flex items-center gap-2 mb-3">
-                      <h4 className="text-base font-bold">Code #{idx + 1}</h4>
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <div className="flex items-baseline gap-1.5">
+                        <h4 className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>Code #{rank}</h4>
+                      </div>
                       <span
-                        className="text-xs px-2 py-0.5 rounded"
+                        className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
                         style={{
+                          borderColor: isCommunity
+                            ? "rgba(5,150,105,0.28)"
+                            : "var(--border-color)",
                           backgroundColor: isCommunity
-                            ? "var(--accent-color)"
+                            ? "rgba(5,150,105,0.06)"
                             : "var(--background-color)",
-                          color: isCommunity ? "white" : "var(--text-color)",
-                          border: !isCommunity
-                            ? "1px solid var(--border-color)"
-                            : "none",
+                          color: isCommunity ? "var(--accent-color)" : "var(--text-secondary)",
                         }}
                       >
-                        {isCommunity ? "Community" : "Original"}
+                        {isCommunity ? "Community" : getCodeTierLabel(rank)}
                       </span>
                     </div>
                     <dl className="text-sm space-y-2">

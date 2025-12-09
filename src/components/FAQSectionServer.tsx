@@ -118,43 +118,58 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
       )}
 
       <section
-        className="dpc-faq-card rounded-2xl border shadow-theme-promo px-5 sm:px-7 py-6 sm:py-7 transition-theme"
-        style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+        className="dpc-faq-card rounded-2xl border px-6 py-5 sm:px-8 sm:py-7 transition-theme"
+        style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-color)' }}
       >
         <h2
           id="faq-heading"
-          className="text-xl sm:text-2xl font-bold mb-4 sm:mb-5"
+          className="text-xl sm:text-2xl font-bold mb-2"
+          style={{ color: 'var(--text-color)' }}
         >
-          Common Questions
+          Questions about this offer
         </h2>
+        <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+          Quick answers to things buyers often ask before using a promo code.
+        </p>
 
-        <div className="space-y-3 sm:space-y-4">
+        <div className="space-y-3">
           {safeFaqs.map((faq, idx) => (
             <details
               key={`${faq.question}-${idx}`}
-              className="group rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-sm"
+              className="group rounded-xl border px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-200"
               style={{
-                backgroundColor: 'var(--background-color)',
-                borderColor: 'var(--border-color)'
+                borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-secondary)'
               }}
             >
-              {/* Question Header - Native HTML summary with ONLY text content for stable hydration */}
+              {/* Question Header - Native HTML summary */}
               <summary
-                className="w-full flex items-center justify-between gap-3 p-4 pr-5 text-left cursor-pointer hover:opacity-80 transition-opacity list-none font-semibold text-base sm:text-lg [&::-webkit-details-marker]:hidden"
+                className="w-full flex items-center justify-between gap-3 text-left cursor-pointer text-sm sm:text-base font-medium"
+                style={{
+                  color: 'var(--text-color)',
+                  listStyle: 'none',
+                }}
               >
                 <span>{faq.question}</span>
+                {/* Single plus/minus icon in circle - toggles via CSS */}
                 <span
                   aria-hidden="true"
-                  className="text-sm opacity-60"
+                  className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs font-semibold"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--text-secondary)',
+                    backgroundColor: 'var(--background-color)',
+                  }}
                 >
-                  ▾
+                  <span className="group-open:hidden">+</span>
+                  <span className="hidden group-open:inline">−</span>
                 </span>
               </summary>
 
               {/* Answer Content - Revealed by native details/summary */}
               <div
-                className="px-4 pb-4 pt-0 border-t text-sm sm:text-base leading-relaxed"
-                style={{ color: 'var(--text-secondary)', borderColor: 'var(--border-color)' }}
+                className="mt-2.5 pt-2.5 border-t text-sm leading-relaxed"
+                style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
               >
                 {faq.isHtml ? (
                   <div

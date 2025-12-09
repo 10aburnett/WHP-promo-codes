@@ -35,12 +35,12 @@ export default function OfferPageClient({
   const { t } = useLanguage();
 
   // Shared button styling so SSR + CSR match exactly
-  // Using brightness + shadow hover instead of scale transforms for smooth, premium feel
+  // Pill shape with subtle lift on hover for fintech feel
   const baseButtonClass =
-    'w-full inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm sm:text-base font-bold ' +
-    'transition-all duration-200 hover:brightness-110 hover:shadow-md ' +
+    'w-full inline-flex items-center justify-center rounded-full px-6 py-3.5 text-sm sm:text-base font-bold ' +
+    'transition-all duration-200 hover:brightness-105 hover:shadow-lg hover:-translate-y-0.5 ' +
     'focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:ring-offset-2 ' +
-    'disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:hover:shadow-none';
+    'disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:hover:shadow-none disabled:hover:translate-y-0';
 
   // Extract a numeric promo value if possible (e.g. "20% off" → 20)
   const promoNumericValue = useMemo(() => {
@@ -176,7 +176,7 @@ export default function OfferPageClient({
         </button>
       ) : (
         <div
-          className="w-full border-2 font-bold py-3 px-4 rounded-xl text-center transition-all duration-200 hover:brightness-105 hover:shadow-sm"
+          className="w-full border-2 font-bold py-3.5 px-6 rounded-full text-center transition-all duration-200 hover:shadow-sm"
           style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--accent-color)', color: 'var(--text-color)' }}
         >
           <div className="flex-1 min-w-0">
