@@ -1,66 +1,87 @@
 // src/components/StatisticsSectionServer.tsx
 import Link from 'next/link';
 import type { StatisticsData } from '@/data/statistics';
+import { formatUserCount } from '@/config/platformMetrics';
 
 interface StatisticsServerProps {
   stats: StatisticsData;
 }
 
-export default function StatisticsSectionServer({ stats }: StatisticsServerProps) {
-  const formatNumber = (num: number) => {
-    if (num >= 1_000_000) {
-      return (num / 1_000_000).toFixed(1) + 'M';
-    } else if (num >= 1_000) {
-      return (num / 1_000).toFixed(1) + 'K';
-    }
-    return num.toString();
-  };
+// SVG Icons for each stat card
+const UsersIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
 
+const OffersIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+    <line x1="7" y1="7" x2="7.01" y2="7" />
+  </svg>
+);
+
+const TicketIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+    <path d="M13 5v2" />
+    <path d="M13 17v2" />
+    <path d="M13 11v2" />
+  </svg>
+);
+
+const TrophyIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+    <path d="M4 22h16" />
+    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+  </svg>
+);
+
+export default function StatisticsSectionServer({ stats }: StatisticsServerProps) {
   const StatCard = ({
-    title,
+    label,
     value,
-    suffix = '',
+    caption,
     link = null,
     icon,
     showLogo = false,
     logoUrl,
   }: {
-    title: string;
+    label: string;
     value: number | string;
-    suffix?: string;
+    caption: string;
     link?: string | null;
-    icon: string | React.ReactElement;
+    icon: React.ReactElement;
     showLogo?: boolean;
     logoUrl?: string;
   }) => {
-    const displayValue = typeof value === 'number' ? formatNumber(value) : value;
+    const displayValue = typeof value === 'number' ? formatUserCount(value) : value;
 
     const content = (
-      <div className="h-full">
-        <div
-          className="group relative h-full rounded-2xl border shadow-theme-promo bg-[color:var(--card-bg)] px-4 py-4 md:px-6 md:py-6 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
-          style={{
-            backgroundColor: 'var(--card-bg)',
-            borderColor: 'var(--card-border)',
-          }}
-        >
-          {/* Thin fintech accent bar */}
+      <div
+        className="flex flex-col gap-2 rounded-2xl border px-4 py-4 sm:px-6 sm:py-5 shadow-theme-promo transition-all hover:shadow-lg hover:-translate-y-0.5"
+        style={{
+          borderColor: 'var(--border-color)',
+          backgroundColor: 'var(--background-color)',
+        }}
+      >
+        {/* Icon + label row */}
+        <div className="flex items-center gap-2">
           <div
-            className="pointer-events-none absolute inset-x-4 top-0 h-0.5 rounded-full"
+            className="flex h-8 w-8 items-center justify-center rounded-full"
             style={{
-              background:
-                'linear-gradient(90deg, rgba(4,120,87,0.9), rgba(22,163,74,0.85))',
+              backgroundColor: 'rgba(5,150,105,0.08)',
+              color: 'var(--accent-color)',
             }}
-          />
-
-          {showLogo && logoUrl ? (
-            <div
-              className="mb-2 flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-              }}
-            >
+          >
+            {showLogo && logoUrl ? (
               <img
                 src={
                   logoUrl.startsWith('http')
@@ -68,41 +89,44 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
                     : logoUrl
                 }
                 alt={`${value} logo`}
-                width={32}
-                height={32}
-                className="h-full w-full object-cover"
+                width={20}
+                height={20}
+                className="h-5 w-5 rounded object-cover"
                 loading="lazy"
               />
-            </div>
-          ) : (
-            <div
-              className="mb-2 text-2xl md:text-3xl"
-              style={{ color: 'var(--accent-color)' }}
-            >
-              {typeof icon === 'string' ? icon : icon}
-            </div>
-          )}
+            ) : (
+              icon
+            )}
+          </div>
+          <span
+            className="text-xs uppercase tracking-wide font-semibold"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {label}
+          </span>
+        </div>
 
-          <div
-            className="text-2xl font-semibold leading-tight md:text-3xl"
+        {/* Number + caption */}
+        <div className="mt-1">
+          <p
+            className="text-2xl sm:text-3xl font-semibold"
             style={{ color: 'var(--text-color)' }}
           >
             {displayValue}
-            {suffix}
-          </div>
-          <div
-            className="mt-1 mb-1.5 text-xs leading-snug md:mb-4 md:text-sm line-clamp-2"
+          </p>
+          <p
+            className="text-sm mt-0.5 line-clamp-2"
             style={{ color: 'var(--text-secondary)' }}
           >
-            {title}
-          </div>
+            {caption}
+          </p>
         </div>
       </div>
     );
 
     if (link) {
       return (
-        <Link href={link} className="block h-full">
+        <Link href={link} className="block">
           {content}
         </Link>
       );
@@ -131,39 +155,43 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
       <div className="container mx-auto max-w-6xl px-3 md:px-4">
         <div className="mb-8 text-center md:mb-12">
           <h2
-            className="text-2xl font-semibold md:text-3xl lg:text-4xl"
+            className="text-2xl font-bold sm:text-3xl"
             style={{ color: 'var(--text-color)' }}
           >
-            Platform Statistics
+            Live platform metrics
           </h2>
           <p
-            className="mt-3 max-w-2xl mx-auto text-sm md:text-base"
+            className="mt-2 text-sm sm:text-base max-w-2xl mx-auto"
             style={{ color: 'var(--text-secondary)' }}
           >
-            Real-time data from our growing community
+            A snapshot of how people use DigitalPromoCodes to save on digital products and memberships.
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-5 lg:gap-6">
           <StatCard
-            title="Active Users"
+            label="Active users"
             value={stats?.totalUsers || 0}
-            icon="👥"
+            caption="People browsing deals this month"
+            icon={<UsersIcon />}
           />
           <StatCard
-            title="Available Offers"
+            label="Verified offers"
             value={stats?.totalOffersAvailable || 0}
-            icon="🎯"
+            caption="Verified offers currently listed"
+            icon={<OffersIcon />}
           />
           <StatCard
-            title="Promo Codes Claimed"
+            label="Codes redeemed"
             value={stats?.promoCodesClaimed || 0}
-            icon="🎉"
+            caption="Promo codes successfully redeemed"
+            icon={<TicketIcon />}
           />
           <StatCard
-            title="Most Popular"
+            label="Most clicked"
             value={stats?.mostClaimedOffer?.name || 'N/A'}
-            icon="⭐"
+            caption="Most-clicked programme"
+            icon={<TrophyIcon />}
             link={
               stats?.mostClaimedOffer?.slug
                 ? `/offer/${stats.mostClaimedOffer.slug.toLowerCase()}`

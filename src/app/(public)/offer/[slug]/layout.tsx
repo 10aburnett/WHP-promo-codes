@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;
-  types?: ReactNode;
-  etypes?: ReactNode;
+  types: ReactNode;
+  etypes: ReactNode;
 }
 
 export default function OfferDetailLayout({

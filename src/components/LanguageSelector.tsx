@@ -8,12 +8,11 @@ import { languages, Language } from '@/lib/i18n';
 const shortCodes: Record<Language, string> = {
   en: 'EN',
   es: 'ES',
+  nl: 'NL',
   fr: 'FR',
   de: 'DE',
-  pt: 'PT',
   it: 'IT',
-  ja: 'JA',
-  ko: 'KO',
+  pt: 'PT',
   zh: 'ZH',
 };
 

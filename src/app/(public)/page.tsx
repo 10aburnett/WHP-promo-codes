@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { getStatisticsCached } from '@/data/statistics'; // Server-side statistics
 import { absoluteUrl, offerAbsoluteUrl } from '@/lib/urls';
 import { SITE_BRAND, SITE_TAGLINE, SITE_DESCRIPTION } from '@/lib/brand';
+import { formatUserCount } from '@/config/platformMetrics';
 import type { Metadata } from 'next';
 
 // Force dynamic rendering so ?page= works server-side (not statically cached)
@@ -12,14 +13,6 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const dynamicParams = true;
 export const runtime = 'nodejs'; // Required for Prisma
-
-// Floors to the nearest thousand/million: 98,600 -> "98K"
-const formatCompact = (n: number) => {
-  if (!Number.isFinite(n) || n <= 0) return '0';
-  if (n >= 1_000_000) return `${Math.floor(n / 1_000_000)}M`;
-  if (n >= 1_000) return `${Math.floor(n / 1_000)}K`;
-  return `${Math.floor(n)}`;
-};
 
 // Read marketing users from env (NEXT_PUBLIC_ so it's safe in the client if needed)
 const getMarketingUsers = (dbCount: number) => {
@@ -393,154 +386,138 @@ export default async function Home({
         >
           {/* Hero / trust copy */}
           <div className="text-center mb-12 md:mb-16">
-            <div
-              className="md-pill inline-flex items-center gap-2 rounded-full px-5 sm:px-6 py-2.5 mb-5 md:mb-6 mt-1 md:mt-3 transition-theme text-xs sm:text-sm font-medium"
-              style={{
-                backgroundColor: 'rgba(4, 120, 87, 0.08)', // emerald-800 @ low opacity
-                border: '1px solid rgba(4, 120, 87, 0.35)',
-                color: 'var(--accent-color)',
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-full animate-pulse"
-                style={{ backgroundColor: 'var(--accent-color)' }}
-              />
-              <span>
-                {data.totalUsers > 0
-                  ? `Trusted by ${formatCompact(data.totalUsers)}+ users`
-                  : 'Verified promo codes for serious builders'}
-              </span>
+            {/* Trust pill - uses same totalUsers as stats */}
+            <div className="flex justify-center">
+              <div
+                className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs sm:text-[13px] font-medium"
+                style={{
+                  borderColor: 'rgba(5,150,105,0.25)',
+                  backgroundColor: 'rgba(5,150,105,0.06)',
+                  color: 'var(--accent-color)',
+                }}
+              >
+                <span
+                  className="inline-block h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+                <span>
+                  {statistics.totalUsers > 0
+                    ? `Trusted by ${formatUserCount(statistics.totalUsers)} users`
+                    : 'Used by savvy digital buyers'}
+                </span>
+              </div>
             </div>
 
             <h2
-              className="md-heading text-3xl sm:text-4xl md:text-[2.5rem] font-semibold md:font-bold mb-4 md:mb-5 bg-clip-text text-transparent leading-tight py-1"
-              style={{
-                backgroundImage: `linear-gradient(to right, var(--text-color), var(--text-secondary))`,
-              }}
+              className="mt-4 text-2xl sm:text-3xl font-bold text-center"
+              style={{ color: 'var(--text-color)' }}
             >
-              Why users choose {SITE_BRAND}
+              Why people rely on {SITE_BRAND}
             </h2>
 
             <p
-              className="md-body max-w-3xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed"
+              className="mt-2 text-sm sm:text-base text-center max-w-2xl mx-auto"
               style={{ color: 'var(--text-secondary)' }}
             >
-              {SITE_TAGLINE}. Curated, verified promo codes for digital products, courses and
-              communities – without the spammy coupon-site noise.
+              We focus on real savings for digital products, tools and memberships – without the usual coupon-site clutter or dead codes.
             </p>
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
-            <div className="mobile-dark-section text-center p-5 sm:p-6 rounded-2xl border transition-theme"
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-10 md:mb-12">
+            {/* Card 1: Curated, not scraped */}
+            <div
+              className="flex flex-col gap-3 rounded-2xl border px-5 py-5 sm:px-6 sm:py-6 shadow-theme-promo"
               style={{
-                backgroundColor: 'var(--background-color)',
                 borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-color)',
               }}
             >
               <div
-                className="md-icon w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--accent-color)' }}
+                className="h-9 w-9 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'rgba(5,150,105,0.08)',
+                  color: 'var(--accent-color)',
+                }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-7 w-7 sm:h-8 sm:w-8 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+                {/* Shield check icon */}
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="m9 12 2 2 4-4" />
                 </svg>
               </div>
-              <h3
-                className="md-heading text-lg sm:text-xl font-semibold mb-2.5"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Expert-screened deals
-              </h3>
-              <p className="md-body text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
-                We prioritise real value, checking each offer for quality, longevity and actual user
-                benefit before it appears on the site.
-              </p>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
+                  Curated, not scraped
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Every promo is reviewed before it goes live, so you're not wasting time trying random codes that never work.
+                </p>
+              </div>
             </div>
 
-            <div className="mobile-dark-section text-center p-5 sm:p-6 rounded-2xl border transition-theme"
+            {/* Card 2: Better entry points */}
+            <div
+              className="flex flex-col gap-3 rounded-2xl border px-5 py-5 sm:px-6 sm:py-6 shadow-theme-promo"
               style={{
-                backgroundColor: 'var(--background-color)',
                 borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-color)',
               }}
             >
               <div
-                className="md-icon w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--accent-color)' }}
+                className="h-9 w-9 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'rgba(5,150,105,0.08)',
+                  color: 'var(--accent-color)',
+                }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-7 w-7 sm:h-8 sm:w-8 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                  />
+                {/* Link/arrow icon */}
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                 </svg>
               </div>
-              <h3
-                className="md-heading text-lg sm:text-xl font-semibold mb-2.5"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Genuine exclusive access
-              </h3>
-              <p className="md-body text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
-                Many codes are negotiated directly with creators, giving you better entry points
-                into premium communities, tools and programmes.
-              </p>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
+                  Better entry points
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Many codes are negotiated directly with creators, giving you exclusive or better-than-public discounts.
+                </p>
+              </div>
             </div>
 
-            <div className="mobile-dark-section text-center p-5 sm:p-6 rounded-2xl border transition-theme"
+            {/* Card 3: Kept up-to-date */}
+            <div
+              className="flex flex-col gap-3 rounded-2xl border px-5 py-5 sm:px-6 sm:py-6 shadow-theme-promo"
               style={{
-                backgroundColor: 'var(--background-color)',
                 borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-color)',
               }}
             >
               <div
-                className="md-icon w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--accent-color)' }}
+                className="h-9 w-9 rounded-xl flex items-center justify-center"
+                style={{
+                  backgroundColor: 'rgba(5,150,105,0.08)',
+                  color: 'var(--accent-color)',
+                }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-7 w-7 sm:h-8 sm:w-8 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
+                {/* Refresh/clock icon */}
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                  <path d="M21 3v5h-5" />
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                  <path d="M3 21v-5h5" />
                 </svg>
               </div>
-              <h3
-                className="md-heading text-lg sm:text-xl font-semibold mb-2.5"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Updated like a product
-              </h3>
-              <p className="md-body text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
-                Offers, terms and availability are reviewed regularly so you're not wasting time on
-                dead codes or abandoned products.
-              </p>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
+                  Kept up-to-date
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Codes are reviewed regularly and retired when they stop working – no more guessing if a deal is still valid.
+                </p>
+              </div>
             </div>
           </div>
 

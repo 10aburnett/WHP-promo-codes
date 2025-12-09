@@ -73,18 +73,29 @@ export default function CallToAction() {
         {t('home.readyToSave')}
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
+        <button
           onClick={scrollToTop}
-          className="font-semibold px-8 py-3 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
+          className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-[1px]"
           style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
         >
           {t('home.cta')}
         </button>
-        <button 
+        <button
           onClick={scrollToTopAndFocusSearch}
-          className="border font-semibold px-8 py-3 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
-          style={{ borderColor: 'var(--accent-color)', color: 'var(--accent-color)' }}
+          className="inline-flex items-center justify-center gap-2 rounded-full border px-6 py-2.5 text-sm font-semibold transition-all duration-200 hover:shadow-sm hover:-translate-y-[1px]"
+          style={{ borderColor: 'var(--border-color)', color: 'var(--text-color)' }}
         >
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+          </svg>
           {t('home.filterCodes')}
         </button>
       </div>

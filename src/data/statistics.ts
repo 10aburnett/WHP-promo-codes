@@ -1,6 +1,7 @@
 // src/data/statistics.ts
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import { PLATFORM_METRICS } from '@/config/platformMetrics';
 
 export interface StatisticsData {
   totalUsers: number;
@@ -22,67 +23,48 @@ export const getStatisticsCached = () =>
   unstable_cache(
     async (): Promise<StatisticsData> => {
       try {
-        // Simplified and faster queries
-        const [activeWhops, totalCodes] = await Promise.all([
-          prisma.deal.count({
-            where: { publishedAt: { not: null } }
-          }),
-          prisma.promoCode.count()
-        ]);
+        // Use marketing values from shared config
+        const totalUsers = PLATFORM_METRICS.activeUsers;
+        const promoCodesClaimed = PLATFORM_METRICS.claimedCodes;
+        const totalOffersAvailable = PLATFORM_METRICS.availableOffers;
 
-        // Use static/estimated values for less critical metrics to avoid expensive queries
-        const totalUsers = Math.max(1000, activeWhops * 12); // Estimate: ~12 users per whop
-        const promoCodesClaimed = Math.max(500, totalCodes * 8); // Estimate: ~8 claims per code
-
-        // Get a simple popular whop without complex tracking queries
-        const popularWhop = await prisma.deal.findFirst({
+        // Get the configured most popular whop's logo from the database
+        const configuredWhop = await prisma.deal.findFirst({
           where: {
-            publishedAt: { not: null },
-            rating: { gte: 4.0 }
+            slug: PLATFORM_METRICS.mostPopularOfferSlug,
           },
-          orderBy: [
-            { rating: 'desc' },
-            { createdAt: 'desc' }
-          ],
           select: {
-            name: true,
-            slug: true,
             logo: true
           }
         });
 
-        // Use deterministic seed based on slug hash to ensure stable SSR
-        const getStableClaimCount = (slug: string): number => {
-          let hash = 0;
-          for (let i = 0; i < slug.length; i++) {
-            hash = ((hash << 5) - hash) + slug.charCodeAt(i);
-            hash = hash & hash; // Convert to 32bit integer
-          }
-          return 20 + (Math.abs(hash) % 51); // Range: 20-70 (deterministic)
+        const mostClaimedOffer = {
+          name: PLATFORM_METRICS.mostPopularOfferName,
+          slug: PLATFORM_METRICS.mostPopularOfferSlug,
+          claimCount: 50,
+          logoUrl: configuredWhop?.logo || undefined
         };
-
-        const mostClaimedOffer = popularWhop ? {
-          name: popularWhop.name,
-          slug: popularWhop.slug,
-          claimCount: getStableClaimCount(popularWhop.slug),
-          logoUrl: popularWhop.logo || undefined
-        } : null;
 
         return {
           totalUsers,
           promoCodesClaimed,
-          totalOffersAvailable: activeWhops,
+          totalOffersAvailable,
           mostClaimedOffer
         };
       } catch (error) {
         console.error('Error fetching statistics:', error);
 
-        // Return estimated statistics on error
+        // Return marketing values from config on error
         return {
-          totalUsers: 5000,
-          promoCodesClaimed: 2500,
-          totalOffersAvailable: 150,
-          mostClaimedOffer: null
+          totalUsers: PLATFORM_METRICS.activeUsers,
+          promoCodesClaimed: PLATFORM_METRICS.claimedCodes,
+          totalOffersAvailable: PLATFORM_METRICS.availableOffers,
+          mostClaimedOffer: {
+            name: PLATFORM_METRICS.mostPopularOfferName,
+            slug: PLATFORM_METRICS.mostPopularOfferSlug,
+            claimCount: 50,
+            logoUrl: undefined
+          }
         };
       }
     },
