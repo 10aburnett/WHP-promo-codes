@@ -634,7 +634,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
   
   const firstPromo = offerFormatted.promoCodes[0] || null;
   const promoCode = firstPromo?.code || null;
-  const promoTitle = "Exclusive Access"; // Always show "Exclusive Access" on detail pages
+  const promoTitle = "Special access"; // Always show "Special access" on detail pages
 
   // TASK 1: Helper boolean for hiding promo-code UI when no codes
   const hasPromoCodes =

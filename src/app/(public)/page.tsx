@@ -334,7 +334,7 @@ export default async function Home({
                   promo.value.includes('off')
                   ? promo.value
                   : `${promo.value}% off`
-                : 'Exclusive Access',
+                : 'Special access',
           },
         })),
       },

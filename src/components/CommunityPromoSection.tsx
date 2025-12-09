@@ -51,7 +51,7 @@ export default function CommunityPromoSection({ offer, promoCodes, slug }: Commu
     // Create a fake promo code entry for whops without codes but keep the button functionality
     const fakePromo = {
       id: 'no-code',
-      title: 'Exclusive Access',
+      title: 'Special access',
       description: 'This creator doesn\'t allow promo codes at this time.',
       code: null,
       type: 'exclusive',
@@ -67,7 +67,7 @@ export default function CommunityPromoSection({ offer, promoCodes, slug }: Commu
               offer={offer}
               firstPromo={fakePromo}
               promoCode={null}
-              promoTitle="Exclusive Access"
+              promoTitle="Special access"
               onTrackingComplete={handleTrackingComplete}
             />
           </div>

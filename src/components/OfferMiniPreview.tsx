@@ -24,7 +24,7 @@ export default function OfferMiniPreview({
   const href = `/offer/${encodeURIComponent(slug)}`;
 
   // Compute display values with safe fallbacks
-  const badge = category && category.trim() ? category : 'Exclusive Access';
+  const badge = category && category.trim() ? category : 'Special access';
   // Clamp rating between 0-5 for display consistency
   const r = Math.min(5, Math.max(0, Number(rating) || 0));
   const rc =

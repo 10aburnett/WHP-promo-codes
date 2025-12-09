@@ -33,7 +33,7 @@ export const translations = {
     'home.noResults': 'No promo codes found matching your filters. Try changing your filter criteria.',
     'home.expertReviews': 'Expert Reviews',
     'home.expertReviewsDesc': 'Our team thoroughly tests each digital product and promo code to ensure you get the best deals with genuine value and access.',
-    'home.exclusiveAccess': 'Exclusive Access',
+    'home.exclusiveAccess': 'Special access',
     'home.exclusiveAccessDesc': 'Get special promo codes and exclusive discounts that you won\'t find anywhere else, negotiated exclusively for our community.',
     'home.alwaysUpdated': 'Always Updated',
     'home.alwaysUpdatedDesc': 'Our promo code database is updated daily to ensure all offers are current, active, and provide maximum value to users.',

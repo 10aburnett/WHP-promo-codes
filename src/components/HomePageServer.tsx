@@ -301,7 +301,7 @@ export default function HomePageServer({
               slug: whop.slug,
               promoType: whop.promoCodes[0]?.type || 'discount',
               promoValue: parseInt(whop.promoCodes[0]?.value || '0'),
-              promoText: whop.promoCodes[0]?.title || 'Exclusive Access',
+              promoText: whop.promoCodes[0]?.title || 'Special access',
               logoUrl: whop.logo || '',
               promoCode: whop.promoCodes[0]?.code || null,
               affiliateLink: whop.affiliateLink || '',

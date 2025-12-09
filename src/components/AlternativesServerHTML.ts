@@ -34,7 +34,7 @@ function esc(s: string): string {
 
 function getPromoText(whop: Alternative): string {
   const firstPromo = whop.promoCodes?.[0];
-  if (!firstPromo) return 'Exclusive Access';
+  if (!firstPromo) return 'Special access';
 
   // If there's a promo code and a value > 0, show the discount
   if (firstPromo.code && firstPromo.value && firstPromo.value !== '0') {
@@ -45,7 +45,7 @@ function getPromoText(whop: Alternative): string {
     return `${firstPromo.value}% Off`;
   }
 
-  return firstPromo.title || 'Exclusive Access';
+  return firstPromo.title || 'Special access';
 }
 
 function resolveLogoUrl(logo: string | null | undefined): string {
@@ -107,9 +107,9 @@ export function renderAlternativesHTML(alternatives: Alternative[], explore: Exp
 
   return `
 <section class="mt-8">
-  <h2 class="text-xl sm:text-2xl font-bold mb-1">You might also consider…</h2>
+  <h2 class="text-xl sm:text-2xl font-bold mb-1">Other deals to review</h2>
   <p class="text-sm mb-4" style="color:var(--text-secondary)">
-    Alternative offers that might interest you
+    Additional offers that could suit what you're viewing
   </p>
   <div class="space-y-4">
     ${alternativeItems}

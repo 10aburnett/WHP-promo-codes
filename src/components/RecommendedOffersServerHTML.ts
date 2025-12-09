@@ -41,7 +41,7 @@ export function renderRecommendedHTML(items: DealData[]) {
         <div class="font-semibold text-base line-clamp-2 break-words mb-1" style="color:var(--text-color)">${esc(w.name)}</div>
         <div class="text-sm line-clamp-2 break-words" style="color:var(--text-secondary)">${desc === '&nbsp;' ? '&nbsp;' : esc(desc)}</div>
         <div class="mt-2 text-xs flex items-center gap-2" style="color:var(--text-secondary)">
-          <span class="px-2 py-0.5 rounded-full border" style="border-color:var(--border-color)">Exclusive Access</span>
+          <span class="px-2 py-0.5 rounded-full border" style="border-color:var(--border-color)">Special access</span>
           <span>${cat === '&nbsp;' ? '&nbsp;' : esc(cat)}</span>
           <span>${rating}</span>
         </div>
@@ -53,8 +53,8 @@ export function renderRecommendedHTML(items: DealData[]) {
 
   return `
 <section class="mt-8" data-recs data-recs-count="${items.length}">
-  <h2 class="text-xl sm:text-2xl font-bold mb-2">Recommended for You</h2>
-  <p class="text-sm mb-4" style="color:var(--text-secondary)">Similar offers based on your current selection</p>
+  <h2 class="text-xl sm:text-2xl font-bold mb-2">Suggestions for you</h2>
+  <p class="text-sm mb-4" style="color:var(--text-secondary)">Related offers that align with this page</p>
   <ul class="flex flex-col gap-3">
     ${lis.join('\n')}
   </ul>
