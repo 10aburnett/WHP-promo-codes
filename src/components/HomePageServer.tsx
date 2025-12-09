@@ -411,10 +411,27 @@ export default function HomePageServer({
 
       {/* No results message */}
       {items.length === 0 && (
-        <div className="col-span-full text-center py-12">
-          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-            No results found
-          </p>
+        <div className="col-span-full text-center py-16">
+          <div className="max-w-md mx-auto space-y-4">
+            <div
+              className="h-12 w-12 mx-auto rounded-xl flex items-center justify-center"
+              style={{
+                backgroundColor: 'rgba(5,150,105,0.10)',
+                color: 'var(--accent-color)',
+              }}
+            >
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
+              No matching deals found
+            </h3>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Try adjusting your filters or search for a different product, tool, or creator.
+            </p>
+          </div>
         </div>
       )}
     </div>

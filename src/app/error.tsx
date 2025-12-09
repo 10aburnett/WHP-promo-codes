@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+import ErrorState from '@/components/layout/ErrorState';
 
-export default function Error({
+export default function GlobalError({
   error,
   reset,
 }: {
@@ -10,23 +11,16 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error(error);
+    console.error('Global error:', error);
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#343541] text-white">
-      <div className="text-center p-8 max-w-md">
-        <h2 className="text-3xl font-bold mb-4">Something went wrong</h2>
-        <p className="text-[#a4a5b0] mb-6">
-          We apologize for the inconvenience. The error has been logged.
-        </p>
-        <button
-          onClick={() => reset()}
-          className="px-6 py-3 bg-[#68D08B] text-white rounded-md hover:bg-[#5abc7a] transition-colors"
-        >
-          Try again
-        </button>
-      </div>
-    </div>
+    <ErrorState
+      variant="error"
+      title="We hit a snag loading this page"
+      description="An unexpected error occurred while loading this part of DigitalPromoCodes. Our team is automatically notified so we can look into it."
+      onRetry={reset}
+      secondaryCta={{ href: '/', label: 'Back to homepage' }}
+    />
   );
-} 
+}
