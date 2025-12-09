@@ -75,10 +75,10 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
       if (response.ok) {
         setMessage({ type: 'success', text: data.message })
         onCommentSubmitted()
-        
+
         // Check if user is already subscribed before showing popup (for both comments and replies)
         const isAlreadySubscribed = await checkEmailSubscription(formData.authorEmail)
-        
+
         if (!isAlreadySubscribed) {
           // Show mailing list popup if user is not already subscribed
           console.log('User not subscribed, showing mailing list popup')
@@ -88,7 +88,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
         } else {
           console.log('User already subscribed, skipping mailing list popup')
         }
-        
+
       } else {
         setMessage({ type: 'error', text: data.error || 'Failed to submit comment' })
       }
@@ -100,9 +100,9 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
   }
 
   const resetFormData = () => {
-    setFormData({ 
-      authorName: '', 
-      authorEmail: '', 
+    setFormData({
+      authorName: '',
+      authorEmail: '',
       content: parentId && parentAuthor ? `@${parentAuthor} ` : ''
     })
   }
@@ -120,35 +120,50 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
   }
 
   return (
-    <div className="rounded-2xl shadow-lg p-8 border" 
-         style={{ 
-           backgroundColor: 'var(--card-bg)', 
-           borderColor: 'var(--card-border)',
+    <div className="rounded-2xl shadow-lg p-8 border"
+         style={{
+           backgroundColor: 'var(--background-secondary)',
+           borderColor: 'var(--border-color)',
            boxShadow: 'var(--promo-shadow)'
          }}>
-      <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-        {parentId ? `Reply to ${parentAuthor}` : 'Join the discussion'}
-      </h3>
+      {/* Header */}
+      <div className="mb-8">
+        <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-color)' }}>
+          Join the discussion
+        </h3>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          Share your thoughts with the community. Your comment helps others navigate digital products more confidently.
+        </p>
+      </div>
 
-      {parentId && onCancel && (
-        <div className="mb-4">
-          <button
-            onClick={onCancel}
-            className="text-sm px-4 py-2 rounded border transition-colors"
-            style={{ 
-              borderColor: 'var(--card-border)',
-              color: 'var(--text-muted)',
-              backgroundColor: 'var(--background-color)'
-            }}
+      {/* Reply indicator pill */}
+      {parentId && parentAuthor && (
+        <div className="mb-4 flex items-center gap-2">
+          <span
+            className="inline-flex items-center rounded-full px-3 py-1 text-xs"
+            style={{ backgroundColor: 'rgba(5,150,105,0.08)', color: 'var(--accent-color)' }}
           >
-            Cancel Reply
-          </button>
+            Replying to {parentAuthor}
+          </span>
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              className="text-xs px-3 py-1 rounded-full border transition-colors hover:opacity-80"
+              style={{
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-muted)',
+                backgroundColor: 'var(--background-color)'
+              }}
+            >
+              Cancel
+            </button>
+          )}
         </div>
       )}
 
       {message && (
-        <div 
-          className="p-4 rounded-lg mb-6"
+        <div
+          className="p-4 rounded-xl mb-6"
           style={message.type === 'success' ? {
             backgroundColor: 'var(--accent-color)',
             color: 'white'
@@ -162,83 +177,86 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-              Name *
-            </label>
-            <input
-              type="text"
-              value={formData.authorName}
-              onChange={(e) => setFormData(prev => ({ ...prev, authorName: e.target.value }))}
-              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-              style={{ 
-                backgroundColor: 'var(--background-color)', 
-                borderColor: 'var(--card-border)',
-                color: 'var(--text-color)'
-              }}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-              Email *
-            </label>
-            <input
-              type="email"
-              value={formData.authorEmail}
-              onChange={(e) => setFormData(prev => ({ ...prev, authorEmail: e.target.value }))}
-              className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-              style={{ 
-                backgroundColor: 'var(--background-color)', 
-                borderColor: 'var(--card-border)',
-                color: 'var(--text-color)'
-              }}
-              required
-              disabled={isSubmitting}
-            />
-            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-              Your email will not be published
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-            Comment *
+      {/* Single-column form layout */}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Name field */}
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+            Your name
           </label>
-          <textarea
-            value={formData.content}
-            onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-            rows={5}
-            className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
-            style={{ 
-              backgroundColor: 'var(--background-color)', 
-              borderColor: 'var(--card-border)',
+          <input
+            type="text"
+            value={formData.authorName}
+            onChange={(e) => setFormData(prev => ({ ...prev, authorName: e.target.value }))}
+            className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2"
+            style={{
+              backgroundColor: 'var(--background-color)',
+              borderColor: 'var(--border-color)',
               color: 'var(--text-color)'
             }}
-            placeholder={parentId ? `Reply to ${parentAuthor}...` : "Share your thoughts..."}
+            placeholder="What should we call you?"
             required
             disabled={isSubmitting}
           />
         </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-8 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
-            style={{ 
-              backgroundColor: 'var(--accent-color)', 
-              color: 'white'
+        {/* Email field */}
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+            Email address
+          </label>
+          <input
+            type="email"
+            value={formData.authorEmail}
+            onChange={(e) => setFormData(prev => ({ ...prev, authorEmail: e.target.value }))}
+            className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2"
+            style={{
+              backgroundColor: 'var(--background-color)',
+              borderColor: 'var(--border-color)',
+              color: 'var(--text-color)'
             }}
-          >
-            {isSubmitting ? 'Submitting...' : (parentId ? 'Post Reply' : 'Post Comment')}
-          </button>
+            placeholder="your@email.com"
+            required
+            disabled={isSubmitting}
+          />
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Your email will not be published
+          </p>
         </div>
+
+        {/* Comment textarea */}
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+            Comment
+          </label>
+          <textarea
+            value={formData.content}
+            onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+            rows={4}
+            className="w-full rounded-xl border px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2"
+            style={{
+              backgroundColor: 'var(--background-color)',
+              borderColor: 'var(--border-color)',
+              color: 'var(--text-color)'
+            }}
+            placeholder="Write your thoughts..."
+            required
+            disabled={isSubmitting}
+          />
+        </div>
+
+        {/* Submit button */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="rounded-full px-6 py-2.5 text-sm font-semibold shadow-sm hover:shadow-md transition disabled:opacity-50"
+          style={{
+            backgroundColor: 'var(--accent-color)',
+            color: 'white'
+          }}
+        >
+          {isSubmitting ? 'Posting...' : (parentId ? 'Post reply' : 'Post comment')}
+        </button>
       </form>
 
       {/* Mailing List Popup - for both comments and replies */}

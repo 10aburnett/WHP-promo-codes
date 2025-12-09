@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
     const canonical = `${siteOrigin()}/blog/${post.slug}`;
     const currentYear = new Date().getFullYear();
-    const metaDescription = post.excerpt ?? undefined;
+    const metaDescription = post.excerpt ?? `Practical insights on digital products, promo strategies, and online savings from ${SITE_BRAND}.`;
     const publishedDate = post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined;
 
     const authorName = post.User?.name || post.authorName || SITE_AUTHOR;
@@ -81,7 +81,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     return {
       title: `${post.title} - ${SITE_BRAND} Blog`,
       description: metaDescription,
-      keywords: `${post.title}, blog, deals, digital products, ${authorName}`,
+      keywords: `${post.title}, promo strategies, digital products, online savings, ${authorName}`,
       authors: [{ name: authorName }],
       alternates: {
         canonical
@@ -162,7 +162,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Blog',
+        name: 'Insights',
         item: `${siteOrigin()}/blog`
       },
       {

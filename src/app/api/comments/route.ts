@@ -26,8 +26,8 @@ const CommentSchema = z.object({
   return data.blogPostId || data.postSlug;
 }, { message: "Either blogPostId or postSlug is required" });
 
-// Hate speech and harmful content detection
-const BLOCKED_PATTERNS = [
+// Content moderation patterns for comment filtering
+const COMMENT_BLOCK_PATTERNS = [
   // Racial slurs and hate speech (using partial patterns to avoid false positives)
   /n[i1!]gg[e3]r/i,
   /f[a@]gg[o0]t/i,
@@ -52,10 +52,10 @@ const BLOCKED_PATTERNS = [
   /r[a@]p[e3]\s*(y[o0]u|h[e3]r|h[i1!]m)/i,
 ]
 
-function containsHateSpeech(content: string): { isBlocked: boolean; reason?: string } {
+function scanForBlockedCommentContent(content: string): { isBlocked: boolean; reason?: string } {
   const normalizedContent = content.toLowerCase().replace(/[^a-z0-9\s]/g, '')
-  
-  for (const pattern of BLOCKED_PATTERNS) {
+
+  for (const pattern of COMMENT_BLOCK_PATTERNS) {
     if (pattern.test(normalizedContent)) {
       return { isBlocked: true, reason: 'Contains hate speech or harmful content' }
     }
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Content moderation - auto-approve unless severely offensive
-    const moderation = containsHateSpeech(content)
+    const moderation = scanForBlockedCommentContent(content)
     const status = moderation.isBlocked ? 'FLAGGED' : 'APPROVED'
     const flaggedReason = moderation.reason || null
 

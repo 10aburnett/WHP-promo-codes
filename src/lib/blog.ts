@@ -100,7 +100,8 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPostFull | nu
   };
 }
 
-function normalize(p: any): AdminPost {
+/** Normalize admin blog post for DigitalPromoCodes blog listing */
+function normalizeAdminPost(p: any): AdminPost {
   return {
     id: p.id,
     title: p.title,
@@ -144,6 +145,6 @@ export async function getAdminBlogPosts(opts?: { page?: number; limit?: number }
     }),
   ]);
 
-  const items = rows.map(normalize);
+  const items = rows.map(normalizeAdminPost);
   return { ok: true as const, page, limit, total, items };
 }

@@ -12,15 +12,15 @@ export async function GET(request: NextRequest) {
     }
 
     // Extract keywords from the current post title for better matching
-    const titleWords = title
+    const titleKeywords = title
       .toLowerCase()
       .split(/[\s\-_.,!?()]+/)
       .filter(word => word.length > 3 && !['with', 'from', 'this', 'that', 'they', 'them', 'their', 'there', 'then', 'than', 'when', 'where', 'what', 'will', 'would', 'could', 'should'].includes(word))
       .slice(0, 5) // Take top 5 keywords
 
     // Build search conditions for related posts
-    const searchConditions = titleWords.length > 0 ? {
-      OR: titleWords.map(word => ({
+    const keywordSearchConditions = titleKeywords.length > 0 ? {
+      OR: titleKeywords.map(word => ({
         OR: [
           { title: { contains: word, mode: 'insensitive' as const } },
           { content: { contains: word, mode: 'insensitive' as const } },
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         AND: [
           { published: true },
           { id: { not: postId } },
-          ...(titleWords.length > 0 ? [searchConditions] : [])
+          ...(titleKeywords.length > 0 ? [keywordSearchConditions] : [])
         ]
       },
       select: {
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error fetching related posts:', error)
+    console.error('Blog related posts API error:', error)
     return Response.json({ error: 'Failed to fetch related posts' }, { status: 500 })
   }
 }

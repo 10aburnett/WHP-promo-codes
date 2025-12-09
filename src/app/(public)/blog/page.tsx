@@ -60,60 +60,56 @@ export default async function BlogPage() {
         <div className="min-h-screen py-8 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
           <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
             <div className="space-y-6">
-              {/* Header */}
-              <div className="text-center">
-                <h1 className="text-4xl md:text-5xl font-bold py-1"
-                    style={{ lineHeight: '1.3', marginBottom: '0.6rem' }}>
-                  <span style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</span>
-                  <span className="ml-2" style={{ color: 'var(--text-color)' }}>
-                    Blog
-                  </span>
-                </h1>
-                <div
-                  className="mx-auto h-1.5 w-28 rounded-full"
-                  style={{
-                    backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.6))'
-                  }}
-                ></div>
-              </div>
+              {/* Two-column hero layout */}
+              <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
+                <div>
+                  <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
+                    DigitalPromoCodes Insights
+                  </p>
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
+                    Strategies, updates & playbooks for smarter digital savings.
+                  </h1>
+                  <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
+                    Deep-dive guides and analysis on digital products, communities, and promo strategies from the team behind DigitalPromoCodes.
+                  </p>
+                </div>
 
-              <div className="text-center -mt-2">
-                <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                  Deep-dive guides, savings strategies, and digital product insights from the team behind DigitalPromoCodes.
-                </p>
-              </div>
-
-              <div className="text-center py-16">
-                <div
-                  className="inline-flex flex-col items-center justify-center rounded-2xl border px-8 py-10 shadow-sm"
-                  style={{
-                    backgroundColor: 'var(--background-secondary)',
-                    borderColor: 'var(--border-color)',
-                  }}
+                <aside
+                  className="rounded-2xl border p-5 md:p-6 shadow-sm"
+                  style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
                 >
-                  <div
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-full"
-                    style={{ backgroundColor: 'rgba(5,150,105,0.12)', color: 'var(--accent-color)' }}
-                  >
-                    <svg
-                      className="h-6 w-6"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.8}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="11" cy="11" r="6" />
-                      <path d="m16 16 3.5 3.5" />
+                  <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                    Stay ahead of the next deal wave
+                  </h2>
+                  <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+                    Occasional roundups of new digital products, top promo codes, and strategy breakdowns. No spam.
+                  </p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                    New posts typically ship a few times per month.
+                  </p>
+                </aside>
+              </div>
+
+              {/* Empty state card */}
+              <div className="flex justify-center py-16">
+                <div
+                  className="max-w-md text-center rounded-2xl border p-8"
+                  style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+                >
+                  <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full"
+                       style={{ backgroundColor: 'rgba(5,150,105,0.12)', color: 'var(--accent-color)' }}>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
                     </svg>
                   </div>
                   <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
                     No articles published yet
                   </h2>
-                  <p className="text-sm max-w-md" style={{ color: 'var(--text-secondary)' }}>
-                    We're preparing in-depth guides on digital products, promo strategies, and savings tips.
-                    Check back soon for fresh content from the DigitalPromoCodes team.
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    We&apos;re working on in-depth guides and case studies. Check back soon for fresh insights.
                   </p>
                 </div>
               </div>
@@ -151,55 +147,51 @@ export default async function BlogPage() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
-          <div className="space-y-6">
-            {/* Header */}
-            <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold py-1"
-                  style={{ lineHeight: '1.3', marginBottom: '0.6rem' }}>
-                <span style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</span>
-                <span className="ml-2" style={{ color: 'var(--text-color)' }}>
-                  Blog
-                </span>
-              </h1>
-              <div
-                className="mx-auto h-1.5 w-28 rounded-full"
-                style={{
-                  backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.6))'
-                }}
-              ></div>
+          <div className="space-y-8">
+            {/* Two-column hero layout */}
+            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
+              <div>
+                <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
+                  DigitalPromoCodes Insights
+                </p>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
+                  Strategies, updates & playbooks for smarter digital savings.
+                </h1>
+                <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
+                  Deep-dive guides and analysis on digital products, communities, and promo strategies from the team behind DigitalPromoCodes.
+                </p>
+              </div>
+
+              <aside
+                className="rounded-2xl border p-5 md:p-6 shadow-sm"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+              >
+                <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                  Stay ahead of the next deal wave
+                </h2>
+                <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+                  Occasional roundups of new digital products, top promo codes, and strategy breakdowns. No spam.
+                </p>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  New posts typically ship a few times per month.
+                </p>
+              </aside>
             </div>
 
-            <div className="text-center -mt-2">
-              <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                Deep-dive guides, savings strategies, and digital product insights from the team behind DigitalPromoCodes.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Blog posts grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(posts as BlogListItemWithDates[]).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <article
-                    className="group relative flex h-full cursor-pointer flex-col rounded-2xl border bg-[var(--card-bg)] p-6 shadow-sm transition-all duration-200 hover:shadow-lg"
+                    className="group h-full rounded-2xl border p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200"
                     style={{
+                      backgroundColor: 'var(--card-bg)',
                       borderColor: 'var(--card-border)',
                       boxShadow: 'var(--promo-shadow)',
                     }}
                   >
-                    {post.pinned && (
-                      <div className="absolute right-4 top-4">
-                        <span
-                          className="rounded-full px-2.5 py-1 text-xs font-medium"
-                          style={{
-                            backgroundColor: 'rgba(5,150,105,0.1)',
-                            color: 'var(--accent-color)',
-                          }}
-                        >
-                          Featured
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex h-full flex-col">
-                      <div className="mb-3">
+                    <div className="mb-4 space-y-2">
+                      <div className="flex items-center justify-between">
                         <time
                           className="text-xs uppercase tracking-wide"
                           style={{ color: 'var(--text-muted)' }}
@@ -212,48 +204,56 @@ export default async function BlogPage() {
                               })
                             : ''}
                         </time>
+                        {post.pinned && (
+                          <span
+                            className="rounded-full px-2.5 py-1 text-xs font-medium"
+                            style={{
+                              backgroundColor: 'rgba(5,150,105,0.1)',
+                              color: 'var(--accent-color)',
+                            }}
+                          >
+                            Featured
+                          </span>
+                        )}
                       </div>
 
                       <h2
-                        className="mb-3 line-clamp-2 text-xl font-semibold group-hover:opacity-85"
+                        className="text-lg md:text-xl font-semibold group-hover:opacity-90"
                         style={{ color: 'var(--text-color)' }}
                       >
                         {post.title}
                       </h2>
 
                       {post.excerpt && (
-                        <p
-                          className="mb-6 line-clamp-3 text-sm"
-                          style={{ color: 'var(--text-secondary)' }}
-                        >
+                        <p className="text-sm line-clamp-3" style={{ color: 'var(--text-secondary)' }}>
                           {post.excerpt}
                         </p>
                       )}
+                    </div>
 
-                      <div className="mt-auto flex items-center justify-between pt-2">
-                        <span
-                          className="inline-flex items-center text-sm font-medium transition-opacity group-hover:opacity-80"
-                          style={{ color: 'var(--accent-color)' }}
+                    <div className="flex items-center justify-between pt-3 border-t"
+                         style={{ borderColor: 'var(--border-color)' }}>
+                      <span
+                        className="inline-flex items-center text-xs font-medium"
+                        style={{ color: 'var(--accent-color)' }}
+                      >
+                        Read article
+                        <svg
+                          className="ml-1.5 h-4 w-4"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={1.8}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
-                          Read article
-                          <svg
-                            className="ml-2 h-4 w-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth={1.8}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M5 12h14" />
-                            <path d="M13 5l7 7-7 7" />
-                          </svg>
-                        </span>
-
-                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                          By {post.authorName ?? post.author?.name ?? 'Unknown'}
-                        </span>
-                      </div>
+                          <path d="M5 12h14" />
+                          <path d="M13 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                        By {post.authorName ?? post.author?.name ?? 'Unknown'}
+                      </span>
                     </div>
                   </article>
                 </Link>
@@ -269,60 +269,55 @@ export default async function BlogPage() {
       <div className="min-h-screen py-8 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
         <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
           <div className="space-y-6">
-            {/* Header */}
-            <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold py-1"
-                  style={{ lineHeight: '1.3', marginBottom: '0.6rem' }}>
-                <span style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</span>
-                <span className="ml-2" style={{ color: 'var(--text-color)' }}>
-                  Blog
-                </span>
-              </h1>
-              <div
-                className="mx-auto h-1.5 w-28 rounded-full"
-                style={{
-                  backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.6))'
-                }}
-              ></div>
-            </div>
+            {/* Two-column hero layout (error state) */}
+            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
+              <div>
+                <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
+                  DigitalPromoCodes Insights
+                </p>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
+                  Strategies, updates & playbooks for smarter digital savings.
+                </h1>
+                <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
+                  Deep-dive guides and analysis on digital products, communities, and promo strategies from the team behind DigitalPromoCodes.
+                </p>
+              </div>
 
-            <div className="text-center -mt-2">
-              <p className="text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                Deep-dive guides, savings strategies, and digital product insights from the team behind DigitalPromoCodes.
-              </p>
-            </div>
-
-            <div className="text-center py-16">
-              <div
-                className="inline-flex flex-col items-center justify-center rounded-2xl border px-8 py-10 shadow-sm"
-                style={{
-                  backgroundColor: 'var(--background-secondary)',
-                  borderColor: 'var(--border-color)',
-                }}
+              <aside
+                className="rounded-2xl border p-5 md:p-6 shadow-sm"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
-                <div
-                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-full"
-                  style={{ backgroundColor: 'rgba(248, 113, 113, 0.15)', color: '#ef4444' }}
-                >
-                  <svg
-                    className="h-6 w-6"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.8}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 9v4" />
-                    <path d="M12 17h.01" />
-                    <path d="M10.29 3.86 1.82 18a1 1 0 0 0 .86 1.5h18.64a1 1 0 0 0 .86-1.5L13.71 3.86a1 1 0 0 0-1.72 0Z" />
+                <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                  Stay ahead of the next deal wave
+                </h2>
+                <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+                  Occasional roundups of new digital products, top promo codes, and strategy breakdowns. No spam.
+                </p>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  New posts typically ship a few times per month.
+                </p>
+              </aside>
+            </div>
+
+            {/* Error state card */}
+            <div className="flex justify-center py-16">
+              <div
+                className="max-w-md text-center rounded-2xl border p-8"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+              >
+                <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full"
+                     style={{ backgroundColor: 'rgba(248, 113, 113, 0.15)', color: '#ef4444' }}>
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-color)' }}>
-                  Unable to load blog posts
+                <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                  Unable to load articles
                 </h2>
-                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Something went wrong while loading the latest articles. Please refresh the page or try again in a few minutes.
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Something went wrong while fetching blog content. Please refresh or try again in a few minutes.
                 </p>
               </div>
             </div>

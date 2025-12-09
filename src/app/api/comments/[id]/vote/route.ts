@@ -7,7 +7,7 @@ export const revalidate = 0
 
 type Vote = "UPVOTE" | "DOWNVOTE";
 
-function getClientIP(req: Request) {
+function getCommentVoterIP(req: Request) {
   const h = req.headers;
   return (
     h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -24,7 +24,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       return NextResponse.json({ error: "Invalid voteType" }, { status: 400 });
     }
 
-    const ip = getClientIP(req);
+    const ip = getCommentVoterIP(req);
     const commentId = params.id;
 
     const result = await prisma.$transaction(async (tx) => {
@@ -132,7 +132,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
     return NextResponse.json(result.body, { status: result.status });
   } catch (err: any) {
-    console.error("Comment vote error:", err);
+    console.error("Comments vote API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

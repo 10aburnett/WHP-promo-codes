@@ -57,74 +57,65 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
     <div className="min-h-screen py-12 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
       <div className="mx-auto w-[90%] md:w-[95%] max-w-[800px]">
         <div className="space-y-8">
-          {/* Breadcrumb Navigation */}
+          {/* Breadcrumb Navigation - Simplified slash format */}
           <nav className="mb-8" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <ol className="flex flex-wrap items-center gap-1 text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
               <li>
                 <Link href="/" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--accent-color)' }}>
                   Home
                 </Link>
               </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
+              <li aria-hidden="true">/</li>
+              <li>
                 <Link href="/blog" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--accent-color)' }}>
-                  Blog
+                  Insights
                 </Link>
               </li>
-              <li className="flex items-center">
-                <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
-                <span className="truncate max-w-xs" style={{ color: 'var(--text-muted)' }}>
-                  {post.title}
-                </span>
+              <li aria-hidden="true">/</li>
+              <li className="truncate max-w-[12rem]" style={{ color: 'var(--text-muted)' }}>
+                {post.title}
               </li>
             </ol>
           </nav>
 
           {/* Article */}
           <article>
-            <header className="text-center mb-12">
-              <h1
-                className="mb-4 bg-gradient-to-r from-[var(--text-color)] to-[var(--text-secondary)] bg-clip-text text-4xl md:text-5xl font-bold text-transparent"
-                style={{ lineHeight: '1.3' }}
-              >
-                {post.title}
-              </h1>
+            {/* Carded Hero Header */}
+            <header className="mb-10">
               <div
-                className="mx-auto mb-6 h-1.5 w-24 rounded-full"
-                style={{
-                  backgroundImage: 'linear-gradient(to right, var(--accent-color), rgba(59,130,246,0.7))',
-                }}
-              ></div>
-
-              <div
-                className="flex flex-wrap items-center justify-center gap-4 text-sm"
-                style={{ color: 'var(--text-secondary)' }}
+                className="rounded-2xl border p-6 md:p-8 shadow-sm"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
-                {post.publishedAt && (
-                  <time>
-                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </time>
-                )}
+                <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--accent-color)' }}>
+                  DigitalPromoCodes Insights
+                </p>
+                <h1 className="text-3xl md:text-4xl font-bold mb-3"
+                    style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
+                  {post.title}
+                </h1>
+                <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {post.publishedAt && (
+                    <time>
+                      {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
+                  )}
 
-                {(post.authorName || post.author?.name) && (
-                  <span>By {post.authorName || post.author?.name}</span>
-                )}
+                  {(post.authorName || post.author?.name) && (
+                    <span>By {post.authorName || post.author?.name}</span>
+                  )}
 
-                <span className="flex items-center">
-                  <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 6v6l3 3" />
-                  </svg>
-                  {post.readingTime} min read
-                </span>
+                  <span className="flex items-center">
+                    <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 6v6l3 3" />
+                    </svg>
+                    {post.readingTime} min read
+                  </span>
+                </div>
               </div>
             </header>
 
@@ -175,7 +166,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                       color: 'var(--text-color)',
                     }}
                   >
-                    <span className="font-medium text-sm">On this page</span>
+                    <span className="font-medium text-sm">{showToc ? 'Hide outline' : 'Show outline'}</span>
                     <svg
                       className={`h-5 w-5 transition-transform ${showToc ? 'rotate-180' : ''}`}
                       fill="none"
@@ -222,6 +213,9 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                     boxShadow: 'var(--promo-shadow)',
                   }}
                 >
+                  <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+                    Last updated for accuracy and clarity. Some details may change over time.
+                  </p>
                   <div
                     className="prose prose-lg max-w-none blog-content"
                     style={{
@@ -263,19 +257,17 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
           </div>
 
           {/* Navigation */}
-          <div className="mt-12 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
-            <div className="text-center">
-              <Link
-                href="/blog"
-                className="inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-semibold transition-all hover:opacity-90"
-                style={{
-                  backgroundColor: 'var(--accent-color)',
-                  color: 'white',
-                }}
-              >
-                Back to all articles
-              </Link>
-            </div>
+          <div className="mt-16 flex justify-center">
+            <Link
+              href="/blog"
+              className="inline-flex items-center rounded-full px-7 py-3 text-sm font-semibold shadow-sm hover:shadow-md transition"
+              style={{
+                backgroundColor: 'var(--accent-color)',
+                color: 'white',
+              }}
+            >
+              Browse all articles
+            </Link>
           </div>
         </div>
       </div>

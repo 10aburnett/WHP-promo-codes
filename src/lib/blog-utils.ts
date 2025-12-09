@@ -105,9 +105,9 @@ export function generateArticleSchema(post: {
     'url': `${origin}/blog/${post.slug}`,
     'wordCount': post.content.replace(/<[^>]*>/g, '').split(/\s+/).length,
     'timeRequired': `PT${readingTime}M`,
-    'genre': 'Technology',
-    'keywords': `deals, digital products, ${post.title}, discount codes`,
-    'articleSection': 'Digital Products',
+    'genre': 'Online products & savings',
+    'keywords': `digital promo codes, online products, savings strategies, ${post.title}`,
+    'articleSection': 'Digital products & promo strategies',
     'inLanguage': 'en-US'
   }
 }
@@ -130,7 +130,7 @@ export function generateBreadcrumbSchema(postTitle: string, slug: string) {
       {
         '@type': 'ListItem',
         'position': 2,
-        'name': 'Blog',
+        'name': 'Insights',
         'item': `${origin}/blog`
       },
       {

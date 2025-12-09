@@ -13,9 +13,9 @@ export default function BlogPostNotFound() {
   return (
     <ErrorState
       variant="not-found"
-      title="Blog post not found"
-      description="We couldn't find this article on DigitalPromoCodes. It may have been removed, renamed, or the link may be incorrect."
-      primaryCta={{ href: '/blog', label: 'Browse all articles' }}
+      title="Article not found"
+      description="This article is no longer available on DigitalPromoCodes. It may have been removed, renamed, or never existed."
+      primaryCta={{ href: '/blog', label: 'View all insights' }}
       secondaryCta={{ href: '/', label: 'Back to homepage' }}
     />
   );

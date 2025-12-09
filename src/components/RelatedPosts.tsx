@@ -9,11 +9,21 @@ interface RelatedPost {
   excerpt: string | null
   publishedAt: string | null
   authorName?: string | null
+  author?: { name?: string | null } | null
 }
 
 interface RelatedPostsProps {
   currentPostId: string
   currentPostTitle: string
+}
+
+const formatDate = (dateString: string | null) => {
+  if (!dateString) return ''
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
 }
 
 export default function RelatedPosts({ currentPostId, currentPostTitle }: RelatedPostsProps) {
@@ -40,25 +50,35 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <h3 className="text-2xl font-bold" style={{ color: 'var(--text-color)' }}>
+      <section className="mt-20">
+        <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
           You might also like
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="animate-pulse">
-              <div className="rounded-lg p-6 border" style={{ 
-                backgroundColor: 'var(--background-secondary)', 
-                borderColor: 'var(--border-color)' 
-              }}>
-                <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded mb-4"></div>
-                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded mb-2"></div>
-                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+        <div className="space-y-4">
+          {[1, 2].map(i => (
+            <div
+              key={i}
+              className="rounded-2xl border p-4 flex gap-4 animate-pulse"
+              style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+            >
+              <div
+                className="h-12 w-12 rounded-full flex-shrink-0"
+                style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
+              />
+              <div className="flex-1 space-y-2">
+                <div
+                  className="h-4 w-3/4 rounded"
+                  style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
+                />
+                <div
+                  className="h-3 w-full rounded"
+                  style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
+                />
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
     )
   }
 
@@ -66,58 +86,56 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
     return null
   }
 
+  // Only show first 2 posts for the new asymmetric layout
+  const displayPosts = relatedPosts.slice(0, 2)
+
   return (
-    <div className="space-y-6">
-      <h3 className="text-2xl font-bold" style={{ color: 'var(--text-color)' }}>
+    <section className="mt-20">
+      <h3
+        className="text-2xl font-bold mb-6"
+        style={{ color: 'var(--text-color)' }}
+      >
         You might also like
       </h3>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {relatedPosts.map((post) => (
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {displayPosts.map((post) => (
           <Link key={post.id} href={`/blog/${post.slug}`}>
             <article
-              className="group flex h-full cursor-pointer flex-col rounded-2xl border p-5 shadow-sm transition-all duration-200 hover:shadow-lg"
+              className="group flex flex-col rounded-2xl border p-6 shadow-sm hover:shadow-md transition-all duration-200 h-full"
               style={{
-                backgroundColor: 'var(--card-bg)',
-                borderColor: 'var(--card-border)',
-                boxShadow: 'var(--promo-shadow)',
+                backgroundColor: 'var(--background-secondary)',
+                borderColor: 'var(--border-color)',
               }}
             >
-              <div className="flex-1">
-                <h4 className="text-lg font-semibold mb-3 group-hover:opacity-80 transition-opacity line-clamp-2" 
-                    style={{ color: 'var(--text-color)' }}>
-                  {post.title}
-                </h4>
-                
-                {post.excerpt && (
-                  <p className="text-sm mb-4 line-clamp-3" style={{ color: 'var(--text-secondary)' }}>
-                    {post.excerpt}
-                  </p>
-                )}
+              <div className="mb-3">
+                <time
+                  className="text-xs uppercase tracking-wide"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  {formatDate(post.publishedAt)}
+                </time>
               </div>
-              
-              <div className="flex items-center justify-between mt-auto pt-4 border-t" 
-                   style={{ borderColor: 'var(--border-color)' }}>
-                {post.publishedAt && (
-                  <time className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </time>
-                )}
-                
-                {post.authorName && (
-                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    By {post.authorName}
-                  </span>
-                )}
-              </div>
-              
-              <div className="mt-3">
+
+              <h4
+                className="text-xl font-semibold mb-2 line-clamp-2 group-hover:opacity-90"
+                style={{ color: 'var(--text-color)' }}
+              >
+                {post.title}
+              </h4>
+
+              {post.excerpt && (
+                <p
+                  className="text-sm mb-4 line-clamp-3"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {post.excerpt}
+                </p>
+              )}
+
+              <div className="mt-auto flex items-center justify-between">
                 <span
-                  className="inline-flex items-center text-sm font-medium transition-opacity group-hover:opacity-80"
+                  className="inline-flex items-center text-sm font-medium"
                   style={{ color: 'var(--accent-color)' }}
                 >
                   Read article
@@ -134,11 +152,20 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
                     <path d="M13 5l7 7-7 7" />
                   </svg>
                 </span>
+
+                {(post.authorName || post.author?.name) && (
+                  <span
+                    className="text-xs"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    {post.authorName || post.author?.name}
+                  </span>
+                )}
               </div>
             </article>
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

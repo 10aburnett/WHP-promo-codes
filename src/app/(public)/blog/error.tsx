@@ -18,7 +18,7 @@ export default function BlogError({
     <ErrorState
       variant="error"
       title="We couldn't load the blog"
-      description="An issue occurred while loading blog content on DigitalPromoCodes. Please refresh the page or try again shortly."
+      description="Something went wrong while loading blog content on DigitalPromoCodes. Please retry or return to the homepage."
       onRetry={reset}
       secondaryCta={{ href: '/', label: 'Back to homepage' }}
     />

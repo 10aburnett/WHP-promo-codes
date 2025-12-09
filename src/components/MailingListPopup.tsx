@@ -120,15 +120,15 @@ export default function MailingListPopup({
             </div>
             
             <h3 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>
-              Welcome to the VIP List! 🎉
+              You're on the list!
             </h3>
-            
+
             <div className="space-y-3 mb-6">
               <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--accent-color)' }}>You're all set!</strong> We've added <strong>{userEmail}</strong> to our exclusive mailing list.
+                <strong style={{ color: 'var(--accent-color)' }}>Success!</strong> We've added <strong>{userEmail}</strong> to receive DigitalPromoCodes updates.
               </p>
-              
-              <div 
+
+              <div
                 className="p-4 rounded-lg border"
                 style={{
                   backgroundColor: 'var(--card-bg)',
@@ -137,8 +137,7 @@ export default function MailingListPopup({
                 }}
               >
                 <p className="text-sm">
-                  🎯 <strong>What's next?</strong> Watch your inbox for the latest DigitalPromoCodes updates, insider tips, and curated digital deals.
-                  Your first VIP email is on the way!
+                  <strong>What to expect:</strong> Short, practical roundups of new digital products, verified promo codes, and savings strategies. No spam, ever.
                 </p>
               </div>
             </div>
@@ -154,18 +153,18 @@ export default function MailingListPopup({
           <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
                style={{ backgroundColor: 'var(--accent-color)' }}>
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          
+
           <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-color)' }}>
-            Join Our VIP List! 🎉
+            Stay in the loop
           </h3>
-          
+
           <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            Get exclusive access to the <strong style={{ color: 'var(--accent-color)' }}>newest digital promo codes</strong>,
-            savings strategies, and tools we discover — before they're widely shared.
+            Get <strong style={{ color: 'var(--accent-color)' }}>verified digital promo codes</strong>,
+            savings strategies, and new product discoveries delivered to your inbox.
           </p>
         </div>
 
@@ -178,10 +177,10 @@ export default function MailingListPopup({
               </svg>
             </div>
             <span style={{ color: 'var(--text-secondary)' }}>
-              <strong>Exclusive promo codes</strong> not available anywhere else
+              <strong>Exclusive digital promo codes</strong> for tools, communities, and online products
             </span>
           </div>
-          
+
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0 w-5 h-5 mt-1">
               <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="currentColor" viewBox="0 0 20 20">
@@ -189,10 +188,10 @@ export default function MailingListPopup({
               </svg>
             </div>
             <span style={{ color: 'var(--text-secondary)' }}>
-              <strong>Weekly insider tips</strong> on the best digital product deals
+              <strong>Short, practical breakdowns</strong> of new launches and pricing changes
             </span>
           </div>
-          
+
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0 w-5 h-5 mt-1">
               <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="currentColor" viewBox="0 0 20 20">
@@ -200,7 +199,7 @@ export default function MailingListPopup({
               </svg>
             </div>
             <span style={{ color: 'var(--text-secondary)' }}>
-              <strong>Early access</strong> to limited-time offers
+              <strong>Early heads-up</strong> when high-value deals are about to expire
             </span>
           </div>
         </div>
@@ -220,9 +219,9 @@ export default function MailingListPopup({
               }}
             />
             <span style={{ color: 'var(--text-secondary)' }}>
-              Yes, I want to receive exclusive digital promo codes and insider tips!
+              Yes, send me verified promo codes and savings strategies!
               <span className="text-xs block mt-1" style={{ color: 'var(--text-muted)' }}>
-                (Unsubscribe anytime. We respect your privacy.)
+                (Unsubscribe anytime. No spam, ever.)
               </span>
             </span>
           </label>

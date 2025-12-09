@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(post)
   } catch (error) {
-    console.error('Error fetching blog post:', error)
+    console.error('Blog API error (single post):', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
