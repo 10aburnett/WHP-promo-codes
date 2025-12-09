@@ -1,147 +1,88 @@
-import Image from "next/image";
-import proofManifest from "@data/proof-manifest.json";
-import { fileSlug } from "@/lib/slug-utils";
-import { siteOrigin } from "@/lib/site-origin";
-import { SITE_BRAND } from "@/lib/brand";
-
-// Check if proof exists for a slug using the manifest
-function proofExists(slug: string) {
-  const normalizedSlug = fileSlug(slug);
-  return (proofManifest.slugs || []).includes(normalizedSlug);
-}
-
-// Generate proof path for a given slug
-function proofPathForSlug(slug: string) {
-  const PROOF_VERSION = proofManifest.version || "2025-09";
-  const normalizedSlug = fileSlug(slug);
-  return `/images/howto/${normalizedSlug}-proof-${PROOF_VERSION}.png`;
-}
-
-// Format currency from cents
-function fmt(cents?: number, cur?: string) {
-  if (cents == null || !cur) return null;
-  return new Intl.NumberFormat("en", { style: "currency", currency: cur }).format(cents / 100);
-}
+// src/components/offer/HowToSection.tsx
+// Whop-specific, fully rewritten, no figures, SEO-safe, modernised wording
 
 type Props = {
-  slug: string;
   brand: string;
-  currency: string; // e.g., "USD"
-  hasTrial?: boolean;
-  lastTestedISO?: string; // e.g. "2025-09-19T10:55:00Z"
-  beforeCents?: number;    // numbers from verification ledger
-  afterCents?: number;
 };
 
-export default function HowToSection({ slug, brand, currency, hasTrial, lastTestedISO, beforeCents, afterCents }: Props) {
-  // Debug logging for production troubleshooting
-  console.log('HowToSection props:', { slug, brand, currency, lastTestedISO, beforeCents, afterCents });
-
-  const A = "/images/howto/whop-ui-map-2025-09.png";
-  const B = proofPathForSlug(slug);
-  const hasB = proofExists(slug);
-  const before = fmt(beforeCents, currency);
-  const after = fmt(afterCents, currency);
-
-  console.log('HowToSection formatted:', { before, after, hasB });
-
+export default function HowToSection({ brand }: Props) {
   return (
-    <section aria-labelledby="howto-title" className="mt-3">
-      <h2 id="howto-title" className="text-xl sm:text-2xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>
-        Checkout specifics (Whop)
+    <section
+      aria-labelledby="howto-title"
+      className="mt-6 rounded-2xl shadow-theme-promo p-6 sm:p-8 transition-theme"
+      style={{ backgroundColor: "var(--background-secondary)" }}
+    >
+      <h2
+        id="howto-title"
+        className="text-xl sm:text-2xl font-bold mb-4"
+        style={{ color: "var(--text-color)" }}
+      >
+        How to Apply a Promo Code on Whop
       </h2>
 
-      <div className="space-y-4 mb-6">
+      <div
+        className="space-y-4 leading-relaxed text-base"
+        style={{ color: "var(--text-secondary)" }}
+      >
         <p>
-          <strong>Totals & tax:</strong> Prices show ex-VAT; VAT/GST appears after you choose your country. The currency label is next to Total due today.
+          Whop uses a unified checkout layout, so applying a promo code for{" "}
+          <strong>{brand}</strong> is normally quick and intuitive. The steps
+          below explain exactly where to enter your code and how to ensure it
+          registers correctly.
         </p>
 
         <p>
-          <strong>Code behavior:</strong> Whop accepts one code at a time (case-insensitive). If a code is prefilled or you tried another earlier, click Remove, then Add coupon and paste your best code again.
+          <strong>1. Open the checkout page for the product or plan you want.</strong><br />
+          Whop displays your chosen tier on the right-hand side, along with the
+          price and billing period.
         </p>
 
         <p>
-          <strong>No price change?</strong> It usually means the code is restricted to a different plan/SKU or new customers. Reselect the correct tier and re-apply.
+          <strong>2. Locate the "Add coupon" or "Have a code?" link.</strong><br />
+          This appears next to the order summary. If a code is auto-filled from a
+          previous session or extension, remove it first so you can add your best
+          discount manually.
         </p>
 
         <p>
-          <strong>Trials / renewals:</strong> If a trial exists, check the first paid charge line for date/amount; most codes apply to the first paid period only (not ongoing renewals).
+          <strong>3. Enter your promo code exactly as provided.</strong><br />
+          Whop normally accepts codes regardless of capitalisation, but avoid
+          spaces or autofill errors. After applying the code, the total should
+          update immediately.
         </p>
 
         <p>
-          <strong>Extensions & autofill:</strong> Coupon extensions or aggressive autofill can block updates—try Incognito or temporarily disable extensions.
+          <strong>4. If the price doesn't change:</strong><br />
+          It may mean the code only applies to a different billing cycle,
+          one-time purchase, or new-customer plan. Switching the tier or removing
+          and re-adding the code usually resolves this.
         </p>
 
         <p>
-          <strong>After purchase:</strong> Find access in your Whop Library. For Discord, go Manage → Connect Discord. Need paperwork? Use View receipt / Download invoice on the order.
+          <strong>5. Trials & renewals:</strong><br />
+          When a trial is available, the discount commonly applies to the first
+          paid period. Check the renewal line in the summary to confirm the exact
+          amount and date.
         </p>
 
-        <p className="text-sm italic text-gray-600">
-          (Screenshots show where to enter the code, see totals, VAT, and currency.)
+        <p>
+          <strong>6. Browser tools and extensions:</strong><br />
+          Some coupon extensions or aggressive autofill scripts can override the
+          input field. If your code refuses to apply, try incognito mode or
+          temporarily disabling extensions.
+        </p>
+
+        <p>
+          <strong>7. After completing your order:</strong><br />
+          Your access will appear in your Whop Library. For Discord-based
+          products, use "Manage → Connect Discord" to activate permissions.
+        </p>
+
+        <p className="text-sm italic opacity-70">
+          These steps reflect the most common Whop checkout behaviour. Minor interface
+          variations exist depending on the seller.
         </p>
       </div>
-
-      {/* Figure A: Reusable UI map */}
-      <figure className="mb-6">
-        <Image
-          src={A}
-          alt="Whop checkout template showing where promo codes are applied"
-          width={1200}
-          height={750}
-          sizes="(max-width: 768px) 100vw, 900px"
-          loading="lazy"
-        />
-        <figcaption className="text-sm text-muted-foreground mt-2">
-          Figure A — Whop checkout template.
-        </figcaption>
-      </figure>
-
-      {/* Figure B: Merchant-specific proof (optional) */}
-      {hasB && (
-        <>
-          <figure>
-            <Image
-              src={B}
-              alt={
-                before && after && lastTestedISO
-                  ? `${brand} on Whop with promo applied — ${before} → ${after} (ex-VAT), verified ${new Date(lastTestedISO).toISOString().split('T')[0]}`
-                  : `${brand} on Whop promo code proof screenshot`
-              }
-              width={1200}
-              height={750}
-              sizes="(max-width: 768px) 100vw, 900px"
-              loading="lazy"
-              unoptimized
-            />
-            <figcaption className="text-sm text-muted-foreground mt-2">
-              Figure B — Promo code applied on Whop: ex-VAT before → after {before && after ? `${before} → ${after}` : 'verification in progress'}. {lastTestedISO && `Last tested ${new Date(lastTestedISO).toLocaleDateString('en-GB')}.`}
-            </figcaption>
-          </figure>
-
-          {before && after && lastTestedISO && (
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "ImageObject",
-                  contentUrl: `${siteOrigin()}${B}`,
-                  caption: `Promo code proof — ${before} → ${after} (ex-VAT), verified ${new Date(lastTestedISO).toLocaleDateString('en-GB')}`,
-                  author: SITE_BRAND,
-                  datePublished: lastTestedISO,
-                }),
-              }}
-            />
-          )}
-        </>
-      )}
-
-      {/* Last tested verification line */}
-      {(lastTestedISO && before && after) && (
-        <p className="mt-3 text-sm">
-          <strong>Last tested:</strong> {new Date(lastTestedISO).toLocaleString("en-GB", { hour12: false })} — {before} → <strong>{after}</strong> (ex-VAT).
-        </p>
-      )}
     </section>
   );
 }

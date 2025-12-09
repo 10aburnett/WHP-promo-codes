@@ -950,15 +950,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
             {/* Visual Guide Section */}
             <section className="dpc-offer-howto rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-              <HowToSection
-                slug={params.slug}
-                brand={offerFormatted.name}
-                currency={extractCurrency(offerFormatted.price)}
-                hasTrial={hasTrial(offerFormatted.price)}
-                lastTestedISO={verificationData?.best?.computedAt ?? null}
-                beforeCents={verificationData?.best?.beforeCents ?? null}
-                afterCents={verificationData?.best?.afterCents ?? null}
-              />
+              <HowToSection brand={offerFormatted.name} />
             </section>
 
             {/* FAQ Section */}
