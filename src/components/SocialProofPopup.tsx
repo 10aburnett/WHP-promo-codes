@@ -46,53 +46,63 @@ function SocialProofPopupItem({ data, onComplete }: SocialProofPopupProps) {
   return (
     <div
       className={`
-        fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 
+        fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50
         max-w-xs sm:max-w-sm w-auto
-        bg-white dark:bg-gray-800 
-        border border-gray-200 dark:border-gray-700
-        rounded-lg shadow-lg p-3 sm:p-4
+        rounded-xl border p-3 sm:p-3.5
+        backdrop-blur
         transition-all duration-500 ease-out
-        ${isVisible && !isExiting 
-          ? 'opacity-100 translate-y-0 scale-100' 
-          : 'opacity-0 translate-y-4 scale-95'
+        ${isVisible && !isExiting
+          ? 'opacity-100 translate-y-0 scale-100'
+          : 'opacity-0 translate-y-3 scale-95'
         }
       `}
       style={{
-        backgroundColor: 'var(--background-secondary)',
+        backgroundColor: 'var(--background-color)',
         borderColor: 'var(--border-color)',
         color: 'var(--text-color)',
-        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
+        boxShadow: '0 18px 35px rgba(12, 20, 33, 0.30)',
       }}
     >
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Party emoji for visual interest */}
-        <div className="text-lg sm:text-xl flex-shrink-0">🎉</div>
-        
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            {/* Checkmark icon */}
-            <svg 
-              className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" 
-              style={{ color: 'var(--success-color)' }}
-              fill="none" 
-              stroke="currentColor" 
+      <div className="flex items-start gap-3">
+        {/* Circular accent icon */}
+        <div className="flex-shrink-0">
+          <div
+            className="flex h-8 w-8 items-center justify-center rounded-full"
+            style={{
+              backgroundColor: 'rgba(5,150,105,0.12)',
+              color: 'var(--success-color)',
+            }}
+          >
+            <svg
+              className="h-3.5 w-3.5"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M5 13l4 4L19 7" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="font-semibold text-xs sm:text-sm" style={{ color: 'var(--success-color)' }}>
-              Just saved!
-            </span>
           </div>
-          
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <p
+            className="text-[11px] sm:text-xs font-semibold uppercase tracking-wide mb-0.5"
+            style={{ color: 'var(--success-color)' }}
+          >
+            Live savings
+          </p>
           <p className="text-xs sm:text-sm leading-relaxed">
-            Someone just saved money on <span className="font-medium">{data.whopName}</span> by using one of our promo codes!
+            A shopper just saved with a promo on{' '}
+            <span className="font-medium" style={{ color: 'var(--accent-color)' }}>
+              {data.whopName}
+            </span>
+            .
           </p>
         </div>
       </div>
