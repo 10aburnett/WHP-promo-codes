@@ -65,110 +65,212 @@ export default function AboutPage() {
         }}
       />
 
-      <div className="min-h-screen py-12 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
-      <div className="mx-auto w-[90%] md:w-[95%] max-w-[800px]">
-        <div className="space-y-8">
-          {/* Header */}
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r bg-clip-text text-transparent leading-tight" 
-                style={{ backgroundImage: `linear-gradient(to right, var(--text-color), var(--text-secondary))` }}>
-              About Us
-            </h1>
-            <div className="w-20 h-1 mx-auto rounded-full" style={{ backgroundColor: 'var(--accent-color)' }}></div>
-          </div>
+      <div className="min-h-screen py-16 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
+        <div className="mx-auto w-[90%] md:w-[95%] max-w-[1100px]">
 
-          {/* Main Content */}
-          <div className="prose prose-lg max-w-none space-y-6" style={{ color: 'var(--text-color)' }}>
-            <div className="text-center mb-8">
-              <p className="text-xl leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Welcome to <strong style={{ color: 'var(--accent-color)' }}>{SITE_BRAND}</strong> — your go-to hub for exclusive deals, discounts, and digital product insights. Check out our <Link href="/blog" className="underline hover:opacity-80" style={{ color: 'var(--accent-color)' }}>latest blog posts</Link> or <Link href="/contact" className="underline hover:opacity-80" style={{ color: 'var(--accent-color)' }}>get in touch</Link>.
+          {/* Left-aligned Hero */}
+          <header className="mb-16">
+            <span
+              className="inline-block text-xs font-medium tracking-wider uppercase px-3 py-1 rounded-full mb-4"
+              style={{ backgroundColor: 'rgba(22, 101, 52, 0.08)', color: 'var(--accent-color)' }}
+            >
+              About DigitalPromoCodes
+            </span>
+            <h1 className="text-3xl md:text-4xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
+              Verified savings for digital products
+            </h1>
+            <p className="text-lg max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
+              We aggregate and verify promotional offers across digital products, courses, and communities — providing accurate pricing and transparent affiliate disclosure.
+            </p>
+          </header>
+
+          {/* Two-column Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16 mb-20">
+
+            {/* LEFT: Mission Narrative */}
+            <div className="space-y-8">
+              <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Finding legitimate discounts for digital products can be time-consuming. Promo codes expire, terms change, and many listings are outdated or inaccurate. We created {SITE_BRAND} to solve this problem.
+              </p>
+
+              <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Our team maintains one of the largest collections of verified digital product offers online. Each listing includes current pricing, applicable discounts, and straightforward product summaries — updated daily.
+              </p>
+
+              {/* Horizontal Mission Banner */}
+              <div
+                className="flex items-center gap-4 py-5 px-6 mt-8"
+                style={{ backgroundColor: 'var(--background-secondary)' }}
+              >
+                <div className="flex-shrink-0">
+                  <svg className="w-6 h-6" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Our mission</span>
+                  <p className="text-base font-medium" style={{ color: 'var(--text-color)' }}>
+                    Make digital product pricing more transparent and accessible.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                We operate as independent affiliates. When you purchase through our links, we may earn a commission at no additional cost to you. This model allows us to maintain the site and continue verifying offers.
               </p>
             </div>
 
-            <section className="about-v2">
-              <div className="space-y-6">
-                <p className="text-lg leading-relaxed">
-                  We curate and maintain one of the largest collections of verified digital product offers online, helping you save money on premium courses, tools, and digital communities. Whether you're a trader, entrepreneur, or digital learner, we've got deals that unlock real value — without the guesswork.
-                </p>
-
-                <div className="about-card bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <h2 className="about-heading text-2xl font-bold mb-4 text-center text-gray-900" style={{ color: 'var(--accent-color)' }}>
-                    Our Mission
-                  </h2>
-                  <p className="about-copy-white text-xl text-center font-medium text-gray-900">
-                    Make premium digital products more affordable and transparent.
-                  </p>
+            {/* RIGHT: Stats & Values Rail */}
+            <aside className="space-y-6">
+              <div className="py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
+                <div className="flex items-center gap-3 mb-2">
+                  <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Database</span>
                 </div>
-
-              <div>
-                <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>
-                  What sets us apart?
-                </h2>
-                
-                <div className="grid gap-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-6 h-6 mt-1">
-                      <svg className="w-6 h-6" style={{ color: 'var(--accent-color)' }} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <strong>8,000+ curated listings</strong>, organised for easy navigation
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-6 h-6 mt-1">
-                      <svg className="w-6 h-6" style={{ color: 'var(--accent-color)' }} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <strong>Daily updates</strong> to keep codes fresh and active
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-6 h-6 mt-1">
-                      <svg className="w-6 h-6" style={{ color: 'var(--accent-color)' }} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <strong>No misleading offers</strong> — every listing includes course summaries, pricing details, and our honest take
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 w-6 h-6 mt-1">
-                      <svg className="w-6 h-6" style={{ color: 'var(--accent-color)' }} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <strong>Affiliate transparency</strong> — we earn a commission when you use our links, at no extra cost to you
-                    </div>
-                  </div>
-                </div>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>8,000+ listings</p>
               </div>
 
-                <div className="about-card bg-gray-50 dark:bg-gray-900/50 p-6 rounded-lg border border-gray-200 dark:border-gray-800">
-                  <p className="about-copy-muted text-lg leading-relaxed mb-4 text-gray-900">
-                    We're independent curators and affiliates who use our experience to help others navigate the fast-growing world of online learning and mentorship.
-                  </p>
+              <div className="py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
+                <div className="flex items-center gap-3 mb-2">
+                  <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Updates</span>
                 </div>
-
-                <div className="about-card text-center p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                  <p className="about-copy-white text-xl font-semibold text-gray-900">
-                    If you're tired of wasting time hunting for working promo codes, welcome home.
-                  </p>
-                </div>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Daily verification</p>
               </div>
-            </section>
+
+              <div className="py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
+                <div className="flex items-center gap-3 mb-2">
+                  <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Accuracy</span>
+                </div>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Verified codes</p>
+              </div>
+
+              <div className="py-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <svg className="w-5 h-5" style={{ color: 'var(--accent-color)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Transparency</span>
+                </div>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Clear disclosure</p>
+              </div>
+            </aside>
           </div>
+
+          {/* Numbered Timeline: What Sets Us Apart */}
+          <section className="mb-16">
+            <h2 className="text-xl font-semibold mb-8" style={{ color: 'var(--text-color)' }}>
+              How we operate
+            </h2>
+
+            <div className="relative pl-8">
+              {/* Vertical line */}
+              <div
+                className="absolute left-[11px] top-2 bottom-2 w-px"
+                style={{ backgroundColor: 'var(--border-color)' }}
+              />
+
+              <div className="space-y-8">
+                {/* Item 1 */}
+                <div className="relative">
+                  <div
+                    className="absolute -left-8 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+                    style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                  >
+                    1
+                  </div>
+                  <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
+                    Comprehensive aggregation
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    We collect promotional offers from digital product creators, course platforms, and online communities.
+                  </p>
+                </div>
+
+                {/* Item 2 */}
+                <div className="relative">
+                  <div
+                    className="absolute -left-8 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+                    style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                  >
+                    2
+                  </div>
+                  <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
+                    Daily verification
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    Our systems check code validity and pricing accuracy to remove expired or incorrect listings.
+                  </p>
+                </div>
+
+                {/* Item 3 */}
+                <div className="relative">
+                  <div
+                    className="absolute -left-8 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+                    style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                  >
+                    3
+                  </div>
+                  <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
+                    Transparent presentation
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    Each listing includes product summaries, current pricing, and clear affiliate disclosure.
+                  </p>
+                </div>
+
+                {/* Item 4 */}
+                <div className="relative">
+                  <div
+                    className="absolute -left-8 top-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+                    style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                  >
+                    4
+                  </div>
+                  <h3 className="text-base font-medium mb-1" style={{ color: 'var(--text-color)' }}>
+                    Community contributions
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    Users can submit promo codes they discover, which we verify before adding to the database.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer Links */}
+          <footer className="pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Questions or feedback? We're here to help.
+            </p>
+            <div className="flex flex-wrap gap-6">
+              <Link
+                href="/contact"
+                className="text-sm font-medium hover:opacity-80 transition-opacity"
+                style={{ color: 'var(--accent-color)' }}
+              >
+                Contact us <span aria-hidden="true">→</span>
+              </Link>
+              <Link
+                href="/blog"
+                className="text-sm font-medium hover:opacity-80 transition-opacity"
+                style={{ color: 'var(--accent-color)' }}
+              >
+                Read our insights <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </footer>
+
         </div>
       </div>
-    </div>
     </>
   );
 }

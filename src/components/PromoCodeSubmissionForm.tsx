@@ -15,8 +15,8 @@ interface DealSearchResult {
 }
 
 interface PromoCodeSubmissionFormProps {
-  preselectedOfferId?: string; // For deal-specific submissions
-  preselectedOfferName?: string; // For displaying the preselected deal name
+  preselectedOfferId?: string;
+  preselectedOfferName?: string;
   onClose?: () => void;
   onSuccess?: () => void;
 }
@@ -44,31 +44,26 @@ export default function PromoCodeSubmissionForm({
     submitterName: '',
     submitterEmail: '',
     submitterMessage: '',
-    isGeneral: !preselectedOfferId, // Default to general if no preselected course
+    isGeneral: !preselectedOfferId,
     offerId: preselectedOfferId || '',
-    customCourseName: '', // For new courses
+    customCourseName: '',
     isNewCourse: false,
   });
 
-  // Initialize search term with preselected course name only once
   useEffect(() => {
     if (preselectedOfferName && !searchTerm) {
       setSearchTerm(preselectedOfferName);
       setDebouncedSearchTerm(preselectedOfferName);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preselectedOfferName]);
 
-  // Optimized debounce with shorter delay for instant feel
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 100);
-
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Server-side search with request cancellation
   const searchWhops = useCallback(async (query: string) => {
     if (searchController.current) {
       searchController.current.abort();
@@ -96,7 +91,7 @@ export default function PromoCodeSubmissionForm({
       }
     } catch (error: unknown) {
       if (error instanceof Error && error.name !== 'AbortError') {
-        console.error('Error searching courses:', error);
+        console.error('Error searching products:', error);
       }
     } finally {
       if (!controller.signal.aborted) {
@@ -105,15 +100,13 @@ export default function PromoCodeSubmissionForm({
     }
   }, []);
 
-  // Trigger search when debounced term changes
   useEffect(() => {
     if (showDropdown) {
       searchWhops(debouncedSearchTerm);
     }
   }, [debouncedSearchTerm, showDropdown, searchWhops]);
 
-  // Get selected course name efficiently
-  const selectedCourseName = useMemo(() => {
+  const selectedProductName = useMemo(() => {
     if (formData.isNewCourse) return formData.customCourseName;
     const selectedOffer = searchResults.find((w) => w.id === formData.offerId);
     return selectedOffer?.name || '';
@@ -123,41 +116,26 @@ export default function PromoCodeSubmissionForm({
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Base validation
-    if (
-      !formData.title ||
-      !formData.description ||
-      !formData.submitterName ||
-      !formData.submitterEmail
-    ) {
+    if (!formData.title || !formData.description || !formData.submitterName || !formData.submitterEmail) {
       alert('Please fill in all required fields.');
       setIsSubmitting(false);
       return;
     }
 
     if (!formData.code.trim() || !formData.value.trim()) {
-      alert(
-        'Please provide both a promo code and discount value. If no code is required, enter "No code required" in the promo code field.'
-      );
+      alert('Please provide both a promo code and discount value.');
       setIsSubmitting(false);
       return;
     }
 
-    // Course-specific validation
     if (!formData.isGeneral && !formData.offerId && !formData.isNewCourse) {
-      alert(
-        'Please select a course or mark it as a new course for course-specific submissions.'
-      );
+      alert('Please select a product or mark it as new.');
       setIsSubmitting(false);
       return;
     }
 
-    if (
-      !formData.isGeneral &&
-      formData.isNewCourse &&
-      !formData.customCourseName.trim()
-    ) {
-      alert('Please enter the name of the new course.');
+    if (!formData.isGeneral && formData.isNewCourse && !formData.customCourseName.trim()) {
+      alert('Please enter the product name.');
       setIsSubmitting(false);
       return;
     }
@@ -168,20 +146,13 @@ export default function PromoCodeSubmissionForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          offerId: formData.isGeneral
-            ? null
-            : formData.isNewCourse
-            ? null
-            : formData.offerId,
-          customCourseName: formData.isNewCourse
-            ? formData.customCourseName
-            : null,
+          offerId: formData.isGeneral ? null : formData.isNewCourse ? null : formData.offerId,
+          customCourseName: formData.isNewCourse ? formData.customCourseName : null,
         }),
       });
 
       if (response.ok) {
         setShowSuccessMessage(true);
-
         setTimeout(() => {
           setFormData({
             title: '',
@@ -199,19 +170,19 @@ export default function PromoCodeSubmissionForm({
           setSearchTerm('');
           setShowSuccessMessage(false);
           onSuccess?.();
-        }, 15000);
+        }, 10000);
       } else {
-        throw new Error('Failed to submit promo code');
+        throw new Error('Failed to submit');
       }
     } catch (error) {
-      console.error('Error submitting promo code:', error);
-      alert('Failed to submit promo code. Please try again.');
+      console.error('Submission error:', error);
+      alert('Failed to submit. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCourseSelect = useCallback((whop: DealSearchResult) => {
+  const handleProductSelect = useCallback((whop: DealSearchResult) => {
     setFormData((prev) => ({
       ...prev,
       offerId: whop.id,
@@ -226,7 +197,7 @@ export default function PromoCodeSubmissionForm({
     });
   }, []);
 
-  const handleNewCourse = useCallback(() => {
+  const handleNewProduct = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
       isNewCourse: true,
@@ -236,7 +207,6 @@ export default function PromoCodeSubmissionForm({
     setShowDropdown(false);
   }, [searchTerm]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (searchController.current) {
@@ -250,604 +220,338 @@ export default function PromoCodeSubmissionForm({
     onSuccess?.();
   };
 
-  /* =====================
-     SUCCESS STATE MODAL
-     ===================== */
+  // Success Modal
   if (showSuccessMessage) {
     return (
       <div
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+        className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+        style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
         role="dialog"
         aria-modal="true"
       >
         <div
-          className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border shadow-theme-promo transition-theme p-8 text-center"
-          style={{
-            backgroundColor: 'var(--background-color)',
-            borderColor: 'var(--border-color)',
-          }}
+          className="relative w-full max-w-sm p-8 text-center shadow-lg"
+          style={{ backgroundColor: 'var(--background-color)' }}
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={handleCloseSuccess}
-            className="absolute top-4 right-4 hover:opacity-80 text-2xl font-bold"
-            style={{ color: 'var(--text-secondary)' }}
+            className="absolute top-3 right-3 p-1 hover:opacity-70"
+            style={{ color: 'var(--text-muted)' }}
             aria-label="Close"
           >
-            ×
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
+
           <div className="mb-6">
-            <div
-              className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(22, 163, 74, 0.12)' }}
+            <svg
+              className="w-12 h-12 mx-auto mb-4"
+              style={{ color: 'var(--accent-color)' }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
             >
-              <svg
-                className="w-8 h-8"
-                style={{ color: 'var(--accent-color)' }}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <h3
-              className="text-2xl font-bold mb-4"
-              style={{ color: 'var(--text-color)' }}
-            >
-              Thank You! 🎉
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+
+            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+              Submission received
             </h3>
-            <p
-              className="text-lg leading-relaxed"
-              style={{ color: 'var(--text-color)' }}
-            >
-              You&apos;re awesome! Thanks for making our community better by
-              sharing this promo code. Your contribution adds real value and
-              helps fellow members save money.
-            </p>
-            <p
-              className="mt-4"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              We&apos;ll review your submission and add it to the site once
-              approved. Keep being amazing! ✨
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Thanks for contributing. We'll review your promo code and add it once verified.
             </p>
           </div>
+
+          <button
+            onClick={handleCloseSuccess}
+            className="px-6 py-2 text-sm font-medium rounded-full"
+            style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+          >
+            Close
+          </button>
         </div>
       </div>
     );
   }
 
-  /* =====================
-     MAIN FORM MODAL
-     ===================== */
-  const handleOverlayClick = () => {
-    onClose?.();
-  };
-
+  // Main Form Modal
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center px-4 sm:px-6"
-      style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)' }}
+      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
+      style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
       role="dialog"
       aria-modal="true"
-      onClick={handleOverlayClick}
+      onClick={() => onClose?.()}
     >
       <div
-        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border shadow-theme-promo transition-theme"
-        style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg"
+        style={{ backgroundColor: 'var(--background-color)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header row */}
-        <div
-          className="flex items-center justify-between px-5 sm:px-6 pt-5 pb-3 border-b"
-          style={{ borderColor: 'var(--border-color)' }}
-        >
+        {/* Accent top border */}
+        <div className="h-1" style={{ backgroundColor: 'var(--accent-color)' }} />
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
           <div>
-            <h2
-              className="text-lg sm:text-xl font-bold"
-              style={{ color: 'var(--text-color)' }}
-            >
+            <h2 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
               Submit a promo code
             </h2>
-            <p className="text-xs sm:text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-              Share a promo you&apos;ve found and we&apos;ll review it for the community.
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              Share a code for the community to use
             </p>
           </div>
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1 rounded-full hover:bg-[var(--background-color)] transition-colors"
+              className="p-1 hover:opacity-70"
+              style={{ color: 'var(--text-muted)' }}
               aria-label="Close"
-              style={{ color: 'var(--text-secondary)' }}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           )}
         </div>
 
-        {/* Form body */}
-        <div className="px-5 sm:px-6 py-5">
+        {/* Form Body */}
+        <div className="px-6 py-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Promo Type Selection */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
+            {/* Promo Type Toggle */}
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setFormData((prev) => ({ ...prev, isGeneral: false }))}
+                className={`flex-1 py-2 text-sm font-medium border transition-colors ${!formData.isGeneral ? '' : ''}`}
+                style={{
+                  backgroundColor: !formData.isGeneral ? 'var(--accent-color)' : 'transparent',
+                  color: !formData.isGeneral ? 'white' : 'var(--text-secondary)',
+                  borderColor: !formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
+                }}
               >
-                Promo Code Type
-              </label>
-              <div
-                className="inline-flex items-center gap-1 rounded-full px-1 py-1 border"
-                style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}
+                Product-specific
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData((prev) => ({ ...prev, isGeneral: true, offerId: '', isNewCourse: false, customCourseName: '' }))}
+                className="flex-1 py-2 text-sm font-medium border transition-colors"
+                style={{
+                  backgroundColor: formData.isGeneral ? 'var(--accent-color)' : 'transparent',
+                  color: formData.isGeneral ? 'white' : 'var(--text-secondary)',
+                  borderColor: formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
+                }}
               >
-                <label
-                  className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-full cursor-pointer transition-colors ${!formData.isGeneral ? 'font-medium' : ''}`}
-                  style={{
-                    backgroundColor: !formData.isGeneral ? 'var(--accent-color)' : 'transparent',
-                    color: !formData.isGeneral ? 'white' : 'var(--text-secondary)',
-                  }}
-                >
-                  <input
-                    type="radio"
-                    className="sr-only"
-                    checked={!formData.isGeneral}
-                    onChange={() =>
-                      setFormData((prev) => ({ ...prev, isGeneral: false }))
-                    }
-                  />
-                  <span>Course-specific</span>
-                </label>
-                <label
-                  className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-full cursor-pointer transition-colors ${formData.isGeneral ? 'font-medium' : ''}`}
-                  style={{
-                    backgroundColor: formData.isGeneral ? 'var(--accent-color)' : 'transparent',
-                    color: formData.isGeneral ? 'white' : 'var(--text-secondary)',
-                  }}
-                >
-                  <input
-                    type="radio"
-                    className="sr-only"
-                    checked={formData.isGeneral}
-                    onChange={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        isGeneral: true,
-                        offerId: '',
-                        isNewCourse: false,
-                        customCourseName: '',
-                      }))
-                    }
-                  />
-                  <span>General promo</span>
-                </label>
-              </div>
+                General promo
+              </button>
             </div>
 
-            {/* Course Selection (only for course-specific) */}
+            {/* Product Search */}
             {!formData.isGeneral && (
-              <div className="relative space-y-1.5">
-                <label
-                  className="block text-sm font-medium"
-                  style={{ color: 'var(--text-color)' }}
-                >
-                  Select Course *
+              <div className="relative">
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                  Select product
                 </label>
-
-                {/* Search input */}
                 <div className="relative">
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      setSearchTerm(value);
+                      setSearchTerm(e.target.value);
                       setShowDropdown(true);
-                      setFormData((prev) => ({
-                        ...prev,
-                        offerId: '',
-                        isNewCourse: false,
-                        customCourseName: '',
-                      }));
+                      setFormData((prev) => ({ ...prev, offerId: '', isNewCourse: false, customCourseName: '' }));
                     }}
                     onFocus={() => {
                       setShowDropdown(true);
-                      if (searchTerm.length >= 2) {
-                        searchWhops(searchTerm);
-                      }
+                      if (searchTerm.length >= 2) searchWhops(searchTerm);
                     }}
-                    placeholder="Type to search for a course..."
-                    className="w-full px-3 py-2 pr-10 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
+                    placeholder="Search for a product..."
+                    className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 transition-colors"
                     style={{
-                      backgroundColor: 'var(--background-color)',
-                      borderColor: 'var(--border-color)',
+                      borderBottomColor: 'var(--border-color)',
                       color: 'var(--text-color)',
+                      backgroundColor: 'transparent'
                     }}
-                    required={!formData.isGeneral}
                     autoComplete="off"
                   />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2">
                     {isSearching ? (
-                      <div
-                        className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
-                        style={{ borderColor: 'var(--accent-color)' }}
-                      />
+                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--accent-color)' }} />
                     ) : (
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        style={{ color: 'var(--text-secondary)' }}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
+                      <svg className="w-4 h-4" style={{ color: 'var(--text-muted)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                       </svg>
                     )}
                   </div>
                 </div>
 
-                {/* Dropdown results */}
+                {/* Dropdown */}
                 {showDropdown && (
                   <>
                     <div
-                      className="absolute z-20 w-full mt-1 rounded-xl border shadow-theme-promo max-h-60 overflow-y-auto transition-theme"
-                      style={{
-                        backgroundColor: 'var(--background-secondary)',
-                        borderColor: 'var(--border-color)',
-                      }}
+                      className="absolute z-20 w-full mt-1 max-h-48 overflow-y-auto shadow-md"
+                      style={{ backgroundColor: 'var(--background-color)', border: '1px solid var(--border-color)' }}
                     >
-                      {searchTerm && searchTerm.length < 2 && (
-                        <div
-                          className="px-3 py-2 text-sm"
-                          style={{ color: 'var(--text-secondary)' }}
+                      {searchTerm.length < 2 && (
+                        <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-muted)' }}>
+                          Type at least 2 characters...
+                        </div>
+                      )}
+
+                      {!isSearching && searchTerm.length >= 2 && searchResults.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleProductSelect(item)}
+                          className="w-full px-3 py-2 text-left text-sm hover:bg-[var(--background-secondary)] transition-colors"
+                          style={{ color: 'var(--text-color)' }}
                         >
-                          Type at least 2 characters to search...
-                        </div>
-                      )}
+                          {item.name}
+                        </button>
+                      ))}
 
-                      {isSearching && searchTerm.length >= 2 && (
-                        <div className="px-3 py-2 text-sm flex items-center gap-2">
-                          <div
-                            className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin"
-                            style={{ borderColor: 'var(--accent-color)' }}
-                          />
-                          <span style={{ color: 'var(--text-secondary)' }}>
-                            Searching courses...
-                          </span>
-                        </div>
-                      )}
-
-                      {!isSearching &&
-                        searchTerm.length >= 2 &&
-                        searchResults.length > 0 && (
-                          <div>
-                            {searchResults.map((whop) => (
-                              <button
-                                key={whop.id}
-                                type="button"
-                                onClick={() => handleCourseSelect(whop)}
-                                className="w-full px-3 py-2 text-left text-sm hover:bg-[var(--background-tertiary)] transition-colors"
-                                style={{ color: 'var(--text-color)' }}
-                              >
-                                <div className="truncate">{whop.name}</div>
-                              </button>
-                            ))}
-                            {searchResults.length === 20 && (
-                              <div className="px-3 py-1 text-xs border-t"
-                                style={{ color: 'var(--text-secondary)', borderColor: 'var(--border-color)' }}
-                              >
-                                Showing first 20 results. Be more specific to
-                                narrow down.
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                      {searchTerm && searchTerm.length > 2 && (
-                        <div
-                          className={
-                            searchResults.length > 0 ? 'border-t' : ''
-                          }
-                          style={{
-                            borderColor:
-                              searchResults.length > 0
-                                ? 'var(--border-color)'
-                                : 'transparent',
-                          }}
+                      {searchTerm.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={handleNewProduct}
+                          className="w-full px-3 py-2 text-left text-sm border-t transition-colors"
+                          style={{ color: 'var(--accent-color)', borderColor: 'var(--border-color)' }}
                         >
-                          <button
-                            type="button"
-                            onClick={handleNewCourse}
-                            className="w-full px-3 py-2 text-left text-sm transition-colors"
-                            style={{ color: 'var(--accent-color)' }}
-                          >
-                            <div className="flex items-center">
-                              <svg
-                                className="w-4 h-4 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                />
-                              </svg>
-                              Add &quot;{searchTerm}&quot; as new course
-                            </div>
-                          </button>
-                        </div>
+                          + Add "{searchTerm}" as new product
+                        </button>
                       )}
-
-                      {!isSearching &&
-                        searchTerm.length >= 2 &&
-                        searchResults.length === 0 && (
-                          <div
-                            className="px-3 py-2 text-sm"
-                            style={{ color: 'var(--text-secondary)' }}
-                          >
-                            No courses found matching &quot;{searchTerm}
-                            &quot;.{' '}
-                            {searchTerm.length > 2 &&
-                              'Use the option above to add as new course.'}
-                          </div>
-                        )}
                     </div>
-
-                    {/* Click outside dropdown (but still inside modal) */}
-                    <div
-                      className="fixed inset-0 z-10"
-                      onClick={() => setShowDropdown(false)}
-                    />
+                    <div className="fixed inset-0 z-10" onClick={() => setShowDropdown(false)} />
                   </>
                 )}
 
-                {(selectedCourseName || formData.isNewCourse) && (
-                  <div className="mt-2 px-3 py-2 rounded-md text-sm"
-                    style={{
-                      backgroundColor: 'rgba(22,163,74,0.06)',
-                      border: '1px solid rgba(22,163,74,0.35)',
-                      color: '#166534',
-                    }}
-                  >
-                    {formData.isNewCourse ? (
-                      <span>
-                        ✅ New course:{' '}
-                        <strong>{formData.customCourseName}</strong>
-                      </span>
-                    ) : (
-                      <span>
-                        ✅ Selected:{' '}
-                        <strong>{selectedCourseName}</strong>
-                      </span>
-                    )}
+                {(selectedProductName || formData.isNewCourse) && (
+                  <div className="mt-2 text-xs" style={{ color: 'var(--accent-color)' }}>
+                    Selected: {formData.isNewCourse ? formData.customCourseName : selectedProductName}
                   </div>
                 )}
               </div>
             )}
 
             {/* Title */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Promo Title *
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                Promo title
               </label>
               <input
                 type="text"
                 value={formData.title}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, title: e.target.value }))
-                }
-                placeholder="e.g. 20% Off Summer Sale, Free Month Trial"
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
+                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+                placeholder="e.g. 20% Off Summer Sale"
+                className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
+                style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
                 required
               />
+            </div>
+
+            {/* Code + Value row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                  Promo code
+                </label>
+                <input
+                  type="text"
+                  value={formData.code}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, code: e.target.value }))}
+                  placeholder="SUMMER20"
+                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
+                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                  Discount value
+                </label>
+                <input
+                  type="text"
+                  value={formData.value}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, value: e.target.value }))}
+                  placeholder="20% off"
+                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
+                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                  required
+                />
+              </div>
             </div>
 
             {/* Description */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Description *
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                Description
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                placeholder="Describe the promo code and any conditions..."
-                rows={3}
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                placeholder="Describe the promo and any conditions..."
+                rows={2}
+                className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 resize-none"
+                style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
                 required
               />
             </div>
 
-            {/* Code */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Promo Code *
-              </label>
-              <input
-                type="text"
-                value={formData.code}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, code: e.target.value }))
-                }
-                placeholder='e.g. SUMMER20, FREEMONTH, or "No code required"'
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
-                required
-              />
-              <p
-                className="text-xs"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                If no promo code is needed, enter &quot;No code required&quot;.
-              </p>
-            </div>
-
-            {/* Value */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Discount Value *
-              </label>
-              <input
-                type="text"
-                value={formData.value}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, value: e.target.value }))
-                }
-                placeholder="e.g. 20% off, $50 off, Free trial, Free access"
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
-                required
-              />
-              <p
-                className="text-xs"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                What do users get with this promo? (discount amount, free
-                trial, etc.)
-              </p>
-            </div>
-
-            {/* Submitter Name */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Your Name *
-              </label>
-              <input
-                type="text"
-                value={formData.submitterName}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    submitterName: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
-                required
-              />
-            </div>
-
-            {/* Submitter Email */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Your Email *
-              </label>
-              <input
-                type="email"
-                value={formData.submitterEmail}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    submitterEmail: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
-                required
-              />
+            {/* Name + Email row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                  Your name
+                </label>
+                <input
+                  type="text"
+                  value={formData.submitterName}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, submitterName: e.target.value }))}
+                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
+                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  value={formData.submitterEmail}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, submitterEmail: e.target.value }))}
+                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
+                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                  required
+                />
+              </div>
             </div>
 
             {/* Optional Message */}
-            <div className="space-y-1.5">
-              <label
-                className="block text-sm font-medium"
-                style={{ color: 'var(--text-color)' }}
-              >
-                Additional Message
+            <div>
+              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                Additional notes (optional)
               </label>
               <textarea
                 value={formData.submitterMessage}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    submitterMessage: e.target.value,
-                  }))
-                }
-                placeholder="Any additional information about this promo code..."
+                onChange={(e) => setFormData((prev) => ({ ...prev, submitterMessage: e.target.value }))}
                 rows={2}
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
-                style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)',
-                }}
+                className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 resize-none"
+                style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
               />
             </div>
 
-            {/* Buttons row */}
-            <div
-              className="flex justify-end gap-3 pt-4 border-t mt-4"
-              style={{ borderColor: 'var(--border-color)' }}
-            >
+            {/* Actions */}
+            <div className="flex justify-end gap-3 pt-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
               {onClose && (
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-full text-sm font-medium border hover:bg-[var(--background-color)] transition-colors"
+                  className="px-5 py-2 text-sm font-medium border"
                   style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
                 >
                   Cancel
@@ -856,27 +560,17 @@ export default function PromoCodeSubmissionForm({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150"
+                className="px-6 py-2 text-sm font-medium rounded-full disabled:opacity-50"
                 style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
               >
-                {isSubmitting ? 'Submitting…' : 'Submit Promo Code'}
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </button>
             </div>
           </form>
 
-          <div
-            className="mt-6 p-4 rounded-xl transition-theme"
-            style={{ backgroundColor: 'var(--background-tertiary)' }}
-          >
-            <p
-              className="text-sm"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              <strong style={{ color: 'var(--text-color)' }}>Community Guidelines:</strong> Please only submit
-              legitimate promo codes. All submissions are reviewed by our team
-              before being published. Thank you for helping build the community!
-            </p>
-          </div>
+          <p className="mt-4 text-xs" style={{ color: 'var(--text-muted)' }}>
+            All submissions are reviewed before publishing.
+          </p>
         </div>
       </div>
     </div>

@@ -4,51 +4,49 @@ import PromoCodeSubmissionForm from './PromoCodeSubmissionForm'
 
 interface PromoCodeSubmissionButtonProps {
   offerId: string
-  whopName: string
+  offerName: string
 }
 
-export default function PromoCodeSubmissionButton({ offerId, whopName }: PromoCodeSubmissionButtonProps) {
+export default function PromoCodeSubmissionButton({ offerId, offerName }: PromoCodeSubmissionButtonProps) {
   const [showForm, setShowForm] = useState(false)
 
   return (
     <>
       <section
-        className="rounded-2xl border shadow-theme-promo px-6 py-6 sm:px-7 sm:py-7 transition-theme"
+        className="border py-6 px-6 transition-theme"
         style={{
-          backgroundColor: 'var(--background-secondary)',
           borderColor: 'var(--border-color)',
+          backgroundColor: 'transparent',
         }}
       >
-        <div className="flex flex-col gap-4 sm:gap-5 text-left">
+        <div className="flex flex-col gap-4 text-left">
           <div>
-            <h3
-              className="text-2xl font-bold mb-2"
+            <h4
+              className="text-lg font-semibold mb-1"
               style={{ color: 'var(--text-color)' }}
             >
               Know a better code?
-            </h3>
+            </h4>
             <p
-              className="text-base leading-relaxed"
+              className="text-sm"
               style={{ color: 'var(--text-secondary)' }}
             >
-              Help the community by submitting a promo code for {whopName}
+              Help the community by submitting a promo code for {offerName}
             </p>
           </div>
 
-          <div className="w-full flex sm:justify-start">
-            <button
-              onClick={() => setShowForm(true)}
-              type="button"
-              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all duration-150"
-              style={{
-                backgroundColor: 'var(--background-tertiary)',
-                color: 'var(--text-color)',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              Submit a promo for this offer
-            </button>
-          </div>
+          <button
+            onClick={() => setShowForm(true)}
+            type="button"
+            className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-opacity duration-150 hover:opacity-80"
+            style={{
+              backgroundColor: 'transparent',
+              color: 'var(--accent-color)',
+              border: '1px solid var(--accent-color)',
+            }}
+          >
+            Submit a promo code
+          </button>
         </div>
       </section>
 
@@ -56,7 +54,7 @@ export default function PromoCodeSubmissionButton({ offerId, whopName }: PromoCo
       {showForm && (
         <PromoCodeSubmissionForm
           preselectedOfferId={offerId}
-          preselectedOfferName={whopName}
+          preselectedOfferName={offerName}
           onClose={() => setShowForm(false)}
           onSuccess={() => setShowForm(false)}
         />

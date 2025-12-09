@@ -16,16 +16,15 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
   // Helper function to get localized paths
   const getLocalizedPath = (path: string) => {
     if (language === 'en') {
-      return path; // English uses root paths
+      return path;
     }
-    return `/${language}${path}`; // Other languages use language prefix
+    return `/${language}${path}`;
   };
 
   // Format date based on language
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    
-    // Use appropriate locale for date formatting
+
     const localeMap: { [key: string]: string } = {
       'en': 'en-US',
       'es': 'es-ES',
@@ -38,186 +37,215 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
     };
 
     const locale = localeMap[language] || 'en-US';
-    
-    return date.toLocaleDateString(locale, { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+
+    return date.toLocaleDateString(locale, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
-  // Determine if this is privacy or terms page based on title
+  // Determine if this is privacy or terms page
   const isPrivacyPage = title.toLowerCase().includes('privacy') || title.toLowerCase().includes('privacidad') || title.toLowerCase().includes('privacybeleid') || title.toLowerCase().includes('confidentialité') || title.toLowerCase().includes('datenschutz') || title.toLowerCase().includes('politica') || title.toLowerCase().includes('privacidade') || title.toLowerCase().includes('隐私');
-  
-  // Generate translated content
+
+  // Generate translated content with clean legal-document format
   const generateTranslatedContent = () => {
     if (isPrivacyPage) {
       return `
-        <div class="section">
+        <section>
           <h2>${t('privacy.introduction.title')}</h2>
           <p>${t('privacy.introduction.content')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.infoCollect.title')}</h2>
-          
+
           <h3>${t('privacy.infoProvide.title')}</h3>
           <p>${t('privacy.infoProvide.content').replace(/\n/g, '<br>')}</p>
-          
+
           <h3>${t('privacy.infoAuto.title')}</h3>
           <p>${t('privacy.infoAuto.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.howUse.title')}</h2>
           <p>${t('privacy.howUse.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.sharing.title')}</h2>
           <p>${t('privacy.sharing.content').replace(/\n/g, '<br>').replace(/\n\n/g, '<br><br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.cookies.title')}</h2>
           <p>${t('privacy.cookies.content').replace(/\n/g, '<br>').replace(/\n\n/g, '<br><br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.security.title')}</h2>
           <p>${t('privacy.security.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.rights.title')}</h2>
           <p>${t('privacy.rights.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('privacy.contact.title')}</h2>
           <p>${t('privacy.contact.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
       `;
     } else {
-      // Terms of Service
       return `
-        <div class="section">
+        <section>
           <h2>${t('terms.agreement.title')}</h2>
           <p>${t('terms.agreement.content')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('terms.license.title')}</h2>
           <p>${t('terms.license.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('terms.disclaimer.title')}</h2>
           <p>${t('terms.disclaimer.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('terms.responsible.title')}</h2>
           <p>${t('terms.responsible.content').replace(/\n/g, '<br>').replace(/\n\n/g, '<br><br>')}</p>
-        </div>
+        </section>
 
-        <div class="section">
+        <section>
           <h2>${t('terms.contactInfo.title')}</h2>
           <p>${t('terms.contactInfo.content').replace(/\n/g, '<br>')}</p>
-        </div>
+        </section>
       `;
     }
   };
 
   return (
     <>
-      <main className="min-h-screen py-12 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
-        <div className="mx-auto w-[90%] md:w-[95%] max-w-[800px]">
-          <div className="mb-8">
-            <Link 
+      <main className="min-h-screen py-16 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
+        <div className="mx-auto w-[90%] md:w-[95%] max-w-[720px]">
+
+          {/* Header */}
+          <header className="mb-12">
+            <Link
               href={getLocalizedPath('/')}
-              className="inline-flex items-center gap-2 transition-colors duration-200 mb-6 hover:opacity-80"
+              className="inline-flex items-center text-sm mb-8 hover:opacity-80 transition-opacity"
               style={{ color: 'var(--accent-color)' }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m15 18-6-6 6-6"/>
-              </svg>
-              {t('legal.backToHome')}
+              <span aria-hidden="true">←</span>
+              <span className="ml-2">{t('legal.backToHome')}</span>
             </Link>
-            
-            <h1 className="text-4xl font-bold mb-4">
+
+            <span className="text-xs font-medium tracking-wider uppercase mb-3 block" style={{ color: 'var(--text-muted)' }}>
+              Legal Information
+            </span>
+
+            <h1 className="text-3xl md:text-4xl font-semibold mb-3" style={{ color: 'var(--text-color)' }}>
               {isPrivacyPage ? t('privacy.title') : t('terms.title')}
             </h1>
-            <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
               {t('legal.lastUpdated')}: {formatDate(lastUpdated)}
             </p>
-          </div>
 
-          <div 
-            className="legal-content-wrapper"
+            <div className="w-full h-px mt-8" style={{ backgroundColor: 'var(--border-color)' }} />
+          </header>
+
+          {/* Content */}
+          <div
+            className="legal-document"
             dangerouslySetInnerHTML={{ __html: generateTranslatedContent() }}
           />
+
+          {/* Footer */}
+          <footer className="mt-16 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Questions about this policy?{' '}
+              <Link
+                href="/contact"
+                className="hover:opacity-80 transition-opacity"
+                style={{ color: 'var(--accent-color)' }}
+              >
+                Contact us
+              </Link>
+            </p>
+          </footer>
+
         </div>
       </main>
-      
+
       <style dangerouslySetInnerHTML={{
         __html: `
-          .legal-content-wrapper h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            margin-top: 2rem;
-            color: var(--text-color);
+          .legal-document section {
+            margin-bottom: 3rem;
           }
-          
-          .legal-content-wrapper h3 {
+
+          .legal-document section:last-child {
+            margin-bottom: 0;
+          }
+
+          .legal-document h2 {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            margin-top: 1.5rem;
-            color: var(--accent-color);
-          }
-          
-          .legal-content-wrapper p {
             margin-bottom: 1rem;
-            line-height: 1.6;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            color: var(--text-color);
+          }
+
+          .legal-document h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+          }
+
+          .legal-document p {
+            font-size: 0.9375rem;
+            line-height: 1.75;
+            margin-bottom: 1rem;
             color: var(--text-secondary);
           }
-          
-          .legal-content-wrapper ul, .legal-content-wrapper ol {
+
+          .legal-document ul,
+          .legal-document ol {
             margin-bottom: 1rem;
-            padding-left: 1.5rem;
+            padding-left: 1.25rem;
           }
-          
-          .legal-content-wrapper li {
+
+          .legal-document li {
+            font-size: 0.9375rem;
+            line-height: 1.75;
             margin-bottom: 0.5rem;
             color: var(--text-secondary);
+            list-style-type: disc;
           }
-          
-          .legal-content-wrapper strong {
+
+          .legal-document strong {
             color: var(--text-color);
             font-weight: 600;
           }
-          
-          .legal-content-wrapper a {
+
+          .legal-document a {
             color: var(--accent-color);
             text-decoration: none;
             transition: opacity 0.2s;
           }
-          
-          .legal-content-wrapper a:hover {
-            opacity: 0.8;
-          }
-          
-          .legal-content-wrapper .section {
-            background: var(--background-secondary);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
+
+          .legal-document a:hover {
+            text-decoration: underline;
           }
         `
       }} />
     </>
   );
-} 
+}

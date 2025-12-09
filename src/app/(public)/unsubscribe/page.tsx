@@ -35,131 +35,140 @@ export default function UnsubscribePage() {
   }
 
   return (
-    <div className="min-h-screen py-12 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
-      <div className="mx-auto w-[90%] md:w-[95%] max-w-[600px]">
-        <div className="space-y-8">
-          {/* Back to Home */}
-          <div className="mb-8">
+    <div className="min-h-screen py-20 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
+      <div className="mx-auto w-[90%] max-w-[440px]">
+
+        {/* Centered Icon + Header */}
+        <div className="text-center mb-10">
+          <div className="mb-6">
+            <svg
+              className="w-12 h-12 mx-auto"
+              style={{ color: 'var(--text-muted)' }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={1}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V18z" />
+            </svg>
+          </div>
+
+          <h1 className="text-2xl md:text-3xl font-semibold mb-3" style={{ color: 'var(--text-color)' }}>
+            Unsubscribe from emails
+          </h1>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Enter your email address to stop receiving updates.
+          </p>
+        </div>
+
+        {/* Form */}
+        <div className="mb-8">
+          {/* Inline Alert */}
+          {message && (
+            <div
+              className="mb-6 py-3 px-4 border-l-2"
+              style={{
+                borderLeftColor: message.type === 'success' ? 'var(--accent-color)' : '#ef4444',
+                backgroundColor: message.type === 'success' ? 'rgba(22, 101, 52, 0.05)' : 'rgba(239, 68, 68, 0.05)'
+              }}
+            >
+              <p className="text-sm" style={{ color: message.type === 'success' ? 'var(--accent-color)' : '#ef4444' }}>
+                {message.text}
+              </p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Field - Underline Style */}
+            <div className="relative">
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-transparent border-0 border-b-2 px-0 py-3 text-base focus:outline-none focus:ring-0 peer transition-colors"
+                style={{
+                  borderBottomColor: 'var(--border-color)',
+                  color: 'var(--text-color)'
+                }}
+                placeholder=" "
+                required
+                disabled={isSubmitting}
+              />
+              <label
+                htmlFor="email"
+                className="absolute left-0 top-3 text-sm transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-xs"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                Email address
+              </label>
+              <div
+                className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 peer-focus:w-full"
+                style={{ backgroundColor: 'var(--accent-color)' }}
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3 font-medium text-base transition-all duration-200 disabled:opacity-50"
+              style={{
+                backgroundColor: 'var(--accent-color)',
+                color: 'white'
+              }}
+            >
+              {isSubmitting ? 'Processing...' : 'Unsubscribe'}
+            </button>
+          </form>
+        </div>
+
+        {/* Privacy Notice - Muted paragraphs */}
+        <div
+          className="p-5 mb-8"
+          style={{ backgroundColor: 'var(--background-secondary)' }}
+        >
+          <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-muted)' }}>
+            Your email will be removed from our mailing list within 48 hours. You may still receive emails that were already scheduled before your request was processed.
+          </p>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+            You can resubscribe at any time through our website. We do not share your email address with third parties.
+          </p>
+        </div>
+
+        {/* Footer Links */}
+        <div className="text-center space-y-4">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Changed your mind?{' '}
             <Link
-              href="/"
-              className="inline-flex items-center font-medium hover:opacity-80 transition-opacity"
+              href="/subscribe"
+              className="hover:opacity-80 transition-opacity"
               style={{ color: 'var(--accent-color)' }}
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Home
+              Subscribe again
             </Link>
-          </div>
+          </p>
 
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r bg-clip-text text-transparent py-2" 
-                style={{ backgroundImage: `linear-gradient(to right, var(--text-color), var(--text-secondary))`, lineHeight: '1.3' }}>
-              Unsubscribe from Mailing List
-            </h1>
-            <div className="w-20 h-1 mx-auto rounded-full mb-6" style={{ backgroundColor: 'var(--accent-color)' }}></div>
-            <p className="text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              Sorry to see you go! Enter your email below to unsubscribe from our mailing list.
-            </p>
-          </div>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Need help?{' '}
+            <a
+              href="mailto:digitalpromocodescontact@gmail.com"
+              className="hover:opacity-80 transition-opacity underline"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Contact support
+            </a>
+          </p>
 
-          {/* Unsubscribe Form */}
-          <div className="rounded-2xl shadow-lg p-8 border" 
-               style={{ 
-                 backgroundColor: 'var(--card-bg)', 
-                 borderColor: 'var(--card-border)',
-                 boxShadow: 'var(--promo-shadow)'
-               }}>
-            
-            {message && (
-              <div className={`p-4 rounded-lg mb-6 ${
-                message.type === 'success' 
-                  ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800' 
-                  : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800'
-              }`}>
-                <div className="flex items-center">
-                  {message.type === 'success' ? (
-                    <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                  {message.text}
-                </div>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  style={{ 
-                    backgroundColor: 'var(--background-color)', 
-                    borderColor: 'var(--card-border)',
-                    color: 'var(--text-color)'
-                  }}
-                  placeholder="Enter the email address to unsubscribe"
-                  required
-                  disabled={isSubmitting}
-                />
-                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                  We'll remove this email from all future mailings
-                </p>
-              </div>
-
-              <div className="flex justify-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-8 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
-                  style={{ 
-                    backgroundColor: 'var(--accent-color)', 
-                    color: 'white'
-                  }}
-                >
-                  {isSubmitting ? 'Unsubscribing...' : 'Unsubscribe'}
-                </button>
-              </div>
-            </form>
-
-            {/* Privacy Notice */}
-            <div className="mt-8 pt-6 border-t" style={{ borderColor: 'var(--border-color)' }}>
-              <div className="text-sm space-y-2" style={{ color: 'var(--text-muted)' }}>
-                <p><strong>Privacy Notice:</strong></p>
-                <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>Your email will be removed from our mailing list within 48 hours</li>
-                  <li>You may still receive emails that were already in transit</li>
-                  <li>You can resubscribe at any time through our website</li>
-                  <li>We respect your privacy and will not share your information</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="text-center">
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-              Having trouble? Contact us at{' '}
-              <a
-                href="mailto:digitalpromocodescontact@gmail.com"
-                className="hover:opacity-80 transition-opacity"
-                style={{ color: 'var(--accent-color)' }}
-              >
-                digitalpromocodescontact@gmail.com
-              </a>
-            </p>
-          </div>
+          <Link
+            href="/"
+            className="inline-block text-sm hover:opacity-80 transition-opacity"
+            style={{ color: 'var(--accent-color)' }}
+          >
+            <span aria-hidden="true">←</span> Back to home
+          </Link>
         </div>
+
       </div>
     </div>
   )
