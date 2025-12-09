@@ -14,86 +14,86 @@
   --btn-border-radius: 6px;
   --card-spacing: 30px;
 
-  /* Light Theme Variables (Fintech Green) */
-  --background-color: #f9fafb;           /* very light neutral */
-  --background-secondary: #f3f4f6;       /* soft grey */
-  --background-tertiary: #e5e7eb;        /* slightly stronger */
+  /* Light Theme Variables (Premium Minimal + Soft Green Accent) */
+  --background-color: #f8faf9;           /* very light, slightly green-tinted */
+  --background-secondary: #ffffff;       /* cards mostly white */
+  --background-tertiary: #f1f7f3;        /* subtle pale green highlight panels */
   --container-color: #ffffff;            /* clean white containers */
 
-  --text-color: #0f172a;                 /* slate-900 */
-  --text-secondary: #475569;             /* slate-600 */
-  --text-muted: #94a3b8;                 /* slate-400 */
+  --text-color: #071619;                 /* near-black */
+  --text-secondary: #4b6357;             /* muted green-grey */
+  --text-muted: #7b8e82;                 /* lighter muted green-grey */
 
   /* Deep green accent – not fluorescent */
-  --accent-color: #047857;               /* emerald-800 */
-  --accent-hover: #065f46;               /* emerald-900 */
+  --accent-color: #059669;               /* emerald */
+  --accent-hover: #047857;               /* emerald-700 */
 
   --success-color: #16a34a;              /* green-600 */
   --warning-color: #d97706;              /* amber-600 */
   --error-color: #dc2626;                /* red-600 */
 
-  --border-color: #e5e7eb;               /* soft neutral border */
-  --shadow-color: rgba(15, 23, 42, 0.08);/* subtle slate shadow */
+  --border-color: #d7e7dd;               /* muted green-grey border */
+  --shadow-color: rgba(5, 150, 105, 0.08);/* subtle green shadow */
 
-  --menu-item-color: #64748b;            /* slate-500 */
-  --header-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+  --menu-item-color: #4b6357;            /* muted green-grey */
+  --header-shadow: 0 1px 0 rgba(5, 150, 105, 0.06);
 
   --promo-bg: #ffffff;
-  --promo-bg-gradient: linear-gradient(135deg, #ffffff, #ecfdf3); /* white → green-50 */
-  --promo-border: 1px solid #e5e7eb;
-  --promo-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  --promo-bg-gradient: linear-gradient(135deg, #ffffff, #f1f7f3); /* white → pale green */
+  --promo-border: 1px solid #d7e7dd;
+  --promo-shadow: 0 14px 35px rgba(5, 150, 105, 0.08), 0 4px 10px rgba(15, 23, 42, 0.06);
 
   --card-bg: #ffffff;
-  --card-border: #e5e7eb;
+  --card-border: #d7e7dd;
 
   --input-bg: #ffffff;
-  --input-border: #d1d5db;
-  --input-focus: #047857;                /* tie to accent */
+  --input-border: #d7e7dd;
+  --input-focus: #059669;                /* tie to accent */
 
   --thread-line-color: #bbf7d0;          /* green-100 */
 }
 
 /* Dark Theme Override – Deep Green Fintech */
 [data-theme="dark"] {
-  --background-color: #020617;           /* slate-950 */
-  --background-secondary: #020c1b;       /* very dark blue-green */
-  --background-tertiary: #0b1120;        /* navy slate */
-  --container-color: #020c1b;
+  --background-color: #020a07;           /* almost-black with green tint */
+  --background-secondary: #050f0a;       /* main dark card background */
+  --background-tertiary: #07140d;        /* slightly lifted panels */
+  --container-color: #050f0a;
 
-  --text-color: #e5e7eb;                 /* grey-200 */
-  --text-secondary: #9ca3af;             /* grey-400 */
-  --text-muted: #6b7280;                 /* grey-500 */
+  --text-color: #e4f3eb;                 /* soft green-tinted white */
+  --text-secondary: #9abda8;             /* muted green */
+  --text-muted: #7ba28b;                 /* darker muted green */
 
-  /* Dark accent – still green, not neon */
-  --accent-color: #16a34a;               /* green-600 */
-  --accent-hover: #15803d;               /* green-700 */
+  /* Dark accent – lighter green for visibility */
+  --accent-color: #34d399;               /* emerald-400 */
+  --accent-hover: #10b981;               /* emerald-500 */
 
   --success-color: #22c55e;              /* green-500 */
   --warning-color: #f59e0b;              /* amber-500 */
   --error-color: #f97316;                /* orange-500 for better pop on dark */
 
-  --border-color: #1f2933;               /* subtle border */
+  --border-color: #113325;               /* deep green border */
   --shadow-color: rgba(0, 0, 0, 0.4);
 
-  --menu-item-color: #9ca3af;
+  --menu-item-color: #9abda8;
   --header-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
 
-  --promo-bg: #020c1b;
-  --promo-bg-gradient: linear-gradient(135deg, #020617, #022c22); /* dark → deep green */
-  --promo-border: 1px solid #1f2933;
-  --promo-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+  --promo-bg: #050f0a;
+  --promo-bg-gradient: linear-gradient(135deg, #020a07, #0a1f15); /* dark → deep green */
+  --promo-border: 1px solid #113325;
+  --promo-shadow: 0 14px 35px rgba(5, 150, 105, 0.12), 0 4px 10px rgba(0, 0, 0, 0.4);
 
-  --card-bg: #020c1b;
-  --card-border: #1f2933;
+  --card-bg: #050f0a;
+  --card-border: #113325;
 
-  --input-bg: #020c1b;
-  --input-border: #374151;
-  --input-focus: #16a34a;
+  --input-bg: #050f0a;
+  --input-border: #113325;
+  --input-focus: #34d399;
 
   --thread-line-color: #065f46;
 
   /* for blog dark override */
-  --card-bg-blog: #020c1b;
+  --card-bg-blog: #050f0a;
 }
 
 /* Base Styles with Transitions */
@@ -259,8 +259,8 @@ body {
 
 /* === Better Code tile: dark mode overrides (scoped) === */
 html.dark .better-code-tile {
-  background-color: #2b2d3a !important;
-  border-color: transparent !important;
+  background-color: var(--background-secondary) !important;
+  border-color: var(--border-color) !important;
 }
 /* Any nested white panels (CardContent, wrappers, etc) → transparent in dark */
 html.dark .better-code-tile .kill-white,
@@ -347,8 +347,8 @@ html.dark .better-code-tile .tile-btn:hover {
 /* === About section — force dark backgrounds on ALL cards === */
 /* Scope stays tight to the about page wrapper (.about-v2) */
 html.dark .about-v2 .about-card {
-  background-color: #2b2d3a !important;      /* required dark backdrop */
-  border-color: transparent !important;
+  background-color: var(--background-secondary) !important;      /* required dark backdrop */
+  border-color: var(--border-color) !important;
   box-shadow: none !important;
 
   /* kill any gradient on the card itself */
@@ -361,12 +361,12 @@ html.dark .about-v2 .about-card {
 /* …and on card pseudo-elements (some UI libs paint gradients there) */
 html.dark .about-v2 .about-card::before,
 html.dark .about-v2 .about-card::after {
-  background: #2b2d3a !important;
+  background: var(--background-secondary) !important;
   background-image: none !important;
   --tw-gradient-from: transparent !important;
   --tw-gradient-to: transparent !important;
   --tw-gradient-stops: initial !important;
-  border-color: transparent !important;
+  border-color: var(--border-color) !important;
   box-shadow: none !important;
 }
 
