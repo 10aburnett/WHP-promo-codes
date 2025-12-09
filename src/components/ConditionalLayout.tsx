@@ -66,112 +66,99 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
     <>
       {/* HEADER */}
       <header
-        className="fixed top-0 w-full z-50 pb-0 md:pb-2 lg:pb-1 transition-theme border-b shadow-theme-header backdrop-blur-sm"
+        className="sticky top-0 z-40 border-b backdrop-blur-sm transition-theme"
         style={{
-          backgroundColor: 'var(--background-color)',
+          backgroundColor: 'var(--background-secondary)',
           borderColor: 'var(--border-color)',
         }}
       >
-        <div className="container mx-auto px-2 sm:px-4 h-20 md:h-20 lg:h-[72px] xl:h-[72px] flex items-center justify-start md:justify-between gap-2">
-          <div className="flex items-center space-x-1 md:space-x-6">
-            {/* Brand wordmark */}
-            <Link
-              href={getLocalizedPath('/')}
-              className="flex items-center transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-              aria-label={`${SITE_BRAND} home`}
-            >
-              <div className="text-lg md:text-xl font-semibold md:font-bold tracking-tight translate-x-[6px] md:translate-x-0">
-                <span style={{ color: 'var(--accent-color)' }}>Digital</span>
-                <span style={{ color: 'var(--text-color)' }}>PromoCodes</span>
-              </div>
-            </Link>
-
-            {/* Separator line - hidden on mobile */}
-            <div
-              className="hidden md:block h-8 w-px"
-              style={{ backgroundColor: 'var(--border-color)' }}
-            />
-
-            {/* Blog link - hidden on mobile */}
-            <Link
-              href={getLocalizedPath('/blog')}
-              className="hidden md:flex items-center transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-            >
-              <div className="text-base md:text-lg font-semibold tracking-tight">
-                <span style={{ color: 'var(--accent-color)' }}>DPC</span>
-                <span style={{ color: 'var(--text-color)' }}>Blog</span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Navigation and Controls */}
-          <div className="flex items-center">
-            {/* Mobile: Language selector, theme toggle, and hamburger menu */}
-            <div className="flex md:hidden items-center gap-2 pl-2 ml-16">
-              <LanguageSelector />
-              <ThemeToggle />
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 rounded-full transition-all duration-200 hover:opacity-80 active:scale-95"
-                style={{ color: 'var(--text-color)' }}
-                aria-label="Open menu"
+        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
+          <div className="flex h-16 items-center justify-between gap-4">
+            {/* Left: logo + brand */}
+            <div className="flex items-center gap-2">
+              <Link
+                href={getLocalizedPath('/')}
+                className="flex items-center transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
+                aria-label={`${SITE_BRAND} home`}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
+                <span className="text-sm font-semibold tracking-tight sm:text-base" style={{ color: 'var(--text-color)' }}>
+                  <span style={{ color: 'var(--accent-color)' }}>Digital</span>PromoCodes
+                </span>
+              </Link>
             </div>
 
-            {/* Desktop: Full navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <nav className="flex items-center space-x-6 text-sm md:text-[0.9rem]">
-                <Link
-                  href={getLocalizedPath('/')}
-                  className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {t('nav.home')}
-                </Link>
-                <GeneralPromoSubmissionButton
-                  className="rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200 hover:-translate-y-[1px] hover:shadow-theme-promo cursor-pointer"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    backgroundColor: 'var(--background-secondary)',
-                    color: 'var(--accent-color)',
-                  }}
-                >
-                  Submit Code
-                </GeneralPromoSubmissionButton>
-                <Link
-                  href="/subscribe"
-                  className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  Subscribe
-                </Link>
-                <Link
-                  href={getLocalizedPath('/about')}
-                  className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {t('nav.about')}
-                </Link>
-                <Link
-                  href={getLocalizedPath('/contact')}
-                  className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {t('nav.contact')}
-                </Link>
-              </nav>
-              <div className="flex items-center space-x-3">
+            {/* Center/right: nav links (desktop) */}
+            <nav className="hidden md:flex items-center gap-3 text-sm font-medium">
+              <Link
+                href={getLocalizedPath('/')}
+                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {t('nav.home')}
+              </Link>
+              <Link
+                href={getLocalizedPath('/blog')}
+                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Blog
+              </Link>
+              <Link
+                href="/subscribe"
+                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Subscribe
+              </Link>
+              <Link
+                href={getLocalizedPath('/about')}
+                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {t('nav.about')}
+              </Link>
+              <Link
+                href={getLocalizedPath('/contact')}
+                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {t('nav.contact')}
+              </Link>
+            </nav>
+
+            {/* Right: CTA + controls */}
+            <div className="flex items-center gap-2">
+              {/* Mobile: Language selector, theme toggle, and hamburger menu */}
+              <div className="flex md:hidden items-center gap-2">
                 <LanguageSelector />
                 <ThemeToggle />
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="p-2 rounded-full transition-all duration-200 hover:bg-[var(--background-tertiary)] active:scale-95"
+                  style={{ color: 'var(--text-color)' }}
+                  aria-label="Open menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Desktop: Language selector, theme toggle + Submit promo CTA */}
+              <div className="hidden md:flex items-center gap-3">
+                <LanguageSelector />
+                <ThemeToggle />
+                <GeneralPromoSubmissionButton
+                  className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all duration-150 cursor-pointer"
+                  style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                >
+                  Submit a promo
+                </GeneralPromoSubmissionButton>
               </div>
             </div>
           </div>
@@ -188,9 +175,9 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
             />
             {/* sheet */}
             <div
-              className="fixed inset-x-0 top-0 z-50 rounded-b-2xl border-b p-4 shadow-lg transition-theme"
+              className="fixed inset-x-0 top-0 z-50 rounded-b-2xl border-b p-4 shadow-theme-promo transition-theme"
               style={{
-                backgroundColor: 'var(--background-color)',
+                backgroundColor: 'var(--background-secondary)',
                 borderColor: 'var(--border-color)',
               }}
             >
@@ -202,28 +189,23 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/blog')}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
-                  <span className="font-bold" style={{ color: 'var(--accent-color)' }}>
-                    DPC
-                  </span>
-                  <span className="font-bold" style={{ color: 'var(--text-color)' }}>
-                    Blog
-                  </span>
+                  Blog
                 </Link>
                 <Link
                   href={getLocalizedPath('/')}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('nav.home')}
@@ -231,11 +213,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <button
                   type="button"
                   onClick={handleMobileSubmitCode}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200 cursor-pointer"
                   style={{
                     borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    color: 'var(--accent-color)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   Submit Code
@@ -243,11 +225,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href="/subscribe"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   Subscribe
@@ -255,11 +237,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/about')}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('nav.about')}
@@ -267,11 +249,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/contact')}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('nav.contact')}
@@ -279,12 +261,12 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
               </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-4 w-full rounded-xl border px-3 py-2 text-sm transition-all duration-200"
+                className="mt-4 w-full rounded-full border px-3 py-2.5 text-sm font-medium transition-all duration-200"
                 aria-label="Close menu"
                 style={{
                   borderColor: 'var(--border-color)',
-                  backgroundColor: 'var(--background-secondary)',
-                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-color)',
+                  color: 'var(--text-secondary)',
                 }}
               >
                 Close
@@ -294,9 +276,9 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
         )}
       </header>
 
-      {/* MAIN CONTENT OFFSET FOR FIXED HEADER */}
+      {/* MAIN CONTENT OFFSET FOR STICKY HEADER */}
       <div
-        className="transition-theme pt-20 md:pt-20 lg:pt-[76px] xl:pt-[76px]"
+        className="transition-theme"
         style={{ backgroundColor: 'var(--background-color)' }}
       >
         {children}
@@ -304,109 +286,116 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
 
       {/* FOOTER */}
       <footer
-        className="transition-theme border-t -mt-8 md:mt-8 pt-1 md:pt-8"
+        className="border-t mt-12 transition-theme"
         style={{
-          backgroundColor: 'var(--background-color)',
-          color: 'var(--text-secondary)',
+          backgroundColor: 'var(--background-secondary)',
           borderColor: 'var(--border-color)',
         }}
       >
         {/* DESKTOP FOOTER */}
-        <div className="hidden md:block pb-8">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-6 sm:mb-0">
-                <Link
-                  href={getLocalizedPath('/')}
-                  className="transition-all duration-200 hover:-translate-y-[1px] font-bold text-center sm:text-left hover:opacity-80"
-                >
-                  <span style={{ color: 'var(--accent-color)' }}>Digital</span>
-                  <span style={{ color: 'var(--text-color)' }}>PromoCodes</span>
-                </Link>
-                <div className="flex items-center justify-center sm:justify-start gap-6 text-sm mt-4 sm:mt-0">
-                  <div
-                    className="h-4 w-px"
-                    style={{ backgroundColor: 'var(--border-color)' }}
-                  />
-                  <Link
-                    href={getLocalizedPath('/blog')}
-                    className="font-bold transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ fontSize: '0.875rem' }}
-                  >
-                    <span style={{ color: 'var(--accent-color)' }}>DPC</span>
-                    <span style={{ color: 'var(--text-color)' }}>Blog</span>
-                  </Link>
-                  <GeneralPromoSubmissionButton
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80 cursor-pointer"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    Submit Code
-                  </GeneralPromoSubmissionButton>
-                  <Link
-                    href="/subscribe"
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    Subscribe
-                  </Link>
-                  <Link
-                    href={getLocalizedPath('/about')}
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {t('nav.about')}
-                  </Link>
-                  <Link
-                    href={getLocalizedPath('/privacy')}
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {t('footer.privacy')}
-                  </Link>
-                  <Link
-                    href={getLocalizedPath('/terms')}
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {t('footer.terms')}
-                  </Link>
-                  <Link
-                    href={getLocalizedPath('/contact')}
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {t('nav.contact')}
-                  </Link>
-                  <Link
-                    href="/unsubscribe"
-                    className="transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    Unsubscribe
-                  </Link>
+        <div className="hidden md:block">
+          <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+              {/* Brand + description */}
+              <div className="max-w-sm">
+                <div className="text-base font-semibold mb-1" style={{ color: 'var(--text-color)' }}>
+                  <span style={{ color: 'var(--accent-color)' }}>Digital</span>PromoCodes
+                </div>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Curated promo codes and offers for digital tools, courses, and communities.
+                </p>
+              </div>
+
+              {/* Link columns */}
+              <div className="flex flex-wrap gap-8 text-sm">
+                <div>
+                  <div className="font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Explore</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link href={getLocalizedPath('/')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        All offers
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href={getLocalizedPath('/blog')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        Blog
+                      </Link>
+                    </li>
+                    <li>
+                      <GeneralPromoSubmissionButton
+                        className="hover:underline cursor-pointer"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        Submit a promo
+                      </GeneralPromoSubmissionButton>
+                    </li>
+                    <li>
+                      <Link href="/subscribe" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        Subscribe
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Company</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link href={getLocalizedPath('/about')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        {t('nav.about')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href={getLocalizedPath('/contact')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        {t('nav.contact')}
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Legal</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link href={getLocalizedPath('/privacy')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        {t('footer.privacy')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href={getLocalizedPath('/terms')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        {t('footer.terms')}
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/unsubscribe" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        Unsubscribe
+                      </Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
-              <div
-                className="text-xs text-center sm:text-right opacity-70"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                © {currentYear} {SITE_BRAND}. {t('footer.rights')}
-              </div>
+            </div>
+
+            {/* Copyright row */}
+            <div
+              className="mt-6 pt-4 border-t text-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+              style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+            >
+              <span>© {currentYear} {SITE_BRAND}. {t('footer.rights')}</span>
             </div>
           </div>
         </div>
 
         {/* MOBILE FOOTER (compact) */}
-        <div className="md:hidden py-1 md:py-8">
+        <div className="md:hidden py-4">
           <div className="mx-auto max-w-7xl px-4">
             <div className="flex flex-col items-center gap-3">
               {/* logo */}
               <Link
                 href={getLocalizedPath('/')}
-                className="select-none text-xl font-extrabold tracking-tight"
+                className="select-none text-base font-semibold tracking-tight"
                 aria-label={`${SITE_BRAND} home`}
               >
-                <span style={{ color: 'var(--accent-color)' }}>{SITE_BRAND}</span>
+                <span style={{ color: 'var(--accent-color)' }}>Digital</span>
+                <span style={{ color: 'var(--text-color)' }}>PromoCodes</span>
               </Link>
 
               {/* hamburger button */}
@@ -414,21 +403,14 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 type="button"
                 onClick={() => setIsMobileFooterOpen(!isMobileFooterOpen)}
                 aria-label="Open footer menu"
-                className="mt-1 rounded-xl border p-2 shadow-sm active:scale-[0.98] transition-all duration-200"
+                className="mt-1 rounded-full border px-4 py-2 text-sm font-medium shadow-sm active:scale-[0.98] transition-all duration-200"
                 style={{
                   borderColor: 'var(--border-color)',
-                  backgroundColor: 'var(--background-secondary)',
-                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-color)',
+                  color: 'var(--text-secondary)',
                 }}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
+                More links
               </button>
 
               {/* copyright */}
@@ -450,9 +432,9 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
             />
             {/* sheet */}
             <div
-              className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border-t p-4 shadow-lg transition-theme"
+              className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border-t p-4 shadow-theme-promo transition-theme"
               style={{
-                backgroundColor: 'var(--background-color)',
+                backgroundColor: 'var(--background-secondary)',
                 borderColor: 'var(--border-color)',
               }}
             >
@@ -464,28 +446,23 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/blog')}
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
-                  <span className="font-bold" style={{ color: 'var(--accent-color)' }}>
-                    DPC
-                  </span>
-                  <span className="font-bold" style={{ color: 'var(--text-color)' }}>
-                    Blog
-                  </span>
+                  Blog
                 </Link>
                 <button
                   type="button"
                   onClick={handleMobileSubmitCode}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200 cursor-pointer"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200 cursor-pointer"
                   style={{
                     borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    color: 'var(--accent-color)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   Submit Code
@@ -493,11 +470,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href="/subscribe"
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   Subscribe
@@ -505,11 +482,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/about')}
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('nav.about')}
@@ -517,11 +494,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/privacy')}
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('footer.privacy')}
@@ -529,11 +506,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/terms')}
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('footer.terms')}
@@ -541,11 +518,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href={getLocalizedPath('/contact')}
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   {t('nav.contact')}
@@ -553,11 +530,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <Link
                   href="/unsubscribe"
                   onClick={() => setIsMobileFooterOpen(false)}
-                  className="rounded-lg border px-3 py-2 text-sm active:scale-[0.99] transition-all duration-200"
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
+                    backgroundColor: 'var(--background-color)',
                   }}
                 >
                   Unsubscribe
@@ -565,12 +542,12 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
               </div>
               <button
                 onClick={() => setIsMobileFooterOpen(false)}
-                className="mt-4 w-full rounded-xl border px-3 py-2 text-sm transition-all duration-200"
+                className="mt-4 w-full rounded-full border px-3 py-2.5 text-sm font-medium transition-all duration-200"
                 aria-label="Close menu"
                 style={{
                   borderColor: 'var(--border-color)',
-                  backgroundColor: 'var(--background-secondary)',
-                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-color)',
+                  color: 'var(--text-secondary)',
                 }}
               >
                 Close

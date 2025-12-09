@@ -13,29 +13,40 @@ export default function PromoCodeSubmissionButton({ offerId, whopName }: PromoCo
   return (
     <>
       <section
-        className="better-code-tile rounded-2xl border p-5 md:p-6 shadow-sm
-                   bg-white border-gray-200"  /* light mode unchanged */
+        className="rounded-2xl border shadow-theme-promo px-6 py-6 sm:px-7 sm:py-7 transition-theme"
+        style={{
+          backgroundColor: 'var(--background-secondary)',
+          borderColor: 'var(--border-color)',
+        }}
       >
-        {/* This wrapper neutralizes any nested bg-white in dark */}
-        <div className="kill-white flex flex-col md:flex-row md:items-center md:justify-between md:gap-6">
-          <div className="md:flex-1 text-center md:text-left">
-            <h3 className="tile-heading text-2xl font-semibold text-gray-900">
-              Know a Better Code?
+        <div className="flex flex-col gap-4 sm:gap-5 text-left">
+          <div>
+            <h3
+              className="text-2xl font-bold mb-2"
+              style={{ color: 'var(--text-color)' }}
+            >
+              Know a better code?
             </h3>
-
-            <p className="tile-description mt-2 md:mt-1 leading-relaxed text-gray-600">
+            <p
+              className="text-base leading-relaxed"
+              style={{ color: 'var(--text-secondary)' }}
+            >
               Help the community by submitting a promo code for {whopName}
             </p>
           </div>
 
-          <div className="mt-4 md:mt-0 self-center md:self-auto">
+          <div className="w-full flex sm:justify-start">
             <button
               onClick={() => setShowForm(true)}
               type="button"
-              className="tile-btn inline-flex items-center justify-center rounded-xl px-4 py-3 font-semibold text-white transition-colors
-                         bg-[#497BFF] hover:bg-[#3f6df0]"  /* light mode colors */
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all duration-150"
+              style={{
+                backgroundColor: 'var(--background-tertiary)',
+                color: 'var(--text-color)',
+                border: '1px solid var(--border-color)',
+              }}
             >
-              Submit Code
+              Submit a promo for this offer
             </button>
           </div>
         </div>

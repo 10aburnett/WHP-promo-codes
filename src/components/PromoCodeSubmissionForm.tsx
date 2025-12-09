@@ -332,52 +332,73 @@ export default function PromoCodeSubmissionForm({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-start sm:items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center px-4 sm:px-6"
+      style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)' }}
       role="dialog"
       aria-modal="true"
       onClick={handleOverlayClick}
     >
       <div
         className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border shadow-theme-promo transition-theme"
-        style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}
+        style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
+        {/* Header row */}
+        <div
+          className="flex items-center justify-between px-5 sm:px-6 pt-5 pb-3 border-b"
+          style={{ borderColor: 'var(--border-color)' }}
+        >
+          <div>
             <h2
-              className="text-2xl font-bold"
+              className="text-lg sm:text-xl font-bold"
               style={{ color: 'var(--text-color)' }}
             >
-              Submit a Promo Code
+              Submit a promo code
             </h2>
-            {onClose && (
-              <button
-                onClick={onClose}
-                className="hover:opacity-80 text-2xl font-bold"
-                style={{ color: 'var(--text-secondary)' }}
-                aria-label="Close"
-              >
-                ×
-              </button>
-            )}
+            <p className="text-xs sm:text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+              Share a promo you&apos;ve found and we&apos;ll review it for the community.
+            </p>
           </div>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="p-1 rounded-full hover:bg-[var(--background-color)] transition-colors"
+              aria-label="Close"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Form body */}
+        <div className="px-5 sm:px-6 py-5">
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Promo Type Selection */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-3"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Promo Code Type
               </label>
-              <div className="flex gap-4">
+              <div
+                className="inline-flex items-center gap-1 rounded-full px-1 py-1 border"
+                style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}
+              >
                 <label
-                  className="flex items-center gap-2 text-sm"
-                  style={{ color: 'var(--text-color)' }}
+                  className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-full cursor-pointer transition-colors ${!formData.isGeneral ? 'font-medium' : ''}`}
+                  style={{
+                    backgroundColor: !formData.isGeneral ? 'var(--accent-color)' : 'transparent',
+                    color: !formData.isGeneral ? 'white' : 'var(--text-secondary)',
+                  }}
                 >
                   <input
                     type="radio"
+                    className="sr-only"
                     checked={!formData.isGeneral}
                     onChange={() =>
                       setFormData((prev) => ({ ...prev, isGeneral: false }))
@@ -386,11 +407,15 @@ export default function PromoCodeSubmissionForm({
                   <span>Course-specific</span>
                 </label>
                 <label
-                  className="flex items-center gap-2 text-sm"
-                  style={{ color: 'var(--text-color)' }}
+                  className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-full cursor-pointer transition-colors ${formData.isGeneral ? 'font-medium' : ''}`}
+                  style={{
+                    backgroundColor: formData.isGeneral ? 'var(--accent-color)' : 'transparent',
+                    color: formData.isGeneral ? 'white' : 'var(--text-secondary)',
+                  }}
                 >
                   <input
                     type="radio"
+                    className="sr-only"
                     checked={formData.isGeneral}
                     onChange={() =>
                       setFormData((prev) => ({
@@ -409,9 +434,9 @@ export default function PromoCodeSubmissionForm({
 
             {/* Course Selection (only for course-specific) */}
             {!formData.isGeneral && (
-              <div className="relative">
+              <div className="relative space-y-1.5">
                 <label
-                  className="block text-sm font-medium mb-2"
+                  className="block text-sm font-medium"
                   style={{ color: 'var(--text-color)' }}
                 >
                   Select Course *
@@ -440,9 +465,9 @@ export default function PromoCodeSubmissionForm({
                       }
                     }}
                     placeholder="Type to search for a course..."
-                    className="w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                    className="w-full px-3 py-2 pr-10 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                     style={{
-                      backgroundColor: 'var(--background-secondary)',
+                      backgroundColor: 'var(--background-color)',
                       borderColor: 'var(--border-color)',
                       color: 'var(--text-color)',
                     }}
@@ -478,9 +503,9 @@ export default function PromoCodeSubmissionForm({
                 {showDropdown && (
                   <>
                     <div
-                      className="absolute z-20 w-full mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto transition-theme border"
+                      className="absolute z-20 w-full mt-1 rounded-xl border shadow-theme-promo max-h-60 overflow-y-auto transition-theme"
                       style={{
-                        backgroundColor: 'var(--background-color)',
+                        backgroundColor: 'var(--background-secondary)',
                         borderColor: 'var(--border-color)',
                       }}
                     >
@@ -514,16 +539,8 @@ export default function PromoCodeSubmissionForm({
                                 key={whop.id}
                                 type="button"
                                 onClick={() => handleCourseSelect(whop)}
-                                className="w-full px-3 py-2 text-left text-sm transition-colors"
+                                className="w-full px-3 py-2 text-left text-sm hover:bg-[var(--background-tertiary)] transition-colors"
                                 style={{ color: 'var(--text-color)' }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.backgroundColor =
-                                    'var(--background-secondary)')
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.backgroundColor =
-                                    'transparent')
-                                }
                               >
                                 <div className="truncate">{whop.name}</div>
                               </button>
@@ -625,9 +642,9 @@ export default function PromoCodeSubmissionForm({
             )}
 
             {/* Title */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Promo Title *
@@ -639,9 +656,9 @@ export default function PromoCodeSubmissionForm({
                   setFormData((prev) => ({ ...prev, title: e.target.value }))
                 }
                 placeholder="e.g. 20% Off Summer Sale, Free Month Trial"
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
@@ -650,9 +667,9 @@ export default function PromoCodeSubmissionForm({
             </div>
 
             {/* Description */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Description *
@@ -667,9 +684,9 @@ export default function PromoCodeSubmissionForm({
                 }
                 placeholder="Describe the promo code and any conditions..."
                 rows={3}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
@@ -678,9 +695,9 @@ export default function PromoCodeSubmissionForm({
             </div>
 
             {/* Code */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Promo Code *
@@ -692,16 +709,16 @@ export default function PromoCodeSubmissionForm({
                   setFormData((prev) => ({ ...prev, code: e.target.value }))
                 }
                 placeholder='e.g. SUMMER20, FREEMONTH, or "No code required"'
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
                 required
               />
               <p
-                className="text-xs mt-1"
+                className="text-xs"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 If no promo code is needed, enter &quot;No code required&quot;.
@@ -709,9 +726,9 @@ export default function PromoCodeSubmissionForm({
             </div>
 
             {/* Value */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Discount Value *
@@ -723,16 +740,16 @@ export default function PromoCodeSubmissionForm({
                   setFormData((prev) => ({ ...prev, value: e.target.value }))
                 }
                 placeholder="e.g. 20% off, $50 off, Free trial, Free access"
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
                 required
               />
               <p
-                className="text-xs mt-1"
+                className="text-xs"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 What do users get with this promo? (discount amount, free
@@ -741,9 +758,9 @@ export default function PromoCodeSubmissionForm({
             </div>
 
             {/* Submitter Name */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Your Name *
@@ -757,9 +774,9 @@ export default function PromoCodeSubmissionForm({
                     submitterName: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
@@ -768,9 +785,9 @@ export default function PromoCodeSubmissionForm({
             </div>
 
             {/* Submitter Email */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Your Email *
@@ -784,9 +801,9 @@ export default function PromoCodeSubmissionForm({
                     submitterEmail: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
@@ -795,9 +812,9 @@ export default function PromoCodeSubmissionForm({
             </div>
 
             {/* Optional Message */}
-            <div>
+            <div className="space-y-1.5">
               <label
-                className="block text-sm font-medium mb-2"
+                className="block text-sm font-medium"
                 style={{ color: 'var(--text-color)' }}
               >
                 Additional Message
@@ -812,27 +829,26 @@ export default function PromoCodeSubmissionForm({
                 }
                 placeholder="Any additional information about this promo code..."
                 rows={2}
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
                 }}
               />
             </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end gap-3 pt-6">
+            {/* Buttons row */}
+            <div
+              className="flex justify-end gap-3 pt-4 border-t mt-4"
+              style={{ borderColor: 'var(--border-color)' }}
+            >
               {onClose && (
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-2 rounded-full border text-sm font-medium hover:opacity-80 transition-opacity"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-secondary)',
-                  }}
+                  className="px-4 py-2 rounded-full text-sm font-medium border hover:bg-[var(--background-color)] transition-colors"
+                  style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
                 >
                   Cancel
                 </button>
@@ -840,26 +856,23 @@ export default function PromoCodeSubmissionForm({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 rounded-full text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
-                style={{
-                  backgroundColor: 'var(--accent-color)',
-                  color: '#ffffff',
-                }}
+                className="px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150"
+                style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
               >
-                {isSubmitting ? 'Submitting…' : 'Submit a Promo Code'}
+                {isSubmitting ? 'Submitting…' : 'Submit Promo Code'}
               </button>
             </div>
           </form>
 
           <div
-            className="mt-6 p-4 rounded-lg transition-theme"
+            className="mt-6 p-4 rounded-xl transition-theme"
             style={{ backgroundColor: 'var(--background-tertiary)' }}
           >
             <p
               className="text-sm"
-              style={{ color: 'var(--text-color)' }}
+              style={{ color: 'var(--text-secondary)' }}
             >
-              <strong>Community Guidelines:</strong> Please only submit
+              <strong style={{ color: 'var(--text-color)' }}>Community Guidelines:</strong> Please only submit
               legitimate promo codes. All submissions are reviewed by our team
               before being published. Thank you for helping build the community!
             </p>

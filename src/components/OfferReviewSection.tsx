@@ -193,65 +193,65 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
   };
 
   return (
-    <section className="rounded-xl px-7 py-6 sm:p-8 border transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-      {/* Write Review Button - Mobile First */}
-      <div className="block sm:hidden mb-4">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="w-full px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
-          style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
-        >
-          Write Review
-        </button>
-      </div>
-
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6">
+    <section
+      className="rounded-2xl border shadow-theme-promo px-6 py-5 sm:px-8 sm:py-7 transition-theme"
+      style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+    >
+      {/* Header row */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: 'var(--text-color)' }}>Community Feedback</h2>
-          {reviewCount > 0 ? (
-            <div className="flex items-center gap-3">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <svg
-                    key={i}
-                    className={`w-5 h-5 ${i < Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
-                {averageRating} ({reviewCount} review{reviewCount !== 1 ? 's' : ''})
+          <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-color)' }}>
+            Community reviews
+          </h2>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+            {reviewCount > 0 ? (
+              <span className="flex items-center gap-2 mt-1">
+                <span className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`w-4 h-4 ${i < Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </span>
+                <span>{averageRating} ({reviewCount} review{reviewCount !== 1 ? 's' : ''})</span>
               </span>
-            </div>
-          ) : (
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              No reviews yet. Be the first to leave a review!
-            </p>
-          )}
+            ) : (
+              'Real feedback from users who have tried this offer.'
+            )}
+          </p>
         </div>
-        
-        {/* Write Review Button - Desktop Only */}
-        <div className="hidden sm:block">
+
+        {/* Write Review Button - pill style */}
         <button
+          type="button"
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
-          style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+          className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-150 shadow-sm hover:shadow-md hover:-translate-y-[1px]"
+          style={{
+            backgroundColor: 'var(--accent-color)',
+            color: 'white',
+          }}
         >
-          Write Review
+          Write a review
         </button>
-        </div>
       </div>
 
       {/* Review Form */}
       {showForm && (
-        <div className="mb-6 p-4 rounded-lg border" style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}>
-          <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Leave a Review</h3>
+        <div
+          className="mt-6 pt-5 border-t border-dashed"
+          style={{ borderColor: 'var(--border-color)' }}
+        >
+          <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
+            Leave a Review
+          </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
+            <div className="space-y-1.5">
+              <label htmlFor="username" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
                 Name (Optional)
               </label>
               <input
@@ -261,17 +261,17 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                 value={newReview.username}
                 onChange={handleInputChange}
                 placeholder="Your name"
-                className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1 transition-colors"
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
                 style={{
-                  backgroundColor: 'var(--background-secondary)',
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)'
                 }}
               />
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
                 Rating
               </label>
               <div className="flex space-x-1">
@@ -289,9 +289,9 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                 ))}
               </div>
             </div>
-            
-            <div>
-              <label htmlFor="text" className="block text-sm font-medium mb-2" style={{ color: 'var(--text-color)' }}>
+
+            <div className="space-y-1.5">
+              <label htmlFor="text" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
                 Review
               </label>
               <textarea
@@ -302,30 +302,30 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                 placeholder="Share your experience with this product..."
                 required
                 rows={4}
-                className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1 transition-colors resize-vertical"
-                style={{ 
-                  backgroundColor: 'var(--background-secondary)', 
+                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors resize-vertical"
+                style={{
+                  backgroundColor: 'var(--background-color)',
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)'
                 }}
               />
             </div>
-            
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
-                style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
-              >
-                Submit Review
-              </button>
+
+            <div className="flex justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="px-4 py-2 rounded-lg border font-medium transition-all duration-200 hover:opacity-90 hover:scale-[1.02] transform-gpu"
+                className="px-4 py-2 rounded-full text-sm font-medium border hover:bg-[var(--background-color)] transition-colors"
                 style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
               >
                 Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all duration-150"
+                style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+              >
+                Submit Review
               </button>
             </div>
           </form>
@@ -334,24 +334,34 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
 
       {/* Reviews List */}
       {reviewCount > 0 && (
-        <div className="space-y-4">
+        <ul className="space-y-3 sm:space-y-4 mt-5">
           {visibleReviews.map((review) => (
-            <div key={review.id} className="p-4 rounded-lg border" style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}>
+            <li
+              key={review.id}
+              className="rounded-xl border px-4 py-3 sm:px-5 sm:py-4 transition-all duration-150 hover:shadow-sm"
+              style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+            >
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}>
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
+                    style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                  >
                     {getDisplayName(review).charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-medium text-sm" style={{ color: 'var(--text-color)' }}>
+                    <p className="font-medium text-sm flex items-center gap-2" style={{ color: 'var(--text-color)' }}>
                       {getDisplayName(review)}
                       {review.verified && (
-                        <span className="ml-2 text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--success-color)', color: 'white' }}>
+                        <span
+                          className="rounded-full px-2 py-0.5 text-xs"
+                          style={{ backgroundColor: 'rgba(5,150,105,0.12)', color: 'var(--accent-color)' }}
+                        >
                           Verified
                         </span>
                       )}
                     </p>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 mt-0.5">
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
@@ -369,24 +379,24 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                   </div>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-sm leading-relaxed mt-2" style={{ color: 'var(--text-secondary)' }}>
                 {getDisplayText(review)}
               </p>
-            </div>
+            </li>
           ))}
-          
+
           {reviews.length > 2 && (
-            <div className="text-center">
+            <div className="text-center pt-2">
               <button
                 onClick={() => setExpanded(!expanded)}
                 className="text-sm font-medium transition-colors duration-200 hover:opacity-80"
                 style={{ color: 'var(--accent-color)' }}
               >
-                {expanded ? `Show Less` : `Show All ${reviewCount} Reviews`}
+                {expanded ? 'Show Less' : `Show All ${reviewCount} Reviews`}
               </button>
             </div>
           )}
-        </div>
+        </ul>
       )}
     </section>
   );
