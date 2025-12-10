@@ -50,28 +50,28 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
 
   if (loading) {
     return (
-      <section className="mt-20">
-        <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-          More from our insights
+      <section aria-label="Related reading" className="space-y-4">
+        <h3 className="text-lg font-semibold mb-4 tracking-tight" style={{ color: 'var(--text-color)' }}>
+          Related reading
         </h3>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
           {[1, 2].map(i => (
             <div
               key={i}
-              className="rounded-2xl border p-4 flex gap-4 animate-pulse"
+              className="rounded-xl border p-4 flex gap-4 animate-pulse"
               style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
             >
-              <div
-                className="h-12 w-12 rounded-full flex-shrink-0"
-                style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
-              />
               <div className="flex-1 space-y-2">
                 <div
-                  className="h-4 w-3/4 rounded"
+                  className="h-3 w-1/3 rounded"
                   style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
                 />
                 <div
-                  className="h-3 w-full rounded"
+                  className="h-4 w-full rounded"
+                  style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
+                />
+                <div
+                  className="h-3 w-3/4 rounded"
                   style={{ backgroundColor: 'var(--text-muted)', opacity: 0.3 }}
                 />
               </div>
@@ -86,82 +86,71 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
     return null
   }
 
-  // Only show first 2 posts for the new asymmetric layout
+  // Only show first 2 posts for compact sidebar layout
   const displayPosts = relatedPosts.slice(0, 2)
 
   return (
-    <section className="mt-20">
+    <section aria-label="Related reading">
       <h3
-        className="text-2xl font-bold mb-6"
+        className="text-lg font-semibold mb-4 tracking-tight"
         style={{ color: 'var(--text-color)' }}
       >
-        More from our insights
+        Related reading
       </h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4">
         {displayPosts.map((post) => (
           <Link key={post.id} href={`/blog/${post.slug}`}>
             <article
-              className="group flex flex-col rounded-2xl border p-6 shadow-sm hover:shadow-md transition-all duration-200 h-full"
+              className="group flex gap-4 rounded-xl border p-4 hover:shadow-sm transition-all duration-200"
               style={{
                 backgroundColor: 'var(--background-secondary)',
                 borderColor: 'var(--border-color)',
               }}
             >
-              <div className="mb-3">
+              <div className="flex-1 space-y-1.5">
                 <time
-                  className="text-xs uppercase tracking-wide"
+                  className="text-[11px] uppercase tracking-wide"
                   style={{ color: 'var(--text-muted)' }}
                 >
                   {formatDate(post.publishedAt)}
                 </time>
-              </div>
 
-              <h4
-                className="text-xl font-semibold mb-2 line-clamp-2 group-hover:opacity-90"
-                style={{ color: 'var(--text-color)' }}
-              >
-                {post.title}
-              </h4>
-
-              {post.excerpt && (
-                <p
-                  className="text-sm mb-4 line-clamp-3"
-                  style={{ color: 'var(--text-secondary)' }}
+                <h4
+                  className="text-sm font-semibold line-clamp-2 group-hover:opacity-90"
+                  style={{ color: 'var(--text-color)' }}
                 >
-                  {post.excerpt}
-                </p>
-              )}
+                  {post.title}
+                </h4>
 
-              <div className="mt-auto flex items-center justify-between">
-                <span
-                  className="inline-flex items-center text-sm font-medium"
-                  style={{ color: 'var(--accent-color)' }}
-                >
-                  View article
-                  <svg
-                    className="ml-1.5 h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.8}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                {post.excerpt && (
+                  <p
+                    className="text-xs line-clamp-2"
+                    style={{ color: 'var(--text-secondary)' }}
                   >
-                    <path d="M5 12h14" />
-                    <path d="M13 5l7 7-7 7" />
-                  </svg>
-                </span>
-
-                {(post.authorName || post.author?.name) && (
-                  <span
-                    className="text-xs"
-                    style={{ color: 'var(--text-muted)' }}
-                  >
-                    {post.authorName || post.author?.name}
-                  </span>
+                    {post.excerpt}
+                  </p>
                 )}
               </div>
+
+              <span
+                className="self-end mb-1 inline-flex items-center text-[11px] font-medium"
+                style={{ color: 'var(--accent-color)' }}
+              >
+                Read
+                <svg
+                  className="ml-1 h-3 w-3"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M13 5l7 7-7 7" />
+                </svg>
+              </span>
             </article>
           </Link>
         ))}

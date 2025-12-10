@@ -230,30 +230,30 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
             </div>
           </article>
 
-          {/* Related Posts Section */}
-          <div className="mt-12">
-            <RelatedPosts 
-              currentPostId={post.id} 
-              currentPostTitle={post.title}
-            />
-          </div>
-
-          {/* Comments Section */}
+          {/* Comments Section – full width */}
           <div className="mt-12 space-y-8">
-            <CommentsList 
-              blogPostId={post.id} 
-              refreshTrigger={refreshComments} 
+            <CommentsList
+              blogPostId={post.id}
+              refreshTrigger={refreshComments}
               onReply={handleReply}
             />
             <div data-comment-form>
-              <CommentForm 
-                blogPostId={post.id} 
+              <CommentForm
+                blogPostId={post.id}
                 onCommentSubmitted={handleCommentSubmitted}
                 parentId={replyTo?.parentId}
                 parentAuthor={replyTo?.parentAuthor}
                 onCancel={replyTo ? handleCancelReply : undefined}
               />
             </div>
+          </div>
+
+          {/* Related Posts – sits underneath the comment form */}
+          <div className="mt-10">
+            <RelatedPosts
+              currentPostId={post.id}
+              currentPostTitle={post.title}
+            />
           </div>
 
           {/* Navigation */}
@@ -266,7 +266,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                 color: 'white',
               }}
             >
-              Back to all articles
+              Browse all articles
             </Link>
           </div>
         </div>
