@@ -120,10 +120,10 @@ export const viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: [
-    // Light mode: fintech accent green
-    { media: '(prefers-color-scheme: light)', color: '#047857' }, // emerald-800
+    // Light mode: DPC brand green
+    { media: '(prefers-color-scheme: light)', color: '#059669' },
     // Dark mode: deep slate background
-    { media: '(prefers-color-scheme: dark)', color: '#020617' },  // slate-950
+    { media: '(prefers-color-scheme: dark)', color: '#020617' },
   ],
 };
 
@@ -160,16 +160,13 @@ export default async function RootLayout({
         {/* dns-prefetch for dynamic origin handled by siteOrigin() */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
         <link rel="preload" href="/logo.png" as="image" />
-        {/* Comprehensive favicon setup for all browsers */}
+        {/* Favicon setup from RealFaviconGenerator */}
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
-        <meta name="msapplication-TileColor" content="#047857" />
-        <meta name="theme-color" content="#047857" />
+        <meta name="msapplication-TileColor" content="#059669" />
+        <meta name="theme-color" content="#059669" />
         {/* Only include manifest in production to avoid 401s on Vercel protected previews */}
         {process.env.VERCEL_ENV === 'production' && (
           <link rel="manifest" href="/site.webmanifest" />
