@@ -105,9 +105,9 @@ export function generateArticleSchema(post: {
     'url': `${origin}/blog/${post.slug}`,
     'wordCount': post.content.replace(/<[^>]*>/g, '').split(/\s+/).length,
     'timeRequired': `PT${readingTime}M`,
-    'genre': 'Online products & savings',
-    'keywords': `digital promo codes, online products, savings strategies, ${post.title}`,
-    'articleSection': 'Digital products & promo strategies',
+    'genre': 'Digital products & savings strategies',
+    'keywords': `digital promo codes, digital products, online savings tips, ${post.title}`,
+    'articleSection': 'Digital products, discounts & savings strategies',
     'inLanguage': 'en-US'
   }
 }

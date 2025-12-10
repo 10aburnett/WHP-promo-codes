@@ -52,7 +52,7 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
     return (
       <section className="mt-20">
         <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-          You might also like
+          More from our insights
         </h3>
         <div className="space-y-4">
           {[1, 2].map(i => (
@@ -95,7 +95,7 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
         className="text-2xl font-bold mb-6"
         style={{ color: 'var(--text-color)' }}
       >
-        You might also like
+        More from our insights
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -138,7 +138,7 @@ export default function RelatedPosts({ currentPostId, currentPostTitle }: Relate
                   className="inline-flex items-center text-sm font-medium"
                   style={{ color: 'var(--accent-color)' }}
                 >
-                  Read article
+                  View article
                   <svg
                     className="ml-1.5 h-4 w-4"
                     viewBox="0 0 24 24"

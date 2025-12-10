@@ -21,9 +21,9 @@ export const runtime = 'nodejs' // Required for Prisma
 const currentYear = new Date().getFullYear()
 
 export const metadata: Metadata = {
-  title: `${SITE_BRAND} Blog - Latest Deals, Tips & Digital Product Insights ${currentYear}`,
-  description: `Discover the latest deals, digital product reviews, exclusive offers, and insider tips for ${currentYear}. Stay updated with the newest discounts and insights from the world of digital products and online communities.`,
-  keywords: `blog, deals ${currentYear}, digital products, online courses, communities, exclusive deals, discount tips, digital marketplace insights`,
+  title: `${SITE_BRAND} Blog - Guides on Deals, Discounts & Digital Products ${currentYear}`,
+  description: `Explore practical guides, breakdowns, and reviews on digital products, discounts and offers in ${currentYear}. Stay informed about new tools, communities and ways to save online.`,
+  keywords: `blog, deals ${currentYear}, digital products, online courses, communities, discount strategies, exclusive offers, online savings insights`,
   alternates: {
 // PHASE1-DEINDEX:     canonical: `${siteOrigin()}/blog`
   },
@@ -39,15 +39,15 @@ export const metadata: Metadata = {
     }
   },
   openGraph: {
-    title: `${SITE_BRAND} Blog - Latest Deals & Digital Product Insights ${currentYear}`,
-    description: `Your source for the latest deals, exclusive offers, and digital product insights for ${currentYear}. Get insider tips and discover new opportunities in the digital marketplace.`,
+    title: `${SITE_BRAND} Blog - Guides to Digital Deals & Products ${currentYear}`,
+    description: `Your hub for guides on digital deals, exclusive offers and product explainers in ${currentYear}. Learn how to evaluate tools, pick the right products and make the most of online discounts.`,
     type: 'website',
     url: `${siteOrigin()}/blog`
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_BRAND} Blog - Latest Deals & Digital Product Insights ${currentYear}`,
-    description: `Your source for the latest deals, exclusive offers, and digital product insights for ${currentYear}. Get insider tips and discover new opportunities in the digital marketplace.`
+    title: `${SITE_BRAND} Blog - Digital Savings & Product Guides ${currentYear}`,
+    description: `Articles on digital savings, new products and promo strategies in ${currentYear}. Learn how to use discounts and memberships more effectively online.`
   }
 }
 
@@ -67,10 +67,10 @@ export default async function BlogPage() {
                     DigitalPromoCodes Insights
                   </p>
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                    Strategies, updates & playbooks for smarter digital savings.
+                    Guides, updates & playbooks for smarter digital spending.
                   </h1>
                   <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                    Deep-dive guides and analysis on digital products, communities, and promo strategies from the team behind DigitalPromoCodes.
+                    Long-form guides and analysis on digital products, online communities and promo tactics from the team behind DigitalPromoCodes.
                   </p>
                 </div>
 
@@ -79,13 +79,13 @@ export default async function BlogPage() {
                   style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
                 >
                   <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                    Stay ahead of the next deal wave
+                    Stay ahead of new digital offers
                   </h2>
                   <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                    Occasional roundups of new digital products, top promo codes, and strategy breakdowns. No spam.
+                    Occasional roundups of new digital products, notable promo codes and strategy breakdowns. No clutter or spam.
                   </p>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    New posts typically ship a few times per month.
+                    New articles are usually published a few times each month.
                   </p>
                 </aside>
               </div>
@@ -106,10 +106,10 @@ export default async function BlogPage() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                    No articles published yet
+                    There are no published articles yet
                   </h2>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    We&apos;re working on in-depth guides and case studies. Check back soon for fresh insights.
+                    We&apos;re currently preparing in-depth guides and examples. Check back soon for new articles.
                   </p>
                 </div>
               </div>
@@ -155,10 +155,10 @@ export default async function BlogPage() {
                   DigitalPromoCodes Insights
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                  Strategies, updates & playbooks for smarter digital savings.
+                  Guides, updates & playbooks for smarter digital spending.
                 </h1>
                 <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                  Deep-dive guides and analysis on digital products, communities, and promo strategies from the team behind DigitalPromoCodes.
+                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind DigitalPromoCodes.
                 </p>
               </div>
 
@@ -167,13 +167,13 @@ export default async function BlogPage() {
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Stay ahead of the next deal wave
+                  Stay ahead of new digital offers
                 </h2>
                 <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Occasional roundups of new digital products, top promo codes, and strategy breakdowns. No spam.
+                  Occasional roundups of new digital products, notable promo codes and strategy breakdowns. No clutter or spam.
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  New posts typically ship a few times per month.
+                  New articles are usually published a few times each month.
                 </p>
               </aside>
             </div>
@@ -212,7 +212,7 @@ export default async function BlogPage() {
                               color: 'var(--accent-color)',
                             }}
                           >
-                            Featured
+                            Editor's pick
                           </span>
                         )}
                       </div>
@@ -237,7 +237,7 @@ export default async function BlogPage() {
                         className="inline-flex items-center text-xs font-medium"
                         style={{ color: 'var(--accent-color)' }}
                       >
-                        Read article
+                        Open article
                         <svg
                           className="ml-1.5 h-4 w-4"
                           viewBox="0 0 24 24"
@@ -276,10 +276,10 @@ export default async function BlogPage() {
                   DigitalPromoCodes Insights
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                  Strategies, updates & playbooks for smarter digital savings.
+                  Guides, updates & playbooks for smarter digital spending.
                 </h1>
                 <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                  Deep-dive guides and analysis on digital products, communities, and promo strategies from the team behind DigitalPromoCodes.
+                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind DigitalPromoCodes.
                 </p>
               </div>
 
@@ -288,13 +288,13 @@ export default async function BlogPage() {
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Stay ahead of the next deal wave
+                  Stay ahead of new digital offers
                 </h2>
                 <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Occasional roundups of new digital products, top promo codes, and strategy breakdowns. No spam.
+                  Occasional roundups of new digital products, notable promo codes and strategy breakdowns. No clutter or spam.
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  New posts typically ship a few times per month.
+                  New articles are usually published a few times each month.
                 </p>
               </aside>
             </div>
@@ -314,10 +314,10 @@ export default async function BlogPage() {
                   </svg>
                 </div>
                 <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Unable to load articles
+                  Blog articles could not be loaded
                 </h2>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  Something went wrong while fetching blog content. Please refresh or try again in a few minutes.
+                  An issue occurred while retrieving blog content. Please refresh the page or try again shortly.
                 </p>
               </div>
             </div>

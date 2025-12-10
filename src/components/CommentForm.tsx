@@ -129,10 +129,10 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
       {/* Header */}
       <div className="mb-8">
         <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-color)' }}>
-          Join the discussion
+          Join the conversation
         </h3>
         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-          Share your thoughts with the community. Your comment helps others navigate digital products more confidently.
+          Share your perspective with other readers. Your comment can help people make better decisions about digital products.
         </p>
       </div>
 
@@ -143,7 +143,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
             className="inline-flex items-center rounded-full px-3 py-1 text-xs"
             style={{ backgroundColor: 'rgba(5,150,105,0.08)', color: 'var(--accent-color)' }}
           >
-            Replying to {parentAuthor}
+            Replying to {parentAuthor}'s comment
           </span>
           {onCancel && (
             <button
@@ -182,7 +182,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
         {/* Name field */}
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
-            Your name
+            Name
           </label>
           <input
             type="text"
@@ -194,7 +194,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
               borderColor: 'var(--border-color)',
               color: 'var(--text-color)'
             }}
-            placeholder="What should we call you?"
+            placeholder="How should we address you?"
             required
             disabled={isSubmitting}
           />
@@ -203,7 +203,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
         {/* Email field */}
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
-            Email address
+            Email
           </label>
           <input
             type="email"
@@ -215,19 +215,19 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
               borderColor: 'var(--border-color)',
               color: 'var(--text-color)'
             }}
-            placeholder="your@email.com"
+            placeholder="name@example.com"
             required
             disabled={isSubmitting}
           />
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            Your email will not be published
+            Your email won't be shown publicly.
           </p>
         </div>
 
         {/* Comment textarea */}
         <div className="space-y-1.5">
           <label className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
-            Comment
+            Your comment
           </label>
           <textarea
             value={formData.content}
@@ -239,7 +239,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
               borderColor: 'var(--border-color)',
               color: 'var(--text-color)'
             }}
-            placeholder="Write your thoughts..."
+            placeholder="Write your comment here..."
             required
             disabled={isSubmitting}
           />
@@ -255,7 +255,7 @@ export default function CommentForm({ blogPostId, onCommentSubmitted, parentId, 
             color: 'white'
           }}
         >
-          {isSubmitting ? 'Posting...' : (parentId ? 'Post reply' : 'Post comment')}
+          {isSubmitting ? 'Submitting...' : (parentId ? 'Submit reply' : 'Submit comment')}
         </button>
       </form>
 

@@ -242,7 +242,7 @@ export default function CommentsList({ blogPostId, refreshTrigger, onReply }: Co
         }}
       >
         <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-          Discussion
+          Comments
         </h3>
         <div className="space-y-4">
           {[1, 2].map(i => (
@@ -286,13 +286,13 @@ export default function CommentsList({ blogPostId, refreshTrigger, onReply }: Co
       }}
     >
       <h3 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-color)' }}>
-        Discussion ({comments?.length || 0})
+        Comments ({comments?.length || 0})
       </h3>
 
       {!comments || comments.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            No comments yet. Be the first to share your thoughts!
+            No comments yet. Start the conversation with the first comment.
           </p>
         </div>
       ) : (

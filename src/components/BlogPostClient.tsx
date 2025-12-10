@@ -132,7 +132,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                       }}
                     >
                       <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
-                        On this page
+                        Article contents
                       </h3>
                       <nav className="space-y-1.5">
                         {post.headings.map((heading, index) => (
@@ -166,7 +166,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                       color: 'var(--text-color)',
                     }}
                   >
-                    <span className="font-medium text-sm">{showToc ? 'Hide outline' : 'Show outline'}</span>
+                    <span className="font-medium text-sm">{showToc ? 'Hide section list' : 'Show section list'}</span>
                     <svg
                       className={`h-5 w-5 transition-transform ${showToc ? 'rotate-180' : ''}`}
                       fill="none"
@@ -214,7 +214,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                   }}
                 >
                   <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
-                    Last updated for accuracy and clarity. Some details may change over time.
+                    Reviewed periodically for accuracy. Specific details can evolve over time.
                   </p>
                   <div
                     className="prose prose-lg max-w-none blog-content"
@@ -266,7 +266,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                 color: 'white',
               }}
             >
-              Browse all articles
+              Back to all articles
             </Link>
           </div>
         </div>
