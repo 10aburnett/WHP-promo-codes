@@ -134,6 +134,7 @@ export default async function BlogPage() {
         datePublished: p.publishedAt?.toISOString?.() ?? undefined,
         dateModified: (p.updatedAt ?? p.publishedAt)?.toISOString?.() ?? undefined,
         url: `${origin}/blog/${p.slug}`,
+        image: `${origin}/og.png`,
         author: {
           '@type': 'Person',
           name: (p as any).User?.name || (p as any).authorName || SITE_AUTHOR

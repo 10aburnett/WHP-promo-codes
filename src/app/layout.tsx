@@ -71,10 +71,10 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: SITE_BRAND,
       images: [
         {
-          url: '/logo.png',
+          url: '/og.png',
           width: 1200,
           height: 630,
-          alt: `${SITE_BRAND} – Digital Deals & Discount Finder`
+          alt: `${SITE_BRAND} – Save on digital tools, AI apps, courses & memberships`
         }
       ],
     },
@@ -82,7 +82,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`,
       description: SITE_DESCRIPTION,
-      images: ['/logo.png'],
+      images: ['/og.png'],
     },
     robots: {
       index: false,
@@ -159,7 +159,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://img-v2-prod.whop.com" crossOrigin="" />
         {/* dns-prefetch for dynamic origin handled by siteOrigin() */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-        <link rel="preload" href="/logo.png" as="image" />
+        <link rel="preload" href="/og.png" as="image" />
         {/* Favicon setup from RealFaviconGenerator */}
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

@@ -72,9 +72,9 @@ export function generateArticleSchema(post: {
   
   const origin = siteOrigin();
 
-  // Extract first image from content for schema
+  // Use OG image as default, fall back to first image in content if available
   const imageMatch = post.content.match(/<img[^>]+src="([^"]+)"/i)
-  const imageUrl = imageMatch ? imageMatch[1] : `${origin}/logo.png`
+  const imageUrl = imageMatch ? imageMatch[1] : `${origin}/og.png`
 
   return {
     '@context': 'https://schema.org',
@@ -93,7 +93,7 @@ export function generateArticleSchema(post: {
       'url': origin,
       'logo': {
         '@type': 'ImageObject',
-        'url': `${origin}/logo.png`
+        'url': `${origin}/og.png`
       }
     },
     'datePublished': publishedDate,

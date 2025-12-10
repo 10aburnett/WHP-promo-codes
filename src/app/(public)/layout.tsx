@@ -64,10 +64,10 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: SITE_BRAND,
       images: [
         {
-          url: '/logo.png',
+          url: '/og.png',
           width: 1200,
           height: 630,
-          alt: `${SITE_BRAND} – Digital Deals & Savings Hub`
+          alt: `${SITE_BRAND} – Save on digital tools, AI apps, courses & memberships`
         }
       ],
     },
@@ -75,7 +75,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`,
       description,
-      images: ['/logo.png'],
+      images: ['/og.png'],
       // Twitter handles removed until new brand accounts exist
     },
     verification: {

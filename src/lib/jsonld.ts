@@ -27,6 +27,7 @@ export function buildOrgSite({ org, site }: { org: OrgParams; site: SiteParams }
     name: org.name,
     url: org.url,
     logo: org.logo,
+    image: `${org.url}/og.png`,
     ...(org.sameAs && org.sameAs.length ? { sameAs: org.sameAs } : {})
   };
 
@@ -36,6 +37,7 @@ export function buildOrgSite({ org, site }: { org: OrgParams; site: SiteParams }
     "@id": `${site.url}#website`,
     url: site.url,
     name: site.name,
+    image: `${site.url}/og.png`,
     potentialAction: {
       "@type": "SearchAction",
       target: site.searchTarget,
