@@ -11,26 +11,26 @@ interface FilterControlsProps {
   submitMode?: 'manual' | 'auto';
 }
 
-// All available categories in a logical order
+// Categories ordered by user interest and engagement
 const WHOP_CATEGORIES: WhopCategory[] = [
-  'TRADING',
   'AI',
-  'SOCIAL_MEDIA',
-  'SPORTS_BETTING',
   'BUSINESS',
   'ECOMMERCE',
-  'GAMING',
-  'PERSONAL_DEVELOPMENT',
+  'TRADING',
   'PERSONAL_FINANCE',
+  'SOCIAL_MEDIA',
+  'SPORTS_BETTING',
+  'PERSONAL_DEVELOPMENT',
   'RESELLING',
-  'CAREERS',
   'FITNESS',
-  'RECREATION',
+  'GAMING',
+  'CAREERS',
   'COMPUTER_SCIENCE',
   'REAL_ESTATE',
-  'DATING',
+  'RECREATION',
   'TRAVEL',
   'LANGUAGES',
+  'DATING',
   'OTHER',
 ];
 
@@ -170,12 +170,12 @@ export default function FilterControls({
             }}
           >
             <option value="">Sort by</option>
-            <option value="newest">Recently added</option>
             <option value="highest-rated">Top rated</option>
-            <option value="highest">Biggest discount</option>
-            <option value="lowest">Smallest discount</option>
+            <option value="newest">Recently added</option>
             <option value="alpha-asc">A–Z</option>
             <option value="alpha-desc">Z–A</option>
+            <option value="highest">Biggest discount</option>
+            <option value="lowest">Smallest discount</option>
           </select>
           {chevronIcon}
         </div>
@@ -262,12 +262,12 @@ export default function FilterControls({
             }}
           >
             <option value="">Sort by</option>
-            <option value="newest">Recently added</option>
             <option value="highest-rated">Top rated</option>
-            <option value="highest">Biggest discount</option>
-            <option value="lowest">Smallest discount</option>
+            <option value="newest">Recently added</option>
             <option value="alpha-asc">A–Z</option>
             <option value="alpha-desc">Z–A</option>
+            <option value="highest">Biggest discount</option>
+            <option value="lowest">Smallest discount</option>
           </select>
           {chevronIcon}
         </div>
