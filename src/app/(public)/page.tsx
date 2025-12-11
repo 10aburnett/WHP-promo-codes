@@ -372,9 +372,6 @@ export default async function Home({
         total={data.total}
       />
 
-      {/* Statistics Section - Server Rendered */}
-      <StatisticsSectionServer stats={statistics} />
-
       {/* Marketing / trust section */}
       <div className="container mx-auto max-w-6xl px-3 sm:px-4 lg:px-0">
         <div
@@ -525,6 +522,9 @@ export default async function Home({
           <CallToAction />
         </div>
       </div>
+
+      {/* Statistics Section - Server Rendered */}
+      <StatisticsSectionServer stats={statistics} />
     </main>
   );
 }
