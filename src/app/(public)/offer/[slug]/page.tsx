@@ -764,10 +764,35 @@ export default async function DealPage({ params }: { params: { slug: string } })
         {/* Noindex Notice Banner */}
         {!pageIsIndexable && (
           <div className="dpc-notice-banner max-w-4xl mx-auto mb-6">
-            <div className="rounded-full border px-4 py-3 text-sm" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)', opacity: 0.8 }}>
-              <span style={{ color: 'var(--text-secondary)' }}>
-                ℹ️ This page is currently not indexed by search engines, but is available for viewing.
-              </span>
+            <div
+              className="rounded-xl border px-4 py-3 flex items-center gap-3"
+              style={{
+                backgroundColor: 'rgba(5,150,105,0.04)',
+                borderColor: 'rgba(5,150,105,0.15)',
+              }}
+            >
+              <div
+                className="flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: 'rgba(5,150,105,0.1)' }}
+              >
+                <svg
+                  className="h-3.5 w-3.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ color: 'var(--accent-color)' }}
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+              </div>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                This offer is unlisted and won't appear in search results. You can still view and use it.
+              </p>
             </div>
           </div>
         )}
