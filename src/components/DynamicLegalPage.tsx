@@ -117,7 +117,7 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
           style={{ color: 'var(--accent-color)' }}
         >
           <span aria-hidden="true">←</span>
-          <span>Back to site policies</span>
+          <span>Back to homepage</span>
         </Link>
 
         {/* Top hero / summary card */}
