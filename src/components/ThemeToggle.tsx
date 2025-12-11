@@ -10,27 +10,19 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative inline-flex items-center w-12 h-6 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors duration-200 hover:opacity-80"
       style={{
-        backgroundColor: isDark ? 'var(--accent-color)' : 'var(--border-color)',
-        // @ts-ignore - CSS variable for focus ring
-        '--tw-ring-color': 'var(--accent-color)',
+        borderColor: 'var(--border-color)',
+        backgroundColor: 'var(--background-secondary)',
+        color: 'var(--text-color)',
       }}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
-      {/* Toggle Thumb */}
-      <div
-        className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out flex items-center justify-center ${
-          isDark ? 'translate-x-6' : 'translate-x-0.5'
-        }`}
-      >
-        {/* Sun Icon */}
+      {/* Sun Icon - shown in dark mode (click to switch to light) */}
+      {isDark ? (
         <svg
-          className={`w-3 h-3 transition-all duration-300 ease-in-out ${
-            isDark ? 'opacity-0 scale-0 rotate-180' : 'opacity-100 scale-100 rotate-0'
-          }`}
-          style={{ color: 'var(--accent-color)' }}
+          className="h-4 w-4"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -40,19 +32,16 @@ export default function ThemeToggle() {
             clipRule="evenodd"
           />
         </svg>
-
-        {/* Moon Icon */}
+      ) : (
+        /* Moon Icon - shown in light mode (click to switch to dark) */
         <svg
-          className={`absolute w-3 h-3 transition-all duration-300 ease-in-out ${
-            isDark ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 -rotate-180'
-          }`}
-          style={{ color: 'var(--accent-color)' }}
+          className="h-4 w-4"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
         </svg>
-      </div>
+      )}
     </button>
   );
 } 

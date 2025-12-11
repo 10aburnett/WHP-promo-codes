@@ -64,107 +64,167 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
   // For ALL other pages (including offer pages), show the full layout with header and footer
   return (
     <>
-      {/* HEADER */}
+      {/* HEADER - Two-row structure */}
       <header
-        className="sticky top-0 z-40 border-b backdrop-blur-sm transition-theme"
+        className="sticky top-0 z-40 border-b backdrop-blur-md transition-theme"
         style={{
-          backgroundColor: 'var(--background-secondary)',
+          backgroundColor: 'var(--background-color)',
           borderColor: 'var(--border-color)',
         }}
       >
-        <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-6">
-          <div className="flex h-16 items-center justify-between gap-4">
-            {/* Left: logo + brand */}
-            <div className="flex items-center gap-2">
+        <div className="mx-auto w-[92%] max-w-6xl">
+          {/* BRAND + ACTIONS ROW */}
+          <div className="flex items-center justify-between py-3 md:py-4">
+            {/* Left: Brand + tagline */}
+            <div className="flex flex-col">
               <Link
                 href={getLocalizedPath('/')}
-                className="flex items-center transition-all duration-200 hover:-translate-y-[1px] hover:opacity-80"
+                className="flex items-baseline gap-0.5 transition-opacity hover:opacity-80"
                 aria-label={`${SITE_BRAND} home`}
               >
-                <span className="text-sm font-semibold tracking-tight sm:text-base" style={{ color: 'var(--text-color)' }}>
-                  <span style={{ color: 'var(--accent-color)' }}>Digital</span>PromoCodes
+                <span className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--accent-color)' }}>
+                  Digital
+                </span>
+                <span className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>
+                  PromoCodes
                 </span>
               </Link>
+              <p className="hidden md:block mt-0.5 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                Verified promo codes for digital tools, courses &amp; memberships.
+              </p>
             </div>
 
-            {/* Center/right: nav links (desktop) */}
-            <nav className="hidden md:flex items-center gap-3 text-sm font-medium">
-              <Link
-                href={getLocalizedPath('/')}
-                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
-                style={{ color: 'var(--text-secondary)' }}
+            {/* Right: controls cluster (desktop) */}
+            <div className="hidden md:flex items-center gap-2 lg:gap-3">
+              <LanguageSelector />
+              <ThemeToggle />
+              <GeneralPromoSubmissionButton
+                className="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all cursor-pointer"
+                style={{
+                  borderColor: 'var(--accent-color)',
+                  backgroundColor: 'var(--accent-color)',
+                  color: '#ffffff',
+                }}
               >
-                {t('nav.home')}
-              </Link>
-              <Link
-                href={getLocalizedPath('/blog')}
-                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                Blog
-              </Link>
-              <Link
-                href="/subscribe"
-                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                Subscribe
-              </Link>
-              <Link
-                href={getLocalizedPath('/about')}
-                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t('nav.about')}
-              </Link>
-              <Link
-                href={getLocalizedPath('/contact')}
-                className="px-3 py-1.5 rounded-full transition-colors hover:bg-[var(--background-tertiary)]"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                {t('nav.contact')}
-              </Link>
-            </nav>
+                <span>Share a promo</span>
+                <span className="ml-1" aria-hidden="true">↗</span>
+              </GeneralPromoSubmissionButton>
+            </div>
 
-            {/* Right: CTA + controls */}
-            <div className="flex items-center gap-2">
-              {/* Mobile: Language selector, theme toggle, and hamburger menu */}
-              <div className="flex md:hidden items-center gap-2">
-                <LanguageSelector />
-                <ThemeToggle />
-                <button
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className="p-2 rounded-full transition-all duration-200 hover:bg-[var(--background-tertiary)] active:scale-95"
-                  style={{ color: 'var(--text-color)' }}
-                  aria-label="Open menu"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Desktop: Language selector, theme toggle + Submit promo CTA */}
-              <div className="hidden md:flex items-center gap-3">
-                <LanguageSelector />
-                <ThemeToggle />
-                <GeneralPromoSubmissionButton
-                  className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all duration-150 cursor-pointer"
-                  style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
-                >
-                  Submit a promo
-                </GeneralPromoSubmissionButton>
-              </div>
+            {/* Mobile: controls + menu toggle */}
+            <div className="flex md:hidden items-center gap-1.5">
+              <LanguageSelector />
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                  color: 'var(--text-color)',
+                }}
+                aria-label="Toggle navigation"
+                aria-expanded={isMobileMenuOpen}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
+
+          {/* NAV ROW (desktop) */}
+          <nav className="hidden md:flex items-center gap-6 pb-3" aria-label="Main navigation">
+            <Link
+              href={getLocalizedPath('/')}
+              className={`relative pb-2 text-sm font-medium transition-colors ${
+                pathname === '/' || pathname === `/${language}`
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              {t('nav.home')}
+              {(pathname === '/' || pathname === `/${language}`) && (
+                <span
+                  className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+              )}
+            </Link>
+            <Link
+              href={getLocalizedPath('/blog')}
+              className={`relative pb-2 text-sm font-medium transition-colors ${
+                pathname.startsWith('/blog')
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              Blog
+              {pathname.startsWith('/blog') && (
+                <span
+                  className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+              )}
+            </Link>
+            <Link
+              href="/subscribe"
+              className={`relative pb-2 text-sm font-medium transition-colors ${
+                pathname === '/subscribe'
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              Subscribe
+              {pathname === '/subscribe' && (
+                <span
+                  className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+              )}
+            </Link>
+            <Link
+              href={getLocalizedPath('/about')}
+              className={`relative pb-2 text-sm font-medium transition-colors ${
+                pathname === '/about' || pathname === `/${language}/about`
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              {t('nav.about')}
+              {(pathname === '/about' || pathname === `/${language}/about`) && (
+                <span
+                  className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+              )}
+            </Link>
+            <Link
+              href={getLocalizedPath('/contact')}
+              className={`relative pb-2 text-sm font-medium transition-colors ${
+                pathname === '/contact' || pathname === `/${language}/contact`
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              {t('nav.contact')}
+              {(pathname === '/contact' || pathname === `/${language}/contact`) && (
+                <span
+                  className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+              )}
+            </Link>
+          </nav>
         </div>
 
-        {/* Mobile Menu Top Sheet */}
+        {/* MOBILE NAV PANEL */}
         {isMobileMenuOpen && (
           <>
             {/* scrim */}
@@ -173,104 +233,96 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
               onClick={() => setIsMobileMenuOpen(false)}
               className="fixed inset-0 z-40 bg-black/40"
             />
-            {/* sheet */}
+            {/* panel */}
             <div
-              className="fixed inset-x-0 top-0 z-50 rounded-b-2xl border-b p-4 shadow-theme-promo transition-theme"
+              className="fixed inset-x-0 top-0 z-50 border-b shadow-lg"
               style={{
-                backgroundColor: 'var(--background-secondary)',
+                backgroundColor: 'var(--background-color)',
                 borderColor: 'var(--border-color)',
               }}
             >
-              <div
-                className="mx-auto h-1.5 w-10 rounded-full mb-4"
-                style={{ backgroundColor: 'var(--border-color)' }}
-              />
-              <div className="mt-4 grid grid-cols-2 gap-3 text-center">
-                <Link
-                  href={getLocalizedPath('/blog')}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-color)',
-                  }}
-                >
-                  Blog
-                </Link>
-                <Link
-                  href={getLocalizedPath('/')}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-color)',
-                  }}
-                >
-                  {t('nav.home')}
-                </Link>
+              <div className="mx-auto w-[92%] max-w-6xl py-4">
+                {/* Header row in mobile panel */}
+                <div className="flex items-center justify-between mb-4">
+                  <Link
+                    href={getLocalizedPath('/')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-baseline gap-0.5"
+                  >
+                    <span className="text-xl font-semibold" style={{ color: 'var(--accent-color)' }}>
+                      Digital
+                    </span>
+                    <span className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>
+                      PromoCodes
+                    </span>
+                  </Link>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border"
+                    style={{ borderColor: 'var(--border-color)', color: 'var(--text-color)' }}
+                    aria-label="Close menu"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Nav links - vertical list */}
+                <nav className="space-y-1 mb-4" aria-label="Mobile navigation">
+                  <Link
+                    href={getLocalizedPath('/')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-sm font-medium"
+                    style={{ color: pathname === '/' ? 'var(--text-color)' : 'var(--text-secondary)' }}
+                  >
+                    {t('nav.home')}
+                  </Link>
+                  <Link
+                    href={getLocalizedPath('/blog')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-sm font-medium"
+                    style={{ color: pathname.startsWith('/blog') ? 'var(--text-color)' : 'var(--text-secondary)' }}
+                  >
+                    Blog
+                  </Link>
+                  <Link
+                    href="/subscribe"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-sm font-medium"
+                    style={{ color: pathname === '/subscribe' ? 'var(--text-color)' : 'var(--text-secondary)' }}
+                  >
+                    Subscribe
+                  </Link>
+                  <Link
+                    href={getLocalizedPath('/about')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-sm font-medium"
+                    style={{ color: pathname === '/about' ? 'var(--text-color)' : 'var(--text-secondary)' }}
+                  >
+                    {t('nav.about')}
+                  </Link>
+                  <Link
+                    href={getLocalizedPath('/contact')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-sm font-medium"
+                    style={{ color: pathname === '/contact' ? 'var(--text-color)' : 'var(--text-secondary)' }}
+                  >
+                    {t('nav.contact')}
+                  </Link>
+                </nav>
+
+                {/* CTA button */}
                 <button
                   type="button"
                   onClick={handleMobileSubmitCode}
-                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200 cursor-pointer"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--accent-color)',
-                    backgroundColor: 'var(--background-color)',
-                  }}
+                  className="w-full inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold shadow-sm"
+                  style={{ backgroundColor: 'var(--accent-color)', color: '#ffffff' }}
                 >
-                  Submit Code
+                  Share a promo
+                  <span className="ml-1" aria-hidden="true">↗</span>
                 </button>
-                <Link
-                  href="/subscribe"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-color)',
-                  }}
-                >
-                  Subscribe
-                </Link>
-                <Link
-                  href={getLocalizedPath('/about')}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-color)',
-                  }}
-                >
-                  {t('nav.about')}
-                </Link>
-                <Link
-                  href={getLocalizedPath('/contact')}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
-                  style={{
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)',
-                    backgroundColor: 'var(--background-color)',
-                  }}
-                >
-                  {t('nav.contact')}
-                </Link>
               </div>
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="mt-4 w-full rounded-full border px-3 py-2.5 text-sm font-medium transition-all duration-200"
-                aria-label="Close menu"
-                style={{
-                  borderColor: 'var(--border-color)',
-                  backgroundColor: 'var(--background-color)',
-                  color: 'var(--text-secondary)',
-                }}
-              >
-                Close
-              </button>
             </div>
           </>
         )}
