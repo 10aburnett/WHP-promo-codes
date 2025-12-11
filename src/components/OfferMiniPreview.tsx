@@ -68,10 +68,10 @@ export default function OfferMiniPreview({
           >
             {isExploreLink ? <>Discover: {name}</> : name}
           </h3>
-          <div className="flex items-center gap-2 mt-0.5">
+          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             {category && category.trim() && (
               <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium"
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap flex-shrink-0"
                 style={{
                   backgroundColor: 'var(--background-tertiary)',
                   color: 'var(--accent-color)',
@@ -81,7 +81,7 @@ export default function OfferMiniPreview({
               </span>
             )}
             {description && (
-              <p className="text-xs line-clamp-1" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-xs line-clamp-1 min-w-0" style={{ color: 'var(--text-secondary)' }}>
                 {description}
               </p>
             )}

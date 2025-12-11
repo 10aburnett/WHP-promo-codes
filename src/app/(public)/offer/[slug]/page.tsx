@@ -847,6 +847,23 @@ export default async function DealPage({ params }: { params: { slug: string } })
                     </div>
                   </div>
                 </div>
+
+                {/* Hero CTA - Prominent reveal button above the fold */}
+                <div className="mt-6 lg:mt-0 lg:flex-shrink-0">
+                  <div className="max-w-xs">
+                    <OfferPageInteractive
+                      offer={{
+                        id: offerFormatted.id,
+                        name: offerFormatted.name,
+                        slug: params.slug,
+                        affiliateLink: offerFormatted.affiliateLink
+                      }}
+                      firstPromo={firstPromo}
+                      promoCode={firstPromo?.code ?? null}
+                      promoTitle={promoTitle}
+                    />
+                  </div>
+                </div>
               </div>
             </header>
 
@@ -952,7 +969,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 return aboutVal && (
                   <section
                     id="overview"
-                    className="dpc-offer-overview rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                    className="dpc-offer-overview rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
                     style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
                   >
                     <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>Overview</h2>
@@ -973,7 +990,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
               {/* Redemption Steps Section */}
               <section
                 id="redemption"
-                className="dpc-offer-redemption rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                className="dpc-offer-redemption rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>How to apply this promo code</h2>
@@ -1033,7 +1050,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
               {/* Deal Specifics Section */}
               <section
                 id="details"
-                className="dpc-offer-details rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                className="dpc-offer-details rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>What you get with this membership</h2>
@@ -1071,7 +1088,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
               {isMeaningful(offerFormatted.featuresContent) && (
                 <section
                   id="features"
-                  className="dpc-offer-features rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                  className="dpc-offer-features rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
                   style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
                 >
                   <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>What&apos;s included</h2>
@@ -1099,7 +1116,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
               {/* Fine Print Section */}
               <section
                 id="terms"
-                className="dpc-offer-terms rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                className="dpc-offer-terms rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>Things to know before you buy</h2>
