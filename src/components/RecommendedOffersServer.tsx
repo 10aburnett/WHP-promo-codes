@@ -23,9 +23,24 @@ export default function RecommendedOffersServer({ items }: { items?: Item[] }) {
   if (!list.length) return null;
 
   return (
-    <section aria-label="Other offers you may like" className="mt-8">
-      <h2 className="text-xl font-bold mb-4">Other offers to explore</h2>
-      <ul className="flex flex-col gap-4" suppressHydrationWarning>
+    <section
+      aria-label="More ways to save"
+      className="rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+      style={{
+        borderColor: 'var(--border-color)',
+        backgroundColor: 'var(--background-tertiary)',
+      }}
+    >
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <h2
+          className="text-lg font-semibold"
+          style={{ color: 'var(--text-color)' }}
+        >
+          More ways to save
+        </h2>
+      </div>
+
+      <div className="space-y-3" suppressHydrationWarning>
         {list.map((w, i) => (
           <OfferMiniPreview
             key={`${w.slug}#${i}`}
@@ -38,7 +53,7 @@ export default function RecommendedOffersServer({ items }: { items?: Item[] }) {
             ratingCount={w.ratingCount ?? 0}
           />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

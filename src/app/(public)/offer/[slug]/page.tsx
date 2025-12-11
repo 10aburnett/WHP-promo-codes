@@ -740,7 +740,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
   return (
     <main
       key={pageKey}
-      className="dpc-offer-page min-h-screen pt-24 pb-16 transition-theme"
+      className="dpc-offer-page min-h-screen pb-16 pt-8 transition-theme"
       style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
     >
       {/* HowTo Schema for SEO */}
@@ -760,568 +760,559 @@ export default async function DealPage({ params }: { params: { slug: string } })
         />
       )}
 
-      <div className="dpc-offer-container container mx-auto max-w-6xl px-3 sm:px-4">
-        {/* Noindex Notice Banner */}
-        {!pageIsIndexable && (
-          <div className="dpc-notice-banner max-w-4xl mx-auto mb-6">
-            <div
-              className="rounded-xl border px-4 py-3 flex items-center gap-3"
-              style={{
-                backgroundColor: 'rgba(5,150,105,0.04)',
-                borderColor: 'rgba(5,150,105,0.15)',
-              }}
+      {/* Noindex Notice Banner - Outside main container for full width feel */}
+      {!pageIsIndexable && (
+        <section className="mx-auto mb-6 max-w-6xl px-4 lg:px-6">
+          <div
+            className="flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm transition-theme"
+            style={{
+              borderColor: 'var(--border-color)',
+              backgroundColor: 'var(--background-tertiary)',
+              color: 'var(--text-color)',
+            }}
+          >
+            <svg
+              className="h-5 w-5 flex-shrink-0 mt-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <div
-                className="flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'rgba(5,150,105,0.1)' }}
-              >
-                <svg
-                  className="h-3.5 w-3.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ color: 'var(--accent-color)' }}
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 16v-4" />
-                  <path d="M12 8h.01" />
-                </svg>
-              </div>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                This offer is unlisted and won't appear in search results. You can still view and use it.
-              </p>
-            </div>
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4" />
+              <path d="M12 8h.01" />
+            </svg>
+            <p>This offer is unlisted and won&apos;t appear in search results. You can still view and use it.</p>
           </div>
-        )}
+        </section>
+      )}
 
+      <div className="dpc-offer-container mx-auto max-w-6xl px-4 lg:px-6">
         {/* Two-Column Layout: Main Content + Sidebar */}
-        <div className="dpc-offer-layout flex flex-col lg:flex-row lg:gap-8 max-w-4xl mx-auto">
+        <div className="dpc-offer-layout grid gap-8 lg:grid-cols-[minmax(0,2.1fr)_minmax(320px,1fr)] items-start">
 
           {/* Main Content Column */}
-          <article className="dpc-offer-main flex-1 min-w-0 space-y-6 mb-8 lg:mb-0">
+          <article className="dpc-offer-main space-y-8 lg:space-y-10">
 
-            {/* Hero Header */}
-            <header className="dpc-offer-header rounded-2xl px-7 py-6 sm:p-8 shadow-theme-promo border transition-theme" style={{ background: 'linear-gradient(to bottom right, var(--background-secondary), var(--background-tertiary))', borderColor: 'var(--border-color)' }}>
-              <div className="flex items-center gap-4 sm:gap-6 mb-4">
-                <figure className="relative w-16 sm:w-20 h-16 sm:h-20 rounded-xl border overflow-hidden flex-shrink-0" style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}>
-                  <OfferLogo offer={offerFormatted} />
-                </figure>
-                <div className="min-w-0">
-                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">{offerFormatted.name} Promo Code</h1>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-base sm:text-lg" style={{ color: 'var(--accent-color)' }}>
-                      {promoTitle}
-                    </p>
-                    {offerFormatted.price && offerFormatted.price !== 'N/A' && (
+            {/* Hero Header - Blog hero pattern */}
+            <header
+              className="dpc-offer-header rounded-3xl border p-6 sm:p-8 transition-theme"
+              style={{
+                borderColor: 'var(--border-color)',
+                background: 'var(--promo-bg-gradient)',
+              }}
+            >
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                {/* Left: logo + title + meta */}
+                <div className="flex items-start gap-4">
+                  <figure
+                    className="relative w-12 sm:w-14 h-12 sm:h-14 rounded-2xl border overflow-hidden flex-shrink-0 shadow-sm transition-theme"
+                    style={{
+                      borderColor: 'var(--border-color)',
+                      backgroundColor: 'var(--background-secondary)',
+                    }}
+                  >
+                    <OfferLogo offer={offerFormatted} />
+                  </figure>
+                  <div className="min-w-0 space-y-2">
+                    <h1
+                      className="text-xl sm:text-2xl font-bold tracking-tight"
+                      style={{ lineHeight: 1.2, color: 'var(--text-color)' }}
+                    >
+                      {offerFormatted.name} Promo Code
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold"
+                        className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
                         style={{
-                          backgroundColor: offerFormatted.price === 'Free' ? 'var(--success-color)' : 'var(--success-color)',
-                          color: 'white',
+                          backgroundColor: 'var(--background-tertiary)',
+                          color: 'var(--accent-color)',
                         }}
                       >
-                        {offerFormatted.price}
+                        {promoTitle}
                       </span>
-                    )}
+                      {offerFormatted.price && offerFormatted.price !== 'N/A' && (
+                        <span
+                          className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                          style={{
+                            backgroundColor: 'var(--accent-color)',
+                            color: 'white',
+                          }}
+                        >
+                          {offerFormatted.price}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Promo Codes CTA */}
-              <div className="dpc-offer-cta mt-4">
-                <hr className="mb-4" style={{ borderColor: 'var(--border-color)', borderWidth: '1px', opacity: 0.3 }} />
-                <CommunityPromoSection
-                  key={`community-${offerFormatted.id}-${offerFormatted.promoCodes?.length || 0}`}
-                  offer={{
-                    id: offerFormatted.id,
-                    name: offerFormatted.name,
-                    affiliateLink: offerFormatted.affiliateLink
-                  }}
-                  promoCodes={offerFormatted.promoCodes || []}
-                  slug={params.slug}
-                />
-                <div className="mt-6">
-                  <PromoCodeSubmissionButton
-                    offerId={offerFormatted.id}
-                    offerName={offerFormatted.name}
-                  />
                 </div>
               </div>
             </header>
 
-            {/* Jump Links Navigation - Only show links for sections that exist */}
-            <nav className="dpc-jump-links rounded-full px-4 py-3 border shadow-theme-promo" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }} aria-label="Page sections">
-              <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm font-medium">
+            {/* Available Promo Codes - Professional compact list */}
+            <section
+              className="rounded-3xl border p-5 sm:p-6 shadow-sm transition-theme"
+              style={{
+                borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-secondary)',
+              }}
+            >
+              <header className="flex items-start justify-between gap-3 mb-4">
+                <div>
+                  <h3 className="text-base font-semibold" style={{ color: 'var(--text-color)' }}>
+                    Available promo codes
+                  </h3>
+                  <p className="mt-1 text-xs" style={{ color: 'var(--text-muted)' }}>
+                    We highlight the best code first. Other options are listed below if available.
+                  </p>
+                </div>
+              </header>
+              <CommunityPromoSection
+                key={`community-${offerFormatted.id}-${offerFormatted.promoCodes?.length || 0}`}
+                offer={{
+                  id: offerFormatted.id,
+                  name: offerFormatted.name,
+                  affiliateLink: offerFormatted.affiliateLink
+                }}
+                promoCodes={offerFormatted.promoCodes || []}
+                slug={params.slug}
+              />
+            </section>
+
+            {/* Jump Links Navigation - Subtle inline style */}
+            <nav className="dpc-jump-links" aria-label="Page sections">
+              <ul className="flex flex-wrap gap-x-3 gap-y-2 text-sm">
                 {hasOverview && (
-                  <li><a href="#overview" className="hover:underline" style={{ color: 'var(--accent-color)' }}>Overview</a></li>
+                  <li>
+                    <a
+                      href="#overview"
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                    >
+                      Overview
+                    </a>
+                  </li>
                 )}
                 {hasRedemption && (
-                  <li><a href="#redemption" className="hover:underline" style={{ color: 'var(--accent-color)' }}>Redemption</a></li>
+                  <li>
+                    <a
+                      href="#redemption"
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                    >
+                      How to redeem
+                    </a>
+                  </li>
                 )}
                 {hasDetails && (
-                  <li><a href="#details" className="hover:underline" style={{ color: 'var(--accent-color)' }}>Details</a></li>
+                  <li>
+                    <a
+                      href="#details"
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                    >
+                      Details
+                    </a>
+                  </li>
                 )}
                 {hasFeatures && (
-                  <li><a href="#features" className="hover:underline" style={{ color: 'var(--accent-color)' }}>Features</a></li>
+                  <li>
+                    <a
+                      href="#features"
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                    >
+                      What's included
+                    </a>
+                  </li>
                 )}
-                <li><a href="#faq" className="hover:underline" style={{ color: 'var(--accent-color)' }}>FAQ</a></li>
                 {hasTerms && (
-                  <li><a href="#terms" className="hover:underline" style={{ color: 'var(--accent-color)' }}>Terms</a></li>
+                  <li>
+                    <a
+                      href="#terms"
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                    >
+                      Fine print
+                    </a>
+                  </li>
                 )}
               </ul>
             </nav>
 
-            {/* Overview Section */}
-            {(() => {
-              const aboutVal =
-                isMeaningful(offerFormatted.aboutContent) ? offerFormatted.aboutContent
-                : (isMeaningful(offerFormatted.description) ? offerFormatted.description : null);
+            {/* Content Sections - Single column with soft panels */}
+            <div className="space-y-6">
+              {/* Overview Section */}
+              {(() => {
+                const aboutVal =
+                  isMeaningful(offerFormatted.aboutContent) ? offerFormatted.aboutContent
+                  : (isMeaningful(offerFormatted.description) ? offerFormatted.description : null);
 
-              return aboutVal && (
-                <section id="overview" className="dpc-offer-overview rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-                  <h2 className="text-xl sm:text-2xl font-bold mb-4">Overview</h2>
-                  <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    {looksLikeHtml(aboutVal) ? (
+                return aboutVal && (
+                  <section
+                    id="overview"
+                    className="dpc-offer-overview rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                    style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+                  >
+                    <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>Overview</h2>
+                    <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
+                      {looksLikeHtml(aboutVal) ? (
+                        <div
+                          className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                          dangerouslySetInnerHTML={{ __html: aboutVal }}
+                        />
+                      ) : (
+                        <RenderPlain text={aboutVal} />
+                      )}
+                    </div>
+                  </section>
+                );
+              })()}
+
+              {/* Redemption Steps Section */}
+              <section
+                id="redemption"
+                className="dpc-offer-redemption rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+              >
+                <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>How to apply this promo code</h2>
+                {isMeaningful(offerFormatted.howToRedeemContent) ? (
+                  <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
+                    {looksLikeHtml(offerFormatted.howToRedeemContent!) ? (
                       <div
-                        className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                        dangerouslySetInnerHTML={{ __html: aboutVal }}
+                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                        dangerouslySetInnerHTML={{ __html: offerFormatted.howToRedeemContent! }}
                       />
                     ) : (
-                      <RenderPlain text={aboutVal} />
+                      <RenderPlain text={offerFormatted.howToRedeemContent!} />
                     )}
                   </div>
-                </section>
-              );
-            })()}
+                ) : (
+                  <ol className="space-y-2.5 text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-start gap-3">
+                      <span
+                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
+                        style={{ backgroundColor: 'rgba(5,150,105,0.1)', color: 'var(--accent-color)' }}
+                      >
+                        1
+                      </span>
+                      <span>Click &quot;Reveal Code&quot; above to visit {offerFormatted.name} and get your exclusive offer</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span
+                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
+                        style={{ backgroundColor: 'rgba(5,150,105,0.1)', color: 'var(--accent-color)' }}
+                      >
+                        2
+                      </span>
+                      <span>Follow the instructions on the checkout page to apply your savings</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span
+                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
+                        style={{ backgroundColor: 'rgba(5,150,105,0.1)', color: 'var(--accent-color)' }}
+                      >
+                        3
+                      </span>
+                      <span>Complete your purchase to access the exclusive content</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span
+                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
+                        style={{ backgroundColor: 'rgba(5,150,105,0.1)', color: 'var(--accent-color)' }}
+                      >
+                        4
+                      </span>
+                      <span>Enjoy your {promoTitle} and start learning!</span>
+                    </li>
+                  </ol>
+                )}
+              </section>
 
-            {/* Redemption Steps Section */}
-            <section id="redemption" className="dpc-offer-redemption rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-              <h2 className="text-xl sm:text-2xl font-bold mb-4">Redemption Steps</h2>
-              {isMeaningful(offerFormatted.howToRedeemContent) ? (
-                <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(offerFormatted.howToRedeemContent!) ? (
-                    <div
-                      className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: offerFormatted.howToRedeemContent! }}
-                    />
-                  ) : (
-                    <RenderPlain text={offerFormatted.howToRedeemContent!} />
-                  )}
-                </div>
-              ) : (
-                <ol className="dpc-steps-list space-y-2 text-base sm:text-lg" style={{ color: 'var(--text-secondary)' }}>
-                  <li className="flex items-start">
-                    <span className="mr-2 font-semibold">1.</span>
-                    <span>Click &quot;Reveal Code&quot; above to visit {offerFormatted.name} and get your exclusive offer</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 font-semibold">2.</span>
-                    <span>Follow the instructions on the checkout page to apply your savings</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 font-semibold">3.</span>
-                    <span>Complete your purchase to access the exclusive content</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 font-semibold">4.</span>
-                    <span>Enjoy your {promoTitle} and start learning!</span>
-                  </li>
-                </ol>
-              )}
-            </section>
-
-            {/* Deal Specifics Section */}
-            <section id="details" className="dpc-offer-details rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-              <h2 className="text-xl sm:text-2xl font-bold mb-4">Deal Specifics</h2>
-              {isMeaningful(offerFormatted.promoDetailsContent) ? (
-                <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(offerFormatted.promoDetailsContent!) ? (
-                    <div
-                      className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: offerFormatted.promoDetailsContent! }}
-                    />
-                  ) : (
-                    <RenderPlain text={offerFormatted.promoDetailsContent!} />
-                  )}
-                </div>
-              ) : (
-                <>
-                  <div className="p-4 rounded-lg mb-4" style={{ backgroundColor: 'var(--background-color)' }}>
-                    <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--accent-color)' }}>{promoTitle}</h3>
-                    <p className="text-base sm:text-lg leading-relaxed mb-3" style={{ color: 'var(--text-secondary)' }}>
+              {/* Deal Specifics Section */}
+              <section
+                id="details"
+                className="dpc-offer-details rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+              >
+                <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>What you get with this membership</h2>
+                {isMeaningful(offerFormatted.promoDetailsContent) ? (
+                  <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
+                    {looksLikeHtml(offerFormatted.promoDetailsContent!) ? (
+                      <div
+                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                        dangerouslySetInnerHTML={{ __html: offerFormatted.promoDetailsContent! }}
+                      />
+                    ) : (
+                      <RenderPlain text={offerFormatted.promoDetailsContent!} />
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <p className="text-sm sm:text-base" style={{ color: 'var(--text-secondary)' }}>
                       Get exclusive access and special discounts with our promo code.
                     </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: 'var(--background-color)', color: 'var(--accent-color)' }}>
+                    <span
+                      className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium"
+                      style={{
+                        borderColor: 'rgba(5,150,105,0.25)',
+                        backgroundColor: 'rgba(5,150,105,0.06)',
+                        color: 'var(--accent-color)',
+                      }}
+                    >
                       {firstPromo?.type?.replace('_', ' ').toUpperCase() || 'DISCOUNT'} OFFER
                     </span>
                   </div>
-                </>
-              )}
-            </section>
-
-            {/* What's Included Section */}
-            {isMeaningful(offerFormatted.featuresContent) && (
-              <section id="features" className="dpc-offer-features rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-                <h2 className="text-xl sm:text-2xl font-bold mb-4">What&apos;s Included</h2>
-                <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(offerFormatted.featuresContent!) ? (
-                    <div
-                      className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: offerFormatted.featuresContent! }}
-                    />
-                  ) : (
-                    <RenderPlain text={offerFormatted.featuresContent!} />
-                  )}
-                </div>
+                )}
               </section>
-            )}
 
-            {/* Visual Guide Section */}
-            <section className="dpc-offer-howto rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-              <HowToSection brand={offerFormatted.name} />
+              {/* What's Included Section */}
+              {isMeaningful(offerFormatted.featuresContent) && (
+                <section
+                  id="features"
+                  className="dpc-offer-features rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                  style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+                >
+                  <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>What&apos;s included</h2>
+                  <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
+                    {looksLikeHtml(offerFormatted.featuresContent!) ? (
+                      <div
+                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                        dangerouslySetInnerHTML={{ __html: offerFormatted.featuresContent! }}
+                      />
+                    ) : (
+                      <RenderPlain text={offerFormatted.featuresContent!} />
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* Visual Guide Section */}
+              <section
+                className="dpc-offer-howto rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+              >
+                <HowToSection brand={offerFormatted.name} />
+              </section>
+
+              {/* Fine Print Section */}
+              <section
+                id="terms"
+                className="dpc-offer-terms rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+              >
+                <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>Things to know before you buy</h2>
+                {isMeaningful(offerFormatted.termsContent) ? (
+                  <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
+                    {looksLikeHtml(offerFormatted.termsContent!) ? (
+                      <div
+                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                        dangerouslySetInnerHTML={{ __html: offerFormatted.termsContent! }}
+                      />
+                    ) : (
+                      <RenderPlain text={offerFormatted.termsContent!} />
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    This exclusive offer for {offerFormatted.name} is available through our partnership.
+                    {hasPromoCode(offerFormatted.name) ? ' Use the promo code during checkout to get your discount.' : ' The discount will be automatically applied when you click through our link.'}
+                    {' '}Terms and conditions apply as set by {offerFormatted.name}. Offer subject to availability and may be modified or discontinued at any time.
+                  </p>
+                )}
+              </section>
+            </div>
+          </article>
+
+          {/* Sidebar Column - Unified styling */}
+          <aside className="dpc-offer-sidebar space-y-5">
+
+            {/* 1. Product Summary Card */}
+            <section
+              className="rounded-3xl border p-5 sm:p-6 transition-theme"
+              style={{
+                borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-secondary)',
+              }}
+            >
+              <h3
+                className="text-xs font-semibold tracking-wide uppercase mb-3"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                Product summary
+              </h3>
+              <dl className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <dt style={{ color: 'var(--text-secondary)' }}>Category</dt>
+                  <dd className="font-medium" style={{ color: 'var(--text-color)' }}>
+                    {offerFormatted.category ?? "Not specified"}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt style={{ color: 'var(--text-secondary)' }}>Listing type</dt>
+                  <dd className="font-medium" style={{ color: 'var(--text-color)' }}>
+                    {offerFormatted.price === "Free" ? "Free resource" : "Paid product"}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt style={{ color: 'var(--text-secondary)' }}>Last checked</dt>
+                  <dd className="font-medium" style={{ color: 'var(--text-color)' }}>
+                    {verificationData?.best?.computedAt
+                      ? formatDate(verificationData.best.computedAt)
+                      : "Recently"}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt style={{ color: 'var(--text-secondary)' }}>Popularity</dt>
+                  <dd className="font-medium" style={{ color: 'var(--text-color)' }}>
+                    {getPopularityLabel(offerFormatted.promoCodes.length)}
+                  </dd>
+                </div>
+              </dl>
             </section>
 
-            {/* FAQ Section */}
+            {/* 2. Usage Statistics */}
+            <section
+              className="rounded-3xl border p-5 sm:p-6 transition-theme"
+              style={{
+                borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-secondary)',
+              }}
+            >
+              <ServerSectionGuard label="PromoUsageStats">
+                <PromoStatsDisplay
+                  offerId={offerFormatted.id}
+                  slug={params.slug}
+                  initialStats={offerFormatted.usageStats}
+                />
+              </ServerSectionGuard>
+            </section>
+
+            {/* 3. Submit Code Card */}
+            <section
+              className="rounded-3xl border p-4 sm:p-5 transition-theme"
+              style={{
+                borderColor: 'var(--border-color)',
+                backgroundColor: 'var(--background-tertiary)',
+              }}
+            >
+              <h3
+                className="text-sm font-semibold"
+                style={{ color: 'var(--text-color)' }}
+              >
+                Got a code we don&apos;t have?
+              </h3>
+              <p
+                className="mt-1 text-sm"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Share a working promo code for {offerFormatted.name} and help other shoppers save.
+              </p>
+              <div className="mt-3">
+                <PromoCodeSubmissionButton
+                  offerId={offerFormatted.id}
+                  offerName={offerFormatted.name}
+                />
+              </div>
+            </section>
+
+            {/* 4. FAQ Section - Compact for sidebar */}
             <section id="faq" className="dpc-offer-faq" aria-labelledby="faq-heading">
               <FAQSectionServer
                 faqContent={offerFormatted.faqContent}
                 faqs={fallbackFaqData}
                 whopName={offerFormatted.name}
+                compact={true}
               />
             </section>
 
-            {/* Fine Print Section */}
-            <section id="terms" className="dpc-offer-terms rounded-2xl px-7 py-6 sm:p-8 border shadow-theme-promo transition-theme" style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}>
-              <h2 className="text-xl sm:text-2xl font-bold mb-4">Fine Print</h2>
-              {isMeaningful(offerFormatted.termsContent) ? (
-                <div className="dpc-content-block text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  {looksLikeHtml(offerFormatted.termsContent!) ? (
-                    <div
-                      className="prose prose-sm max-w-none whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                      dangerouslySetInnerHTML={{ __html: offerFormatted.termsContent! }}
-                    />
-                  ) : (
-                    <RenderPlain text={offerFormatted.termsContent!} />
-                  )}
-                </div>
-              ) : (
-                <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  This exclusive offer for {offerFormatted.name} is available through our partnership.
-                  {hasPromoCode(offerFormatted.name) ? ' Use the promo code during checkout to get your discount.' : ' The discount will be automatically applied when you click through our link.'}
-                  {' '}Terms and conditions apply as set by {offerFormatted.name}. Offer subject to availability and may be modified or discontinued at any time.
-                </p>
-              )}
-            </section>
-          </article>
+            {/* 5. Key Facts Card */}
+            {(() => {
+              const hasPrice = !!offerFormatted.price;
+              const hasDiscount = !!(firstPromo?.value && firstPromo.value !== "0");
+              const hasAnyFact = hasPrice || hasDiscount;
 
-          {/* Sidebar Column */}
-          <aside className="dpc-offer-sidebar w-full lg:w-80 flex-shrink-0">
-            <div className="lg:sticky lg:top-24 space-y-6">
+              if (!hasAnyFact) return null;
 
-              {/* 1. Product Summary Card */}
-              <div
-                className="dpc-summary-card rounded-2xl px-6 py-5 border shadow-theme-promo"
-                style={{
-                  backgroundColor: "var(--background-secondary)",
-                  borderColor: "var(--border-color)",
-                }}
-              >
-                <h3 className="text-lg font-bold mb-3">Product Summary</h3>
-                <dl className="space-y-2 text-sm">
-                  <div>
-                    <dt
-                      className="font-medium"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      Category
-                    </dt>
-                    <dd>{offerFormatted.category ?? "Not specified"}</dd>
-                  </div>
-
-                  <div>
-                    <dt
-                      className="font-medium"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      Listing type
-                    </dt>
-                    <dd>
-                      {offerFormatted.price === "Free"
-                        ? "Free digital resource"
-                        : "Paid digital product"}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt
-                      className="font-medium"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      Last checked
-                    </dt>
-                    <dd>
-                      {verificationData?.best?.computedAt
-                        ? formatDate(verificationData.best.computedAt)
-                        : "Recently updated"}
-                    </dd>
-                  </div>
-
-                  <div>
-                    <dt
-                      className="font-medium"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      Popularity
-                    </dt>
-                    <dd>{getPopularityLabel(offerFormatted.promoCodes.length)}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              {/* 2. Usage Statistics - moved ABOVE Key Facts */}
-              <div
-                className="dpc-stats-card rounded-2xl px-6 py-5 border shadow-theme-promo"
-                style={{
-                  backgroundColor: "var(--background-secondary)",
-                  borderColor: "var(--border-color)",
-                }}
-              >
-                <ServerSectionGuard label="PromoUsageStats">
-                  <PromoStatsDisplay
-                    offerId={offerFormatted.id}
-                    slug={params.slug}
-                    initialStats={offerFormatted.usageStats}
-                  />
-                </ServerSectionGuard>
-              </div>
-
-              {/* 3. Key Facts Card - Only show Discount/Codes when hasPromoCodes */}
-              <div
-                className="dpc-key-facts rounded-2xl px-6 py-5 border shadow-theme-promo"
-                style={{
-                  backgroundColor: "var(--background-secondary)",
-                  borderColor: "var(--border-color)",
-                }}
-              >
-                <h3 className="text-lg font-bold mb-4">Key Facts</h3>
-                {(() => {
-                  const hasPrice = !!offerFormatted.price;
-                  const hasDiscount = !!(firstPromo?.value && firstPromo.value !== "0");
-                  const hasCategory = !!offerFormatted.category;
-                  const hasAnyFact = hasPrice || hasDiscount || hasCategory;
-
-                  if (!hasAnyFact) {
-                    return (
-                      <p className="text-sm" style={{ color: "var(--text-secondary)" }}>N/A</p>
-                    );
-                  }
-
-                  return (
-                    <dl className="dpc-facts-list space-y-3 text-sm">
-                      {hasPrice && (
-                        <>
-                          <dt
-                            className="font-medium"
-                            style={{ color: "var(--text-secondary)" }}
-                          >
-                            Price
-                          </dt>
-                          <dd
-                            className="mb-2 font-semibold"
-                            style={{
-                              color:
-                                offerFormatted.price === "Free"
-                                  ? "var(--success-color)"
-                                  : "var(--text-color)",
-                            }}
-                          >
-                            {offerFormatted.price}
-                          </dd>
-                        </>
-                      )}
-
-                      {hasDiscount && (
-                        <>
-                          <dt
-                            className="font-medium"
-                            style={{ color: "var(--text-secondary)" }}
-                          >
-                            Discount
-                          </dt>
-                          <dd
-                            className="mb-2 font-semibold"
-                            style={{ color: "var(--accent-color)" }}
-                          >
-                            {firstPromo.value.includes("%") ||
-                            firstPromo.value.includes("$") ||
-                            firstPromo.value.includes("off")
-                              ? firstPromo.value
-                              : `${firstPromo.value}%`}
-                          </dd>
-                        </>
-                      )}
-
-                      {hasCategory && (
-                        <>
-                          <dt
-                            className="font-medium"
-                            style={{ color: "var(--text-secondary)" }}
-                          >
-                            Category
-                          </dt>
-                          <dd className="mb-2">{offerFormatted.category}</dd>
-                        </>
-                      )}
-                    </dl>
-                  );
-                })()}
-              </div>
-
-              {/* 4. Why We Like This Card */}
-              <div
-                className="dpc-why-card rounded-2xl px-6 py-5 border shadow-theme-promo"
-                style={{
-                  backgroundColor: "var(--background-secondary)",
-                  borderColor: "var(--border-color)",
-                }}
-              >
-                <h3 className="text-lg font-bold mb-3">Why we like this</h3>
-                <ul
-                  className="list-disc pl-5 space-y-1 text-sm"
-                  style={{ color: "var(--text-secondary)" }}
+              return (
+                <section
+                  className="rounded-3xl border p-5 sm:p-6 transition-theme"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    backgroundColor: 'var(--background-secondary)',
+                  }}
                 >
-                  <li>
-                    Solid option in the{" "}
-                    {offerFormatted.category ?? "online"} space.
-                  </li>
-                  <li>
-                    Clear value for users looking for {promoTitle.toLowerCase()}.
-                  </li>
-                  <li>
-                    Simple sign-up flow with transparent pricing from{" "}
-                    {offerFormatted.name}.
-                  </li>
-                  <li>
-                    Good choice if you want to try something new before
-                    committing long term.
-                  </li>
-                </ul>
-              </div>
-
-              {/* 5. Mini Alternatives Card */}
-              <div
-                className="dpc-mini-alternatives rounded-2xl px-6 py-5 border shadow-theme-promo"
-                style={{
-                  backgroundColor: "var(--background-secondary)",
-                  borderColor: "var(--border-color)",
-                }}
-              >
-                <h3 className="text-lg font-bold mb-2">Top alternatives</h3>
-                <p
-                  className="text-sm mb-3"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Not sure if {offerFormatted.name} is the right fit? We&apos;ve
-                  listed a few similar deals further down this page.
-                </p>
-                <a
-                  href="#alternatives"
-                  className="text-sm font-medium hover:underline"
-                  style={{ color: "var(--accent-color)" }}
-                >
-                  Jump to alternatives
-                </a>
-              </div>
-
-              {/* 6. Discount Summary Cards - Only show when hasPromoCodes */}
-              {hasPromoCodes && offerFormatted.promoCodes.map((promo, idx) => {
-                const isCommunity = promo.id.startsWith("community_");
-                const rank = idx + 1;
-                return (
-                  <div
-                    key={promo.id}
-                    className="dpc-discount-card rounded-2xl px-6 py-5 border shadow-theme-promo"
-                    style={{
-                      backgroundColor: "var(--background-secondary)",
-                      borderColor: "var(--border-color)",
-                    }}
+                  <h3
+                    className="text-xs font-semibold tracking-wide uppercase mb-3"
+                    style={{ color: 'var(--text-muted)' }}
                   >
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <div className="flex items-baseline gap-1.5">
-                        <h4 className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>Code #{rank}</h4>
+                    Key facts
+                  </h3>
+                  <dl className="space-y-2 text-sm">
+                    {hasPrice && (
+                      <div className="flex justify-between">
+                        <dt style={{ color: 'var(--text-secondary)' }}>Price</dt>
+                        <dd
+                          className="font-semibold"
+                          style={{ color: offerFormatted.price === "Free" ? 'var(--accent-color)' : 'var(--text-color)' }}
+                        >
+                          {offerFormatted.price}
+                        </dd>
                       </div>
-                      <span
-                        className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium"
-                        style={{
-                          borderColor: isCommunity
-                            ? "rgba(5,150,105,0.28)"
-                            : "var(--border-color)",
-                          backgroundColor: isCommunity
-                            ? "rgba(5,150,105,0.06)"
-                            : "var(--background-color)",
-                          color: isCommunity ? "var(--accent-color)" : "var(--text-secondary)",
-                        }}
-                      >
-                        {isCommunity ? "Community" : getCodeTierLabel(rank)}
-                      </span>
-                    </div>
-                    <dl className="text-sm space-y-2">
-                      {promo.value && promo.value !== "0" && (
-                        <>
-                          <dt className="sr-only">Value</dt>
-                          <dd
-                            className="font-semibold"
-                            style={{ color: "var(--accent-color)" }}
-                          >
-                            {promo.value.includes("%") ||
-                            promo.value.includes("$") ||
-                            promo.value.includes("off")
-                              ? promo.value
-                              : `${promo.value}%`}{" "}
-                            off
-                          </dd>
-                        </>
-                      )}
-                    </dl>
-                  </div>
-                );
-              })}
+                    )}
+                    {hasDiscount && (
+                      <div className="flex justify-between">
+                        <dt style={{ color: 'var(--text-secondary)' }}>Discount</dt>
+                        <dd className="font-semibold" style={{ color: 'var(--accent-color)' }}>
+                          {firstPromo.value.includes("%") ||
+                          firstPromo.value.includes("$") ||
+                          firstPromo.value.includes("off")
+                            ? firstPromo.value
+                            : `${firstPromo.value}%`}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </section>
+              );
+            })()}
 
-              {/* 7. Verification Info */}
-              <div className="dpc-verification-card">
-                <ServerSectionGuard label="VerificationStatus">
-                  {offerFormatted.freshnessData && (
-                    <VerificationStatus freshnessData={offerFormatted.freshnessData} />
-                  )}
-                </ServerSectionGuard>
-              </div>
-            </div>
+            {/* 6. Verification Info */}
+            <ServerSectionGuard label="VerificationStatus">
+              {offerFormatted.freshnessData && (
+                <section
+                  className="rounded-3xl border p-5 sm:p-6 transition-theme"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    backgroundColor: 'var(--background-secondary)',
+                  }}
+                >
+                  <VerificationStatus freshnessData={offerFormatted.freshnessData} />
+                </section>
+              )}
+            </ServerSectionGuard>
           </aside>
         </div>
 
-        {/* Related Content Sections */}
-        <div className="dpc-related-content w-full space-y-8 mt-12">
-          {/* Other Options */}
-          <section id="alternatives" className="dpc-offer-alternatives max-w-4xl mx-auto">
+        {/* Related Content Sections - Full width below grid */}
+        <div className="dpc-related-content space-y-10 mt-12">
+          {/* Alternatives Section */}
+          <section id="alternatives" className="dpc-offer-alternatives">
             <Suspense fallback={<SectionSkeleton />}>
               <AlternativesSection currentOfferSlug={dbSlug} />
             </Suspense>
           </section>
 
-          {/* You Might Also Like */}
-          <section className="dpc-offer-recommended max-w-4xl mx-auto">
+          {/* Recommendations Section */}
+          <section className="dpc-offer-recommended">
             <Suspense fallback={<SectionSkeleton />}>
               <RecommendedSection currentOfferSlug={dbSlug} />
             </Suspense>
           </section>
 
-          {/* Community Feedback */}
-          <section className="dpc-offer-reviews max-w-4xl mx-auto">
+          {/* Community Feedback / Reviews */}
+          <section className="dpc-offer-reviews">
             <Suspense fallback={<SectionSkeleton />}>
               <ReviewsSection
                 offerId={offerFormatted.id}
@@ -1332,12 +1323,16 @@ export default async function DealPage({ params }: { params: { slug: string } })
           </section>
 
           {/* Back Link */}
-          <nav className="dpc-back-link max-w-4xl mx-auto" aria-label="Back navigation">
-            <a href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-full transition-colors hover:bg-[var(--background-secondary)]" style={{ color: 'var(--text-secondary)' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <nav className="dpc-back-link pt-4" aria-label="Back navigation">
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+              style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
-              Back to All Offers
+              Back to all offers
             </a>
           </nav>
         </div>

@@ -30,6 +30,7 @@ interface FAQSectionServerProps {
   faqs?: LegacyFAQItem[];
   faqContent?: string | null;
   whopName?: string;
+  compact?: boolean; // For sidebar use - smaller padding and font
 }
 
 // Helper function to determine FAQ content type
@@ -40,7 +41,7 @@ function getFaqAnswerType(answerText: string): { text: string; isHtml: boolean }
   };
 }
 
-export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FAQSectionServerProps) {
+export default function FAQSectionServer({ faqs = [], faqContent, whopName, compact = false }: FAQSectionServerProps) {
   let displayFaqs: Array<{ question: string; answer: string; isHtml: boolean }> = [];
   let jsonLd: any = null;
 
@@ -107,6 +108,87 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
     };
   });
 
+  // Compact mode: sidebar-friendly with smaller padding and fonts
+  if (compact) {
+    return (
+      <>
+        {/* JSON-LD for structured FAQs - only in compact mode since it's in sidebar */}
+        {jsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        )}
+
+        <section
+          className="dpc-faq-card rounded-3xl border p-4 sm:p-5 transition-theme"
+          style={{
+            backgroundColor: 'var(--background-secondary)',
+            borderColor: 'var(--border-color)',
+          }}
+        >
+          <h3
+            id="faq-heading"
+            className="text-sm font-semibold mb-2"
+            style={{ color: 'var(--text-color)' }}
+          >
+            Common questions
+          </h3>
+
+          <div className="space-y-2">
+            {safeFaqs.map((faq, idx) => (
+              <details
+                key={`${faq.question}-${idx}`}
+                className="group rounded-xl border px-3 py-2 transition-all duration-200"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  backgroundColor: 'var(--card-bg)',
+                }}
+              >
+                {/* Question Header - Native HTML summary */}
+                <summary
+                  className="w-full flex items-center justify-between gap-2 text-left cursor-pointer text-xs font-medium [&::-webkit-details-marker]:hidden"
+                  style={{
+                    color: 'var(--text-color)',
+                    listStyle: 'none',
+                  }}
+                >
+                  <span className="pr-1">{faq.question}</span>
+                  <span
+                    aria-hidden="true"
+                    className="flex-shrink-0 transition-transform group-open:rotate-90"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    ▸
+                  </span>
+                </summary>
+
+                {/* Answer Content */}
+                <div
+                  className="mt-2 text-xs leading-relaxed"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {faq.isHtml ? (
+                    <div
+                      className="prose prose-xs max-w-none whitespace-break-spaces"
+                      suppressHydrationWarning
+                      dangerouslySetInnerHTML={{ __html: faq.answer }}
+                    />
+                  ) : (
+                    <div className="leading-relaxed" suppressHydrationWarning>
+                      <RenderPlainServer text={faq.answer} />
+                    </div>
+                  )}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  // Standard mode: full-width FAQ section
   return (
     <>
       {/* JSON-LD for structured FAQs */}
@@ -118,33 +200,36 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
       )}
 
       <section
-        className="dpc-faq-card rounded-2xl border px-6 py-5 sm:px-8 sm:py-7 transition-theme"
-        style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-color)' }}
+        className="dpc-faq-card rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+        style={{
+          backgroundColor: 'var(--background-secondary)',
+          borderColor: 'var(--border-color)',
+        }}
       >
         <h2
           id="faq-heading"
-          className="text-xl sm:text-2xl font-bold mb-2"
+          className="text-lg font-semibold mb-2"
           style={{ color: 'var(--text-color)' }}
         >
           Questions about this offer
         </h2>
-        <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+        <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
           Quick answers to things buyers often ask before using a promo code.
         </p>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {safeFaqs.map((faq, idx) => (
             <details
               key={`${faq.question}-${idx}`}
-              className="group rounded-xl border px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-200"
+              className="group rounded-2xl border px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-200"
               style={{
                 borderColor: 'var(--border-color)',
-                backgroundColor: 'var(--background-secondary)'
+                backgroundColor: 'var(--card-bg)',
               }}
             >
               {/* Question Header - Native HTML summary */}
               <summary
-                className="w-full flex items-center justify-between gap-3 text-left cursor-pointer text-sm sm:text-base font-medium"
+                className="w-full flex items-center justify-between gap-3 text-left cursor-pointer text-sm font-medium [&::-webkit-details-marker]:hidden"
                 style={{
                   color: 'var(--text-color)',
                   listStyle: 'none',
@@ -154,11 +239,11 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
                 {/* Single plus/minus icon in circle - toggles via CSS */}
                 <span
                   aria-hidden="true"
-                  className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs font-semibold"
+                  className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-colors"
                   style={{
                     borderColor: 'var(--border-color)',
                     color: 'var(--text-secondary)',
-                    backgroundColor: 'var(--background-color)',
+                    backgroundColor: 'var(--card-bg)',
                   }}
                 >
                   <span className="group-open:hidden">+</span>
@@ -168,7 +253,7 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName }: FA
 
               {/* Answer Content - Revealed by native details/summary */}
               <div
-                className="mt-2.5 pt-2.5 border-t text-sm leading-relaxed"
+                className="mt-3 pt-3 border-t text-sm leading-relaxed"
                 style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
               >
                 {faq.isHtml ? (

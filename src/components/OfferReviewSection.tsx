@@ -211,57 +211,87 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
 
   return (
     <section
-      className="rounded-2xl border shadow-theme-promo px-6 py-5 sm:px-8 sm:py-7 transition-theme"
-      style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+      className="rounded-3xl border px-5 sm:px-6 py-6 sm:py-7 transition-theme"
+      style={{
+        borderColor: 'var(--border-color)',
+        backgroundColor: 'var(--background-secondary)',
+      }}
     >
-      {/* Header row - two columns on desktop */}
-      <div className="flex flex-col gap-4 sm:grid sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] sm:items-center mb-6">
-        {/* Left: title + rating summary */}
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-color)' }}>
-            User ratings & feedback
+      {/* Two-zone header: Rating block left, Form trigger right */}
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-8 lg:items-start mb-6">
+        {/* Left: Rating summary block */}
+        <div
+          className="rounded-2xl border p-4 sm:p-5 transition-theme"
+          style={{
+            borderColor: 'var(--border-color)',
+            backgroundColor: 'var(--background-tertiary)',
+          }}
+        >
+          <h2
+            className="text-lg font-semibold mb-3"
+            style={{ color: 'var(--text-color)' }}
+          >
+            Community feedback
           </h2>
           {reviewCount > 0 ? (
-            <div className="mt-2">
+            <div className="space-y-3">
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-semibold" style={{ color: 'var(--text-color)' }}>
+                <span
+                  className="text-3xl font-bold"
+                  style={{ color: 'var(--text-color)' }}
+                >
                   {averageRating}
                 </span>
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>/5.0</span>
-              </div>
-              <div className="flex items-center gap-2 mt-1">
-                <StarRow rating={averageRating} size="md" />
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  Based on {reviewCount} rating{reviewCount !== 1 ? 's' : ''} from the DigitalPromoCodes community.
+                <span
+                  className="text-sm"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  /5.0
                 </span>
               </div>
+              <div className="flex items-center gap-2">
+                <StarRow rating={averageRating} size="md" />
+              </div>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                Based on {reviewCount} rating{reviewCount !== 1 ? 's' : ''} from our community.
+              </p>
             </div>
           ) : (
-            <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
-              Be the first to share your experience with this offer.
-            </p>
+            <div className="space-y-2">
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                No reviews yet
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                Be the first to share your experience with this offer.
+              </p>
+            </div>
           )}
         </div>
 
-        {/* Right: CTA */}
-        <div className="sm:text-right">
+        {/* Right: Form zone */}
+        <div className="space-y-4">
+          <div>
+            <h3
+              className="text-base font-semibold"
+              style={{ color: 'var(--text-color)' }}
+            >
+              Share your experience
+            </h3>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+              Help others decide if this offer is right for them.
+            </p>
+          </div>
           <button
             type="button"
             onClick={() => setShowForm(!showForm)}
-            className="ml-auto inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-px"
+            className="inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition-all"
             style={{
-              borderColor: 'var(--accent-color)',
+              borderColor: 'var(--border-color)',
+              backgroundColor: 'var(--background-tertiary)',
               color: 'var(--accent-color)',
-              backgroundColor: 'transparent',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--background-color)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
             }}
           >
-            Add your review
+            {showForm ? 'Cancel' : 'Write a review'}
           </button>
         </div>
       </div>
@@ -269,20 +299,18 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
       {/* Review Form */}
       {showForm && (
         <div
-          className="mt-6 pt-5 border-t border-dashed"
+          className="mt-5 pt-5 border-t transition-theme"
           style={{ borderColor: 'var(--border-color)' }}
         >
-          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-            Share your experience
-          </h3>
-          <p className="text-sm mt-1 mb-4" style={{ color: 'var(--text-secondary)' }}>
-            Your review helps other users decide if this offer is right for them.
-          </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name + Rating side by side on desktop */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label htmlFor="username" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+                <label
+                  htmlFor="username"
+                  className="block text-xs font-semibold uppercase tracking-wide"
+                  style={{ color: 'var(--text-muted)' }}
+                >
                   Display name (optional)
                 </label>
                 <input
@@ -292,17 +320,20 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                   value={newReview.username}
                   onChange={handleInputChange}
                   placeholder="How should we show your name?"
-                  className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors"
+                  className="w-full px-3 py-2.5 rounded-xl border text-sm transition-colors focus:outline-none focus:ring-2"
                   style={{
-                    backgroundColor: 'var(--background-color)',
-                    borderColor: 'var(--border-color)',
-                    color: 'var(--text-color)'
+                    borderColor: 'var(--input-border)',
+                    backgroundColor: 'var(--input-bg)',
+                    color: 'var(--text-color)',
                   }}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+                <label
+                  className="block text-xs font-semibold uppercase tracking-wide"
+                  style={{ color: 'var(--text-muted)' }}
+                >
                   Overall rating
                 </label>
                 <div className="flex items-center gap-2">
@@ -313,13 +344,18 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                         type="button"
                         onClick={() => handleRatingChange(star)}
                         className="w-8 h-8 text-xl transition-transform hover:scale-110"
-                        style={{ color: star <= newReview.rating ? 'var(--accent-color)' : 'var(--border-color)' }}
+                        style={{
+                          color: star <= newReview.rating ? 'var(--accent-color)' : 'var(--border-color)',
+                        }}
                       >
                         ★
                       </button>
                     ))}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  <span
+                    className="text-sm font-medium"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
                     {newReview.rating}/5
                   </span>
                 </div>
@@ -327,7 +363,11 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="text" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+              <label
+                htmlFor="text"
+                className="block text-xs font-semibold uppercase tracking-wide"
+                style={{ color: 'var(--text-muted)' }}
+              >
                 Your feedback
               </label>
               <textarea
@@ -338,11 +378,11 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
                 placeholder="Tell us what you liked, what could be better, and anything future users should know."
                 required
                 rows={4}
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition-colors resize-vertical"
+                className="w-full px-3 py-2.5 rounded-xl border text-sm transition-colors resize-vertical focus:outline-none focus:ring-2"
                 style={{
-                  backgroundColor: 'var(--background-color)',
-                  borderColor: 'var(--border-color)',
-                  color: 'var(--text-color)'
+                  borderColor: 'var(--input-border)',
+                  backgroundColor: 'var(--input-bg)',
+                  color: 'var(--text-color)',
                 }}
               />
             </div>
@@ -351,17 +391,23 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="px-4 py-2 rounded-full text-sm font-medium border hover:bg-[var(--background-color)] transition-colors"
-                style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                className="px-4 py-2 rounded-full text-sm font-medium border transition-colors"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-secondary)',
+                }}
               >
-                Close
+                Cancel
               </button>
               <button
                 type="submit"
                 className="px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all duration-150"
-                style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+                style={{
+                  backgroundColor: 'var(--accent-color)',
+                  color: 'white',
+                }}
               >
-                Send review
+                Publish review
               </button>
             </div>
           </form>
@@ -370,76 +416,84 @@ const OfferReviewSection: React.FC<OfferReviewSectionProps> = ({ offerId, whopNa
 
       {/* Reviews List */}
       {reviewCount > 0 && (
-        <ul className="space-y-3 sm:space-y-4 mt-5">
-          {visibleReviews.map((review) => (
-            <li
-              key={review.id}
-              className="rounded-xl border px-4 py-4 sm:px-5 sm:py-4 flex flex-col gap-2 transition-all hover:shadow-sm"
-              style={{
-                backgroundColor: 'var(--background-color)',
-                borderColor: 'var(--border-color)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent-color)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-color)';
-              }}
-            >
-              {/* Header row */}
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  {/* Avatar - rounded square */}
-                  <div
-                    className="w-9 h-9 rounded-lg border flex items-center justify-center text-sm font-semibold"
-                    style={{
-                      borderColor: 'var(--border-color)',
-                      backgroundColor: 'var(--background-secondary)',
-                      color: 'var(--accent-color)',
-                    }}
-                  >
-                    {getDisplayName(review).charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text-color)' }}>
-                      {getDisplayName(review)}
-                    </p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <StarRow rating={review.rating} size="sm" />
-                      <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                        {review.date}
-                      </span>
+        <div
+          className="mt-5 pt-5 border-t transition-theme"
+          style={{ borderColor: 'var(--border-color)' }}
+        >
+          <div className="space-y-3">
+            {visibleReviews.map((review) => (
+              <div
+                key={review.id}
+                className="rounded-2xl border px-4 py-3.5 transition-all"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  backgroundColor: 'var(--background-tertiary)',
+                }}
+              >
+                {/* Header row */}
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-3">
+                    {/* Avatar - rounded square */}
+                    <div
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold"
+                      style={{
+                        backgroundColor: 'var(--background-tertiary)',
+                        color: 'var(--accent-color)',
+                        border: '1px solid var(--border-color)',
+                      }}
+                    >
+                      {getDisplayName(review).charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p
+                        className="text-sm font-semibold"
+                        style={{ color: 'var(--text-color)' }}
+                      >
+                        {getDisplayName(review)}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <StarRow rating={review.rating} size="sm" />
+                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          {review.date}
+                        </span>
+                      </div>
                     </div>
                   </div>
+                  {review.verified && (
+                    <span
+                      className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                      style={{
+                        backgroundColor: 'var(--background-tertiary)',
+                        color: 'var(--accent-color)',
+                      }}
+                    >
+                      Verified
+                    </span>
+                  )}
                 </div>
-                {review.verified && (
-                  <span
-                    className="rounded-full px-2 py-0.5 text-[11px] font-medium"
-                    style={{ backgroundColor: 'rgba(5,150,105,0.12)', color: 'var(--accent-color)' }}
-                  >
-                    Verified purchase
-                  </span>
-                )}
+                {/* Body text */}
+                <p
+                  className="text-sm leading-relaxed pl-11"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {getDisplayText(review)}
+                </p>
               </div>
-              {/* Body text */}
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                {getDisplayText(review)}
-              </p>
-            </li>
-          ))}
+            ))}
+          </div>
 
           {reviews.length > 2 && (
-            <div className="text-center pt-2">
+            <div className="text-center pt-4">
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-sm font-medium transition-colors duration-200 hover:opacity-80"
-                style={{ color: 'var(--accent-color)' }}
+                className="text-sm font-medium transition-colors"
+                style={{ color: 'var(--text-muted)' }}
               >
-                {expanded ? 'Collapse reviews' : `View all ${reviewCount} reviews`}
+                {expanded ? 'Show fewer reviews' : `View all ${reviewCount} reviews`}
               </button>
             </div>
           )}
-        </ul>
+        </div>
       )}
     </section>
   );

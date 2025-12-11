@@ -37,9 +37,24 @@ export default function AlternativesServer({
   if (!list.length && !explore) return null;
 
   return (
-    <section aria-label="Other options" className="mt-8">
-      <h2 className="text-xl font-bold mb-4">Other Options</h2>
-      <ul className="flex flex-col gap-4" suppressHydrationWarning>
+    <section
+      aria-label="Similar offers"
+      className="rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+      style={{
+        borderColor: 'var(--border-color)',
+        backgroundColor: 'var(--background-tertiary)',
+      }}
+    >
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <h2
+          className="text-lg font-semibold"
+          style={{ color: 'var(--text-color)' }}
+        >
+          You might also like
+        </h2>
+      </div>
+
+      <div className="space-y-3" suppressHydrationWarning>
         {list.map((w, i) => (
           <OfferMiniPreview
             key={`${w.slug}#${i}`}
@@ -67,7 +82,7 @@ export default function AlternativesServer({
             isExploreLink={true}
           />
         )}
-      </ul>
+      </div>
     </section>
   );
 }
