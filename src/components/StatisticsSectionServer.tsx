@@ -66,22 +66,27 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
 
     const content = (
       <div
-        className="flex flex-col gap-2 rounded-2xl border px-4 py-4 sm:px-6 sm:py-5 shadow-theme-promo transition-all hover:shadow-lg hover:-translate-y-0.5"
+        className="rounded-xl border p-4 md:p-5 flex flex-col gap-1 transition-all hover:shadow-md"
         style={{
-          borderColor: 'var(--border-color)',
-          backgroundColor: 'var(--background-color)',
+          borderColor: 'var(--card-border)',
+          backgroundColor: 'var(--card-bg)',
         }}
       >
-        {/* Icon + label row */}
-        <div className="flex items-center gap-2">
-          <div
-            className="flex h-8 w-8 items-center justify-center rounded-full"
-            style={{
-              backgroundColor: 'rgba(5,150,105,0.08)',
-              color: 'var(--accent-color)',
-            }}
-          >
-            {showLogo && logoUrl ? (
+        {/* Label first - top aligned */}
+        <div
+          className="text-xs font-semibold tracking-wide uppercase"
+          style={{ color: 'var(--text-muted)' }}
+        >
+          {label}
+        </div>
+
+        {/* Large value */}
+        <div
+          className="text-2xl md:text-3xl font-bold"
+          style={{ color: 'var(--text-color)' }}
+        >
+          {showLogo && logoUrl ? (
+            <div className="flex items-center gap-2">
               <img
                 src={
                   logoUrl.startsWith('http')
@@ -89,37 +94,35 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
                     : logoUrl
                 }
                 alt={`${value} logo`}
-                width={20}
-                height={20}
-                className="h-5 w-5 rounded object-cover"
+                width={24}
+                height={24}
+                className="h-6 w-6 rounded object-cover"
                 loading="lazy"
               />
-            ) : (
-              icon
-            )}
-          </div>
-          <span
-            className="text-xs uppercase tracking-wide font-semibold"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {label}
-          </span>
+              <span className="text-lg md:text-xl font-semibold truncate">{displayValue}</span>
+            </div>
+          ) : (
+            displayValue
+          )}
         </div>
 
-        {/* Number + caption */}
-        <div className="mt-1">
-          <p
-            className="text-2xl sm:text-3xl font-semibold"
-            style={{ color: 'var(--text-color)' }}
-          >
-            {displayValue}
-          </p>
-          <p
-            className="text-sm mt-0.5 line-clamp-2"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {caption}
-          </p>
+        {/* Caption / descriptor */}
+        <p
+          className="text-xs mt-1"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          {caption}
+        </p>
+
+        {/* Icon moved to bottom */}
+        <div
+          className="mt-2 flex h-7 w-7 items-center justify-center rounded-full"
+          style={{
+            backgroundColor: 'rgba(5,150,105,0.08)',
+            color: 'var(--accent-color)',
+          }}
+        >
+          {icon}
         </div>
       </div>
     );
@@ -168,7 +171,7 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-5 lg:gap-6">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
           <StatCard
             label="Active visitors"
             value={stats?.totalUsers || 0}

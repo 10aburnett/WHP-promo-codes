@@ -420,106 +420,110 @@ export default async function Home({
             </p>
           </div>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-10 md:mb-12">
-            {/* Card 1: Curated, not scraped */}
-            <div
-              className="flex flex-col gap-3 rounded-2xl border px-5 py-5 sm:px-6 sm:py-6 shadow-theme-promo"
-              style={{
-                borderColor: 'var(--border-color)',
-                backgroundColor: 'var(--background-color)',
-              }}
-            >
-              <div
-                className="h-9 w-9 rounded-xl flex items-center justify-center"
-                style={{
-                  backgroundColor: 'rgba(5,150,105,0.08)',
-                  color: 'var(--accent-color)',
-                }}
-              >
-                {/* Shield check icon */}
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
+          {/* Two-column layout: Numbered list left, Trust card right */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-10 md:mb-12">
+            {/* Left column: Numbered benefits list */}
+            <div className="flex flex-col gap-5">
+              {/* Benefit 1 */}
+              <div className="flex gap-4">
+                <div
+                  className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    backgroundColor: 'rgba(5,150,105,0.1)',
+                    color: 'var(--accent-color)',
+                  }}
+                >
+                  1
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold" style={{ color: 'var(--text-color)' }}>
+                    Hand-checked, not auto-scraped
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    Every promo is reviewed before it appears on the site, so you spend less time testing random codes.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-                  Hand-checked, not auto-scraped
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Every promo is reviewed before it appears on the site, so you spend less time testing random codes that were never going to work.
-                </p>
+
+              {/* Benefit 2 */}
+              <div className="flex gap-4">
+                <div
+                  className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    backgroundColor: 'rgba(5,150,105,0.1)',
+                    color: 'var(--accent-color)',
+                  }}
+                >
+                  2
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold" style={{ color: 'var(--text-color)' }}>
+                    Direct-from-creator deals
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    Many offers come straight from creators or partners, meaning better-than-public discounts.
+                  </p>
+                </div>
+              </div>
+
+              {/* Benefit 3 */}
+              <div className="flex gap-4">
+                <div
+                  className="flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    backgroundColor: 'rgba(5,150,105,0.1)',
+                    color: 'var(--accent-color)',
+                  }}
+                >
+                  3
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold" style={{ color: 'var(--text-color)' }}>
+                    Actively maintained codes
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    Codes are checked on a rolling basis and retired when they stop working.
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Card 2: Better entry points */}
+            {/* Right column: Trust / CTA card */}
             <div
-              className="flex flex-col gap-3 rounded-2xl border px-5 py-5 sm:px-6 sm:py-6 shadow-theme-promo"
+              className="rounded-2xl border px-6 py-6 flex flex-col justify-between shadow-theme-promo"
               style={{
                 borderColor: 'var(--border-color)',
                 backgroundColor: 'var(--background-color)',
               }}
             >
-              <div
-                className="h-9 w-9 rounded-xl flex items-center justify-center"
-                style={{
-                  backgroundColor: 'rgba(5,150,105,0.08)',
-                  color: 'var(--accent-color)',
-                }}
-              >
-                {/* Link/arrow icon */}
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                </svg>
-              </div>
               <div>
-                <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-                  Direct-from-creator deals
+                <div
+                  className="h-10 w-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{
+                    backgroundColor: 'rgba(5,150,105,0.08)',
+                    color: 'var(--accent-color)',
+                  }}
+                >
+                  {/* Trophy/star icon */}
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+                    <path d="M4 22h16" />
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+                  Trusted by deal-seekers
                 </h3>
-                <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Many offers come straight from creators or partners, which can mean extras or better-than-public discounts on digital products.
+                <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
+                  Join thousands of shoppers who use {SITE_BRAND} to find verified savings on digital products, courses, and memberships.
                 </p>
               </div>
-            </div>
-
-            {/* Card 3: Kept up-to-date */}
-            <div
-              className="flex flex-col gap-3 rounded-2xl border px-5 py-5 sm:px-6 sm:py-6 shadow-theme-promo"
-              style={{
-                borderColor: 'var(--border-color)',
-                backgroundColor: 'var(--background-color)',
-              }}
-            >
-              <div
-                className="h-9 w-9 rounded-xl flex items-center justify-center"
-                style={{
-                  backgroundColor: 'rgba(5,150,105,0.08)',
-                  color: 'var(--accent-color)',
-                }}
-              >
-                {/* Refresh/clock icon */}
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                  <path d="M21 3v5h-5" />
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                  <path d="M3 21v-5h5" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-                  Actively maintained codes
-                </h3>
-                <p className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                  Codes are checked on a rolling basis and retired when they stop working, so you know whether a deal is still live before you click through.
-                </p>
-              </div>
+              <CallToAction />
             </div>
           </div>
-
-          {/* Call to Action */}
-          <CallToAction />
         </div>
       </div>
 
