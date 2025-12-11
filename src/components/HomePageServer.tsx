@@ -63,35 +63,45 @@ export default function HomePageServer({
   };
 
   return (
-    <div className="container mx-auto max-w-6xl px-3 sm:px-4 lg:px-0 mt-8 md:mt-6 lg:mt-4">
-      {/* HERO */}
-      <section className="text-center mt-2 mb-8 space-y-3">
-        <h1 className="text-3xl md:text-4xl lg:text-[2.5rem] font-semibold md:font-bold tracking-tight">
-          <span style={{ color: 'var(--accent-color)' }}>{SITE_BRAND}</span>
-          <span style={{ color: 'var(--text-color)' }}>
-            {' '}
-            – Promo Codes for Digital Tools, Courses &amp; Memberships
-          </span>
-        </h1>
-        {SITE_TAGLINE && (
-          <p
-            className="text-sm md:text-base max-w-2xl mx-auto"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            {SITE_TAGLINE}
-          </p>
-        )}
+    <>
+      {/* HERO - Left-aligned blog-style layout */}
+      <section
+        className="pt-8 md:pt-10 pb-6 transition-theme"
+        style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
+      >
+        <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
+          <header className="mb-6 md:mb-8">
+            <p
+              className="text-xs font-semibold tracking-wide uppercase mb-3"
+              style={{ color: 'var(--accent-color)' }}
+            >
+              {SITE_BRAND} – verified digital savings
+            </p>
+            <h1
+              className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3"
+              style={{ color: 'var(--text-color)', lineHeight: 1.1 }}
+            >
+              Promo codes for digital tools, courses &amp; memberships.
+            </h1>
+            <p
+              className="text-sm md:text-base max-w-2xl"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Reliable discounts on SaaS, trading communities, AI tools and more – hand-checked before you buy.
+            </p>
+          </header>
+        </div>
       </section>
 
-      {/* Client island for search/filters */}
-      <div className="rounded-2xl border px-3 sm:px-4 py-3 sm:py-4 mb-4 md:mb-6 transition-theme shadow-theme-promo"
-        style={{
-          backgroundColor: 'var(--background-secondary)',
-          borderColor: 'var(--border-color)',
-        }}
-      >
-        <FilterControlsWrapper />
-      </div>
+      {/* Search/Filter Section - Separate from hero */}
+      <section className="pb-6 md:pb-8">
+        <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
+          <FilterControlsWrapper />
+        </div>
+      </section>
+
+      {/* Main content container */}
+      <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
 
       {/* Results count */}
       {total > 0 && (
@@ -434,6 +444,7 @@ export default function HomePageServer({
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
