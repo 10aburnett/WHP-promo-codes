@@ -138,7 +138,7 @@ export const translations = {
     'terms.responsible.title': 'Responsible Use',
     'terms.responsible.content': 'DigitalPromoCodes promotes responsible use of digital products and services. We encourage users to:\n\nOnly purchase products and services you can afford\nResearch products thoroughly before purchasing\nRead terms and conditions of whop products carefully\nContact whop providers directly for product support\n\nIf you have concerns about any whop product or service, please contact the provider directly or reach out to us through our contact form.',
     'terms.contactInfo.title': 'Contact Information',
-    'terms.contactInfo.content': 'If you have any questions about these Terms of Service, please contact us:<br><br>Email: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Website: <a href="/contact">Contact Form</a>',
+    'terms.contactInfo.content': 'If you have any questions about these Terms of Service, please contact us:<br><br>Email: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Website: <a href="/contact">Contact Form</a>',
     
     // Contact
     'contact.title': 'Get in Touch',
@@ -295,7 +295,7 @@ export const translations = {
     'terms.responsible.title': 'Uso Responsable',
     'terms.responsible.content': 'DigitalPromoCodes promueve el uso responsable de productos y servicios digitales. Nosotros animamos a los usuarios a:\n\nSolo comprar productos y servicios que puedan pagar\nInvestigar productos minuciosamente antes de comprar\nLeer cuidadosamente los términos y condiciones de los productos whop\nContactar directamente con los proveedores de whop para product support\n\nSi tiene alguna preocupación sobre cualquier producto o servicio whop, por favor contáctese directamente con el proveedor o comuníquese con nosotros a través del formulario de contacto.',
     'terms.contactInfo.title': 'Contacto',
-    'terms.contactInfo.content': 'Si tiene alguna pregunta sobre estos Términos de Servicio, por favor contáctenos:<br><br>Correo electrónico: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Sitio web: <a href="/es/contact">Formulario de Contacto</a>',
+    'terms.contactInfo.content': 'Si tiene alguna pregunta sobre estos Términos de Servicio, por favor contáctenos:<br><br>Correo electrónico: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Sitio web: <a href="/es/contact">Formulario de Contacto</a>',
     
     // Contact
     'contact.title': 'Contáctanos',
@@ -452,7 +452,7 @@ export const translations = {
     'terms.responsible.title': 'Verantwoordelijk Gebruik',
     'terms.responsible.content': 'DigitalPromoCodes stimuleert verantwoord gebruik van digitale producten en diensten. We aanmoedigen gebruikers om:\n\nAlleen producten en diensten te kopen die ze kunnen betalen\nProdukte grondig te onderzoeken voordat ze worden gekocht\nVoorwaarden en voorwaarden van whop-producten grondig te lezen\nDirect contact opnemen met whop-providers voor productondersteuning\n\nAls u zorgen heeft over een whop-product of -dienst, gelieve direct contact op te nemen met de provider of contacteer ons via ons contactformulier.',
     'terms.contactInfo.title': 'Contactgegevens',
-    'terms.contactInfo.content': 'Als u vragen heeft over deze Servicevoorwaarden, gelieve contact met ons op:<br><br>E-mail: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Website: <a href="/nl/contact">Contactformulier</a>',
+    'terms.contactInfo.content': 'Als u vragen heeft over deze Servicevoorwaarden, gelieve contact met ons op:<br><br>E-mail: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Website: <a href="/nl/contact">Contactformulier</a>',
     
     // Contact
     'contact.title': 'Neem Contact Op',
@@ -609,7 +609,7 @@ export const translations = {
     'terms.responsible.title': 'Utilisation Responsable',
     'terms.responsible.content': 'DigitalPromoCodes promeut l\'utilisation responsable de produits et services numériques. Nous encourageons les utilisateurs à:\n\nN\'acheter que des produits et services qu\'ils peuvent se permettre\nRechercher les produits de manière approfondie avant d\'acheter\nLire attentivement les termes et conditions des produits whop\nContacter directement les fournisseurs whop pour product support\n\nSi vous avez des préoccupations concernant un produit ou service whop, veuillez contacter directement le fournisseur ou nous contacter via notre formulaire de contact.',
     'terms.contactInfo.title': 'Informations de Contact',
-    'terms.contactInfo.content': 'Si vous avez des questions sur ces Conditions de Service, veuillez nous contacter:<br><br>E-mail: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Site web: <a href="/fr/contact">Formulaire de Contact</a>',
+    'terms.contactInfo.content': 'Si vous avez des questions sur ces Conditions de Service, veuillez nous contacter:<br><br>E-mail: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Site web: <a href="/fr/contact">Formulaire de Contact</a>',
     
     // Contact
     'contact.title': 'Nous Contacter',
@@ -766,7 +766,7 @@ export const translations = {
     'terms.responsible.title': 'Verantwortungsvolle Nutzung',
     'terms.responsible.content': 'DigitalPromoCodes fördert den verantwortungsvollen Gebrauch digitaler Produkte und Dienste. Wir ermutigen die Benutzer dazu:\n\nNur Produkte und Dienste zu kaufen, die sie sich leisten können\nProdukte gründlich zu recherchieren, bevor sie gekauft werden\nBedingungen und Bestimmungen von whop-Produkten sorgfältig zu lesen\nDirekt mit whop-Anbietern zu kontaktieren, um Produktunterstützung zu erhalten\n\nWenn Sie Bedenken über ein whop-Produkt oder -Dienst haben, wenden Sie sich bitte direkt an den Anbieter oder kontaktieren Sie uns über unser Kontaktformular.',
     'terms.contactInfo.title': 'Kontaktinformationen',
-    'terms.contactInfo.content': 'Wenn Sie Fragen oder Bedenken zu diesen Nutzungsbedingungen haben, wenden Sie sich bitte an uns:<br><br>E-Mail: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Website: <a href="/de/contact">Kontaktformular</a>',
+    'terms.contactInfo.content': 'Wenn Sie Fragen oder Bedenken zu diesen Nutzungsbedingungen haben, wenden Sie sich bitte an uns:<br><br>E-Mail: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Website: <a href="/de/contact">Kontaktformular</a>',
     
     // Contact
     'contact.title': 'Kontaktieren Sie Uns',
@@ -923,7 +923,7 @@ export const translations = {
     'terms.responsible.title': 'Utilizzo Responsabile',
     'terms.responsible.content': 'DigitalPromoCodes promuove l\'utilizzo responsabile di prodotti e servizi digitali. Incoraggiamo gli utenti a:\n\nAcquistare solo prodotti e servizi che possono permettersi\nIndagare sui prodotti attentamente prima di acquistare\nLeggere attentamente i termini e le condizioni dei prodotti whop\nEntrare in contatto direttamente con i fornitori whop per il supporto del prodotto\n\nSe hai preoccupazioni su un prodotto o servizio whop, per favore entra in contatto direttamente con il fornitore o comunica con noi attraverso il nostro modulo di contatto.',
     'terms.contactInfo.title': 'Informazioni di Contatto',
-    'terms.contactInfo.content': 'Se hai domande o preoccupazioni su questi Termini di Servizio, per favore contattaci:<br><br>E-mail: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Sito web: <a href="/it/contact">Modulo di contatto</a>',
+    'terms.contactInfo.content': 'Se hai domande o preoccupazioni su questi Termini di Servizio, per favore contattaci:<br><br>E-mail: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Sito web: <a href="/it/contact">Modulo di contatto</a>',
     
     // Contact
     'contact.title': 'Contattaci',
@@ -1080,7 +1080,7 @@ export const translations = {
     'terms.responsible.title': 'Utilizzo Responsabile',
     'terms.responsible.content': 'DigitalPromoCodes promuove l\'utilizzo responsabile di prodotti e servizi digitali. Animiamo gli utenti a:\n\nAcquistare solo prodotti e servizi che possono permettersi\nIndagare sui prodotti attentamente prima di acquistare\nLeggere attentamente i termini e le condizioni dei prodotti whop\nEntrare in contatto direttamente con i fornitori whop per il supporto del prodotto\n\nSe hai preoccupazioni su un prodotto o servizio whop, per favore entra in contatto direttamente con il fornitore o comunica con noi attraverso il nostro modulo di contatto.',
     'terms.contactInfo.title': 'Informazioni di Contatto',
-    'terms.contactInfo.content': 'Se hai domande o preoccupazioni su questi Termini di Servizio, per favore contattaci:<br><br>E-mail: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>Sito web: <a href="/pt/contact">Modulo di contatto</a>',
+    'terms.contactInfo.content': 'Se hai domande o preoccupazioni su questi Termini di Servizio, per favore contattaci:<br><br>E-mail: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>Sito web: <a href="/pt/contact">Modulo di contatto</a>',
     
     // Contact
     'contact.title': 'Entre em Contato',
@@ -1237,7 +1237,7 @@ export const translations = {
     'terms.responsible.title': '负责任使用',
     'terms.responsible.content': 'DigitalPromoCodes 促进数字产品和服务的负责任使用。我们鼓励用户：\n\n仅购买他们可以负担的产品和服务\n在购买前彻底研究产品\n仔细阅读 whop 产品的条款和条件\n直接联系 whop 提供商以获取产品支持\n\n如果您对任何 whop 产品或服务有任何关注或关注，请直接联系提供商或通过我们的联系表单与我们联系。',
     'terms.contactInfo.title': '联系信息',
-    'terms.contactInfo.content': '如果您对这些服务条款有任何问题，请与我们联系:<br><br>电子邮件: <a href="mailto:legal@digitalpromocodes.com">legal@digitalpromocodes.com</a><br>网站: <a href="/zh/contact">联系表单</a>',
+    'terms.contactInfo.content': '如果您对这些服务条款有任何问题，请与我们联系:<br><br>电子邮件: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a><br>网站: <a href="/zh/contact">联系表单</a>',
     
     // Contact
     'contact.title': '联系我们',

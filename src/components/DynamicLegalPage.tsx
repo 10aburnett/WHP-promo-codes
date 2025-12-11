@@ -45,207 +45,301 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
     });
   };
 
+  // Get ISO date string for datetime attribute
+  const getISODate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
+
   // Determine if this is privacy or terms page
   const isPrivacyPage = title.toLowerCase().includes('privacy') || title.toLowerCase().includes('privacidad') || title.toLowerCase().includes('privacybeleid') || title.toLowerCase().includes('confidentialité') || title.toLowerCase().includes('datenschutz') || title.toLowerCase().includes('politica') || title.toLowerCase().includes('privacidade') || title.toLowerCase().includes('隐私');
 
-  // Generate translated content with clean legal-document format
-  const generateTranslatedContent = () => {
-    if (isPrivacyPage) {
-      return `
-        <section>
-          <h2>${t('privacy.introduction.title')}</h2>
-          <p>${t('privacy.introduction.content')}</p>
-        </section>
+  // Privacy page sections
+  const privacySections = [
+    { id: 'introduction', title: t('privacy.introduction.title'), content: t('privacy.introduction.content') },
+    {
+      id: 'information-we-collect',
+      title: t('privacy.infoCollect.title'),
+      content: `<h3>${t('privacy.infoProvide.title')}</h3><p>${t('privacy.infoProvide.content').replace(/\n/g, '<br>')}</p><h3>${t('privacy.infoAuto.title')}</h3><p>${t('privacy.infoAuto.content').replace(/\n/g, '<br>')}</p>`
+    },
+    { id: 'how-we-use-information', title: t('privacy.howUse.title'), content: t('privacy.howUse.content').replace(/\n/g, '<br>') },
+    { id: 'information-sharing', title: t('privacy.sharing.title'), content: t('privacy.sharing.content').replace(/\n/g, '<br>') },
+    { id: 'cookies', title: t('privacy.cookies.title'), content: t('privacy.cookies.content').replace(/\n/g, '<br>') },
+    { id: 'security', title: t('privacy.security.title'), content: t('privacy.security.content').replace(/\n/g, '<br>') },
+    { id: 'your-rights', title: t('privacy.rights.title'), content: t('privacy.rights.content').replace(/\n/g, '<br>') },
+    { id: 'contact-us', title: t('privacy.contact.title'), content: t('privacy.contact.content').replace(/\n/g, '<br>') },
+  ];
 
-        <section>
-          <h2>${t('privacy.infoCollect.title')}</h2>
+  // Terms page sections
+  const termsSections = [
+    { id: 'agreement-to-terms', title: t('terms.agreement.title'), content: t('terms.agreement.content') },
+    { id: 'use-license', title: t('terms.license.title'), content: t('terms.license.content').replace(/\n/g, '<br>') },
+    { id: 'disclaimer', title: t('terms.disclaimer.title'), content: t('terms.disclaimer.content').replace(/\n/g, '<br>') },
+    { id: 'responsible-use', title: t('terms.responsible.title'), content: t('terms.responsible.content').replace(/\n/g, '<br>') },
+    { id: 'contact-information', title: t('terms.contactInfo.title'), content: t('terms.contactInfo.content').replace(/\n/g, '<br>') },
+  ];
 
-          <h3>${t('privacy.infoProvide.title')}</h3>
-          <p>${t('privacy.infoProvide.content').replace(/\n/g, '<br>')}</p>
+  const sections = isPrivacyPage ? privacySections : termsSections;
 
-          <h3>${t('privacy.infoAuto.title')}</h3>
-          <p>${t('privacy.infoAuto.content').replace(/\n/g, '<br>')}</p>
-        </section>
+  // Key points for sidebar
+  const privacyKeyPoints = [
+    'We only collect information necessary to operate DigitalPromoCodes.',
+    'We never sell your personal data to third parties.',
+    'You can request access, correction, or deletion of your information.',
+    'We use industry-standard security practices to safeguard your data.',
+  ];
 
-        <section>
-          <h2>${t('privacy.howUse.title')}</h2>
-          <p>${t('privacy.howUse.content').replace(/\n/g, '<br>')}</p>
-        </section>
+  const termsKeyPoints = [
+    'Using the site means you agree to these terms.',
+    'Promo codes and offers may change or expire without notice.',
+    'We are not responsible for third-party products or services.',
+    'Contact us if you have questions about how any clause applies.',
+  ];
 
-        <section>
-          <h2>${t('privacy.sharing.title')}</h2>
-          <p>${t('privacy.sharing.content').replace(/\n/g, '<br>').replace(/\n\n/g, '<br><br>')}</p>
-        </section>
+  const keyPoints = isPrivacyPage ? privacyKeyPoints : termsKeyPoints;
 
-        <section>
-          <h2>${t('privacy.cookies.title')}</h2>
-          <p>${t('privacy.cookies.content').replace(/\n/g, '<br>').replace(/\n\n/g, '<br><br>')}</p>
-        </section>
-
-        <section>
-          <h2>${t('privacy.security.title')}</h2>
-          <p>${t('privacy.security.content').replace(/\n/g, '<br>')}</p>
-        </section>
-
-        <section>
-          <h2>${t('privacy.rights.title')}</h2>
-          <p>${t('privacy.rights.content').replace(/\n/g, '<br>')}</p>
-        </section>
-
-        <section>
-          <h2>${t('privacy.contact.title')}</h2>
-          <p>${t('privacy.contact.content').replace(/\n/g, '<br>')}</p>
-        </section>
-      `;
-    } else {
-      return `
-        <section>
-          <h2>${t('terms.agreement.title')}</h2>
-          <p>${t('terms.agreement.content')}</p>
-        </section>
-
-        <section>
-          <h2>${t('terms.license.title')}</h2>
-          <p>${t('terms.license.content').replace(/\n/g, '<br>')}</p>
-        </section>
-
-        <section>
-          <h2>${t('terms.disclaimer.title')}</h2>
-          <p>${t('terms.disclaimer.content').replace(/\n/g, '<br>')}</p>
-        </section>
-
-        <section>
-          <h2>${t('terms.responsible.title')}</h2>
-          <p>${t('terms.responsible.content').replace(/\n/g, '<br>').replace(/\n\n/g, '<br><br>')}</p>
-        </section>
-
-        <section>
-          <h2>${t('terms.contactInfo.title')}</h2>
-          <p>${t('terms.contactInfo.content').replace(/\n/g, '<br>')}</p>
-        </section>
-      `;
-    }
-  };
+  // Summary text for hero
+  const privacySummary = 'How we collect, use, and protect your information when you use our platform.';
+  const termsSummary = 'The rules and guidelines for using DigitalPromoCodes and our affiliate services.';
+  const summaryText = isPrivacyPage ? privacySummary : termsSummary;
 
   return (
-    <>
-      <main className="min-h-screen py-16 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
-        <div className="mx-auto w-[90%] md:w-[95%] max-w-[720px]">
+    <div
+      className="min-h-screen py-10 md:py-12 transition-theme"
+      style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
+    >
+      <div className="mx-auto w-[90%] md:w-[95%] max-w-6xl space-y-8 md:space-y-10">
 
-          {/* Header */}
-          <header className="mb-12">
-            <Link
-              href={getLocalizedPath('/')}
-              className="inline-flex items-center text-sm mb-8 hover:opacity-80 transition-opacity"
-              style={{ color: 'var(--accent-color)' }}
+        {/* Back link */}
+        <Link
+          href={getLocalizedPath('/')}
+          className="inline-flex items-center text-xs md:text-sm gap-2 hover:opacity-80 transition-opacity"
+          style={{ color: 'var(--accent-color)' }}
+        >
+          <span aria-hidden="true">←</span>
+          <span>Back to site policies</span>
+        </Link>
+
+        {/* Top hero / summary card */}
+        <section
+          className="rounded-2xl border px-6 py-5 md:px-8 md:py-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+          style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+        >
+          <div className="space-y-2">
+            <p
+              className="text-xs font-semibold tracking-[0.12em] uppercase"
+              style={{ color: 'var(--text-muted)' }}
             >
-              <span aria-hidden="true">←</span>
-              <span className="ml-2">{t('legal.backToHome')}</span>
-            </Link>
-
-            <span className="text-xs font-medium tracking-wider uppercase mb-3 block" style={{ color: 'var(--text-muted)' }}>
-              Site Policies
-            </span>
-
-            <h1 className="text-3xl md:text-4xl font-semibold mb-3" style={{ color: 'var(--text-color)' }}>
+              Site policies
+            </p>
+            <h1
+              className="text-2xl md:text-3xl font-bold"
+              style={{ color: 'var(--text-color)' }}
+            >
               {isPrivacyPage ? t('privacy.title') : t('terms.title')}
             </h1>
-
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-              {t('legal.lastUpdated')}: {formatDate(lastUpdated)}
+            <p
+              className="text-xs md:text-sm"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              {summaryText}
             </p>
+          </div>
 
-            <div className="w-full h-px mt-8" style={{ backgroundColor: 'var(--border-color)' }} />
-          </header>
-
-          {/* Content */}
           <div
-            className="legal-document"
-            dangerouslySetInnerHTML={{ __html: generateTranslatedContent() }}
-          />
-
-          {/* Footer */}
-          <footer className="mt-16 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              Need clarification on anything above?{' '}
-              <Link
-                href="/contact"
-                className="hover:opacity-80 transition-opacity"
-                style={{ color: 'var(--accent-color)' }}
-              >
-                Reach out to us
-              </Link>
+            className="flex flex-col items-start md:items-end gap-2 text-xs"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            <div
+              className="inline-flex items-center gap-2 rounded-full border px-3 py-1"
+              style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-color)' }}
+            >
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: 'var(--accent-color)' }}
+              />
+              <span>
+                Last updated:{' '}
+                <time dateTime={getISODate(lastUpdated)}>{formatDate(lastUpdated)}</time>
+              </span>
+            </div>
+            <p
+              className="text-[11px] md:text-xs"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Please read this page carefully before using DigitalPromoCodes.
             </p>
-          </footer>
+          </div>
+        </section>
 
-        </div>
-      </main>
+        {/* Main grid: content + side rail */}
+        <section className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,2.2fr)_minmax(0,1fr)] items-start">
+
+          {/* LEFT: main legal content */}
+          <div
+            className="rounded-2xl border px-5 py-6 md:px-7 md:py-8"
+            style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+          >
+            <div
+              className="space-y-8 md:space-y-10 text-sm md:text-base leading-relaxed"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              {sections.map((section, index) => (
+                <section key={section.id} id={section.id} className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold flex-shrink-0"
+                      style={{
+                        backgroundColor: 'rgba(5,150,105,0.12)',
+                        color: 'var(--accent-color)',
+                      }}
+                    >
+                      {index + 1}
+                    </span>
+                    <h2
+                      className="text-base md:text-lg font-semibold"
+                      style={{ color: 'var(--text-color)' }}
+                    >
+                      {section.title}
+                    </h2>
+                  </div>
+                  <div
+                    className="legal-content pl-9"
+                    dangerouslySetInnerHTML={{ __html: section.content }}
+                  />
+                </section>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT: sticky quick summary / key points */}
+          <aside className="space-y-4 lg:space-y-5">
+            {/* Key points card */}
+            <div
+              className="rounded-2xl border px-4 py-4 md:px-5 md:py-5"
+              style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+            >
+              <h2
+                className="text-sm font-semibold mb-3"
+                style={{ color: 'var(--text-color)' }}
+              >
+                Key points at a glance
+              </h2>
+              <ul
+                className="space-y-2 text-xs md:text-sm"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {keyPoints.map((point, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: 'var(--accent-color)' }}
+                    />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* On this page TOC - sticky on desktop */}
+            <div
+              className="hidden lg:block rounded-2xl border px-4 py-4 md:px-5 md:py-5 sticky top-24"
+              style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+            >
+              <h2
+                className="text-sm font-semibold mb-3"
+                style={{ color: 'var(--text-color)' }}
+              >
+                On this page
+              </h2>
+              <nav className="space-y-1.5 text-xs md:text-sm">
+                {sections.map((section) => (
+                  <a
+                    key={section.id}
+                    href={`#${section.id}`}
+                    className="block hover:opacity-80 transition-opacity"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {section.title}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </aside>
+        </section>
+
+        {/* Footer */}
+        <footer
+          className="pt-6 border-t"
+          style={{ borderColor: 'var(--border-color)' }}
+        >
+          <p
+            className="text-sm"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            Need clarification on anything above?{' '}
+            <Link
+              href="/contact"
+              className="hover:opacity-80 transition-opacity"
+              style={{ color: 'var(--accent-color)' }}
+            >
+              Reach out to us
+            </Link>
+          </p>
+        </footer>
+      </div>
 
       <style dangerouslySetInnerHTML={{
         __html: `
-          .legal-document section {
-            margin-bottom: 3rem;
+          .legal-content h3 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
           }
 
-          .legal-document section:last-child {
+          .legal-content h3:first-child {
+            margin-top: 0;
+          }
+
+          .legal-content p {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+          }
+
+          .legal-content p:last-child {
             margin-bottom: 0;
           }
 
-          .legal-document h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent-color);
-            display: inline-block;
-            color: var(--text-color);
-          }
-
-          .legal-document h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-top: 1.5rem;
+          .legal-content ul,
+          .legal-content ol {
             margin-bottom: 0.75rem;
-            color: var(--text-color);
-          }
-
-          .legal-document p {
-            font-size: 0.9375rem;
-            line-height: 1.75;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-          }
-
-          .legal-document ul,
-          .legal-document ol {
-            margin-bottom: 1rem;
             padding-left: 1.25rem;
           }
 
-          .legal-document li {
-            font-size: 0.9375rem;
-            line-height: 1.75;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
+          .legal-content li {
+            margin-bottom: 0.375rem;
+            line-height: 1.7;
             list-style-type: disc;
           }
 
-          .legal-document strong {
+          .legal-content strong {
             color: var(--text-color);
             font-weight: 600;
           }
 
-          .legal-document a {
+          .legal-content a {
             color: var(--accent-color);
             text-decoration: none;
             transition: opacity 0.2s;
           }
 
-          .legal-document a:hover {
+          .legal-content a:hover {
             text-decoration: underline;
           }
         `
       }} />
-    </>
+    </div>
   );
 }
