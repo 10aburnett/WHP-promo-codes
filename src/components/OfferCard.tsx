@@ -211,129 +211,150 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
     return () => io.disconnect();
   }, []);
 
+  // Derive discount label for meta strip
+  const discountLabel = discountPercent && discountPercent > 0
+    ? `${discountPercent}% off`
+    : promo.promoText || null;
+
   return (
     <div ref={cardRef} className="relative h-full">
       <article
-        className="relative flex h-full flex-col justify-between rounded-2xl border shadow-theme-promo transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+        className="group h-full rounded-2xl border p-4 md:p-5 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
         style={{
           backgroundColor: 'var(--card-bg)',
           borderColor: 'var(--card-border)',
         }}
       >
-        {/* Thin fintech accent bar at the top */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-1 rounded-t-2xl"
-          style={{
-            background:
-              'linear-gradient(90deg, rgba(4,120,87,0.9), rgba(22,163,74,0.8))',
-          }}
-        />
-
+        {/* Header row: accent bar + logo + title */}
         <Link
           href={getDetailPageUrl()}
           prefetch={true}
           onMouseEnter={() => router.prefetch(getDetailPageUrl())}
           onTouchStart={() => router.prefetch(getDetailPageUrl())}
-          className="block px-5 pt-5 pb-3"
-          title={`${promo.whopName} discount – ${promo.promoText} (checked ${new Date().toLocaleDateString(
-            'en-US',
-            { month: 'long', year: 'numeric' },
-          )})`}
+          className="block"
+          title={`${promo.whopName} discount – ${promo.promoText}`}
         >
-          <div className="flex items-start gap-4">
-            <div
-              className="flex h-16 w-16 items-center justify-center rounded-xl border"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-              }}
-            >
-              {!logoUrl ||
-              logoUrl.includes('Simplified Logo') ||
-              logoUrl.includes('placeholder') ? (
-                <InitialsAvatar
-                  name={title}
-                  size="lg"
-                  shape="square"
-                  className="w-full h-full"
-                />
-              ) : (
-                <OfferLogoSSR
-                  src={logoUrl}
-                  alt={`${promo.whopName} logo`}
-                  width={64}
-                  height={64}
-                />
-              )}
+          <div className="flex items-start gap-3 mb-3">
+            {/* Accent bar + logo */}
+            <div className="flex items-center gap-2">
+              <span
+                className="hidden md:block h-10 w-0.5 rounded-full"
+                style={{ backgroundColor: 'var(--accent-color)' }}
+                aria-hidden="true"
+              />
+              <div
+                className="h-12 w-12 rounded-xl overflow-hidden flex items-center justify-center border flex-shrink-0"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                }}
+              >
+                {!logoUrl ||
+                logoUrl.includes('Simplified Logo') ||
+                logoUrl.includes('placeholder') ? (
+                  <InitialsAvatar
+                    name={title}
+                    size="md"
+                    shape="square"
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <OfferLogoSSR
+                    src={logoUrl}
+                    alt={`${promo.whopName} logo`}
+                    width={48}
+                    height={48}
+                  />
+                )}
+              </div>
             </div>
 
-            <div className="min-w-0">
+            {/* Title + subtitle */}
+            <div className="flex-1 min-w-0">
               <h2
-                className="truncate text-lg font-semibold md:text-xl"
+                className="text-sm md:text-base font-semibold truncate group-hover:opacity-90"
                 style={{ color: 'var(--text-color)' }}
               >
                 {title}
               </h2>
-
               {previewText && (
                 <p
-                  className="mt-1 line-clamp-2 text-sm md:text-base"
+                  className="text-xs md:text-sm mt-0.5 line-clamp-2"
                   style={{ color: 'var(--text-secondary)' }}
                   title={previewText}
                 >
                   {previewText}
                 </p>
               )}
-
-              {priceBadge && (
-                <div className="mt-2 flex items-center gap-2">
-                  <span
-                    className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide"
-                    style={{
-                      backgroundColor: 'var(--success-color)',
-                      color: 'white',
-                    }}
-                  >
-                    {priceBadge}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </Link>
 
-        <div className="mt-1 space-y-2 px-5 pb-5">
-          {/* Primary CTA: external promo click */}
+        {/* Meta strip */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          {/* Discount badge */}
+          {discountLabel && (
+            <span
+              className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide"
+              style={{
+                backgroundColor: 'rgba(5,150,105,0.08)',
+                color: 'var(--accent-color)',
+              }}
+            >
+              {discountLabel}
+            </span>
+          )}
+
+          {/* Price + cadence */}
+          {priceBadge && (
+            <span
+              className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium border"
+              style={{
+                backgroundColor: 'var(--background-secondary)',
+                color: 'var(--text-secondary)',
+                borderColor: 'var(--border-color)',
+              }}
+            >
+              {priceBadge}
+            </span>
+          )}
+        </div>
+
+        {/* CTA row - split bar */}
+        <div
+          className="mt-auto pt-3 border-t flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+          style={{ borderColor: 'var(--border-color)' }}
+        >
+          {/* Primary CTA */}
           <a
             href={promo.affiliateLink || '#'}
             target="_blank"
             rel="noopener noreferrer nofollow"
-            className="block w-full transform-gpu rounded-full border px-4 py-2.5 text-center text-sm font-semibold uppercase tracking-wide transition-all duration-150 hover:-translate-y-0.5 hover:opacity-95 active:translate-y-0"
+            className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs md:text-sm font-semibold shadow-sm hover:shadow-md transition flex-1 md:flex-none"
             style={{
               backgroundColor: 'var(--accent-color)',
-              color: 'white',
-              borderColor: 'var(--accent-color)',
+              color: '#ffffff',
             }}
             onClick={handleGetPromoClick}
           >
             {t('whop.getPromo')}
           </a>
 
-          {/* Secondary CTA: internal detail view */}
+          {/* Secondary CTA */}
           <Link
             href={getDetailPageUrl()}
             prefetch={true}
             onMouseEnter={() => router.prefetch(getDetailPageUrl())}
             onTouchStart={() => router.prefetch(getDetailPageUrl())}
-            className="block w-full transform-gpu rounded-full border px-4 py-2.5 text-center text-sm font-medium transition-all duration-150 hover:-translate-y-0.5 hover:bg-theme-secondary active:translate-y-0"
+            className="inline-flex items-center justify-center rounded-full px-3.5 py-2 text-xs md:text-sm font-medium border md:w-auto hover:opacity-90 transition-all"
             style={{
-              backgroundColor: 'var(--background-color)',
+              backgroundColor: 'rgba(5,150,105,0.06)',
+              borderColor: 'rgba(5,150,105,0.2)',
               color: 'var(--accent-color)',
-              borderColor: 'var(--border-color)',
             }}
             onClick={handleViewDealClick}
           >
-            {t('whop.viewDeal')}
+            View promo details
           </Link>
         </div>
       </article>

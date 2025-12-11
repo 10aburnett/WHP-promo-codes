@@ -103,205 +103,117 @@ export default function HomePageServer({
       {/* Main content container */}
       <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
 
-      {/* Results count */}
-      {total > 0 && (
-        <p
-          className="mb-4 md:mb-6 text-center text-sm md:text-base"
-          style={{ color: 'var(--text-secondary)' }}
+      {/* Top Pagination - Compact left-aligned bar */}
+      {totalPages > 1 && (
+        <nav
+          className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+          aria-label="Pagination"
         >
-          Displaying {((currentPage - 1) * 15) + 1}–{Math.min(currentPage * 15, total)} of {total}{' '}
-          available offers
-        </p>
-      )}
-
-      {/* Mobile-only Pagination Controls (Top) */}
-      {totalPages > 1 && (
-        <div className="md:hidden flex justify-center items-center gap-1 sm:gap-2 mt-2 mb-6 px-2 overflow-x-auto">
-          {/* Previous Button */}
-          {currentPage > 1 ? (
-            <Link
-              href={pageHref(currentPage - 1)}
-              prefetch={false}
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-            >
-              <span className="hidden sm:inline">Previous page</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-          ) : (
-            <span
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 opacity-50"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-              aria-disabled="true"
-            >
-              <span className="hidden sm:inline">Previous page</span>
-              <span className="sm:hidden">Back</span>
+          {/* Left: summary */}
+          <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Displaying{' '}
+            <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
+              {((currentPage - 1) * 15) + 1}
             </span>
-          )}
+            –
+            <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
+              {Math.min(currentPage * 15, total)}
+            </span>{' '}
+            of{' '}
+            <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
+              {total}
+            </span>{' '}
+            digital offers
+          </p>
 
-          {/* Page Numbers */}
-          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
-            {getPageNumbers().map((pageNum) => (
+          {/* Right: controls */}
+          <div className="inline-flex items-center gap-1 md:gap-2">
+            {/* Previous */}
+            {currentPage > 1 ? (
               <Link
-                key={pageNum}
-                href={pageHref(pageNum)}
+                href={pageHref(currentPage - 1)}
                 prefetch={false}
-                aria-current={pageNum === currentPage ? 'page' : undefined}
-                className={`px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base flex-shrink-0 min-w-[36px] sm:min-w-[40px] text-center transition-all duration-200 hover:opacity-85 active:scale-[0.98] ${
-                  pageNum === currentPage ? 'font-semibold' : ''
-                }`}
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
                 style={{
-                  backgroundColor:
-                    pageNum === currentPage
-                      ? 'var(--accent-color)'
-                      : 'var(--background-secondary)',
-                  borderColor:
-                    pageNum === currentPage
-                      ? 'var(--accent-color)'
-                      : 'var(--border-color)',
-                  color: pageNum === currentPage ? '#ffffff' : 'var(--text-color)',
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
                 }}
               >
-                {pageNum}
+                <span aria-hidden="true">←</span>
+                <span>Previous</span>
               </Link>
-            ))}
-          </div>
-
-          {/* Next Button */}
-          {currentPage < totalPages ? (
-            <Link
-              href={pageHref(currentPage + 1)}
-              prefetch={false}
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-            >
-              <span className="hidden sm:inline">Next page</span>
-              <span className="sm:hidden">More</span>
-            </Link>
-          ) : (
-            <span
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 opacity-50"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-              aria-disabled="true"
-            >
-              <span className="hidden sm:inline">Next page</span>
-              <span className="sm:hidden">More</span>
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Desktop-only Pagination Controls (Top) */}
-      {totalPages > 1 && (
-        <div className="hidden md:flex justify-center items-center gap-1 sm:gap-2 mt-2 mb-6 px-2 overflow-x-auto">
-          {/* Previous Button */}
-          {currentPage > 1 ? (
-            <Link
-              href={pageHref(currentPage - 1)}
-              prefetch={false}
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-            >
-              <span className="hidden sm:inline">Previous page</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-          ) : (
-            <span
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 opacity-50"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-              aria-disabled="true"
-            >
-              <span className="hidden sm:inline">Previous page</span>
-              <span className="sm:hidden">Back</span>
-            </span>
-          )}
-
-          {/* Page Numbers */}
-          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
-            {getPageNumbers().map((pageNum) => (
-              <Link
-                key={pageNum}
-                href={pageHref(pageNum)}
-                prefetch={false}
-                aria-current={pageNum === currentPage ? 'page' : undefined}
-                className={`px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base flex-shrink-0 min-w-[36px] sm:min-w-[40px] text-center transition-all duration-200 hover:opacity-85 active:scale-[0.98] ${
-                  pageNum === currentPage ? 'font-semibold' : ''
-                }`}
+            ) : (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm opacity-50 cursor-not-allowed"
                 style={{
-                  backgroundColor:
-                    pageNum === currentPage
-                      ? 'var(--accent-color)'
-                      : 'var(--background-secondary)',
-                  borderColor:
-                    pageNum === currentPage
-                      ? 'var(--accent-color)'
-                      : 'var(--border-color)',
-                  color: pageNum === currentPage ? '#ffffff' : 'var(--text-color)',
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                }}
+                aria-disabled="true"
+              >
+                <span aria-hidden="true">←</span>
+                <span>Previous</span>
+              </span>
+            )}
+
+            {/* Page numbers */}
+            <div className="flex items-center gap-1">
+              {getPageNumbers().map((pageNum) => (
+                <Link
+                  key={pageNum}
+                  href={pageHref(pageNum)}
+                  prefetch={false}
+                  aria-current={pageNum === currentPage ? 'page' : undefined}
+                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs md:text-sm min-w-[28px] ${
+                    pageNum === currentPage ? 'font-semibold' : ''
+                  }`}
+                  style={{
+                    backgroundColor: pageNum === currentPage ? 'var(--accent-color)' : 'transparent',
+                    color: pageNum === currentPage ? '#ffffff' : 'var(--text-secondary)',
+                  }}
+                >
+                  {pageNum}
+                </Link>
+              ))}
+            </div>
+
+            {/* Next */}
+            {currentPage < totalPages ? (
+              <Link
+                href={pageHref(currentPage + 1)}
+                prefetch={false}
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
                 }}
               >
-                {pageNum}
+                <span>Next</span>
+                <span aria-hidden="true">→</span>
               </Link>
-            ))}
+            ) : (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm opacity-50 cursor-not-allowed"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                }}
+                aria-disabled="true"
+              >
+                <span>Next</span>
+                <span aria-hidden="true">→</span>
+              </span>
+            )}
           </div>
-
-          {/* Next Button */}
-          {currentPage < totalPages ? (
-            <Link
-              href={pageHref(currentPage + 1)}
-              prefetch={false}
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-            >
-              <span className="hidden sm:inline">Next page</span>
-              <span className="sm:hidden">More</span>
-            </Link>
-          ) : (
-            <span
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 opacity-50"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-              aria-disabled="true"
-            >
-              <span className="hidden sm:inline">Next page</span>
-              <span className="sm:hidden">More</span>
-            </span>
-          )}
-        </div>
+        </nav>
       )}
 
-      {/* Offer Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-7 mb-8">
+      {/* Offer Cards Grid - Using sm + xl breakpoints for fingerprint differentiation */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8">
         {items.map((whop) => (
           <OfferCard
             key={whop.id}
@@ -326,97 +238,113 @@ export default function HomePageServer({
         ))}
       </div>
 
-      {/* Pagination Controls (Bottom) */}
+      {/* Bottom Pagination - Compact left-aligned bar */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-1 sm:gap-2 mt-4 mb-10 px-2 overflow-x-auto">
-          {/* Previous Button */}
-          {currentPage > 1 ? (
-            <Link
-              href={pageHref(currentPage - 1)}
-              prefetch={false}
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-            >
-              <span className="hidden sm:inline">Previous page</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-          ) : (
-            <span
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 opacity-50"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-              aria-disabled="true"
-            >
-              <span className="hidden sm:inline">Previous page</span>
-              <span className="sm:hidden">Back</span>
+        <nav
+          className="mt-4 mb-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+          aria-label="Pagination"
+        >
+          {/* Left: summary */}
+          <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Displaying{' '}
+            <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
+              {((currentPage - 1) * 15) + 1}
             </span>
-          )}
+            –
+            <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
+              {Math.min(currentPage * 15, total)}
+            </span>{' '}
+            of{' '}
+            <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
+              {total}
+            </span>{' '}
+            digital offers
+          </p>
 
-          {/* Page Numbers */}
-          <div className="flex items-center gap-1 sm:gap-2 min-w-0">
-            {getPageNumbers().map((pageNum) => (
+          {/* Right: controls */}
+          <div className="inline-flex items-center gap-1 md:gap-2">
+            {/* Previous */}
+            {currentPage > 1 ? (
               <Link
-                key={pageNum}
-                href={pageHref(pageNum)}
+                href={pageHref(currentPage - 1)}
                 prefetch={false}
-                aria-current={pageNum === currentPage ? 'page' : undefined}
-                className={`px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base flex-shrink-0 min-w-[36px] sm:min-w-[40px] text-center transition-all duration-200 hover:opacity-85 active:scale-[0.98] ${
-                  pageNum === currentPage ? 'font-semibold' : ''
-                }`}
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
                 style={{
-                  backgroundColor:
-                    pageNum === currentPage
-                      ? 'var(--accent-color)'
-                      : 'var(--background-secondary)',
-                  borderColor:
-                    pageNum === currentPage
-                      ? 'var(--accent-color)'
-                      : 'var(--border-color)',
-                  color: pageNum === currentPage ? '#ffffff' : 'var(--text-color)',
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
                 }}
               >
-                {pageNum}
+                <span aria-hidden="true">←</span>
+                <span>Previous</span>
               </Link>
-            ))}
-          </div>
+            ) : (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm opacity-50 cursor-not-allowed"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                }}
+                aria-disabled="true"
+              >
+                <span aria-hidden="true">←</span>
+                <span>Previous</span>
+              </span>
+            )}
 
-          {/* Next Button */}
-          {currentPage < totalPages ? (
-            <Link
-              href={pageHref(currentPage + 1)}
-              prefetch={false}
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 transition-all duration-200 hover:opacity-85 active:scale-[0.98]"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-            >
-              <span className="hidden sm:inline">Next page</span>
-              <span className="sm:hidden">More</span>
-            </Link>
-          ) : (
-            <span
-              className="px-3 sm:px-4 py-2.5 rounded-full border text-sm sm:text-base whitespace-nowrap flex-shrink-0 opacity-50"
-              style={{
-                backgroundColor: 'var(--background-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-color)',
-              }}
-              aria-disabled="true"
-            >
-              <span className="hidden sm:inline">Next page</span>
-              <span className="sm:hidden">More</span>
-            </span>
-          )}
-        </div>
+            {/* Page numbers */}
+            <div className="flex items-center gap-1">
+              {getPageNumbers().map((pageNum) => (
+                <Link
+                  key={pageNum}
+                  href={pageHref(pageNum)}
+                  prefetch={false}
+                  aria-current={pageNum === currentPage ? 'page' : undefined}
+                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs md:text-sm min-w-[28px] ${
+                    pageNum === currentPage ? 'font-semibold' : ''
+                  }`}
+                  style={{
+                    backgroundColor: pageNum === currentPage ? 'var(--accent-color)' : 'transparent',
+                    color: pageNum === currentPage ? '#ffffff' : 'var(--text-secondary)',
+                  }}
+                >
+                  {pageNum}
+                </Link>
+              ))}
+            </div>
+
+            {/* Next */}
+            {currentPage < totalPages ? (
+              <Link
+                href={pageHref(currentPage + 1)}
+                prefetch={false}
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                }}
+              >
+                <span>Next</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            ) : (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm opacity-50 cursor-not-allowed"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-secondary)',
+                }}
+                aria-disabled="true"
+              >
+                <span>Next</span>
+                <span aria-hidden="true">→</span>
+              </span>
+            )}
+          </div>
+        </nav>
       )}
 
       {/* No results message */}
