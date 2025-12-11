@@ -55,7 +55,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
 
   return (
     <div className="min-h-screen py-12 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
-      <div className="mx-auto w-[90%] md:w-[95%] max-w-[800px]">
+      <div className="mx-auto w-[90%] md:w-[94%] max-w-[1100px]">
         <div className="space-y-8">
           {/* Breadcrumb Navigation - Simplified slash format */}
           <nav className="mb-8" aria-label="Breadcrumb">
@@ -80,152 +80,173 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
 
           {/* Article */}
           <article>
-            {/* Carded Hero Header */}
-            <header className="mb-10">
-              <div
-                className="rounded-2xl border p-6 md:p-8 shadow-sm"
-                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+            {/* Flat Editorial Header */}
+            <header className="mb-8 md:mb-10">
+              <p
+                className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
+                style={{ color: 'var(--accent-color)' }}
               >
-                <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--accent-color)' }}>
-                  DigitalPromoCodes Insights
-                </p>
-                <h1 className="text-3xl md:text-4xl font-bold mb-3"
-                    style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                  {post.title}
-                </h1>
-                <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  {post.publishedAt && (
-                    <time>
-                      {new Date(post.publishedAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </time>
-                  )}
+                DigitalPromoCodes blog
+              </p>
 
-                  {(post.authorName || post.author?.name) && (
-                    <span>By {post.authorName || post.author?.name}</span>
-                  )}
+              <h1
+                className="text-3xl md:text-4xl lg:text-[2.6rem] font-bold tracking-tight mb-4"
+                style={{ color: 'var(--text-color)', lineHeight: 1.15 }}
+              >
+                {post.title}
+              </h1>
 
-                  <span className="flex items-center">
-                    <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M12 6v6l3 3" />
-                    </svg>
-                    {post.readingTime} min read
-                  </span>
-                </div>
+              <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm"
+                   style={{ color: 'var(--text-secondary)' }}>
+                {post.publishedAt && (
+                  <time>
+                    {new Date(post.publishedAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                )}
+
+                {(post.authorName || post.author?.name) && (
+                  <span>• {post.authorName || post.author?.name}</span>
+                )}
+
+                <span>• {post.readingTime} min read</span>
+              </div>
+
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] md:text-xs"
+                   style={{
+                     backgroundColor: 'rgba(5,150,105,0.06)',
+                     color: 'var(--accent-color)',
+                   }}>
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--accent-color)]" />
+                Updated periodically as offers change
               </div>
             </header>
 
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Table of Contents - Desktop Sidebar */}
-              {shouldShowToc && (
-                <div className="hidden lg:block lg:w-64 shrink-0">
-                  <div className="sticky top-8">
-                    <div
-                      className="rounded-xl border p-5 shadow-sm"
-                      style={{
-                        backgroundColor: 'var(--background-secondary)',
-                        borderColor: 'var(--border-color)',
-                      }}
-                    >
-                      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
-                        Article contents
-                      </h3>
-                      <nav className="space-y-1.5">
-                        {post.headings.map((heading, index) => (
-                          <a
-                            key={index}
-                            href={`#${heading.id}`}
-                            className="block text-sm transition-opacity hover:opacity-80"
-                            style={{
-                              color: 'var(--text-secondary)',
-                              paddingLeft: `${(heading.level - 1) * 12}px`,
-                            }}
-                          >
-                            {heading.text}
-                          </a>
-                        ))}
-                      </nav>
-                    </div>
+            {/* Mobile Table of Contents Toggle */}
+            {shouldShowToc && (
+              <div className="lg:hidden mb-6">
+                <button
+                  onClick={() => setShowToc(!showToc)}
+                  className="flex w-full items-center justify-between rounded-xl border px-4 py-3"
+                  style={{
+                    backgroundColor: 'var(--background-secondary)',
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--text-color)',
+                  }}
+                >
+                  <span className="font-medium text-sm">{showToc ? 'Hide outline' : 'Show outline'}</span>
+                  <svg
+                    className={`h-5 w-5 transition-transform ${showToc ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {showToc && (
+                  <div className="mt-4 p-4 rounded-xl border" style={{
+                    backgroundColor: 'var(--background-secondary)',
+                    borderColor: 'var(--border-color)'
+                  }}>
+                    <nav className="space-y-1.5">
+                      {post.headings.map((heading, index) => (
+                        <a
+                          key={index}
+                          href={`#${heading.id}`}
+                          onClick={() => setShowToc(false)}
+                          className="block text-sm hover:opacity-80 transition-opacity"
+                          style={{
+                            color: 'var(--text-secondary)',
+                            paddingLeft: `${(heading.level - 1) * 12}px`
+                          }}
+                        >
+                          {heading.text}
+                        </a>
+                      ))}
+                    </nav>
                   </div>
-                </div>
-              )}
-              
-              {/* Mobile Table of Contents Toggle */}
+                )}
+              </div>
+            )}
+
+            {/* Content layout: TOC rail + full-width article band */}
+            <div className="mt-8 grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
+              {/* Table of Contents - left rail (desktop) */}
               {shouldShowToc && (
-                <div className="lg:hidden mb-6">
-                  <button
-                    onClick={() => setShowToc(!showToc)}
-                    className="flex w-full items-center justify-between rounded-xl border px-4 py-3"
+                <div className="hidden lg:block">
+                  <div
+                    className="sticky top-8 rounded-xl border p-5 shadow-sm"
                     style={{
                       backgroundColor: 'var(--background-secondary)',
                       borderColor: 'var(--border-color)',
-                      color: 'var(--text-color)',
                     }}
                   >
-                    <span className="font-medium text-sm">{showToc ? 'Hide section list' : 'Show section list'}</span>
-                    <svg
-                      className={`h-5 w-5 transition-transform ${showToc ? 'rotate-180' : ''}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    <h3
+                      className="mb-3 text-sm font-semibold uppercase tracking-wide"
+                      style={{ color: 'var(--text-muted)' }}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {showToc && (
-                    <div className="mt-4 p-4 rounded-xl border" style={{
-                      backgroundColor: 'var(--background-secondary)',
-                      borderColor: 'var(--border-color)'
-                    }}>
-                      <nav className="space-y-1.5">
-                        {post.headings.map((heading, index) => (
-                          <a
-                            key={index}
-                            href={`#${heading.id}`}
-                            onClick={() => setShowToc(false)}
-                            className="block text-sm hover:opacity-80 transition-opacity"
-                            style={{
-                              color: 'var(--text-secondary)',
-                              paddingLeft: `${(heading.level - 1) * 12}px`
-                            }}
-                          >
-                            {heading.text}
-                          </a>
-                        ))}
-                      </nav>
-                    </div>
-                  )}
+                      On this page
+                    </h3>
+                    <nav className="space-y-1.5">
+                      {post.headings.map((heading, index) => (
+                        <a
+                          key={index}
+                          href={`#${heading.id}`}
+                          className="block text-sm transition-opacity hover:opacity-80"
+                          style={{
+                            color: 'var(--text-secondary)',
+                            paddingLeft: `${(heading.level - 1) * 12}px`,
+                          }}
+                        >
+                          {heading.text}
+                        </a>
+                      ))}
+                    </nav>
+                  </div>
                 </div>
               )}
-              
-              {/* Main Content */}
-              <div className="flex-1">
-                <div
-                  className="rounded-2xl border px-6 py-7 md:px-10 md:py-10"
+
+              {/* Main article - full-width band */}
+              <div className={shouldShowToc ? 'lg:col-start-2' : 'lg:col-span-2'}>
+                <section
+                  aria-label="Article content"
+                  className="py-10 md:py-14"
                   style={{
-                    backgroundColor: 'var(--card-bg)',
-                    borderColor: 'var(--card-border)',
-                    boxShadow: 'var(--promo-shadow)',
+                    marginLeft: 'calc(50% - 50vw)',
+                    marginRight: 'calc(50% - 50vw)',
+                    background:
+                      'radial-gradient(circle at top left, rgba(8, 150, 105, 0.10), transparent 55%)',
+                    borderTop: '1px solid var(--border-color)',
+                    borderBottom: '1px solid var(--border-color)',
                   }}
                 >
-                  <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
-                    Reviewed periodically for accuracy. Specific details can evolve over time.
-                  </p>
-                  <div
-                    className="prose prose-lg max-w-none blog-content"
-                    style={{
-                      color: 'var(--text-color)',
-                      '--tw-prose-headings': 'var(--text-color)',
-                      '--tw-prose-links': 'var(--accent-color)',
-                    } as React.CSSProperties}
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  />
-                </div>
+                  {/* inner container aligned like the homepage/blog heroes */}
+                  <div className="mx-auto w-[90%] md:w-[95%] max-w-[820px]">
+                    <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
+                      Last updated for accuracy and clarity. Some details may change over time.
+                    </p>
+
+                    <div
+                      className="relative mt-2 pl-4 md:pl-6 border-l"
+                      style={{ borderColor: 'var(--border-color)' }}
+                    >
+                      <div
+                        className="prose prose-lg max-w-none blog-content"
+                        style={{
+                          color: 'var(--text-color)',
+                          '--tw-prose-headings': 'var(--text-color)',
+                          '--tw-prose-links': 'var(--accent-color)',
+                        } as React.CSSProperties}
+                        dangerouslySetInnerHTML={{ __html: post.content }}
+                      />
+                    </div>
+                  </div>
+                </section>
               </div>
             </div>
           </article>

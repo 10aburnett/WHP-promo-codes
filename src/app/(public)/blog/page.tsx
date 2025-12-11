@@ -179,24 +179,27 @@ export default async function BlogPage() {
               </aside>
             </div>
 
-            {/* Blog posts grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Blog posts grid - 2-column editorial layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-7 lg:gap-8">
               {(posts as BlogListItemWithDates[]).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <article
-                    className="group h-full rounded-2xl border p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200"
-                    style={{
-                      backgroundColor: 'var(--card-bg)',
-                      borderColor: 'var(--card-border)',
-                      boxShadow: 'var(--promo-shadow)',
-                    }}
+                    className="group relative h-full overflow-hidden rounded-2xl border bg-[color:var(--card-bg)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                    style={{ borderColor: 'var(--card-border)', boxShadow: 'var(--promo-shadow)' }}
                   >
-                    <div className="mb-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <time
-                          className="text-xs uppercase tracking-wide"
-                          style={{ color: 'var(--text-muted)' }}
-                        >
+                    {/* Left accent strip */}
+                    <div
+                      className="absolute inset-y-0 left-0 w-1"
+                      style={{
+                        background: 'linear-gradient(to bottom, var(--accent-color), transparent)',
+                      }}
+                    />
+
+                    <div className="flex h-full flex-col gap-4 px-5 py-5 md:px-6 md:py-6 pl-7">
+                      {/* Meta row */}
+                      <div className="flex items-center justify-between gap-3 text-[11px] uppercase tracking-wide"
+                           style={{ color: 'var(--text-muted)' }}>
+                        <time>
                           {post.publishedAt
                             ? new Date(post.publishedAt).toLocaleDateString('en-US', {
                                 year: 'numeric',
@@ -205,56 +208,60 @@ export default async function BlogPage() {
                               })
                             : ''}
                         </time>
-                        {post.pinned && (
-                          <span
-                            className="rounded-full px-2.5 py-1 text-xs font-medium"
-                            style={{
-                              backgroundColor: 'rgba(5,150,105,0.1)',
-                              color: 'var(--accent-color)',
-                            }}
-                          >
-                            Editor's pick
-                          </span>
+
+                        <span className="rounded-full border px-2.5 py-1 text-[10px] font-semibold"
+                              style={{
+                                borderColor: 'rgba(148,163,184,0.45)',
+                                backgroundColor: 'rgba(15,23,42,0.02)',
+                                color: 'var(--text-secondary)',
+                              }}>
+                          {post.pinned ? 'Editor pick' : 'Deep-dive'}
+                        </span>
+                      </div>
+
+                      {/* Title + excerpt */}
+                      <div className="space-y-2">
+                        <h2
+                          className="text-lg md:text-xl font-semibold leading-snug group-hover:text-[color:var(--accent-color)] transition-colors"
+                          style={{ color: 'var(--text-color)' }}
+                        >
+                          {post.title}
+                        </h2>
+
+                        {post.excerpt && (
+                          <p className="text-sm leading-relaxed line-clamp-3"
+                             style={{ color: 'var(--text-secondary)' }}>
+                            {post.excerpt}
+                          </p>
                         )}
                       </div>
 
-                      <h2
-                        className="text-lg md:text-xl font-semibold group-hover:opacity-90"
-                        style={{ color: 'var(--text-color)' }}
-                      >
-                        {post.title}
-                      </h2>
+                      {/* Footer: author + CTA chip */}
+                      <div className="mt-auto flex items-center justify-between gap-3 pt-3 border-t"
+                           style={{ borderColor: 'var(--border-color)' }}>
+                        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                          {(post.authorName ?? post.author?.name) || 'DigitalPromoCodes team'}
+                        </span>
 
-                      {post.excerpt && (
-                        <p className="text-sm line-clamp-3" style={{ color: 'var(--text-secondary)' }}>
-                          {post.excerpt}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between pt-3 border-t"
-                         style={{ borderColor: 'var(--border-color)' }}>
-                      <span
-                        className="inline-flex items-center text-xs font-medium"
-                        style={{ color: 'var(--accent-color)' }}
-                      >
-                        Open article
-                        <svg
-                          className="ml-1.5 h-4 w-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={1.8}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                        <span
+                          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium group-hover:border-[color:var(--accent-color)] group-hover:text-[color:var(--accent-color)] transition-colors"
+                          style={{ borderColor: 'rgba(148,163,184,0.6)', color: 'var(--text-secondary)' }}
                         >
-                          <path d="M5 12h14" />
-                          <path d="M13 5l7 7-7 7" />
-                        </svg>
-                      </span>
-                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                        By {post.authorName ?? post.author?.name ?? 'Unknown'}
-                      </span>
+                          View breakdown
+                          <svg
+                            className="h-3.5 w-3.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={1.7}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M5 12h14" />
+                            <path d="M13 5l7 7-7 7" />
+                          </svg>
+                        </span>
+                      </div>
                     </div>
                   </article>
                 </Link>
