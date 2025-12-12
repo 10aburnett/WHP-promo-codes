@@ -193,8 +193,8 @@ async function getPagedWhops({
 // Metadata for SEO
 export async function generateMetadata(): Promise<Metadata> {
   const currentYear = new Date().getFullYear();
-  const title = `${SITE_BRAND} - Digital Promo Codes & Savings on Online Products ${currentYear}`;
-  const description = `${SITE_BRAND} helps you uncover working promo codes for digital tools, courses, communities and memberships. Explore thousands of checked offers and discounts kept fresh throughout ${currentYear}.`;
+  const title = `${SITE_BRAND} - Find Promo Codes for Software, Courses & Memberships ${currentYear}`;
+  const description = `Browse promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`;
 
   return {
     title,
@@ -262,9 +262,9 @@ export default async function Home({
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    '@id': `${siteUrl}#website`,
+    '@id': `${siteUrl}#dpc-website`,
     name: SITE_BRAND,
-    description: SITE_DESCRIPTION,
+    description: 'Directory of promo codes and discounts for digital products, software, and online services.',
     url: siteUrl,
     potentialAction: {
       '@type': 'SearchAction',
@@ -279,7 +279,7 @@ export default async function Home({
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': `${siteUrl}#org`,
+    '@id': `${siteUrl}#dpc-org`,
     name: SITE_BRAND,
     url: siteUrl,
     logo: {
@@ -288,11 +288,10 @@ export default async function Home({
       width: 400,
       height: 400,
     },
-    description: SITE_DESCRIPTION,
-    // sameAs removed - no verified social profiles for new brand yet
+    description: 'An independent platform cataloguing promotional codes and pricing information for digital tools and services.',
     contactPoint: {
       '@type': 'ContactPoint',
-      contactType: 'customer service',
+      contactType: 'customer support',
       url: absoluteUrl('/contact'),
     },
   };
@@ -300,8 +299,9 @@ export default async function Home({
   const offersSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `Featured Digital Discounts & Promo Codes ${currentYear}`,
-    description: `Editorial selection of digital product offers and promo codes for ${currentYear}`,
+    '@id': `${siteUrl}#dpc-featured-list`,
+    name: `Highlighted Digital Offers ${currentYear}`,
+    description: `A curated selection of digital product discounts available in ${currentYear}`,
     numberOfItems: data.total,
     itemListElement: data.items.slice(0, 10).map((whop, index) => ({
       '@type': 'ListItem',
@@ -334,7 +334,7 @@ export default async function Home({
                   promo.value.includes('off')
                   ? promo.value
                   : `${promo.value}% off`
-                : 'Special access',
+                : 'Promotional access',
           },
         })),
       },
@@ -515,10 +515,10 @@ export default async function Home({
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Trusted by deal-seekers
+                  Used by savvy shoppers
                 </h3>
                 <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Join thousands of shoppers who use {SITE_BRAND} to find verified savings on digital products, courses, and memberships.
+                  Join others who use {SITE_BRAND} to find working codes for digital products, courses, and memberships.
                 </p>
               </div>
               <CallToAction />

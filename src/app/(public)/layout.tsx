@@ -48,13 +48,13 @@ export async function generateMetadata(): Promise<Metadata> {
     faviconUrl = `/favicon.ico?v=${STATIC_VERSION}`;
   }
 
-  const title = `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`;
-  const description = `${SITE_DESCRIPTION} Discover fresh discount codes and curated digital offers for ${currentYear}, updated regularly.`;
+  const title = `${SITE_BRAND} - Checked Promo Codes for Digital Products ${currentYear}`;
+  const description = `${SITE_DESCRIPTION} Explore up-to-date discount codes for software tools, learning platforms, and online communities.`;
 
   return {
     title,
     description,
-    keywords: 'digital savings, online promo codes, software deals, course offers, membership discounts, trusted digital coupons, curated promo codes, verified codes',
+    keywords: 'promo codes, digital products, software discounts, course savings, membership deals, checked codes, online tools',
     metadataBase: new URL(siteOrigin()),
     openGraph: {
       title,
@@ -67,16 +67,15 @@ export async function generateMetadata(): Promise<Metadata> {
           url: '/og.png',
           width: 1200,
           height: 630,
-          alt: `${SITE_BRAND} – Save on digital tools, AI apps, courses & memberships`
+          alt: `${SITE_BRAND} - Promo code directory for digital products and services`
         }
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`,
+      title: `${SITE_BRAND} - Checked Promo Codes for Digital Products ${currentYear}`,
       description,
       images: ['/og.png'],
-      // Twitter handles removed until new brand accounts exist
     },
     verification: {
       google: 'your-google-verification-code',

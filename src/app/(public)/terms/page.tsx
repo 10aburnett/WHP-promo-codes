@@ -12,7 +12,7 @@ export const revalidate = 86400 // 24h
 
 export const metadata: Metadata = {
   title: `Terms of Service - ${SITE_BRAND}`,
-  description: `Read the terms and conditions for using ${SITE_BRAND} deals platform and our affiliate services.`,
+  description: `Review the usage terms and conditions that apply when you access ${SITE_BRAND} and interact with listed offers.`,
   alternates: {
 // PHASE1-DEINDEX:     canonical: `${siteOrigin()}/terms`,
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `Terms of Service - ${SITE_BRAND}`,
-    description: `Read the terms and conditions for using ${SITE_BRAND} deals platform and our affiliate services.`,
+    description: `Review the usage terms and conditions that apply when you access ${SITE_BRAND} and interact with listed offers.`,
     url: `${siteOrigin()}/terms`,
     type: 'website',
     siteName: SITE_BRAND,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `Terms of Service - ${SITE_BRAND}`,
-    description: `Read the terms and conditions for using ${SITE_BRAND} deals platform and our affiliate services.`,
+    description: `Review the usage terms and conditions that apply when you access ${SITE_BRAND} and interact with listed offers.`,
   },
 };
 
@@ -118,11 +118,13 @@ export default async function TermsOfService() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebPage",
+            "@id": `${origin}/terms#dpc-terms`,
             name: "Terms of Service",
-            description: `Read the terms and conditions for using ${SITE_BRAND} platform.`,
+            description: `Usage agreement and conditions for ${SITE_BRAND} visitors.`,
             url: `${origin}/terms`,
             mainEntity: {
               "@type": "Organization",
+              "@id": `${origin}#dpc-org`,
               name: SITE_BRAND,
               url: origin
             }

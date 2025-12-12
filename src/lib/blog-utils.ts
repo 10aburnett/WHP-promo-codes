@@ -79,6 +79,7 @@ export function generateArticleSchema(post: {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
+    '@id': `${origin}/blog/${post.slug}#dpc-article`,
     'headline': post.title,
     'description': post.excerpt || post.content.replace(/<[^>]*>/g, '').substring(0, 160) + '...',
     'image': imageUrl,
@@ -89,6 +90,7 @@ export function generateArticleSchema(post: {
     },
     'publisher': {
       '@type': 'Organization',
+      '@id': `${origin}#dpc-org`,
       'name': SITE_BRAND,
       'url': origin,
       'logo': {
@@ -100,14 +102,14 @@ export function generateArticleSchema(post: {
     'dateModified': modifiedDate,
     'mainEntityOfPage': {
       '@type': 'WebPage',
-      '@id': `${origin}/blog/${post.slug}`
+      '@id': `${origin}/blog/${post.slug}#dpc-page`
     },
     'url': `${origin}/blog/${post.slug}`,
     'wordCount': post.content.replace(/<[^>]*>/g, '').split(/\s+/).length,
     'timeRequired': `PT${readingTime}M`,
-    'genre': 'Digital products & savings strategies',
-    'keywords': `digital promo codes, digital products, online savings tips, ${post.title}`,
-    'articleSection': 'Digital products, discounts & savings strategies',
+    'genre': 'Technology and digital commerce',
+    'keywords': `software reviews, digital tools, online services, ${post.title}`,
+    'articleSection': 'Guides and analysis',
     'inLanguage': 'en-US'
   }
 }
@@ -120,17 +122,18 @@ export function generateBreadcrumbSchema(postTitle: string, slug: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    '@id': `${origin}/blog/${slug}#dpc-breadcrumb`,
     'itemListElement': [
       {
         '@type': 'ListItem',
         'position': 1,
-        'name': 'Home',
+        'name': 'Homepage',
         'item': origin
       },
       {
         '@type': 'ListItem',
         'position': 2,
-        'name': 'Insights',
+        'name': 'Articles',
         'item': `${origin}/blog`
       },
       {

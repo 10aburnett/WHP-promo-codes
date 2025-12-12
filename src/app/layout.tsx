@@ -59,13 +59,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const origin = siteOrigin();
 
   return {
-    title: `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`,
-    description: SITE_DESCRIPTION,
-    keywords: 'digital promo codes, online discounts, coupon alternatives, savings on software, course discounts, membership offers, verified digital deals',
+    title: `${SITE_BRAND} - Promo Codes for Digital Products ${currentYear}`,
+    description: `Find working promo codes for software, courses, and memberships. ${SITE_DESCRIPTION}`,
+    keywords: 'promo codes, digital discounts, software savings, course deals, membership offers, online tools',
     metadataBase: new URL(origin),
     openGraph: {
-      title: `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`,
-      description: SITE_DESCRIPTION,
+      title: `${SITE_BRAND} - Promo Codes for Digital Products ${currentYear}`,
+      description: `Find working promo codes for software, courses, and memberships. ${SITE_DESCRIPTION}`,
       url: origin,
       type: 'website',
       siteName: SITE_BRAND,
@@ -74,14 +74,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: '/og.png',
           width: 1200,
           height: 630,
-          alt: `${SITE_BRAND} – Save on digital tools, AI apps, courses & memberships`
+          alt: `${SITE_BRAND} - Directory of digital product discounts and promo codes`
         }
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${SITE_BRAND} - Genuine Promo Codes and Fresh Deals ${currentYear}`,
-      description: SITE_DESCRIPTION,
+      title: `${SITE_BRAND} - Promo Codes for Digital Products ${currentYear}`,
+      description: `Find working promo codes for software, courses, and memberships. ${SITE_DESCRIPTION}`,
       images: ['/og.png'],
     },
     robots: {

@@ -21,9 +21,9 @@ export const runtime = 'nodejs' // Required for Prisma
 const currentYear = new Date().getFullYear()
 
 export const metadata: Metadata = {
-  title: `${SITE_BRAND} Blog - Guides on Deals, Discounts & Digital Products ${currentYear}`,
-  description: `Explore practical guides, breakdowns, and reviews on digital products, discounts and offers in ${currentYear}. Stay informed about new tools, communities and ways to save online.`,
-  keywords: `blog, deals ${currentYear}, digital products, online courses, communities, discount strategies, exclusive offers, online savings insights`,
+  title: `${SITE_BRAND} Articles - Reviews, Guides & Product Analysis ${currentYear}`,
+  description: `Read in-depth coverage of digital tools, software platforms, and online services. Practical breakdowns and independent reviews updated for ${currentYear}.`,
+  keywords: `articles, reviews ${currentYear}, software analysis, digital tools, online services, product guides, technology insights`,
   alternates: {
 // PHASE1-DEINDEX:     canonical: `${siteOrigin()}/blog`
   },
@@ -39,15 +39,15 @@ export const metadata: Metadata = {
     }
   },
   openGraph: {
-    title: `${SITE_BRAND} Blog - Guides to Digital Deals & Products ${currentYear}`,
-    description: `Your hub for guides on digital deals, exclusive offers and product explainers in ${currentYear}. Learn how to evaluate tools, pick the right products and make the most of online discounts.`,
+    title: `${SITE_BRAND} Articles - Software Reviews & Digital Product Analysis ${currentYear}`,
+    description: `Browse detailed guides on digital products and services. Independent analysis of tools, platforms, and online communities for ${currentYear}.`,
     type: 'website',
     url: `${siteOrigin()}/blog`
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_BRAND} Blog - Digital Savings & Product Guides ${currentYear}`,
-    description: `Articles on digital savings, new products and promo strategies in ${currentYear}. Learn how to use discounts and memberships more effectively online.`
+    title: `${SITE_BRAND} Articles - Digital Product Reviews ${currentYear}`,
+    description: `Coverage of software, online tools, and digital services. Analysis and guides to help you make informed decisions in ${currentYear}.`
   }
 }
 

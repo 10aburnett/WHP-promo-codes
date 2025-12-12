@@ -315,7 +315,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const monthYear = `(${currentMonth} ${currentYear})`;
 
   const title = `${offerData.name} Promo Code ${monthYear}`;
-  
+
   // Build dynamic meta description
   let description = '';
   const whopName = offerData.name;
@@ -324,30 +324,30 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const price = offerData.price;
   const category = offerData.category;
 
-  // Start with base call-to-action
+  // Start with base description
   if (firstPromo && firstPromo.code) {
     // Has a promo code
     if (firstPromo.value && firstPromo.value !== '0' && firstPromo.value !== '') {
       // Has specific discount value
-      const promoValueText = firstPromo.value.includes('$') || firstPromo.value.includes('%') || firstPromo.value.includes('off') 
-        ? firstPromo.value 
+      const promoValueText = firstPromo.value.includes('$') || firstPromo.value.includes('%') || firstPromo.value.includes('off')
+        ? firstPromo.value
         : `${firstPromo.value}% off`;
-      description = `Get ${promoValueText} ${whopName} with our exclusive promo code.`;
+      description = `Save ${promoValueText} on ${whopName} using a checked promo code.`;
     } else {
       // Has promo code but no specific discount value
-      description = `Claim your exclusive discount on ${whopName} with our special promo code.`;
+      description = `Apply a working discount code for ${whopName} and reduce your cost.`;
     }
   } else {
-    // No promo code, just exclusive access
-    description = `Get exclusive access to ${whopName} through our special link.`;
+    // No promo code, just direct access
+    description = `View current pricing and availability for ${whopName}.`;
   }
 
   // Add pricing information if available
   if (price) {
     if (price === 'Free') {
-      description += ` Access this free ${category ? category.toLowerCase() : 'content'}.`;
+      description += ` This ${category ? category.toLowerCase() : 'resource'} is currently offered at no cost.`;
     } else if (price !== 'N/A') {
-      description += ` Starting at ${price}.`;
+      description += ` Pricing starts at ${price}.`;
     }
   }
 
@@ -355,18 +355,18 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (category) {
     const categoryLower = category.toLowerCase();
     if (!description.includes(categoryLower)) {
-      description += ` Premium ${categoryLower} content.`;
+      description += ` Part of our ${categoryLower} collection.`;
     }
   }
 
-  // Add urgency and freshness
-  description += ` Limited time offer - verified ${currentMonth} ${currentYear}.`;
+  // Add freshness note
+  description += ` Last checked ${currentMonth} ${currentYear}.`;
 
-  // Add final call-to-action
+  // Add closing
   if (firstPromo && firstPromo.code) {
-    description += ' Copy code & save now!';
+    description += ' See code details inside.';
   } else {
-    description += ' Join today!';
+    description += ' Full details available.';
   }
 
   // Ensure description is within optimal length (150-160 characters)
@@ -405,15 +405,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     keywords: [
       `${offerData.name} promo code`,
       `${offerData.name} discount`,
-      `${offerData.name} coupon`,
+      `${offerData.name} offer`,
       firstPromo?.value ?
         (firstPromo.value.includes('$') || firstPromo.value.includes('%') || firstPromo.value.includes('off')
           ? firstPromo.value
-          : `${firstPromo.value}% off`)
-        : 'exclusive access',
+          : `${firstPromo.value} percent off`)
+        : 'promotional offer',
       offerData.category,
-      price === 'Free' ? 'free' : 'premium',
-      currentMonth,
+      price === 'Free' ? 'free access' : 'paid',
       currentYear.toString()
     ].filter(Boolean).join(', '),
     alternates: {
@@ -464,7 +463,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     // Return safe fallback metadata instead of crashing
     return {
       title: 'Offer',
-      description: 'Discover exclusive deals and discounts.',
+      description: 'Browse digital product offers and promo codes.',
       robots: { index: false, follow: false } // PHASE1-DEINDEX: hard noindex/nofollow
     };
   }
@@ -673,11 +672,11 @@ export default async function DealPage({ params }: { params: { slug: string } })
     },
     {
       question: `What type of product is ${offerFormatted.name}?`,
-      answer: `${offerFormatted.name} is ${offerFormatted.category ? `in the ${offerFormatted.category.toLowerCase()} category and provides` : 'an exclusive platform that provides'} premium content and resources for its members. It's designed to help users achieve their goals through expert guidance and community support.`
+      answer: `${offerFormatted.name} is ${offerFormatted.category ? `listed in the ${offerFormatted.category.toLowerCase()} category and offers` : 'a digital product that offers'} content and resources to its subscribers. It focuses on delivering value through materials and community features.`
     },
     {
       question: 'How long is this offer valid?',
-      answer: `This exclusive offer for ${offerFormatted.name} is available for a limited time. We recommend claiming it as soon as possible as these deals can expire or change without notice.`
+      answer: `This offer for ${offerFormatted.name} is subject to availability. We suggest checking the details soon, as promo codes can change or expire without notice.`
     }
   ];
 

@@ -12,7 +12,7 @@ export const revalidate = 86400 // 24h
 
 export const metadata: Metadata = {
   title: `Privacy Policy - ${SITE_BRAND}`,
-  description: `Learn how ${SITE_BRAND} collects, uses, and protects your information when you use our deals platform.`,
+  description: `Understand how ${SITE_BRAND} handles your data when you browse our promo code directory and use site features.`,
   alternates: {
 // PHASE1-DEINDEX:     canonical: `${siteOrigin()}/privacy`,
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `Privacy Policy - ${SITE_BRAND}`,
-    description: `Learn how ${SITE_BRAND} collects, uses, and protects your information when you use our deals platform.`,
+    description: `Understand how ${SITE_BRAND} handles your data when you browse our promo code directory and use site features.`,
     url: `${siteOrigin()}/privacy`,
     type: 'website',
     siteName: SITE_BRAND,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `Privacy Policy - ${SITE_BRAND}`,
-    description: `Learn how ${SITE_BRAND} collects, uses, and protects your information when you use our deals platform.`,
+    description: `Understand how ${SITE_BRAND} handles your data when you browse our promo code directory and use site features.`,
   },
 };
 
@@ -128,11 +128,13 @@ export default async function PrivacyPolicy() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebPage",
+            "@id": `${origin}/privacy#dpc-privacy`,
             name: "Privacy Policy",
-            description: `Learn how ${SITE_BRAND} collects, uses, and protects your information.`,
+            description: `Data handling practices for ${SITE_BRAND} visitors and users.`,
             url: `${origin}/privacy`,
             mainEntity: {
               "@type": "Organization",
+              "@id": `${origin}#dpc-org`,
               name: SITE_BRAND,
               url: origin
             }

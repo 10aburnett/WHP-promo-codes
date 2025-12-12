@@ -8,8 +8,8 @@ export const dynamic = 'force-static'
 export const fetchCache = 'force-cache'
 export const revalidate = 86400 // 24h
 
-const title = `Contact ${SITE_BRAND} - Get in Touch for Support & Partnerships`;
-const description = `Contact ${SITE_BRAND} for questions about deals, partnerships, or support. We respond within 24-48 hours to all inquiries.`;
+const title = `Contact ${SITE_BRAND} - Questions, Feedback & Partnership Enquiries`;
+const description = `Reach out to ${SITE_BRAND} for support, listing enquiries or feedback. We aim to reply within 24-48 hours.`;
 
 export const metadata: Metadata = {
   title,
@@ -54,17 +54,18 @@ export default function ContactPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ContactPage",
-            "@id": `${origin}/contact#page`,
+            "@id": `${origin}/contact#dpc-contact`,
             name: `Contact ${SITE_BRAND}`,
+            description: "Send us a message for support, partnership requests, or general feedback.",
             url: `${origin}/contact`,
             mainEntity: {
               "@type": "Organization",
-              "@id": `${origin}#org`,
+              "@id": `${origin}#dpc-org`,
               name: SITE_BRAND,
               url: origin,
               contactPoint: {
                 "@type": "ContactPoint",
-                contactType: "customer service",
+                contactType: "customer support",
                 email: CONTACT_EMAIL,
                 url: `${origin}/contact`
               }

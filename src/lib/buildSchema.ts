@@ -115,7 +115,7 @@ export function buildBreadcrumbList(vm: OfferViewModel) {
   const crumbs = vm.breadcrumbs && vm.breadcrumbs.length
     ? vm.breadcrumbs
     : [
-        { name: 'Homepage', url: absoluteUrl('/') },
+        { name: 'Home', url: absoluteUrl('/') },
         ...(vm.category
           ? [{ name: vm.category, url: absoluteUrl(`/category/${encodeURIComponent(vm.category.toLowerCase().replace(/\s+/g, '-'))}`) }]
           : []),
@@ -217,7 +217,7 @@ export function buildFAQ(vm: OfferViewModel) {
   const node: any = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": `${vm.url}#faq`,
+    "@id": `${vm.url}#dpc-faq`,
     mainEntity: qa
   };
   if (vm.inLanguage) node.inLanguage = vm.inLanguage;
@@ -237,8 +237,8 @@ export function buildHowTo(vm: OfferViewModel) {
   const node: any = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "@id": `${vm.url}#howto`,
-    name: `How to use the ${toPlain(vm.name)} offer`,
+    "@id": `${vm.url}#dpc-howto`,
+    name: `Steps to apply a ${toPlain(vm.name)} promo code`,
     step: steps
   };
   if (vm.inLanguage) node.inLanguage = vm.inLanguage;
@@ -276,8 +276,8 @@ export function buildItemList(
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "@id": `${selfUrl}#${idSuffix}`,
-    "name": idSuffix === 'recommended' ? "Suggested offers for you" : "Other options to explore",
+    "@id": `${selfUrl}#dpc-${idSuffix}`,
+    "name": idSuffix === 'recommended' ? "Related offers you may find useful" : "Alternative options in this category",
     "itemListElement": list.map((u, i) => ({
       "@type": "ListItem",
       "position": i + 1,

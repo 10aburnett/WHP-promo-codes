@@ -9,13 +9,13 @@ export const dynamic = 'force-static'
 export const fetchCache = 'force-cache'
 export const revalidate = 86400 // 24h
 
-const title = `About ${SITE_BRAND} – Independent Digital Deals Directory`;
-const description = `Discover how ${SITE_BRAND} sources, reviews, and maintains thousands of live promo codes for digital tools, courses, and communities.`;
+const title = `About ${SITE_BRAND} – How We Catalogue Digital Product Offers`;
+const description = `Learn how ${SITE_BRAND} collects, checks and organises promotional codes for software, online courses, and membership platforms.`;
 
 export const metadata: Metadata = {
   title,
   description,
-  keywords: 'about us, deals, discount codes, digital course discounts, affiliate, course reviews, verified offers',
+  keywords: 'about, promo codes, digital products, software discounts, affiliate disclosure, offer verification',
   alternates: {
 // PHASE1-DEINDEX:     canonical: `${siteOrigin()}/about`,
   },
@@ -56,11 +56,12 @@ export default function AboutPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "@id": `${origin}#org`,
+            "@id": `${origin}#dpc-org`,
             name: SITE_BRAND,
             url: origin,
             logo: `${origin}/logo.png`,
-            contactPoint: { "@type": "ContactPoint", contactType: "customer service", url: `${origin}/contact` }
+            description: "A directory platform that catalogues promotional codes and pricing for digital tools and services.",
+            contactPoint: { "@type": "ContactPoint", contactType: "customer support", url: `${origin}/contact` }
           })
         }}
       />

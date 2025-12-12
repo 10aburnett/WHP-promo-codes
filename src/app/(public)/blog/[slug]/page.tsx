@@ -66,22 +66,22 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     if (!post || !post.published) {
       return {
         title: `Article not available - ${SITE_BRAND}`,
-        description: 'This article is not currently available on DigitalPromoCodes.',
+        description: 'This article is not currently available. Browse other content on DigitalPromoCodes.',
         robots: { index: false, follow: true }
       }
     }
 
     const canonical = `${siteOrigin()}/blog/${post.slug}`;
     const currentYear = new Date().getFullYear();
-    const metaDescription = post.excerpt ?? `Straightforward guidance on digital products, discount approaches and online savings from ${SITE_BRAND}.`;
+    const metaDescription = post.excerpt ?? `Analysis and practical information on digital tools and online services from the ${SITE_BRAND} editorial team.`;
     const publishedDate = post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined;
 
     const authorName = post.User?.name || post.authorName || SITE_AUTHOR;
 
     return {
-      title: `${post.title} - ${SITE_BRAND} Blog`,
+      title: `${post.title} - ${SITE_BRAND} Articles`,
       description: metaDescription,
-      keywords: `${post.title}, promo strategies, digital products, online savings, ${authorName}`,
+      keywords: `${post.title}, software reviews, digital products, online tools, ${authorName}`,
       authors: [{ name: authorName }],
       alternates: {
         canonical
@@ -98,7 +98,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
         }
       },
       openGraph: {
-        title: `${post.title} - ${SITE_BRAND} Blog`,
+        title: `${post.title} - ${SITE_BRAND} Articles`,
         description: metaDescription,
         type: 'article',
         url: canonical,
@@ -108,7 +108,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${post.title} - ${SITE_BRAND} Blog`,
+        title: `${post.title} - ${SITE_BRAND} Articles`,
         description: metaDescription,
       }
     }
@@ -116,7 +116,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     console.error('Error generating blog post metadata:', error)
     return {
       title: `Article - ${SITE_BRAND}`,
-      description: 'Browse articles and explainers on digital products, savings approaches and getting more value from online tools.'
+      description: 'Read coverage of digital tools, software platforms and online services. Practical guides and independent analysis.'
     }
   }
 }
@@ -138,11 +138,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const articleLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
+    '@id': `${siteOrigin()}/blog/${post.slug}#dpc-article`,
     headline: post.title,
     description: post.excerpt ?? undefined,
     datePublished: post.publishedAt?.toISOString?.(),
     dateModified: post.updatedAt?.toISOString?.(),
-    mainEntityOfPage: `${siteOrigin()}/blog/${post.slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${siteOrigin()}/blog/${post.slug}#dpc-page`
+    },
     author: authorName
       ? { '@type': 'Person', name: authorName }
       : { '@type': 'Organization', name: SITE_BRAND },
@@ -152,17 +156,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    '@id': `${siteOrigin()}/blog/${post.slug}#dpc-breadcrumb`,
     itemListElement: [
       {
         '@type': 'ListItem',
         position: 1,
-        name: 'Home',
+        name: 'Homepage',
         item: siteOrigin()
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Insights',
+        name: 'Articles',
         item: `${siteOrigin()}/blog`
       },
       {
