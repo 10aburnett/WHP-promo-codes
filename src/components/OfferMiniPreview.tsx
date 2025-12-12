@@ -31,7 +31,7 @@ export default function OfferMiniPreview({
   return (
     <a
       href={href}
-      className="group flex items-center justify-between gap-3 rounded-2xl border px-4 py-3.5 transition-all duration-200"
+      className="group flex items-center justify-between gap-3 rounded-2xl border px-4 py-3.5 transition-all duration-200 hover:shadow-sm hover:-translate-y-0.5"
       style={{
         borderColor: 'var(--border-color)',
         backgroundColor: 'var(--card-bg)',

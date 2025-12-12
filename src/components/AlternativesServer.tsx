@@ -50,7 +50,7 @@ export default function AlternativesServer({
           className="text-lg font-semibold"
           style={{ color: 'var(--text-color)' }}
         >
-          You might also like
+          Why Not Try…
         </h2>
       </div>
 

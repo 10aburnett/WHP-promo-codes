@@ -1309,25 +1309,25 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 </section>
               )}
             </ServerSectionGuard>
+
+            {/* 7. Alternatives - Why Not Try... */}
+            <section id="alternatives" className="dpc-offer-alternatives">
+              <Suspense fallback={<SectionSkeleton />}>
+                <AlternativesSection currentOfferSlug={dbSlug} />
+              </Suspense>
+            </section>
+
+            {/* 8. Recommendations - More ways to save */}
+            <section className="dpc-offer-recommended">
+              <Suspense fallback={<SectionSkeleton />}>
+                <RecommendedSection currentOfferSlug={dbSlug} />
+              </Suspense>
+            </section>
           </aside>
         </div>
 
         {/* Related Content Sections - Full width below grid */}
         <div className="dpc-related-content space-y-10 mt-12">
-          {/* Alternatives Section */}
-          <section id="alternatives" className="dpc-offer-alternatives">
-            <Suspense fallback={<SectionSkeleton />}>
-              <AlternativesSection currentOfferSlug={dbSlug} />
-            </Suspense>
-          </section>
-
-          {/* Recommendations Section */}
-          <section className="dpc-offer-recommended">
-            <Suspense fallback={<SectionSkeleton />}>
-              <RecommendedSection currentOfferSlug={dbSlug} />
-            </Suspense>
-          </section>
-
           {/* Community Feedback / Reviews */}
           <section className="dpc-offer-reviews">
             <Suspense fallback={<SectionSkeleton />}>
