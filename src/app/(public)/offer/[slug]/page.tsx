@@ -12,6 +12,7 @@ import { canonicalSlugForDB, canonicalSlugForPath } from '@/lib/slug-utils';
 import { siteOrigin } from '@/lib/site-origin';
 import { notFoundWithReason } from '@/lib/notFoundReason';
 import { dlog } from '@/lib/debug';
+import { isOfferLaunchEligible } from '@/lib/launch-cohort';
 
 // Static generation with ISR for stable SSR/CSR hydration
 export const dynamic = 'force-static';
@@ -285,6 +286,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const dbSlug = decoded.toLowerCase();
     console.log('[OFFER META] Generating metadata for:', { slug: params.slug, dbSlug });
 
+    // Launch cohort gate: Return minimal metadata for non-cohort pages
+    if (!isOfferLaunchEligible(dbSlug)) {
+      console.log('[OFFER META] Not in launch cohort, returning 404 metadata:', { dbSlug });
+      return {
+        title: 'Offer Not Found',
+        description: 'The requested offer could not be found.',
+        robots: { index: false, follow: false }
+      };
+    }
+
     // Use unfiltered fetch - show full content for noindex pages with robots meta
     const offerData = await getOfferBySlugUnfiltered(dbSlug, 'en');
     console.log('[OFFER META] Data fetched:', { found: !!offerData, name: offerData?.name });
@@ -529,6 +540,13 @@ export default async function DealPage({ params }: { params: { slug: string } })
       );
     }
     return notFoundWithReason('no_record_for_slug', { raw, decoded, dbSlug });
+  }
+
+  // 3.5) Launch cohort gate: If launch mode is active, only allow cohort slugs
+  // This returns a real 404 (not noindex, not redirect) for non-cohort pages
+  if (!isOfferLaunchEligible(dbSlug)) {
+    console.log('[WHOP DETAIL] 404 - Not in launch cohort:', { dbSlug });
+    return notFoundWithReason('not_in_launch_cohort', { raw, decoded, dbSlug });
   }
 
   // 4) Relaxed quality check per ChatGPT fix - only block GONE pages

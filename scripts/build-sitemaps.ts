@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'fs'
 import { join } from 'path'
+import { isOfferLaunchEligible, LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '../src/lib/launch-cohort'
 
 const prisma = new PrismaClient()
 
@@ -125,10 +126,16 @@ async function main() {
   }
 
   // INDEXABLE (live + index)
-  const indexable = await prisma.deal.findMany({
+  let indexable = await prisma.deal.findMany({
     where: { indexingStatus: 'INDEX', retired: false, retirement: 'NONE' },
     select: { slug: true, locale: true, updatedAt: true },
   })
+
+  // Launch cohort gate: Only include cohort slugs in sitemap when launch mode is active
+  if (LAUNCH_MODE && LAUNCH_COHORT_SLUGS.size > 0) {
+    console.log(`🚀 Launch mode active - filtering to ${LAUNCH_COHORT_SLUGS.size} cohort slugs`)
+    indexable = indexable.filter(whop => isOfferLaunchEligible(whop.slug))
+  }
 
   // NOINDEX (live but noindex)  ❗ EXCLUDE retired/gone
   const noindex = await prisma.deal.findMany({

@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import { loadNeighbors, getNeighborSlugsFor, getExploreFor } from '@/lib/graph';
 import { normalizeSlug } from '@/lib/slug-normalize';
+import { isOfferLaunchEligible, LAUNCH_MODE } from '@/lib/launch-cohort';
 
 interface PromoCode {
   id: string;
@@ -70,7 +71,8 @@ export async function getRecommendations(currentOfferSlug: string): Promise<{
     // Load graph neighbors
     const neighbors = await loadNeighbors();
     const rawSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, 'recommendations');
-    let slugs = Array.from(new Set(rawSlugs.filter(Boolean))).slice(0, 4);
+    // Launch cohort gate: Only include slugs that are launch-eligible
+    let slugs = Array.from(new Set(rawSlugs.filter(Boolean).filter(isOfferLaunchEligible))).slice(0, 4);
 
     // Fallback: if graph has no neighbors, use category-based recommendations
     if (slugs.length === 0) {
@@ -87,10 +89,11 @@ export async function getRecommendations(currentOfferSlug: string): Promise<{
           },
           select: { slug: true },
           orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
-          take: 4
+          take: 20 // Fetch more to filter by launch cohort
         });
 
-        slugs = categoryWhops.map(w => w.slug);
+        // Launch cohort gate: Filter to only launch-eligible slugs
+        slugs = categoryWhops.map(w => w.slug).filter(isOfferLaunchEligible).slice(0, 4);
       }
 
       if (slugs.length === 0) {
@@ -158,7 +161,8 @@ export async function getRecommendations(currentOfferSlug: string): Promise<{
       const exploreSlug = getExploreFor(neighbors, canonicalSlug);
       const shownSlugs = new Set(items.map(r => r.slug));
 
-      if (exploreSlug && !shownSlugs.has(exploreSlug)) {
+      // Launch cohort gate: Only show explore link if slug is launch-eligible
+      if (exploreSlug && !shownSlugs.has(exploreSlug) && isOfferLaunchEligible(exploreSlug)) {
         const exploreWhop = await prisma.deal.findFirst({
           where: {
             slug: exploreSlug,
@@ -220,8 +224,8 @@ export async function getAlternatives(currentOfferSlug: string): Promise<{
     const recSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, 'recommendations');
     const recSet = new Set(recSlugs);
 
-    // Filter out any alternatives that appear in recommendations
-    let slugs = Array.from(new Set(rawAltSlugs.filter(Boolean).filter(slug => !recSet.has(slug)))).slice(0, 5);
+    // Filter out any alternatives that appear in recommendations + launch cohort gate
+    let slugs = Array.from(new Set(rawAltSlugs.filter(Boolean).filter(slug => !recSet.has(slug)).filter(isOfferLaunchEligible))).slice(0, 5);
 
     // Fallback: if graph has no alternatives, use category-based alternatives
     if (slugs.length === 0) {
@@ -239,10 +243,11 @@ export async function getAlternatives(currentOfferSlug: string): Promise<{
           },
           select: { slug: true },
           orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
-          take: 5
+          take: 20 // Fetch more to filter by launch cohort
         });
 
-        slugs = categoryWhops.map(w => w.slug);
+        // Launch cohort gate: Filter to only launch-eligible slugs
+        slugs = categoryWhops.map(w => w.slug).filter(isOfferLaunchEligible).slice(0, 5);
       }
 
       if (slugs.length === 0) {
@@ -310,7 +315,8 @@ export async function getAlternatives(currentOfferSlug: string): Promise<{
       const exploreSlug = getExploreFor(neighbors, canonicalSlug);
       const shownSlugs = new Set(items.map(r => r.slug));
 
-      if (exploreSlug && !shownSlugs.has(exploreSlug)) {
+      // Launch cohort gate: Only show explore link if slug is launch-eligible
+      if (exploreSlug && !shownSlugs.has(exploreSlug) && isOfferLaunchEligible(exploreSlug)) {
         const exploreWhop = await prisma.deal.findFirst({
           where: {
             slug: exploreSlug,

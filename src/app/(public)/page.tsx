@@ -7,6 +7,7 @@ import { absoluteUrl, offerAbsoluteUrl } from '@/lib/urls';
 import { SITE_BRAND, SITE_TAGLINE, SITE_DESCRIPTION } from '@/lib/brand';
 import { formatUserCount } from '@/config/platformMetrics';
 import type { Metadata } from 'next';
+import { isOfferLaunchEligible, LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '@/lib/launch-cohort';
 
 // Force dynamic rendering so ?page= works server-side (not statically cached)
 export const dynamic = 'force-dynamic';
@@ -82,6 +83,11 @@ async function getPagedWhops({
 
     // Build where clause for filtering
     const where: any = {};
+
+    // Launch cohort gate: Only show cohort slugs when launch mode is active
+    if (LAUNCH_MODE && LAUNCH_COHORT_SLUGS.size > 0) {
+      where.slug = { in: Array.from(LAUNCH_COHORT_SLUGS) };
+    }
 
     // Search filter
     if (q) {

@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
+import { isOfferLaunchEligible, LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '../src/lib/launch-cohort';
 
 // Load environment variables from .env.local
 dotenv.config({ path: '.env.local' });
@@ -29,7 +30,15 @@ async function generateStaticSitemaps() {
 
     console.log(`📊 Found ${whops.length} published whops`);
 
-    const totalPages = Math.ceil(whops.length / WHOPS_PER_SITEMAP);
+    // Launch cohort gate: Only include cohort slugs in sitemap when launch mode is active
+    let filteredWhops = whops;
+    if (LAUNCH_MODE && LAUNCH_COHORT_SLUGS.size > 0) {
+      console.log(`🚀 Launch mode active - filtering to ${LAUNCH_COHORT_SLUGS.size} cohort slugs`);
+      filteredWhops = whops.filter(whop => isOfferLaunchEligible(whop.slug));
+      console.log(`📊 After launch cohort filter: ${filteredWhops.length} whops`);
+    }
+
+    const totalPages = Math.ceil(filteredWhops.length / WHOPS_PER_SITEMAP);
     const baseUrl = 'https://digitalpromocodes.com';
     const publicDir = path.join(process.cwd(), 'public');
 
@@ -41,7 +50,7 @@ async function generateStaticSitemaps() {
     // Generate individual sitemap files
     for (let page = 1; page <= totalPages; page++) {
       const skip = (page - 1) * WHOPS_PER_SITEMAP;
-      const pageWhops = whops.slice(skip, skip + WHOPS_PER_SITEMAP);
+      const pageWhops = filteredWhops.slice(skip, skip + WHOPS_PER_SITEMAP);
       
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -82,7 +91,7 @@ ${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `  <sitemap>
     console.log('\n📋 Next steps:');
     console.log('1. Deploy these files to your site');
     console.log('2. Submit https://digitalpromocodes.com/sitemap-index.xml to Google Search Console');
-    console.log(`3. Google will discover ${whops.length + 5} pages`);
+    console.log(`3. Google will discover ${filteredWhops.length + 5} pages`);
 
   } catch (error) {
     console.error('❌ Error generating sitemaps:', error);
