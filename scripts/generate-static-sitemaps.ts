@@ -60,7 +60,7 @@ async function generateStaticSitemaps() {
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pageWhops.map(whop => `  <url>
-    <loc>${baseUrl}/whop/${whop.slug}</loc>
+    <loc>${baseUrl}/offer/${whop.slug}</loc>
     <lastmod>${whop.updatedAt.toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>

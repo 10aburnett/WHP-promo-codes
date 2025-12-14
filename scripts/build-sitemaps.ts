@@ -60,7 +60,7 @@ function buildUrl(slug: string, locale: string | null): string {
   const localePath = locale === 'en' || !locale ? '' : `${locale}/`
   // Canonicalize slug: lowercase + encode colons
   const canonicalSlug = slug.toLowerCase().replace(/:/g, '%3a').replace(/%3a/gi, '%3a')
-  const url = `${SITE_URL}/${localePath}whop/${canonicalSlug}`
+  const url = `${SITE_URL}/${localePath}offer/${canonicalSlug}`
   // Fix double slashes but preserve the protocol://
   return url.replace(/([^:]\/)\/+/g, '$1')
 }
@@ -150,7 +150,7 @@ async function main() {
   })
 
   // Make categories mutually exclusive (belt-and-suspenders)
-  const path = (x: { locale: string | null; slug: string }) => `/${x.locale || 'en'}/whop/${x.slug}`
+  const path = (x: { locale: string | null; slug: string }) => `/offer/${x.slug}`
 
   const setIndex = new Set(indexable.map(path))
   const setNoindex = new Set(noindex.map(path))
