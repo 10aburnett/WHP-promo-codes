@@ -1,11 +1,14 @@
+import * as dotenv from 'dotenv';
+// Load environment variables FIRST before any other imports that depend on env
+dotenv.config({ path: '.env.local' });
+
 import { PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
-import { isOfferLaunchEligible, LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '../src/lib/launch-cohort';
+import { isOfferLaunchEligible, LAUNCH_COHORT_SLUGS } from '../src/lib/launch-cohort';
 
-// Load environment variables from .env.local
-dotenv.config({ path: '.env.local' });
+// Check launch mode at runtime (after dotenv has loaded)
+const LAUNCH_MODE_ACTIVE = process.env.NEXT_PUBLIC_LAUNCH_MODE === 'cohort';
 
 const prisma = new PrismaClient();
 const WHOPS_PER_SITEMAP = 1000;
@@ -13,7 +16,8 @@ const WHOPS_PER_SITEMAP = 1000;
 async function generateStaticSitemaps() {
   try {
     console.log('🔄 Generating static sitemap files...');
-    
+    console.log(`📋 Launch mode: ${LAUNCH_MODE_ACTIVE ? 'ACTIVE (cohort)' : 'OFF'}`);
+
     // Get all published whops
     const whops = await prisma.deal.findMany({
       where: {
@@ -32,9 +36,10 @@ async function generateStaticSitemaps() {
 
     // Launch cohort gate: Only include cohort slugs in sitemap when launch mode is active
     let filteredWhops = whops;
-    if (LAUNCH_MODE && LAUNCH_COHORT_SLUGS.size > 0) {
+    if (LAUNCH_MODE_ACTIVE && LAUNCH_COHORT_SLUGS.size > 0) {
       console.log(`🚀 Launch mode active - filtering to ${LAUNCH_COHORT_SLUGS.size} cohort slugs`);
-      filteredWhops = whops.filter(whop => isOfferLaunchEligible(whop.slug));
+      // Filter directly using the Set (don't use isOfferLaunchEligible which has static LAUNCH_MODE)
+      filteredWhops = whops.filter(whop => LAUNCH_COHORT_SLUGS.has(whop.slug.toLowerCase()));
       console.log(`📊 After launch cohort filter: ${filteredWhops.length} whops`);
     }
 

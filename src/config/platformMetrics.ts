@@ -6,8 +6,8 @@ export const PLATFORM_METRICS = {
   activeUsers: 50_000,         // 50k+
   availableOffers: 8_000,      // 8000+
   claimedCodes: 6_000,         // 6k
-  mostPopularOfferName: 'PJ Trades Premium',
-  mostPopularOfferSlug: 'pj-trades-premium',
+  mostPopularOfferName: 'Scarface Trades Premium',
+  mostPopularOfferSlug: 'scarface-trades-premium',
 };
 
 /**

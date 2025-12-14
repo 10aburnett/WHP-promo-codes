@@ -1,5 +1,6 @@
 // src/app/api/whops/batch/route.ts
 import { prisma } from '@/lib/prisma';
+import { isOfferLaunchEligible, LAUNCH_MODE } from '@/lib/launch-cohort';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -8,7 +9,13 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const raw = searchParams.get('slugs') || '';
-    const slugs = raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+    let slugs = raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+
+    // Launch cohort gate: Only allow cohort slugs in launch mode
+    if (LAUNCH_MODE) {
+      slugs = slugs.filter(isOfferLaunchEligible);
+    }
+
     if (slugs.length === 0) {
       return new Response(JSON.stringify({ whops: [] }), {
         status: 200,
