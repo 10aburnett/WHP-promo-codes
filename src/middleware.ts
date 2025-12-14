@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { RETIRED_PATHS, NOINDEX_PATHS } from './app/_generated/seo-indexes';
+import { LAUNCH_COHORT_SLUGS } from './lib/launch-cohort';
 
 // Simple JWT verification for Edge Runtime
 function verifyJWT(token: string, secret: string): any {
@@ -120,6 +121,29 @@ export function middleware(request: NextRequest) {
           'X-Robots-Tag': 'noindex'
         }
       });
+    }
+
+    // 4.5) LAUNCH COHORT GATE: Return real 404 for non-cohort slugs
+    // This runs at Edge level BEFORE page rendering, ensuring HTTP 404 status
+    // IMPORTANT: Check env at runtime, not import time (Edge runtime behavior)
+    const LAUNCH_MODE_ACTIVE = process.env.NEXT_PUBLIC_LAUNCH_MODE === 'cohort';
+    if (LAUNCH_MODE_ACTIVE && LAUNCH_COHORT_SLUGS.size > 0) {
+      // Extract slug from path, excluding query strings, fragments, and trailing slashes
+      // /offer/some-slug?foo=bar -> some-slug
+      const slugMatch = path.match(/^\/offer\/([^/?#]+)/);
+      if (slugMatch) {
+        const slug = slugMatch[1].toLowerCase().replace(/\/+$/, '');
+        if (!LAUNCH_COHORT_SLUGS.has(slug)) {
+          // Return real 404 - not a soft-404, not noindex, just gone
+          return new NextResponse('Not Found', {
+            status: 404,
+            headers: {
+              ...(process.env.NODE_ENV !== 'production' ? {'x-mw-hit':'1', 'x-cohort-gate': 'blocked'} : {}),
+              'Cache-Control': 's-maxage=120, stale-while-revalidate=60',
+            }
+          });
+        }
+      }
     }
 
     // 5) X-Robots-Tag for NOINDEX paths only
