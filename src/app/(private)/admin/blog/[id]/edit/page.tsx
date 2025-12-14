@@ -7,9 +7,16 @@ function CustomEditor({ value, onChange }: { value: string, onChange: (value: st
   const editorRef = useRef<HTMLDivElement>(null)
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [showBgColorPicker, setShowBgColorPicker] = useState(false)
-  
-  // Force re-mount when value changes from empty to populated (for rich editor)
-  const editorKey = value ? 'loaded' : 'loading'
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  // Only set innerHTML once on initial load, not on every render
+  // This prevents cursor position from being reset on each keystroke
+  useEffect(() => {
+    if (editorRef.current && value && !isInitialized) {
+      editorRef.current.innerHTML = value
+      setIsInitialized(true)
+    }
+  }, [value, isInitialized])
 
   const insertBulletAtCaret = () => {
     if (!editorRef.current) return
@@ -339,23 +346,24 @@ function CustomEditor({ value, onChange }: { value: string, onChange: (value: st
       
       {/* Editor */}
       <div
-        key={editorKey}
         ref={editorRef}
         contentEditable
+        dir="ltr"
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         onPaste={handlePaste}
         className="p-4 min-h-96 focus:outline-none"
-        style={{ 
-          color: '#000000', 
+        style={{
+          color: '#000000',
           backgroundColor: '#ffffff',
           fontSize: '13px',
           lineHeight: '1.5',
           fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif',
-          letterSpacing: '0.005em' // Subtle spacing similar to zero-width space effect
+          letterSpacing: '0.005em',
+          direction: 'ltr',
+          textAlign: 'left'
         }}
         suppressContentEditableWarning={true}
-        dangerouslySetInnerHTML={{ __html: value }}
       />
     </div>
   )

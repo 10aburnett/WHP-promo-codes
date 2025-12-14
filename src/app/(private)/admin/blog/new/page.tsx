@@ -344,17 +344,21 @@ function CustomEditor({ value, onChange }: { value: string, onChange: (value: st
       <div
         ref={editorRef}
         contentEditable
+        dir="ltr"
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         onPaste={handlePaste}
         className="p-4 min-h-96 focus:outline-none"
-        style={{ 
-          color: '#000000', 
+        style={{
+          color: '#000000',
           backgroundColor: '#ffffff',
           fontSize: '13px',
           lineHeight: '1.5',
           fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif',
-          letterSpacing: '0.005em' // Subtle spacing similar to zero-width space effect
+          letterSpacing: '0.005em', // Subtle spacing similar to zero-width space effect
+          direction: 'ltr',
+          textAlign: 'left',
+          unicodeBidi: 'plaintext'
         }}
         suppressContentEditableWarning={true}
       />

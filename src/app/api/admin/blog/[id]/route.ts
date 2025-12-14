@@ -45,15 +45,44 @@ export async function PATCH(req: Request, { params }: Params) {
     // body stays empty if JSON parsing fails
   }
 
-  const action: 'publish' | 'pin' | undefined = body?.action;
+  const action: 'publish' | 'pin' | 'update' | undefined = body?.action;
   // optional: allow explicit value; if omitted we toggle
   const explicitValue: boolean | undefined = typeof body?.value === 'boolean' ? body.value : undefined;
 
-  if (!action) {
-    return NextResponse.json({ error: 'Missing action' }, { status: 400 });
-  }
+  // If no action but we have content fields, treat as full update
+  const isFullUpdate = !action && (body?.title || body?.content !== undefined);
 
   try {
+    // Handle full content update (from edit page)
+    if (isFullUpdate) {
+      const { title, slug, excerpt, content, published, authorName } = body;
+
+      const updated = await prisma.blogPost.update({
+        where: { id },
+        data: {
+          ...(title !== undefined && { title }),
+          ...(slug !== undefined && { slug }),
+          ...(excerpt !== undefined && { excerpt }),
+          ...(content !== undefined && { content }),
+          ...(published !== undefined && {
+            published,
+            publishedAt: published ? new Date() : null
+          }),
+          ...(authorName !== undefined && { authorName }),
+        },
+        select: {
+          id: true, title: true, slug: true, excerpt: true, content: true,
+          published: true, publishedAt: true, pinned: true, pinnedAt: true,
+          authorName: true, updatedAt: true,
+        },
+      });
+      return NextResponse.json({ ok: true, post: updated });
+    }
+
+    if (!action) {
+      return NextResponse.json({ error: 'Missing action or content fields' }, { status: 400 });
+    }
+
     if (action === 'publish') {
       const current = await prisma.blogPost.findUnique({
         where: { id },
