@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '@/lib/launch-cohort'
 
+// Force dynamic - uses request.url
+export const dynamic = "force-dynamic";
+
 // GET /api/whops/search?q=term&limit=20 - Server-side search for whops
 export async function GET(request: Request) {
   try {

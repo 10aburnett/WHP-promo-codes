@@ -25,6 +25,33 @@ const DEV_MOCK_SLUGS = [
   'the-ai-agency-launchpad',
 ];
 
+/**
+ * Try to read graph data directly from filesystem (build-time or SSR).
+ * Falls back to null if file not found or not in Node environment.
+ */
+async function tryReadGraphFromFS(): Promise<NeighborsMap | null> {
+  // Only works on server-side with Node.js fs module
+  if (typeof window !== 'undefined') return null;
+
+  try {
+    const fs = await import('fs');
+    const path = await import('path');
+
+    // Try public/data/graph/neighbors.json
+    const graphPath = path.join(process.cwd(), 'public', 'data', 'graph', 'neighbors.json');
+
+    if (fs.existsSync(graphPath)) {
+      const data = JSON.parse(fs.readFileSync(graphPath, 'utf8'));
+      console.log('[graph] Loaded from filesystem:', Object.keys(data).length, 'entries');
+      return data;
+    }
+  } catch (e) {
+    // fs not available or file not found - fall through to network fetch
+  }
+
+  return null;
+}
+
 export async function loadNeighbors(): Promise<NeighborsMap> {
   // In development, return mock data so we can style recs/alternatives without network timeouts
   if (process.env.NODE_ENV === 'development') {
@@ -56,7 +83,14 @@ export async function loadNeighbors(): Promise<NeighborsMap> {
     });
   }
 
-  // Make URL absolute for server-side fetches
+  // During build or SSR, try to read directly from filesystem first
+  // This avoids network fetches during `next build` which cause "dynamic server usage" warnings
+  if (typeof window === 'undefined') {
+    const fsData = await tryReadGraphFromFS();
+    if (fsData) return fsData;
+  }
+
+  // Make URL absolute for server-side fetches (fallback if file not on disk)
   const baseUrl = typeof window === 'undefined' ? siteOrigin() : '';
   const graphUrl = GRAPH_URL.startsWith('http') ? GRAPH_URL : `${baseUrl}${GRAPH_URL}`;
 

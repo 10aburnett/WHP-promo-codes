@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
+// Force dynamic - test route should never be statically generated
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     console.log('Testing Gmail OAuth2 configuration...');

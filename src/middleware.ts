@@ -31,8 +31,25 @@ function verifyJWT(token: string, secret: string): any {
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Allow all debug routes and trace route to pass through untouched
-  if (pathname.startsWith('/api/_debug/') || pathname.startsWith('/api/debug-api/') || pathname.startsWith('/api/_trace')) {
+  // SECURITY: Block all debug and test API routes on any deployed environment
+  // These should never be accessible publicly (production OR preview)
+  const isDebugOrTestRoute =
+    pathname.startsWith('/api/debug-') ||
+    pathname.startsWith('/api/test-') ||
+    pathname.startsWith('/api/_debug/') ||
+    pathname.startsWith('/api/_trace');
+
+  if (isDebugOrTestRoute) {
+    // Block on any Vercel deployment (production + preview)
+    // VERCEL === '1' is set on all Vercel deployments
+    const isDeployed = process.env.VERCEL === '1';
+    if (isDeployed) {
+      return new NextResponse('Not Found', {
+        status: 404,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+    // Only allow in local development
     return NextResponse.next();
   }
 

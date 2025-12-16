@@ -4,6 +4,9 @@ import { dlog } from '@/lib/debug';
 import { prisma } from '@/lib/prisma';
 import { canonicalSlugForDB } from '@/lib/slug-utils';
 
+// Force dynamic - debug route should never be statically generated
+export const dynamic = "force-dynamic";
+
 function maskDbUrl(u?: string) {
   if (!u) return null;
   try {

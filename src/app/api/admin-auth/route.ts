@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { verifyAdminToken } from "@/lib/auth-utils";
 
+// Force dynamic - uses cookies
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const adminUser = await verifyAdminToken();
