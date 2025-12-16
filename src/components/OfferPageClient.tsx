@@ -174,7 +174,8 @@ export default function OfferPageClient({
         >
           {t('whop.revealCode')}
         </button>
-      ) : (
+      ) : promoCode ? (
+        // Has promo code - show the code pill
         <div
           className="w-full border-2 font-bold py-3.5 px-6 rounded-full text-center transition-all duration-200 hover:shadow-sm"
           style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--accent-color)', color: 'var(--text-color)' }}
@@ -184,58 +185,41 @@ export default function OfferPageClient({
               className="block text-xs uppercase tracking-wide mb-1"
               style={{ color: 'var(--text-secondary)' }}
             >
-              {promoCode ? t('whop.yourCode') : t('whop.noCode')}
+              {t('whop.yourCode')}
             </span>
             <span
               className="text-lg sm:text-xl font-semibold break-all"
-              style={{ color: promoCode ? 'var(--accent-color)' : 'var(--success-color)' }}
+              style={{ color: 'var(--accent-color)' }}
             >
-              {promoCode ? (
-                promoCode
-              ) : offer.name === 'Josh Exclusive VIP Access' ? (
-                'JOSH'
-              ) : offer.name === 'Momentum Monthly' ? (
-                'PROMO-1A92969C'
-              ) : offer.name === "Larry's Lounge Premium" ? (
-                'PROMO-BF9EF1CC'
-              ) : offer.name === "Dodgy's Dungeon" ? (
-                'PROMO-565022F7'
-              ) : offer.name === 'Trade With Insight - Pro' ? (
-                'PROMO-624C9EA4'
-              ) : offer.name === 'ParlayScience Discord Access' ? (
-                'PROMO-C0047AFA'
-              ) : offer.name === 'Scarface Trades Premium' ? (
-                'PROMO-01FE6235'
-              ) : offer.name === 'The Haven' ? (
-                'PROMO-45EF5D24'
-              ) : offer.name === 'PropFellas VIP' ? (
-                'PROMO-B83DC955'
-              ) : offer.name === 'Owls Full Access' ? (
-                'PROMO-7136BFC8'
-              ) : offer.name === 'Stellar AIO' ? (
-                'PROMO-1A6008FA'
-              ) : offer.name === 'Goat Ecom Growth' ? (
-                'PROMO-1B868367'
-              ) : offer.name === 'Indicators & VIP | LIFETIME' ? (
-                'PROMO-7DBFEB18'
-              ) : offer.name === 'Supercar Income' ? (
-                'PROMO-5E906FAB'
-              ) : offer.name === 'GOAT Sports Bets Membership' ? (
-                'PROMO-3352BB19'
-              ) : offer.name === 'Best Of Both Worlds' ? (
-                'PROMO-336B4ACD'
-              ) : offer.name === 'Moementum University' ? (
-                'PROMO-23AB3618'
-              ) : offer.name === 'ZWM Lifetime Access' ? (
-                'PROMO-4E6D572F'
-              ) : offer.name === 'Ayecon Academy Lifetime Membership' ? (
-                'PROMO-022D1F18'
-              ) : offer.name === 'The BFI Traders University' ? (
-                'PROMO-58B279FF'
-              ) : (
-                t('whop.noCode')
-              )}
+              {promoCode}
             </span>
+          </div>
+        </div>
+      ) : (
+        // No promo code - show clean message card (not a giant pill)
+        <div
+          className="w-full rounded-2xl border px-4 py-3"
+          style={{
+            backgroundColor: 'var(--background-secondary)',
+            borderColor: 'var(--border-color)'
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="flex-shrink-0 rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase"
+              style={{
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-muted)'
+              }}
+            >
+              No code
+            </div>
+            <p
+              className="text-sm font-medium"
+              style={{ color: 'var(--text-color)' }}
+            >
+              {t('whop.noCode')}
+            </p>
           </div>
         </div>
       )}

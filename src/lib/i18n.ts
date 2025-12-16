@@ -49,7 +49,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Redeem Promo',
     'whop.revealCode': 'Reveal Code',
-    'whop.noCode': 'CREATOR DOESN\'T ALLOW PROMO CODES AT THIS TIME',
+    'whop.noCode': 'Creator doesn\'t allow promo codes at this time',
     'whop.getPromo': 'Go to Course',
     
     // Whop Page
@@ -206,7 +206,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Canjear Promo',
     'whop.revealCode': 'Revelar Código',
-    'whop.noCode': 'EL CREADOR NO PERMITE CÓDIGOS PROMOCIONALES EN ESTE MOMENTO',
+    'whop.noCode': 'El creador no permite códigos promocionales en este momento',
     'whop.getPromo': 'Ir al Curso',
     
     // Whop Page
@@ -363,7 +363,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Verzilver Promo',
     'whop.revealCode': 'Toon Code',
-    'whop.noCode': 'MAKER STAAT GEEN PROMOCODES TOE OP DIT MOMENT',
+    'whop.noCode': 'Maker staat geen promocodes toe op dit moment',
     'whop.getPromo': 'Ga naar Cursus',
     
     // Whop Page
@@ -520,7 +520,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Utiliser Promo',
     'whop.revealCode': 'Révéler le Code',
-    'whop.noCode': 'LE CRÉATEUR N\'AUTORISE PAS LES CODES PROMO POUR LE MOMENT',
+    'whop.noCode': 'Le créateur n\'autorise pas les codes promo pour le moment',
     'whop.getPromo': 'Aller au Cours',
     
     // Whop Page
@@ -677,7 +677,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Promo Einlösen',
     'whop.revealCode': 'Code Enthüllen',
-    'whop.noCode': 'ERSTELLER ERLAUBT DERZEIT KEINE PROMO-CODES',
+    'whop.noCode': 'Ersteller erlaubt derzeit keine Promo-Codes',
     'whop.getPromo': 'Zum Kurs Gehen',
     
     // Whop Page
@@ -834,7 +834,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Riscatta Promo',
     'whop.revealCode': 'Rivela Codice',
-    'whop.noCode': 'IL CREATORE NON CONSENTE CODICI PROMO AL MOMENTO',
+    'whop.noCode': 'Il creatore non consente codici promo al momento',
     'whop.getPromo': 'Vai al Corso',
     
     // Whop Page
@@ -991,7 +991,7 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Resgatar Promo',
     'whop.revealCode': 'Revelar Código',
-    'whop.noCode': 'CRIADOR NÃO PERMITE CÓDIGOS PROMOCIONAIS NO MOMENTO',
+    'whop.noCode': 'Criador não permite códigos promocionais no momento',
     'whop.getPromo': 'Ir para Curso',
     
     // Whop Page
