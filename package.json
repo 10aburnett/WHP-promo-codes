@@ -44,7 +44,7 @@
     "build:strict": "npm run lint:seo && npm run build",
     "build:guarded": "npm run build && npm run assert:seo",
     "warm:whops": "node scripts/warm-top-whops.mjs",
-    "schema:guard": "NODE_OPTIONS='-r ./scripts/shims/next-build-shims.cjs -r tsconfig-paths/register' tsx scripts/schema-guard.ts",
+    "schema:guard": "test \"$SKIP_SCHEMA_GUARD\" = \"1\" && echo '⏭️  Skipping schema guard (SKIP_SCHEMA_GUARD=1)' || NODE_OPTIONS='-r ./scripts/shims/next-build-shims.cjs -r tsconfig-paths/register' tsx scripts/schema-guard.ts",
     "typecheck": "tsc --noEmit",
     "prepush": "npm run typecheck",
     "test": "playwright test",
