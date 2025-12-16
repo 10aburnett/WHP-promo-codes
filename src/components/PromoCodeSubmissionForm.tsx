@@ -230,7 +230,7 @@ export default function PromoCodeSubmissionForm({
         aria-modal="true"
       >
         <div
-          className="relative w-full max-w-sm p-8 text-center shadow-lg"
+          className="relative w-full max-w-sm p-8 text-center shadow-lg rounded-2xl"
           style={{ backgroundColor: 'var(--background-color)' }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -258,10 +258,10 @@ export default function PromoCodeSubmissionForm({
             </svg>
 
             <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-              Thanks for the tip
+              You're a legend
             </h3>
             <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              We've received your code and will check it before adding it to the catalogue.
+              We'll review your submission and add it if it checks out. Thanks for helping the community save.
             </p>
           </div>
 
@@ -270,7 +270,7 @@ export default function PromoCodeSubmissionForm({
             className="px-6 py-2 text-sm font-medium rounded-full"
             style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
           >
-            Close
+            Done
           </button>
         </div>
       </div>
@@ -287,31 +287,28 @@ export default function PromoCodeSubmissionForm({
       onClick={() => onClose?.()}
     >
       <div
-        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg"
+        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg rounded-2xl"
         style={{ backgroundColor: 'var(--background-color)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Accent top border */}
-        <div className="h-1" style={{ backgroundColor: 'var(--accent-color)' }} />
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
+        {/* Header with close button */}
+        <div className="flex items-start justify-between px-6 pt-6 pb-4">
           <div>
-            <h2 className="text-lg font-semibold" style={{ color: 'var(--text-color)' }}>
-              Suggest a promo code
+            <h2 className="text-xl font-bold" style={{ color: 'var(--text-color)' }}>
+              Got a discount to share?
             </h2>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
-              Found a deal? Let others know about it.
+            <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+              Help the community save money
             </p>
           </div>
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1 hover:opacity-70"
-              style={{ color: 'var(--text-muted)' }}
+              className="p-1.5 hover:opacity-70 rounded-full"
+              style={{ color: 'var(--text-muted)', backgroundColor: 'var(--background-secondary)' }}
               aria-label="Close"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -319,42 +316,94 @@ export default function PromoCodeSubmissionForm({
         </div>
 
         {/* Form Body */}
-        <div className="px-6 py-5">
+        <div className="px-6 pb-6">
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            {/* Promo Type Toggle */}
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setFormData((prev) => ({ ...prev, isGeneral: false }))}
-                className={`flex-1 py-2 text-sm font-medium border transition-colors ${!formData.isGeneral ? '' : ''}`}
-                style={{
-                  backgroundColor: !formData.isGeneral ? 'var(--accent-color)' : 'transparent',
-                  color: !formData.isGeneral ? 'white' : 'var(--text-secondary)',
-                  borderColor: !formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
-                }}
-              >
-                For a specific product
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData((prev) => ({ ...prev, isGeneral: true, offerId: '', isNewCourse: false, customCourseName: '' }))}
-                className="flex-1 py-2 text-sm font-medium border transition-colors"
-                style={{
-                  backgroundColor: formData.isGeneral ? 'var(--accent-color)' : 'transparent',
-                  color: formData.isGeneral ? 'white' : 'var(--text-secondary)',
-                  borderColor: formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
-                }}
-              >
-                General code
-              </button>
+            {/* SECTION 1: About You (moved to top) */}
+            <div className="p-4 rounded-xl" style={{ backgroundColor: 'var(--background-secondary)' }}>
+              <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--text-muted)' }}>
+                About you
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.submitterName}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, submitterName: e.target.value }))}
+                    placeholder="Your name"
+                    className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2"
+                    style={{
+                      borderColor: 'var(--border-color)',
+                      color: 'var(--text-color)',
+                      backgroundColor: 'var(--background-color)',
+                      '--tw-ring-color': 'var(--accent-color)'
+                    } as React.CSSProperties}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.submitterEmail}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, submitterEmail: e.target.value }))}
+                    placeholder="you@example.com"
+                    className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2"
+                    style={{
+                      borderColor: 'var(--border-color)',
+                      color: 'var(--text-color)',
+                      backgroundColor: 'var(--background-color)',
+                      '--tw-ring-color': 'var(--accent-color)'
+                    } as React.CSSProperties}
+                    required
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Product Search */}
+            {/* SECTION 2: Code Type Toggle */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-muted)' }}>
+                Code type
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, isGeneral: false }))}
+                  className="flex-1 py-2.5 text-sm font-medium rounded-lg border transition-colors"
+                  style={{
+                    backgroundColor: !formData.isGeneral ? 'var(--accent-color)' : 'transparent',
+                    color: !formData.isGeneral ? 'white' : 'var(--text-secondary)',
+                    borderColor: !formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
+                  }}
+                >
+                  Specific product
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, isGeneral: true, offerId: '', isNewCourse: false, customCourseName: '' }))}
+                  className="flex-1 py-2.5 text-sm font-medium rounded-lg border transition-colors"
+                  style={{
+                    backgroundColor: formData.isGeneral ? 'var(--accent-color)' : 'transparent',
+                    color: formData.isGeneral ? 'white' : 'var(--text-secondary)',
+                    borderColor: formData.isGeneral ? 'var(--accent-color)' : 'var(--border-color)'
+                  }}
+                >
+                  Works anywhere
+                </button>
+              </div>
+            </div>
+
+            {/* SECTION 3: Product Search (conditional) */}
             {!formData.isGeneral && (
               <div className="relative">
-                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Choose product
+                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+                  Which product?
                 </label>
                 <div className="relative">
                   <input
@@ -369,16 +418,17 @@ export default function PromoCodeSubmissionForm({
                       setShowDropdown(true);
                       if (searchTerm.length >= 2) searchWhops(searchTerm);
                     }}
-                    placeholder="Start typing to search..."
-                    className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 transition-colors"
+                    placeholder="Search for a product..."
+                    className="w-full px-3 py-2 pr-10 text-sm rounded-lg border focus:outline-none focus:ring-2"
                     style={{
-                      borderBottomColor: 'var(--border-color)',
+                      borderColor: 'var(--border-color)',
                       color: 'var(--text-color)',
-                      backgroundColor: 'transparent'
-                    }}
+                      backgroundColor: 'var(--background-color)',
+                      '--tw-ring-color': 'var(--accent-color)'
+                    } as React.CSSProperties}
                     autoComplete="off"
                   />
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
                     {isSearching ? (
                       <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--accent-color)' }} />
                     ) : (
@@ -393,12 +443,12 @@ export default function PromoCodeSubmissionForm({
                 {showDropdown && (
                   <>
                     <div
-                      className="absolute z-20 w-full mt-1 max-h-48 overflow-y-auto shadow-md"
+                      className="absolute z-20 w-full mt-1 max-h-48 overflow-y-auto shadow-lg rounded-lg"
                       style={{ backgroundColor: 'var(--background-color)', border: '1px solid var(--border-color)' }}
                     >
                       {searchTerm.length < 2 && (
                         <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-muted)' }}>
-                          Enter 2 or more letters...
+                          Type at least 2 characters...
                         </div>
                       )}
 
@@ -421,7 +471,7 @@ export default function PromoCodeSubmissionForm({
                           className="w-full px-3 py-2 text-left text-sm border-t transition-colors"
                           style={{ color: 'var(--accent-color)', borderColor: 'var(--border-color)' }}
                         >
-                          + List "{searchTerm}" as a new product
+                          + Add "{searchTerm}" as new
                         </button>
                       )}
                     </div>
@@ -430,147 +480,148 @@ export default function PromoCodeSubmissionForm({
                 )}
 
                 {(selectedProductName || formData.isNewCourse) && (
-                  <div className="mt-2 text-xs" style={{ color: 'var(--accent-color)' }}>
-                    Selected: {formData.isNewCourse ? formData.customCourseName : selectedProductName}
+                  <div className="mt-2 text-xs font-medium" style={{ color: 'var(--accent-color)' }}>
+                    ✓ {formData.isNewCourse ? formData.customCourseName : selectedProductName}
                   </div>
                 )}
               </div>
             )}
 
-            {/* Title */}
-            <div>
-              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Deal headline
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-                placeholder="e.g. 20% off annual plan"
-                className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
-                style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
-                required
-              />
-            </div>
+            {/* SECTION 4: The Code Details */}
+            <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
+                Discount details
+              </p>
 
-            {/* Code + Value row */}
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                    Promo code
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.code}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, code: e.target.value }))}
+                    placeholder="SAVE20"
+                    className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 font-mono"
+                    style={{
+                      borderColor: 'var(--border-color)',
+                      color: 'var(--text-color)',
+                      backgroundColor: 'var(--background-color)',
+                      '--tw-ring-color': 'var(--accent-color)'
+                    } as React.CSSProperties}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                    Discount amount
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.value}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, value: e.target.value }))}
+                    placeholder="20% off"
+                    className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2"
+                    style={{
+                      borderColor: 'var(--border-color)',
+                      color: 'var(--text-color)',
+                      backgroundColor: 'var(--background-color)',
+                      '--tw-ring-color': 'var(--accent-color)'
+                    } as React.CSSProperties}
+                    required
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Code
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                  Short description
                 </label>
                 <input
                   type="text"
-                  value={formData.code}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, code: e.target.value }))}
-                  placeholder="SUMMER20"
-                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
-                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                  value={formData.title}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+                  placeholder="e.g. Holiday sale - 20% off first month"
+                  className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--text-color)',
+                    backgroundColor: 'var(--background-color)',
+                    '--tw-ring-color': 'var(--accent-color)'
+                  } as React.CSSProperties}
                   required
                 />
               </div>
+
               <div>
-                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Value
+                <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                  Any conditions or notes?
                 </label>
-                <input
-                  type="text"
-                  value={formData.value}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, value: e.target.value }))}
-                  placeholder="20% off"
-                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
-                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                  placeholder="New customers only, expires end of month, etc."
+                  rows={2}
+                  className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 resize-none"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--text-color)',
+                    backgroundColor: 'var(--background-color)',
+                    '--tw-ring-color': 'var(--accent-color)'
+                  } as React.CSSProperties}
                   required
                 />
               </div>
             </div>
 
-            {/* Description */}
+            {/* SECTION 5: Extra notes (optional) */}
             <div>
-              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Description
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                placeholder="Briefly explain the offer and any restrictions..."
-                rows={2}
-                className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 resize-none"
-                style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
-                required
-              />
-            </div>
-
-            {/* Name + Email row */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Your name
-                </label>
-                <input
-                  type="text"
-                  value={formData.submitterName}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, submitterName: e.target.value }))}
-                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
-                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                  Your email
-                </label>
-                <input
-                  type="email"
-                  value={formData.submitterEmail}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, submitterEmail: e.target.value }))}
-                  className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0"
-                  style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Optional Message */}
-            <div>
-              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-                Anything else? (optional)
+              <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+                Want to tell us anything else? <span style={{ color: 'var(--text-muted)' }}>(optional)</span>
               </label>
               <textarea
                 value={formData.submitterMessage}
                 onChange={(e) => setFormData((prev) => ({ ...prev, submitterMessage: e.target.value }))}
+                placeholder="Where you found the code, how long it's valid, etc."
                 rows={2}
-                className="w-full border-0 border-b-2 px-0 py-2 text-sm focus:outline-none focus:ring-0 resize-none"
-                style={{ borderBottomColor: 'var(--border-color)', color: 'var(--text-color)', backgroundColor: 'transparent' }}
+                className="w-full px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2 resize-none"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-color)',
+                  backgroundColor: 'var(--background-color)',
+                  '--tw-ring-color': 'var(--accent-color)'
+                } as React.CSSProperties}
               />
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 pt-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
-              {onClose && (
+            <div className="flex items-center justify-between pt-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                We check all submissions before publishing
+              </p>
+              <div className="flex gap-3">
+                {onClose && (
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-4 py-2 text-sm font-medium rounded-lg"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Cancel
+                  </button>
+                )}
                 <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-5 py-2 text-sm font-medium border"
-                  style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-5 py-2 text-sm font-semibold rounded-full disabled:opacity-50 transition-all hover:brightness-105"
+                  style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
                 >
-                  Cancel
+                  {isSubmitting ? 'Sending...' : 'Send it in'}
                 </button>
-              )}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="px-6 py-2 text-sm font-medium rounded-full disabled:opacity-50"
-                style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </button>
+              </div>
             </div>
           </form>
-
-          <p className="mt-4 text-xs" style={{ color: 'var(--text-muted)' }}>
-            We review each submission before making it public.
-          </p>
         </div>
       </div>
     </div>
