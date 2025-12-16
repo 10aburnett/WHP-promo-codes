@@ -117,6 +117,49 @@ async function testCohortOffer(slug) {
     log('FAIL', `SSR content may be missing (page size: ${Math.round(html.length/1024)}KB)`);
   }
 
+  // === CRITICAL SSR CHECKS FOR JS-OFF RENDERING ===
+  // These sections MUST render in HTML without JavaScript
+
+  // 1. Check for "More ways to save" heading (Recommendations)
+  const hasRecommendationsHeading = html.includes('More ways to save');
+  if (hasRecommendationsHeading) {
+    log('PASS', `SSR: "More ways to save" heading present`);
+  } else {
+    log('FAIL', `SSR: "More ways to save" heading MISSING - Recommendations not rendering!`);
+  }
+
+  // 2. Check for "Why Not Try" heading (Alternatives)
+  const hasAlternativesHeading = html.includes('Why Not Try');
+  if (hasAlternativesHeading) {
+    log('PASS', `SSR: "Why Not Try" heading present`);
+  } else {
+    log('FAIL', `SSR: "Why Not Try" heading MISSING - Alternatives not rendering!`);
+  }
+
+  // 3. Check for "Community feedback" heading (Reviews)
+  const hasReviewsHeading = html.includes('Community feedback');
+  if (hasReviewsHeading) {
+    log('PASS', `SSR: "Community feedback" heading present`);
+  } else {
+    log('FAIL', `SSR: "Community feedback" heading MISSING - Reviews not rendering!`);
+  }
+
+  // 4. Check for at least one /offer/ link in HTML (recs/alts internal links)
+  const offerLinks = html.match(/href="\/offer\/[^"]+/g) || [];
+  if (offerLinks.length > 1) {
+    log('PASS', `SSR: ${offerLinks.length} internal /offer/ links found`);
+  } else {
+    log('FAIL', `SSR: Only ${offerLinks.length} /offer/ links - Recs/Alts not rendering!`);
+  }
+
+  // 5. Check for NO animate-pulse (skeleton markers)
+  const hasSkeletonMarkers = html.includes('animate-pulse');
+  if (!hasSkeletonMarkers) {
+    log('PASS', `SSR: No skeleton markers (animate-pulse) found`);
+  } else {
+    log('FAIL', `SSR: Skeleton markers found - content may be streaming-only!`);
+  }
+
   // Check for noindex
   const hasNoindex = html.toLowerCase().includes('noindex');
   if (!hasNoindex) {

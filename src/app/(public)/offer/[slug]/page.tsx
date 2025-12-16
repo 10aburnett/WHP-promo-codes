@@ -7,7 +7,7 @@ import { getOfferBySlugCached } from '@/data/offers'; // NEW: Use cached version
 import { getOfferBySlug, getOfferBySlugUnfiltered } from '@/lib/data'; // Keep for metadata generation
 import { prisma } from '@/lib/prisma';
 import { whereIndexable } from '@/lib/where-indexable';
-import { Suspense } from 'react';
+// Suspense removed - SSR sections render without streaming for SEO
 import { canonicalSlugForDB, canonicalSlugForPath } from '@/lib/slug-utils';
 import { siteOrigin } from '@/lib/site-origin';
 import { notFoundWithReason } from '@/lib/notFoundReason';
@@ -26,13 +26,11 @@ import OfferLogo from '@/components/OfferLogo';
 import OfferPageInteractive from '@/components/OfferPageInteractive';
 import PromoCodeSubmissionButton from '@/components/PromoCodeSubmissionButton';
 
-// Below-the-fold components: dynamically import to reduce initial bundle size
-const OfferReviewSection = dynamicImport(() => import('@/components/OfferReviewSection'), {
-  loading: () => null,
-});
-import FAQSectionServer from '@/components/FAQSectionServer'; // Server component for SEO
-import RecommendedOffersServer from '@/components/RecommendedOffersServer'; // Server component for recommendations
-import AlternativesServer from '@/components/AlternativesServer'; // Server component for alternatives
+// Server components for SEO (render in HTML without JS)
+import FAQSectionServer from '@/components/FAQSectionServer';
+import RecommendedOffersServer from '@/components/RecommendedOffersServer';
+import AlternativesServer from '@/components/AlternativesServer';
+import ReviewsSectionServer from '@/components/ReviewsSectionServer';
 import { getRecommendations, getAlternatives } from '@/data/recommendations'; // Data fetching for recommendations/alternatives
 import { getPromoStatsForSlug } from '@/data/promo-stats'; // Server-side promo usage statistics
 const CommunityPromoSection = dynamicImport(() => import('@/components/CommunityPromoSection'), {
@@ -158,15 +156,7 @@ async function getVerificationData(slug: string) {
   }
 }
 
-// Skeleton component for streaming sections
-function SectionSkeleton() {
-  return (
-    <div
-      className="h-48 w-full rounded-xl animate-pulse"
-      style={{ backgroundColor: 'var(--background-secondary)' }}
-    />
-  );
-}
+// SectionSkeleton removed - SSR sections render without streaming for SEO
 
 // Helper function to extract currency from price string
 function extractCurrency(price: string | null): string {
@@ -259,18 +249,7 @@ async function AlternativesSection({ currentOfferSlug }: { currentOfferSlug: str
   return <AlternativesServer items={frozen} explore={explore} />;
 }
 
-async function ReviewsSection({ offerId, whopName, reviews }: { offerId: string; whopName: string; reviews: any[] }) {
-  // Simulate a small delay to show streaming effect in development
-  await new Promise(resolve => setTimeout(resolve, 150));
-
-  return (
-    <OfferReviewSection
-      offerId={offerId}
-      whopName={whopName}
-      reviews={reviews}
-    />
-  );
-}
+// ReviewsSection removed - using ReviewsSectionServer directly for SSR
 
 // Helper to check if a whop is indexable (supports multiple schema conventions)
 const isIndexable = (raw: unknown) => {
@@ -1335,33 +1314,27 @@ export default async function DealPage({ params }: { params: { slug: string } })
               )}
             </ServerSectionGuard>
 
-            {/* 7. Alternatives - Why Not Try... */}
+            {/* 7. Alternatives - Why Not Try... (NO Suspense - must render in HTML for SEO) */}
             <section id="alternatives" className="dpc-offer-alternatives">
-              <Suspense fallback={<SectionSkeleton />}>
-                <AlternativesSection currentOfferSlug={dbSlug} />
-              </Suspense>
+              <AlternativesSection currentOfferSlug={dbSlug} />
             </section>
 
-            {/* 8. Recommendations - More ways to save */}
+            {/* 8. Recommendations - More ways to save (NO Suspense - must render in HTML for SEO) */}
             <section className="dpc-offer-recommended">
-              <Suspense fallback={<SectionSkeleton />}>
-                <RecommendedSection currentOfferSlug={dbSlug} />
-              </Suspense>
+              <RecommendedSection currentOfferSlug={dbSlug} />
             </section>
           </aside>
         </div>
 
         {/* Related Content Sections - Full width below grid */}
         <div className="dpc-related-content space-y-10 mt-12">
-          {/* Community Feedback / Reviews */}
+          {/* Community Feedback / Reviews (NO Suspense - must render in HTML for SEO) */}
           <section className="dpc-offer-reviews">
-            <Suspense fallback={<SectionSkeleton />}>
-              <ReviewsSection
-                offerId={offerFormatted.id}
-                whopName={offerFormatted.name}
-                reviews={offerFormatted.reviews || []}
-              />
-            </Suspense>
+            <ReviewsSectionServer
+              offerId={offerFormatted.id}
+              whopName={offerFormatted.name}
+              reviews={offerFormatted.reviews || []}
+            />
           </section>
 
           {/* Back Link */}
