@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSocialProof, createSocialProofFromOffer } from '@/contexts/SocialProofContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { hasRealCode, assertCtaMatchesCode } from '@/lib/promo-label';
 
 interface OfferPageClientProps {
   offer: {
@@ -33,6 +34,17 @@ export default function OfferPageClient({
   const [hasMounted, setHasMounted] = useState(false);
   const { addNotification, isHydrated } = useSocialProof();
   const { t } = useLanguage();
+
+  // Determine if offer has a real code (SEO-critical decision)
+  const hasCode = useMemo(() => hasRealCode(promoCode), [promoCode]);
+
+  // DEV REGRESSION GUARD: Check CTA/code mismatch
+  useEffect(() => {
+    if (hasMounted) {
+      const ctaText = hasCode ? t('whop.revealCode') : t('whop.goToOffer');
+      assertCtaMatchesCode(ctaText, hasCode);
+    }
+  }, [hasMounted, hasCode, t]);
 
   // Shared button styling so SSR + CSR match exactly
   // Pill shape with subtle lift on hover for fintech feel
@@ -104,22 +116,21 @@ export default function OfferPageClient({
     [offer.name],
   );
 
-  const handleRevealCode = async () => {
-    console.log('🔥 OfferPageClient: Reveal Code button clicked!', {
+  const handleCtaClick = async () => {
+    console.log('🔥 OfferPageClient: CTA button clicked!', {
       offerName: offer.name,
       offerId: offer.id,
       firstPromoId: firstPromo?.id,
-      hasOfferId: !!offer.id,
-      hasFirstPromo: !!firstPromo,
+      hasCode,
       timestamp: new Date().toISOString(),
     });
 
-    // Open affiliate link
+    // Open affiliate link (always - cookie drop happens here)
     if (offer?.affiliateLink) {
       window.open(offer.affiliateLink, '_blank', 'noopener,noreferrer');
     }
 
-    // Reveal the code immediately for UX
+    // Always show reveal UI after click (shows code or "no code" message)
     setCodeRevealed(true);
 
     // Track the action - now works even without promo code ID
@@ -157,8 +168,9 @@ export default function OfferPageClient({
           className={baseButtonClass}
           style={{ backgroundColor: 'var(--accent-color)', color: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }}
           disabled
+          aria-label={hasCode ? 'Reveal discount code' : 'Go to offer page'}
         >
-          {t('whop.revealCode')}
+          {hasCode ? t('whop.revealCode') : t('whop.goToOffer')}
         </button>
       </div>
     );
@@ -167,12 +179,14 @@ export default function OfferPageClient({
   return (
     <div className="w-full">
       {!codeRevealed ? (
+        // Initial button - "Reveal Code" if has code, "Go to Offer" if no code
         <button
-          onClick={handleRevealCode}
+          onClick={handleCtaClick}
           className={baseButtonClass}
           style={{ backgroundColor: 'var(--accent-color)', color: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }}
+          aria-label={hasCode ? 'Reveal discount code' : 'Go to offer page'}
         >
-          {t('whop.revealCode')}
+          {hasCode ? t('whop.revealCode') : t('whop.goToOffer')}
         </button>
       ) : promoCode ? (
         // Has promo code - show the code pill

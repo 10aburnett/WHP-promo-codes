@@ -88,3 +88,57 @@ export function getOfferBadgeText(input: PromoLabelInput): string {
 
   return 'Special Access';
 }
+
+/**
+ * Determine if an offer has a real discount code
+ *
+ * Google penalizes "Reveal code" buttons that reveal nothing.
+ * Use this to determine CTA text:
+ * - hasCode === true  → "Reveal code" (show code after click)
+ * - hasCode === false → "Go to offer" (immediate redirect, no reveal UI)
+ *
+ * A code is considered "real" if it exists and is not:
+ * - empty or whitespace-only
+ * - a placeholder like "NONE", "N/A", "NO CODE", etc.
+ */
+export function hasRealCode(code: string | null | undefined): boolean {
+  if (!code) return false;
+
+  const trimmed = code.trim();
+  if (trimmed.length === 0) return false;
+
+  // Check for common placeholder values
+  const placeholders = [
+    'none',
+    'n/a',
+    'na',
+    'no code',
+    'no-code',
+    'nocode',
+    'null',
+    'undefined',
+    '-',
+    '—',
+    '...',
+  ];
+
+  return !placeholders.includes(trimmed.toLowerCase());
+}
+
+/**
+ * DEV REGRESSION GUARD
+ * Throws console error if CTA text says "Reveal" but there's no code
+ * Call this in dev to catch mismatches
+ */
+export function assertCtaMatchesCode(ctaText: string, hasCode: boolean): void {
+  if (process.env.NODE_ENV !== 'production') {
+    const hasReveal = /reveal/i.test(ctaText);
+    if (hasReveal && !hasCode) {
+      console.error(
+        '[SEO REGRESSION] CTA says "Reveal" but hasCode is false. ' +
+        'This is a Google trust violation. Fix immediately.',
+        { ctaText, hasCode }
+      );
+    }
+  }
+}

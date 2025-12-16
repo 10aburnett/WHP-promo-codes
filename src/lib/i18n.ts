@@ -49,6 +49,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Redeem Promo',
     'whop.revealCode': 'Reveal Code',
+    'whop.goToOffer': 'Go to Offer',
+    'whop.noCodeDisclosure': 'No code required – offer applied automatically',
     'whop.noCode': 'Creator doesn\'t allow promo codes at this time',
     'whop.getPromo': 'Go to Course',
     
@@ -206,6 +208,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Canjear Promo',
     'whop.revealCode': 'Revelar Código',
+    'whop.goToOffer': 'Ir a la Oferta',
+    'whop.noCodeDisclosure': 'No se requiere código – la oferta se aplica automáticamente',
     'whop.noCode': 'El creador no permite códigos promocionales en este momento',
     'whop.getPromo': 'Ir al Curso',
     
@@ -363,6 +367,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Verzilver Promo',
     'whop.revealCode': 'Toon Code',
+    'whop.goToOffer': 'Ga naar Aanbieding',
+    'whop.noCodeDisclosure': 'Geen code nodig – aanbieding wordt automatisch toegepast',
     'whop.noCode': 'Maker staat geen promocodes toe op dit moment',
     'whop.getPromo': 'Ga naar Cursus',
     
@@ -520,6 +526,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Utiliser Promo',
     'whop.revealCode': 'Révéler le Code',
+    'whop.goToOffer': 'Accéder à l\'Offre',
+    'whop.noCodeDisclosure': 'Aucun code requis – l\'offre s\'applique automatiquement',
     'whop.noCode': 'Le créateur n\'autorise pas les codes promo pour le moment',
     'whop.getPromo': 'Aller au Cours',
     
@@ -677,6 +685,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Promo Einlösen',
     'whop.revealCode': 'Code Enthüllen',
+    'whop.goToOffer': 'Zum Angebot',
+    'whop.noCodeDisclosure': 'Kein Code erforderlich – Angebot wird automatisch angewendet',
     'whop.noCode': 'Ersteller erlaubt derzeit keine Promo-Codes',
     'whop.getPromo': 'Zum Kurs Gehen',
     
@@ -834,6 +844,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Riscatta Promo',
     'whop.revealCode': 'Rivela Codice',
+    'whop.goToOffer': 'Vai all\'Offerta',
+    'whop.noCodeDisclosure': 'Nessun codice richiesto – l\'offerta viene applicata automaticamente',
     'whop.noCode': 'Il creatore non consente codici promo al momento',
     'whop.getPromo': 'Vai al Corso',
     
@@ -991,6 +1003,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': 'Resgatar Promo',
     'whop.revealCode': 'Revelar Código',
+    'whop.goToOffer': 'Ir para Oferta',
+    'whop.noCodeDisclosure': 'Nenhum código necessário – oferta aplicada automaticamente',
     'whop.noCode': 'Criador não permite códigos promocionais no momento',
     'whop.getPromo': 'Ir para Curso',
     
@@ -1148,6 +1162,8 @@ export const translations = {
     // Whop Cards
     'whop.viewDeal': '兑换优惠',
     'whop.revealCode': '显示代码',
+    'whop.goToOffer': '前往优惠',
+    'whop.noCodeDisclosure': '无需代码 – 优惠自动应用',
     'whop.noCode': '创作者目前不允许促销代码',
     'whop.getPromo': '前往课程',
     

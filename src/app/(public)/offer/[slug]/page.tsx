@@ -13,7 +13,7 @@ import { siteOrigin } from '@/lib/site-origin';
 import { notFoundWithReason } from '@/lib/notFoundReason';
 import { dlog } from '@/lib/debug';
 import { isOfferLaunchEligible } from '@/lib/launch-cohort';
-import { extractPercentOff } from '@/lib/promo-label';
+import { extractPercentOff, hasRealCode } from '@/lib/promo-label';
 
 // Static generation with ISR for stable SSR/CSR hydration
 export const dynamic = 'force-static';
@@ -675,10 +675,10 @@ export default async function DealPage({ params }: { params: { slug: string } })
   const hasFeatures = isMeaningful(offerFormatted.featuresContent);
   const hasTerms = true; // Always show - has fallback content
 
-  // Helper function to check if whop has a promo code
-  const hasPromoCode = (whopName: string): boolean => {
-    // Now all promo codes are in database - if promoCode exists, we have a promo
-    return promoCode !== null;
+  // Helper function to check if whop has a real promo code (SEO-critical)
+  // Uses centralized hasRealCode to detect placeholders like "NONE", "N/A", etc.
+  const hasPromoCode = (_whopName: string): boolean => {
+    return hasRealCode(promoCode);
   };
 
   // Helper function to get discount percentage
@@ -690,11 +690,14 @@ export default async function DealPage({ params }: { params: { slug: string } })
   // Create unique key for remounting when slug changes
   const pageKey = `dpc-offer-${params.slug}`;
 
+  // Determine CTA button text based on whether offer has a real code
+  const ctaButtonText = hasPromoCode(offerFormatted.name) ? 'Reveal Code' : 'Go to Offer';
+
   // Prepare fallback FAQ data for the collapsible component (used only if no database FAQ content)
   const fallbackFaqData = [
     {
       question: `How do I use the ${offerFormatted.name} promo code?`,
-      answer: `To use the ${promoTitle} for ${offerFormatted.name}, simply click "Reveal Code" above to visit their website.${hasPromoCode(offerFormatted.name) ? ' Copy the promo code and enter it during checkout.' : ' The discount will be automatically applied when you purchase through our link.'}`
+      answer: `To use the ${promoTitle} for ${offerFormatted.name}, simply click "${ctaButtonText}" above to visit their website.${hasPromoCode(offerFormatted.name) ? ' Copy the promo code and enter it during checkout.' : ' The discount will be automatically applied when you purchase through our link.'}`
     },
     {
       question: `What type of product is ${offerFormatted.name}?`,
@@ -1039,7 +1042,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                       >
                         1
                       </span>
-                      <span>Click &quot;Reveal Code&quot; above to visit {offerFormatted.name} and get your exclusive offer</span>
+                      <span>Click &quot;{ctaButtonText}&quot; above to visit {offerFormatted.name} and get your exclusive offer</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <span
