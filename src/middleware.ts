@@ -30,6 +30,22 @@ function verifyJWT(token: string, secret: string): any {
 // Middleware that handles admin routes, API routes, and SEO
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const host = request.headers.get('host') ?? '';
+
+  // Check if we should noindex this response:
+  // 1. Any *.vercel.app host (production alias + preview URLs)
+  // 2. Any Vercel preview deployment (even on custom domain)
+  const isVercelAppHost = host.toLowerCase().endsWith('.vercel.app');
+  const isVercelPreview = process.env.VERCEL === '1' && process.env.VERCEL_ENV !== 'production';
+  const shouldNoIndex = isVercelAppHost || isVercelPreview;
+
+  // Helper to add X-Robots-Tag noindex on vercel.app or preview deployments
+  function withNoIndex(res: NextResponse): NextResponse {
+    if (shouldNoIndex) {
+      res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    }
+    return res;
+  }
 
   // SECURITY: Block all debug and test API routes on any deployed environment
   // These should never be accessible publicly (production OR preview)
@@ -44,10 +60,10 @@ export function middleware(request: NextRequest) {
     // VERCEL === '1' is set on all Vercel deployments
     const isDeployed = process.env.VERCEL === '1';
     if (isDeployed) {
-      return new NextResponse('Not Found', {
+      return withNoIndex(new NextResponse('Not Found', {
         status: 404,
         headers: { 'Content-Type': 'text/plain' }
-      });
+      }));
     }
     // Only allow in local development
     return NextResponse.next();
@@ -56,7 +72,7 @@ export function middleware(request: NextRequest) {
   if (process.env.SKIP_SEO_BUILD === '1') {
     const res = NextResponse.next();
     res.headers.set('x-skip-seo', '1');
-    return res;
+    return withNoIndex(res);
   }
   const url = request.nextUrl;
   const path = url.pathname.replace(/\/+$/, '');
@@ -82,7 +98,7 @@ export function middleware(request: NextRequest) {
     pathname.endsWith('.css') ||
     pathname.endsWith('.js')
   ) {
-    return NextResponse.next();
+    return withNoIndex(NextResponse.next());
   }
 
   // ========================================
@@ -91,14 +107,14 @@ export function middleware(request: NextRequest) {
   // This blocks: /es/*, /fr/*, /de/*, /en/*, etc.
   // Strict mode: even /en/* returns 404 to avoid duplicate surfaces
   if (shouldBlockLocalePath(pathname)) {
-    return new NextResponse('Not Found', {
+    return withNoIndex(new NextResponse('Not Found', {
       status: 404,
       headers: {
         'Content-Type': 'text/plain',
         'Cache-Control': 's-maxage=300, stale-while-revalidate=60',
         ...(process.env.NODE_ENV !== 'production' ? { 'x-locale-blocked': 'true' } : {}),
       }
-    });
+    }));
   }
 
   // ========================================
@@ -130,7 +146,7 @@ export function middleware(request: NextRequest) {
         // Create new URL with canonical path while preserving query params and hash
         const newUrl = url.clone();
         newUrl.pathname = target;
-        return NextResponse.redirect(newUrl, 301);
+        return withNoIndex(NextResponse.redirect(newUrl, 301));
       }
     }
 
@@ -139,19 +155,19 @@ export function middleware(request: NextRequest) {
 
     // 3) handle specific redirects (preserve existing)
     if (path === '/offer/monthly-mentorship') {
-      return NextResponse.redirect(new URL('/offer/ayecon-academy-monthly-mentorship', url));
+      return withNoIndex(NextResponse.redirect(new URL('/offer/ayecon-academy-monthly-mentorship', url)));
     }
 
     // 4) exact 410 for retired
     if (RETIRED_PATHS.has(path)) {
-      return new NextResponse('Gone', {
+      return withNoIndex(new NextResponse('Gone', {
         status: 410,
         headers: {
           ...(process.env.NODE_ENV !== 'production' ? {'x-mw-hit':'1'} : {}),
           'Cache-Control': 's-maxage=300, stale-while-revalidate=60',
           'X-Robots-Tag': 'noindex'
         }
-      });
+      }));
     }
 
     // 4.5) LAUNCH COHORT GATE: Return real 404 for non-cohort slugs
@@ -166,13 +182,13 @@ export function middleware(request: NextRequest) {
         const slug = slugMatch[1].toLowerCase().replace(/\/+$/, '');
         if (!LAUNCH_COHORT_SLUGS.has(slug)) {
           // Return real 404 - not a soft-404, not noindex, just gone
-          return new NextResponse('Not Found', {
+          return withNoIndex(new NextResponse('Not Found', {
             status: 404,
             headers: {
               ...(process.env.NODE_ENV !== 'production' ? {'x-mw-hit':'1', 'x-cohort-gate': 'blocked'} : {}),
               'Cache-Control': 's-maxage=120, stale-while-revalidate=60',
             }
-          });
+          }));
         }
       }
     }
@@ -184,27 +200,27 @@ export function middleware(request: NextRequest) {
 
     // 6) fall through to admin/API logic if needed, or return
     if (!path.startsWith('/admin') && !path.startsWith('/api')) {
-      return res;
+      return withNoIndex(res);
     }
   }
 
   // Legacy /whop/ redirect to /offer/
   if (path.startsWith('/whop/')) {
     const newPath = path.replace('/whop/', '/offer/');
-    return NextResponse.redirect(new URL(newPath, url), 301);
+    return withNoIndex(NextResponse.redirect(new URL(newPath, url), 301));
   }
   
   // Handle preflight OPTIONS requests for CORS
   if (request.method === 'OPTIONS') {
     const response = new NextResponse(null, { status: 204 });
-    
+
     response.headers.append('Access-Control-Allow-Credentials', 'true');
     response.headers.append('Access-Control-Allow-Origin', request.headers.get('origin') || '*');
     response.headers.append('Access-Control-Allow-Methods', 'GET,DELETE,PATCH,POST,PUT');
-    response.headers.append('Access-Control-Allow-Headers', 
+    response.headers.append('Access-Control-Allow-Headers',
       'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
-    
-    return response;
+
+    return withNoIndex(response);
   }
   
   // Create response
@@ -239,9 +255,9 @@ export function middleware(request: NextRequest) {
         
         // Return unauthorized if no token found
         if (!token) {
-          return new NextResponse(
+          return withNoIndex(new NextResponse(
             JSON.stringify({ error: 'Unauthorized' }),
-            { 
+            {
               status: 401,
               headers: {
                 'Content-Type': 'application/json',
@@ -249,17 +265,17 @@ export function middleware(request: NextRequest) {
                 'Access-Control-Allow-Credentials': 'true'
               }
             }
-          );
+          ));
         }
       }
     }
-    
-    return response;
+
+    return withNoIndex(response);
   }
-  
+
   // Skip middleware for login page
   if (pathname === '/admin/login') {
-    return response;
+    return withNoIndex(response);
   }
   
   // Protect admin routes
@@ -284,7 +300,7 @@ export function middleware(request: NextRequest) {
       // Check if user has admin role
       if (decoded.role !== 'ADMIN') {
         console.log('User does not have admin role, redirecting to login');
-        return NextResponse.redirect(new URL('/admin/login', request.url));
+        return withNoIndex(NextResponse.redirect(new URL('/admin/login', request.url)));
       }
       
     } catch (error) {
@@ -298,11 +314,11 @@ export function middleware(request: NextRequest) {
         path: '/',
         expires: new Date(0),
       });
-      return redirectResponse;
+      return withNoIndex(redirectResponse);
     }
   }
 
-  return response;
+  return withNoIndex(response);
 }
 
 // Configure the paths that middleware should run on
