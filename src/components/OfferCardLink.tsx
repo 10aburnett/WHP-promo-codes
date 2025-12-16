@@ -13,7 +13,7 @@ interface OfferCardLinkProps {
   subtitle?: string;      // short description
   priceText?: string;     // formatted price if you have it
   imageUrl?: string | null;
-  badgeText?: string;     // e.g., "Exclusive Access"
+  badgeText?: string;     // e.g., "15% Off" or "Special Access"
   category?: string | null;
   rating?: number;
   priority?: boolean;     // for prefetch optimization

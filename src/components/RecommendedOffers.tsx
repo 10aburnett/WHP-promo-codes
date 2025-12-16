@@ -7,6 +7,7 @@ import SectionPanel from './SectionPanel';
 import { loadNeighbors, getNeighborSlugsFor, getExploreFor } from '@/lib/graph';
 import { getBaseUrl } from '@/lib/base-url';
 import { normalizeSlug, encodeSlugForAPI } from '@/lib/slug-normalize';
+import { getOfferBadgeText } from '@/lib/promo-label';
 
 interface PromoCode {
   id: string;
@@ -344,20 +345,11 @@ export default function RecommendedOffers({ currentOfferSlug }: RecommendedOffer
   }
 
 
+  // Use centralized promo label logic
   const getPromoText = (whop: RecommendedDeal) => {
     const firstPromo = whop.promoCodes?.[0];
-    if (!firstPromo) return 'Special access';
-
-    // If there's a promo code and a value > 0, show the discount
-    if (firstPromo.code && firstPromo.value && firstPromo.value !== '0') {
-      // Check if value already contains currency or percentage symbol
-      if (firstPromo.value.includes('$') || firstPromo.value.includes('%') || firstPromo.value.includes('off')) {
-        return firstPromo.value;
-      }
-      return `${firstPromo.value}% Off`;
-    }
-
-    return firstPromo.title || 'Special access';
+    const promoValue = firstPromo?.value ? parseInt(firstPromo.value, 10) : null;
+    return getOfferBadgeText({ promoValue: isNaN(promoValue as number) ? null : promoValue });
   };
 
   return (

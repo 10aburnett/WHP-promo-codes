@@ -13,6 +13,7 @@ import { siteOrigin } from '@/lib/site-origin';
 import { notFoundWithReason } from '@/lib/notFoundReason';
 import { dlog } from '@/lib/debug';
 import { isOfferLaunchEligible } from '@/lib/launch-cohort';
+import { extractPercentOff } from '@/lib/promo-label';
 
 // Static generation with ISR for stable SSR/CSR hydration
 export const dynamic = 'force-static';
@@ -1271,8 +1272,11 @@ export default async function DealPage({ params }: { params: { slug: string } })
             {/* 5. Key Facts Card */}
             {(() => {
               const hasPrice = !!offerFormatted.price;
-              const hasDiscount = !!(firstPromo?.value && firstPromo.value !== "0");
-              const hasAnyFact = hasPrice || hasDiscount;
+              // Use centralized logic: only show discount row if there's a real percent
+              const discountPct = extractPercentOff({ promoValue: firstPromo?.value });
+              const hasDiscount = discountPct !== null && discountPct > 0;
+              // Always show the card - either price or "Special Access" offer type
+              const hasAnyFact = hasPrice || firstPromo;
 
               if (!hasAnyFact) return null;
 
@@ -1302,18 +1306,12 @@ export default async function DealPage({ params }: { params: { slug: string } })
                         </dd>
                       </div>
                     )}
-                    {hasDiscount && (
-                      <div className="flex justify-between">
-                        <dt style={{ color: 'var(--text-secondary)' }}>Discount</dt>
-                        <dd className="font-semibold" style={{ color: 'var(--accent-color)' }}>
-                          {firstPromo.value.includes("%") ||
-                          firstPromo.value.includes("$") ||
-                          firstPromo.value.includes("off")
-                            ? firstPromo.value
-                            : `${firstPromo.value}%`}
-                        </dd>
-                      </div>
-                    )}
+                    <div className="flex justify-between">
+                      <dt style={{ color: 'var(--text-secondary)' }}>Offer</dt>
+                      <dd className="font-semibold" style={{ color: 'var(--accent-color)' }}>
+                        {hasDiscount ? `${discountPct}% Off` : 'Special Access'}
+                      </dd>
+                    </div>
                   </dl>
                 </section>
               );

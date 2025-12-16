@@ -9,6 +9,7 @@ import InitialsAvatar from './InitialsAvatar';
 import { OfferLogoSSR } from './OfferLogoSSR';
 import { offerHref } from '@/lib/paths';
 import { resolveLogoUrl } from '@/lib/image-url';
+import { getDiscountBadge } from '@/lib/promo-label';
 
 // Define the promo type directly here to avoid import issues
 interface Promo {
@@ -211,10 +212,9 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
     return () => io.disconnect();
   }, []);
 
-  // Derive discount label for meta strip
-  const discountLabel = discountPercent && discountPercent > 0
-    ? `${discountPercent}% off`
-    : promo.promoText || null;
+  // Derive discount label for meta strip using centralized logic
+  // Rule: show "X% off" if percent exists, otherwise "Special Access"
+  const discountLabel = getDiscountBadge({ discountPercent });
 
   return (
     <div ref={cardRef} className="relative h-full">

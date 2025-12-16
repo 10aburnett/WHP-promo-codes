@@ -64,7 +64,7 @@ function formatValue(csvType: string, discountValue: string, amountMinor: string
     return major ? `${sym}${major}` : "Amount Off";
   }
   if (t === "trial") return "Free Trial";
-  return "Exclusive Access";
+  return "Special Access";
 }
 
 /** parse a display `value` back into comparable units */
