@@ -46,7 +46,9 @@ export async function generateStaticParams() {
   return posts.map(p => ({ slug: p.slug }));
 }
 
-// Generate metadata with canonical URL and proper robots tags
+// NOTE: Blog posts are intentionally noindex during launch phase.
+// Do not make indexable or add to sitemap without explicit SEO review.
+// This prevents topical dilution and crawl surface expansion during trust-building.
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
     const post = await prisma.blogPost.findUnique({
@@ -87,15 +89,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
         canonical
       },
       robots: {
-        index: true,
+        index: false,
         follow: true,
-        googleBot: {
-          index: true,
-          follow: true,
-          'max-image-preview': 'large',
-          'max-snippet': -1,
-          'max-video-preview': -1,
-        }
       },
       openGraph: {
         title: `${post.title} - ${SITE_BRAND} Articles`,

@@ -115,16 +115,24 @@ const nextConfig = {
   // Custom headers for sitemap files
   async headers() {
     return [
-      // NOINDEX for all pages - domain deindexing
+      // X-Robots-Tag ONLY for non-indexable paths (admin, API, private)
+      // NOTE: Offer pages and homepage must NOT have X-Robots-Tag headers
+      // Page-level robots metadata controls indexing for public pages
       {
-        source: '/:path*',
+        source: '/admin/:path*',
         headers: [
           { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
         ],
       },
-      // Allow ISR caching for whop pages
       {
-        source: '/whop/:slug',
+        source: '/__seo/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+        ],
+      },
+      // Allow ISR caching for offer pages
+      {
+        source: '/offer/:slug',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
         ],
@@ -200,18 +208,31 @@ const nextConfig = {
     ];
   },
   // Redirects for removed or renamed pages
+  // NOTE: Legacy /whop/ redirects kept for backwards compatibility with old links
+  // All destinations point to /offer/ (current canonical pattern)
   async redirects() {
     return [
-      // Redirect old Ayecon 1:1 mentorship page to lifetime membership
+      // Legacy /whop/ to /offer/ catchall (before specific redirects)
       {
-        source: '/whop/ayecon-academy-1:1-mentorship',
-        destination: '/whop/ayecon-academy-lifetime-membership',
+        source: '/whop/:slug',
+        destination: '/offer/:slug',
         permanent: true, // 301 redirect
       },
-      // Also handle URL-encoded version
+      // Redirect old Ayecon 1:1 mentorship page to lifetime membership
+      // Handle both unencoded and encoded versions (uppercase and lowercase hex)
       {
-        source: '/whop/ayecon-academy-1%3A1-mentorship',
-        destination: '/whop/ayecon-academy-lifetime-membership',
+        source: '/offer/ayecon-academy-1:1-mentorship',
+        destination: '/offer/ayecon-academy-lifetime-membership',
+        permanent: true, // 301 redirect
+      },
+      {
+        source: '/offer/ayecon-academy-1%3A1-mentorship',
+        destination: '/offer/ayecon-academy-lifetime-membership',
+        permanent: true, // 301 redirect
+      },
+      {
+        source: '/offer/ayecon-academy-1%3a1-mentorship',
+        destination: '/offer/ayecon-academy-lifetime-membership',
         permanent: true, // 301 redirect
       },
     ];

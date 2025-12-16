@@ -20,6 +20,9 @@ export const runtime = 'nodejs' // Required for Prisma
 
 const currentYear = new Date().getFullYear()
 
+// NOTE: Blog hub is intentionally noindex during launch phase.
+// Do not make indexable or add to sitemap without explicit SEO review.
+// This prevents topical dilution and crawl surface expansion during trust-building.
 export const metadata: Metadata = {
   title: `${SITE_BRAND} Articles - Reviews, Guides & Product Analysis ${currentYear}`,
   description: `Read in-depth coverage of digital tools, software platforms, and online services. Practical breakdowns and independent reviews updated for ${currentYear}.`,
@@ -28,15 +31,8 @@ export const metadata: Metadata = {
 // PHASE1-DEINDEX:     canonical: `${siteOrigin()}/blog`
   },
   robots: {
-    index: true,
+    index: false,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-      'max-video-preview': -1,
-    }
   },
   openGraph: {
     title: `${SITE_BRAND} Articles - Software Reviews & Digital Product Analysis ${currentYear}`,
