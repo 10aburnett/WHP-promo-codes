@@ -406,9 +406,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   // Step 8: SEO classification-driven robots flags
-  // PHASE1-DEINDEX: Hard noindex/nofollow for all pages (ignore DB flags)
+  // Use DB indexingStatus to determine if page should be indexed
+  // Cohort pages with indexingStatus='INDEX' will be indexed
   const classification = getPageClassification(canon);
-  const robotsSettings = { index: false, follow: false }; // Hard noindex/nofollow for domain deindexing
+
+  // TODO (post-launch): Consider changing to { index: shouldIndex, follow: true }
+  // Currently: noindex pages also get nofollow, which is fine during cohort-gated launch
+  // (non-cohort pages return 404 anyway). But after removing cohort gating, you may
+  // prefer "noindex, follow" for non-indexed pages so Google can still crawl links
+  // without indexing the page itself. This helps with link equity flow.
+  const robotsSettings = { index: shouldIndex, follow: shouldIndex };
 
   return {
     title,
@@ -427,7 +434,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       currentYear.toString()
     ].filter(Boolean).join(', '),
     alternates: {
-// PHASE1-DEINDEX:       canonical: `https://digitalpromocodes.com/offer/${canon}`,
+      canonical: `https://digitalpromocodes.com/offer/${canon}`,
       ...(isLocaleEnabled() && shouldIncludeInHreflang(classification) && {
         languages: (() => {
           const languages: Record<string, string> = {};
@@ -441,12 +448,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       })
     },
     robots: {
-      ...robotsSettings, // Always use robotsSettings (now hard-coded to index:false, follow:false)
+      ...robotsSettings,
       googleBot: {
-        index: false,
-        follow: false,
-        noarchive: true,
-        noimageindex: true,
+        index: shouldIndex,
+        follow: shouldIndex,
+        noarchive: !shouldIndex,
+        noimageindex: !shouldIndex,
       },
     },
     openGraph: {

@@ -34,11 +34,10 @@ import {
 
 // ---------- main ----------
 async function run() {
-  // 1) Extract indexable whop paths from the sitemap artifact generated in prebuild
+  // 1) Extract indexable offer paths from the sitemap artifact generated in prebuild
   function readSitemapXml(): string | null {
     const candidates = [
-      path.join(process.cwd(), 'public', 'sitemaps', 'index-1.xml'),
-      path.join(process.cwd(), 'public', 'index-1.xml'),
+      path.join(process.cwd(), 'public', 'sitemap-offers.xml'),
     ];
     for (const p of candidates) {
       try {
@@ -51,14 +50,14 @@ async function run() {
   function pathsFromSitemap(xml: string): string[] {
     // Very small parser: grab <loc>…</loc> and map to pathname
     const locs = Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g)).map(m => m[1]);
-    const whopPaths = new Set<string>();
+    const offerPaths = new Set<string>();
     for (const u of locs) {
       try {
         const url = new URL(u);
-        if (url.pathname.startsWith('/whop/')) whopPaths.add(url.pathname.replace(/\/+$/, ''));
+        if (url.pathname.startsWith('/offer/')) offerPaths.add(url.pathname.replace(/\/+$/, ''));
       } catch {/* ignore bad URLs */}
     }
-    return Array.from(whopPaths);
+    return Array.from(offerPaths);
   }
 
   // Optional: refine with seo-indexes Sets if present
@@ -75,23 +74,23 @@ async function run() {
 
   const xml = readSitemapXml();
   if (!xml) {
-    console.warn('[schema-guard] No sitemap index-1.xml found in /public; skipping guard.');
+    console.warn('[schema-guard] No sitemap-offers.xml found in /public; skipping guard.');
     return;
   }
 
   let paths = pathsFromSitemap(xml);
   if (paths.length === 0) {
-    console.warn('[schema-guard] Sitemap has 0 /whop/ URLs; skipping guard.');
+    console.warn('[schema-guard] Sitemap has 0 /offer/ URLs; skipping guard.');
     return;
   }
   // If your sitemap already contains only indexable, this is a no-op; still safe to apply:
   paths = filterWithSeoIndexes(paths);
 
   const samplePaths = take(paths.sort(), 12);
-  const slugs = samplePaths.map(p => p.replace(/^\/whop\//, ''));
+  const slugs = samplePaths.map(p => p.replace(/^\/offer\//, ''));
 
   if (slugs.length === 0) {
-    console.warn('[schema-guard] No indexable whop slugs after filtering; skipping guard.');
+    console.warn('[schema-guard] No indexable offer slugs after filtering; skipping guard.');
     return;
   }
 
@@ -194,7 +193,7 @@ async function run() {
     assert(graph.length >= 2, `Suspiciously small graph for "${slug}"`);
   }
 
-  console.log(`[schema-guard] OK — validated ${slugs.length} whop pages from sitemap with strict rules.`);
+  console.log(`[schema-guard] OK — validated ${slugs.length} offer pages from sitemap with strict rules.`);
 }
 
 run().catch((err) => {

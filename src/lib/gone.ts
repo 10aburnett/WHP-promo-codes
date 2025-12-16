@@ -1,4 +1,8 @@
 // src/lib/gone.ts
+// NOTE: Gone slugs are now tracked via RETIRED_PATHS in seo-indexes.ts
+// This file is kept for backwards compatibility but returns empty set by design.
+// The clean sitemap system does NOT generate gone.xml - retired offers just 404.
+
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -12,9 +16,9 @@ function extractSlugsFromXml(xml: string): Set<string> {
   while ((m = re.exec(xml))) {
     try {
       const u = new URL(m[1].trim());
-      // Expect paths like /whop/some-slug or /whops/some-slug
+      // Expect paths like /offer/some-slug
       const parts = u.pathname.split('/').filter(Boolean);
-      if (parts.length >= 2 && (parts[0] === 'whop' || parts[0] === 'whops')) {
+      if (parts.length >= 2 && parts[0] === 'offer') {
         const slug = decodeURIComponent(parts[1]).toLowerCase();
         if (slug) slugs.add(slug);
       }
@@ -26,14 +30,15 @@ function extractSlugsFromXml(xml: string): Set<string> {
 export async function getGoneOfferSlugs(): Promise<Set<string>> {
   if (GONE_SLUGS_CACHE) return GONE_SLUGS_CACHE;
 
-  // Try reading from public/sitemaps/gone.xml
-  const filePath = path.join(process.cwd(), 'public', 'sitemaps', 'gone.xml');
+  // NOTE: We no longer generate gone.xml - this will return empty set
+  // Retired offers are tracked via RETIRED_PATHS in seo-indexes.ts
+  const filePath = path.join(process.cwd(), 'public', 'gone.xml');
   try {
     const xml = await fs.readFile(filePath, 'utf8');
     GONE_SLUGS_CACHE = extractSlugsFromXml(xml);
     return GONE_SLUGS_CACHE;
   } catch {
-    // If file not found, default to empty set (fail-open, but we'll re-check next call)
+    // File not found is expected - we don't generate gone.xml anymore
     GONE_SLUGS_CACHE = new Set();
     return GONE_SLUGS_CACHE;
   }

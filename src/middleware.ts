@@ -53,9 +53,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/favicon') ||
     pathname === '/site.webmanifest' ||
     pathname === '/manifest.webmanifest' ||
-    pathname.startsWith('/sitemaps/') ||
     pathname === '/robots.txt' ||
-    pathname === '/sitemap.xml' ||
+    pathname.startsWith('/sitemap') || // Allow all sitemap files (sitemap-index.xml, sitemap-offers.xml, sitemap-static.xml)
     pathname.endsWith('.png') ||
     pathname.endsWith('.jpg') ||
     pathname.endsWith('.jpeg') ||

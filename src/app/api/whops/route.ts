@@ -9,6 +9,7 @@ import { JWT_SECRET } from "@/lib/auth-utils";
 import { normalizeImagePath } from "@/lib/image-utils";
 import { unstable_cache } from "next/cache";
 import { siteOrigin } from "@/lib/site-origin";
+import { LAUNCH_MODE, LAUNCH_COHORT_SLUGS, isOfferLaunchEligible } from "@/lib/launch-cohort";
 
 export const runtime = 'nodejs'; // Ensure Node.js runtime (not Edge)
 export const dynamic = 'force-dynamic'; // Explicitly mark this route as dynamic
@@ -794,7 +795,15 @@ export async function GET(request: Request) {
       // Only show published whops (unless admin)
       publishedAt: isAdmin ? undefined : { not: null }
     };
-    
+
+    // Launch mode cohort gate (must match isOfferLaunchEligible() semantics)
+    // Uses LAUNCH_COHORT_SLUGS directly for efficient DB WHERE IN clause.
+    // Single-slug checks elsewhere should use isOfferLaunchEligible(slug).
+    if (LAUNCH_MODE && LAUNCH_COHORT_SLUGS.size > 0 && !isAdmin) {
+      whereClause.slug = { in: Array.from(LAUNCH_COHORT_SLUGS) };
+      console.log(`🚀 Launch mode active - filtering to ${LAUNCH_COHORT_SLUGS.size} cohort slugs`);
+    }
+
     if (search) {
       whereClause.OR = [
         { name: { contains: search, mode: 'insensitive' } },
