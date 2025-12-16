@@ -99,20 +99,20 @@ export function LanguageProvider({ children, locale }: LanguageProviderProps) {
       localStorage.setItem('selectedLanguage', newLanguage);
     }
     
-    // Check if we're currently on a whop detail page
+    // Check if we're currently on an offer detail page
     const isOfferDetailPage = () => {
-      // English whop page: /whop/[slug]
-      if (pathSegments.length === 2 && pathSegments[0] === 'whop') {
-        return { type: 'english-whop', slug: pathSegments[1] };
+      // English offer page: /offer/[slug]
+      if (pathSegments.length === 2 && pathSegments[0] === 'offer') {
+        return { type: 'english-offer', slug: pathSegments[1] };
       }
-      // Localized whop page: /[locale]/[slug] where locale is not 'whop'
+      // Localized offer page: /[locale]/[slug] where locale is not 'offer'
       // BUT exclude privacy and terms pages
-      if (pathSegments.length === 2 && 
-          languageKeys.includes(pathSegments[0] as Language) && 
-          pathSegments[1] !== 'privacy' && 
+      if (pathSegments.length === 2 &&
+          languageKeys.includes(pathSegments[0] as Language) &&
+          pathSegments[1] !== 'privacy' &&
           pathSegments[1] !== 'terms' &&
           pathSegments[1] !== 'contact') {
-        return { type: 'localized-whop', locale: pathSegments[0], slug: pathSegments[1] };
+        return { type: 'localized-offer', locale: pathSegments[0], slug: pathSegments[1] };
       }
       return null;
     };
@@ -152,10 +152,10 @@ export function LanguageProvider({ children, locale }: LanguageProviderProps) {
     const contactPageInfo = isContactPage();
 
     if (offerPageInfo) {
-      // Handle whop detail page language switching
+      // Handle offer detail page language switching
       if (newLanguage === 'en') {
-        // Switching to English: use /whop/[slug] format (canonical slug)
-        newPath = `/whop/${canonicalSlugForPath(offerPageInfo.slug)}`;
+        // Switching to English: use /offer/[slug] format (canonical slug)
+        newPath = `/offer/${canonicalSlugForPath(offerPageInfo.slug)}`;
       } else {
         // Switching to other language: use /[locale]/[slug] format (canonical slug)
         newPath = `/${newLanguage}/${canonicalSlugForPath(offerPageInfo.slug)}`;

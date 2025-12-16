@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   if (!slug || !locale) {
     return NextResponse.json({ error: 'Provide slug & locale' }, { status: 400 });
   }
-  const path = `/whop/${slug}`;
+  const path = `/offer/${slug}`;
   const whop = await prisma.deal.findFirst({
     where: { slug },
     select: { indexingStatus: true, retirement: true, redirectToPath: true },

@@ -151,3 +151,6 @@ data/content/master/.consolidate.lock
 # Performance audit files (local only)
 src/app/api/_trace/
 src/lib/perf/
+
+# Legacy archive (contains old fingerprints - never deploy)
+archive/

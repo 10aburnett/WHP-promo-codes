@@ -1,4 +1,4 @@
-// src/app/api/debug-api/whop/[slug]/route.ts
+// src/app/api/debug-api/offer/[slug]/route.ts
 import { NextResponse } from 'next/server';
 import { dlog } from '@/lib/debug';
 import { prisma } from '@/lib/prisma';

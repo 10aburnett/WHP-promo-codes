@@ -64,8 +64,8 @@ A modern web application for discovering and comparing cryptocurrency casino bon
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/cryptobonuses.git
-cd cryptobonuses
+git clone https://github.com/yourusername/digitalpromocodes.git
+cd digitalpromocodes
 ```
 
 2. Install dependencies:

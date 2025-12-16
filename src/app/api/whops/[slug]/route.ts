@@ -133,7 +133,7 @@ export async function PUT(req: Request, { params }: { params: { slug: string } }
     }
 
     // 4) Invalidate caches so UI refreshes
-    revalidatePath(`/whop/${updatedWhop.slug}`);
+    revalidatePath(`/offer/${updatedWhop.slug}`);
     revalidatePath("/whops");
 
     return NextResponse.json(updatedWhop);

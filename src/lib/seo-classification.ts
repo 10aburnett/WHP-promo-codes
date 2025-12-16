@@ -14,11 +14,11 @@ import { EN_ONLY_MODE } from './i18n-lock';
 export type PageClassification = 'indexable' | 'noindex' | 'private';
 
 /**
- * Determine if a whop slug/path should be indexed
+ * Determine if an offer slug/path should be indexed
  * Uses the generated SEO indexes as single source of truth
  */
 export function getPageClassification(slug: string): PageClassification {
-  const offerPath = `/whop/${slug}`;
+  const offerPath = `/offer/${slug}`;
 
   // Retired pages are effectively private (noindex, nofollow)
   if (RETIRED_PATHS.has(offerPath)) {

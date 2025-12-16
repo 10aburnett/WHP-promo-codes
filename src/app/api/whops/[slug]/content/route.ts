@@ -32,7 +32,7 @@ export async function PUT(req: Request, { params }: { params: { slug: string } }
       select: { slug: true }
     });
 
-    revalidatePath(`/whop/${updated.slug}`);
+    revalidatePath(`/offer/${updated.slug}`);
     revalidatePath(`/whops`);
     revalidatePath(`/admin/offers/${updated.slug}`);
     revalidatePath(`/admin/offers/${updated.slug}/content`);

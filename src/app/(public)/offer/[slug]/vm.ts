@@ -186,7 +186,7 @@ export async function getOfferViewModel(slug: string, localeParam?: string): Pro
   }
 
   // Step 5: Map recommendations and alternatives from graph data (no new DB queries)
-  const toAbs = (s: string) => absoluteUrl(`/whop/${s}`);
+  const toAbs = (s: string) => absoluteUrl(`/offer/${s}`);
   let recommendedUrls: string[] = [];
   let alternativeUrls: string[] = [];
 

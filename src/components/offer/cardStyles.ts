@@ -1,5 +1,5 @@
-// src/components/whop/cardStyles.ts
-// Shared styles for whop recommendation and alternative cards
+// src/components/offer/cardStyles.ts
+// Shared styles for offer recommendation and alternative cards
 // Single source of truth to prevent style drift
 
 export const CARD_LINK =

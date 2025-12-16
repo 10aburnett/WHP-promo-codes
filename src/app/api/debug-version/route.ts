@@ -8,8 +8,8 @@ export async function GET() {
     const componentPath = path.join(process.cwd(), 'src/components/CommunityPromoSection.tsx');
     const componentExists = fs.existsSync(componentPath);
     
-    // Check if whop page imports CommunityPromoSection
-    const whopPagePath = path.join(process.cwd(), 'src/app/whop/[slug]/page.tsx');
+    // Check if offer page imports CommunityPromoSection
+    const whopPagePath = path.join(process.cwd(), 'src/app/(public)/offer/[slug]/page.tsx');
     const whopPageExists = fs.existsSync(whopPagePath);
     
     let whopPageContent = '';

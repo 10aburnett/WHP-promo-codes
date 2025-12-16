@@ -415,7 +415,7 @@ function transformOfferDataForUI(whop: any) {
     promoText: promoText,
     promoCode: firstPromoCode?.code || null,
     affiliateLink: whop.affiliateLink || '#',
-    href: `/whop/${whop.slug || `whop-${whop.id}`}`, // Card expects href
+    href: `/offer/${whop.slug || `offer-${whop.id}`}`, // Card expects href
     isActive: true,
     hasPromo: !!discountPercent,
     priceText: displayPrice, // What the card expects
@@ -463,7 +463,7 @@ function transformOfferDataForUI(whop: any) {
       discountPercent: 0,
       rating: 0,
       affiliateLink: whop?.affiliateLink || '#',
-      href: `/whop/${whop?.slug || 'unknown'}`,
+      href: `/offer/${whop?.slug || 'unknown'}`,
       isActive: true,
       hasPromo: false,
       createdAt: whop?.createdAt || new Date(),
