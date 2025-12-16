@@ -10,9 +10,29 @@
  * - No hreflang output anywhere
  * - All canonicals are EN-only
  * - All sitemaps contain EN-only URLs
+ *
+ * ============================================================================
+ * WARNING: NEVER ENABLE TRANSLATIONS - NOT EVEN "JUST TO TEST"
+ * ============================================================================
+ *
+ * DO NOT:
+ * - Toggle EN_ONLY_MODE to false
+ * - Add /es experiments "temporarily"
+ * - Enable hreflang "just to see"
+ * - Say "we'll remove it later"
+ *
+ * WHY: Google remembers. Once locale URLs are crawled and indexed, they
+ * become part of your site's history. Removing them creates soft-404s,
+ * confuses the crawler, and damages domain trust during the critical
+ * launch period.
+ *
+ * The EN-only lock stays ON until explicit business decision to expand
+ * to international markets with proper translated content.
+ * ============================================================================
  */
 
 // Master switch for EN-only mode
+// DO NOT CHANGE TO FALSE - SEE WARNING ABOVE
 export const EN_ONLY_MODE = true;
 
 // Only English is allowed when EN_ONLY_MODE is true
