@@ -199,6 +199,14 @@ async function testSitemaps() {
       const sitemapCount = (result.text.match(/<sitemap>/g) || []).length;
       const count = urlCount || sitemapCount;
       log('PASS', `${sitemap} returns HTTP 200 (${count} entries)`);
+
+      // EN-only check: No locale prefixes in sitemap URLs
+      const localeMatch = result.text.match(/\/(en|es|fr|de|it|pt|nl|zh|ja|ko|ru|ar)\//i);
+      if (localeMatch) {
+        log('FAIL', `${sitemap} contains locale prefix: ${localeMatch[0]}`);
+      } else {
+        log('PASS', `${sitemap} has no locale prefixes (EN-only OK)`);
+      }
     } else {
       log('FAIL', `${sitemap} returns HTTP ${result.status}`);
     }
@@ -213,6 +221,52 @@ async function testSitemaps() {
     } else {
       log('FAIL', `${sitemap} returns HTTP ${result.status} (should be 404)`);
     }
+  }
+}
+
+async function testEnOnlyLock() {
+  console.log('\n--- EN-Only Lock Verification ---');
+
+  // Test locale paths return 404
+  const localePaths = [
+    '/es/offers',
+    '/fr/offer/dodgys-dungeon',
+    '/de/contact',
+    '/en/offers', // Even /en/* should 404 (strict mode)
+  ];
+
+  for (const path of localePaths) {
+    const result = await fetchText(`${BASE_URL}${path}`);
+    if (result.status === 404) {
+      log('PASS', `${path} returns 404 (locale blocked)`);
+    } else {
+      log('FAIL', `${path} returns HTTP ${result.status} (should be 404 for locale path)`);
+    }
+  }
+
+  // Test cohort page has no hreflang
+  console.log('\n--- No hreflang Check ---');
+  const cohortUrl = `${BASE_URL}/offer/dodgys-dungeon`;
+  const result = await fetchText(cohortUrl);
+
+  if (result.status === 200) {
+    const hasHreflang = result.text.toLowerCase().includes('hreflang');
+    const hasAlternate = result.text.includes('rel="alternate"') || result.text.includes("rel='alternate'");
+
+    if (!hasHreflang) {
+      log('PASS', `Cohort page has no hreflang`);
+    } else {
+      log('FAIL', `Cohort page contains hreflang (should not in EN-only mode)`);
+    }
+
+    if (!hasAlternate) {
+      log('PASS', `Cohort page has no rel="alternate" links`);
+    } else {
+      // rel="alternate" might be used for other things (like RSS), so just info
+      log('INFO', `Cohort page has rel="alternate" (check if it's hreflang-related)`);
+    }
+  } else {
+    log('FAIL', `Could not fetch cohort page: HTTP ${result.status}`);
   }
 }
 
@@ -241,6 +295,9 @@ async function main() {
 
   // Test sitemaps
   await testSitemaps();
+
+  // Test EN-only lock
+  await testEnOnlyLock();
 
   // Summary
   console.log('\n═══════════════════════════════════════════════════════════════');

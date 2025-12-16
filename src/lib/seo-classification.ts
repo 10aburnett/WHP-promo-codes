@@ -1,6 +1,7 @@
 // server-only - SEO classification based on generated indexes
 import 'server-only';
 import { RETIRED_PATHS, NOINDEX_PATHS } from '@/app/_generated/seo-indexes';
+import { EN_ONLY_MODE } from './i18n-lock';
 
 /**
  * Classify page indexability based on SEO index artifact
@@ -58,7 +59,9 @@ export function getRobotsForClassification(classification: PageClassification) {
 /**
  * Check if page should be included in hreflang
  * Only indexable pages get hreflang entries
+ * EN-only lock: hreflang disabled by design during trust phase
  */
 export function shouldIncludeInHreflang(classification: PageClassification): boolean {
+  if (EN_ONLY_MODE) return false; // No hreflang in EN-only mode
   return classification === 'indexable';
 }

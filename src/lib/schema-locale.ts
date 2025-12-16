@@ -1,8 +1,10 @@
 // server-only - Safe schema locale config that doesn't interfere with existing i18n
 import 'server-only';
+import { EN_ONLY_MODE } from './i18n-lock';
 
 // Feature flag to enable/disable locale functionality completely
-const LOCALE_ENABLED = process.env.SCHEMA_LOCALE_ENABLED === 'true';
+// EN_ONLY_MODE overrides this - when EN_ONLY_MODE is true, locales are disabled
+const LOCALE_ENABLED = !EN_ONLY_MODE && process.env.SCHEMA_LOCALE_ENABLED === 'true';
 
 // Conservative subset for schema markup only
 export const LOCALES = ['en', 'de', 'sk'] as const;
@@ -19,5 +21,6 @@ export function getSchemaLocale(localeParam?: string | null): string {
 }
 
 export function isLocaleEnabled(): boolean {
+  // EN-only lock: locale features disabled by design during trust phase
   return LOCALE_ENABLED;
 }

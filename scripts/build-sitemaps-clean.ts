@@ -184,6 +184,9 @@ ${entries.join('\n')}
 
 // === ASSERTIONS ===
 
+// Locale pattern to detect locale-prefixed paths (EN-only invariant)
+const LOCALE_PATH_PATTERN = /\/(en|es|fr|de|it|pt|nl|zh|ja|ko|ru|ar)\//i;
+
 function assertNoBadUrls(urls: string[]): void {
   for (const url of urls) {
     if (url.includes('/whop/')) {
@@ -197,6 +200,10 @@ function assertNoBadUrls(urls: string[]): void {
     }
     if (url.endsWith('/') && url !== `${SITE_URL}/`) {
       throw new Error(`FATAL: URL has trailing slash: ${url}`);
+    }
+    // EN-only invariant: No locale prefixes in URLs
+    if (LOCALE_PATH_PATTERN.test(url)) {
+      throw new Error(`FATAL: URL contains locale prefix (EN-only mode): ${url}`);
     }
   }
 }

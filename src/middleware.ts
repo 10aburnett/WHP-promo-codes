@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { RETIRED_PATHS, NOINDEX_PATHS } from './app/_generated/seo-indexes';
 import { LAUNCH_COHORT_SLUGS } from './lib/launch-cohort';
+import { shouldBlockLocalePath } from './lib/i18n-lock';
 
 // Simple JWT verification for Edge Runtime
 function verifyJWT(token: string, secret: string): any {
@@ -68,11 +69,28 @@ export function middleware(request: NextRequest) {
   }
 
   // ========================================
+  // EN-ONLY LOCK: Block all locale-prefixed paths with 404
+  // ========================================
+  // This blocks: /es/*, /fr/*, /de/*, /en/*, etc.
+  // Strict mode: even /en/* returns 404 to avoid duplicate surfaces
+  if (shouldBlockLocalePath(pathname)) {
+    return new NextResponse('Not Found', {
+      status: 404,
+      headers: {
+        'Content-Type': 'text/plain',
+        'Cache-Control': 's-maxage=300, stale-while-revalidate=60',
+        ...(process.env.NODE_ENV !== 'production' ? { 'x-locale-blocked': 'true' } : {}),
+      }
+    });
+  }
+
+  // ========================================
   // PRODUCTION MODE: Normal SEO handling for DigitalPromoCodes
   // ========================================
 
-  // SEO LOGIC FIRST (for offer routes - renamed from whop)
-  if (path.startsWith('/offer/') || path.match(/^\/([a-z]{2}(?:-[A-Z]{2})?)\/offer\//)) {
+  // SEO LOGIC FIRST (for offer routes)
+  // Note: Locale paths like /es/offer/* are already 404'd by i18n-lock above
+  if (path.startsWith('/offer/')) {
     // prove middleware executed (dev only)
     const res = NextResponse.next();
     if (process.env.NODE_ENV !== 'production') res.headers.set('x-mw-hit', '1');
@@ -99,11 +117,8 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    // 2) normalize legacy locale URLs → /offer/:slug
-    const m = path.match(/^\/([a-z]{2}(?:-[A-Z]{2})?)\/offer\/(.+)$/);
-    if (m) {
-      return NextResponse.redirect(new URL(`/offer/${m[2]}`, url), 308);
-    }
+    // 2) Note: Legacy locale URLs (e.g., /es/offer/foo) are now 404'd by i18n-lock above
+    // No redirect needed - strict EN-only mode
 
     // 3) handle specific redirects (preserve existing)
     if (path === '/offer/monthly-mentorship') {
