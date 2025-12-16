@@ -1,9 +1,9 @@
 /**
  * Build Launch Cohort Script
  *
- * Selects 200 high-quality slugs with real promo codes for the initial launch cohort.
+ * Selects 101 high-quality slugs with real promo codes for the initial launch cohort.
  * Includes hardening filters to exclude generic/risky slugs.
- * Outputs to data/launch-cohort-200.json
+ * Outputs to data/launch-cohort-101.json
  *
  * Usage: node scripts/build-launch-cohort.mjs
  */
@@ -18,7 +18,7 @@ const __dirname = dirname(__filename);
 
 const prisma = new PrismaClient();
 
-const COHORT_SIZE = 200;
+const COHORT_SIZE = 101;
 
 // ============================================================
 // SLUG HARDENING FILTERS
@@ -232,7 +232,7 @@ async function buildLaunchCohort() {
   }
 
   // Write output file
-  const outputPath = join(dataDir, 'launch-cohort-200.json');
+  const outputPath = join(dataDir, 'launch-cohort-101.json');
   const output = {
     generatedAt: new Date().toISOString(),
     count: slugs.length,

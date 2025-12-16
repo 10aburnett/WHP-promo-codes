@@ -1,61 +1,25 @@
 /**
  * Set Cohort Indexing Script
  *
- * Flips indexingStatus to 'INDEX' ONLY for the 200 launch cohort slugs.
- * Does NOT touch any other rows in the database.
+ * Enforces DB indexing status for launch cohort:
+ * - Exactly 101 cohort slugs → INDEX
+ * - All other non-retired deals → NOINDEX
+ * - Retired/GONE deals → untouched
  *
  * Usage:
- *   node scripts/set-cohort-indexing.mjs --dry-run   # Preview changes
- *   node scripts/set-cohort-indexing.mjs --apply     # Apply changes
- *
- * Safety:
- *   - Only modifies rows where slug is in the cohort set
- *   - Uses updateMany with WHERE clause for atomic operation
- *   - Writes audit log to data/index-flip-report.json
+ *   node scripts/set-cohort-indexing.mjs --dry-run   (preview changes)
+ *   node scripts/set-cohort-indexing.mjs --apply     (execute changes)
  */
 
 import { PrismaClient } from '@prisma/client';
-import * as fs from 'fs';
-import * as path from 'path';
+import { readFileSync, writeFileSync } from 'fs';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
 const prisma = new PrismaClient();
-
-/**
- * Parse cohort slugs from launch-cohort.ts between sentinel comments
- */
-function parseCohortSlugs() {
-  const filePath = path.join(__dirname, '..', 'src', 'lib', 'launch-cohort.ts');
-  const content = fs.readFileSync(filePath, 'utf-8');
-
-  // Extract content between COHORT_START and COHORT_END
-  const startMarker = '// COHORT_START';
-  const endMarker = '// COHORT_END';
-
-  const startIdx = content.indexOf(startMarker);
-  const endIdx = content.indexOf(endMarker);
-
-  if (startIdx === -1 || endIdx === -1) {
-    throw new Error('Could not find COHORT_START/COHORT_END markers in launch-cohort.ts');
-  }
-
-  const cohortBlock = content.substring(startIdx, endIdx);
-
-  // Match quoted slugs: 'slug-name' or "slug-name"
-  const slugRegex = /['"]([a-z0-9-]+)['"]/g;
-  const slugs = [];
-  let match;
-
-  while ((match = slugRegex.exec(cohortBlock)) !== null) {
-    slugs.push(match[1].toLowerCase());
-  }
-
-  // Dedupe
-  return [...new Set(slugs)];
-}
 
 async function main() {
   const args = process.argv.slice(2);
@@ -64,141 +28,278 @@ async function main() {
 
   if (!isDryRun && !isApply) {
     console.log('Usage:');
-    console.log('  node scripts/set-cohort-indexing.mjs --dry-run   # Preview changes');
-    console.log('  node scripts/set-cohort-indexing.mjs --apply     # Apply changes');
+    console.log('  node scripts/set-cohort-indexing.mjs --dry-run');
+    console.log('  node scripts/set-cohort-indexing.mjs --apply');
     process.exit(1);
   }
 
-  console.log('📋 Set Cohort Indexing Script');
-  console.log(`Mode: ${isDryRun ? 'DRY RUN (no changes)' : 'APPLY (will modify database)'}`);
-  console.log('');
+  console.log(`\n🔧 SET COHORT INDEXING — ${isDryRun ? 'DRY RUN' : 'APPLY MODE'}\n`);
 
-  // Step 1: Parse cohort slugs
-  console.log('1️⃣ Parsing cohort slugs from launch-cohort.ts...');
-  const cohortSlugs = parseCohortSlugs();
-  console.log(`   ✅ Loaded ${cohortSlugs.length} cohort slugs`);
+  // Load cohort slugs from canonical file
+  const cohortPath = join(__dirname, '..', 'data', 'launch-cohort-curated-101.json');
+  const cohortData = JSON.parse(readFileSync(cohortPath, 'utf8'));
+  const cohortSlugs = new Set(cohortData.slugs);
 
-  // Step 2: Count current state
-  console.log('');
-  console.log('2️⃣ Checking current database state...');
+  console.log(`📋 Cohort slugs loaded: ${cohortSlugs.size}`);
 
-  const currentIndexCount = await prisma.deal.count({
-    where: { indexingStatus: 'INDEX' }
-  });
+  // ========================================
+  // BEFORE COUNTS
+  // ========================================
+  console.log('\n=== BEFORE COUNTS ===\n');
 
-  const currentNoindexCount = await prisma.deal.count({
-    where: { indexingStatus: 'NOINDEX' }
-  });
+  const totalDeals = await prisma.deal.count();
+  console.log(`📊 Total deals in DB: ${totalDeals}`);
 
-  const cohortCurrentState = await prisma.deal.findMany({
-    where: { slug: { in: cohortSlugs } },
-    select: {
-      slug: true,
-      indexingStatus: true,
-      retired: true,
-      retirement: true
+  const retiredDeals = await prisma.deal.count({
+    where: {
+      OR: [
+        { retired: true },
+        { retirement: 'GONE' }
+      ]
     }
   });
+  console.log(`📊 Retired/GONE deals: ${retiredDeals}`);
 
-  console.log(`   Current INDEX count: ${currentIndexCount}`);
-  console.log(`   Current NOINDEX count: ${currentNoindexCount}`);
-  console.log(`   Cohort slugs found in DB: ${cohortCurrentState.length}/${cohortSlugs.length}`);
+  const liveDeals = totalDeals - retiredDeals;
+  console.log(`📊 Live deals (not retired): ${liveDeals}`);
 
-  // Count how many cohort slugs need updating
-  const needsUpdate = cohortCurrentState.filter(d =>
-    d.indexingStatus !== 'INDEX' || d.retired !== false || d.retirement !== 'NONE'
-  );
-  const alreadyCorrect = cohortCurrentState.filter(d =>
-    d.indexingStatus === 'INDEX' && d.retired === false && d.retirement === 'NONE'
-  );
+  const currentlyIndex = await prisma.deal.count({
+    where: {
+      indexingStatus: 'INDEX',
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    }
+  });
+  console.log(`📊 Currently INDEX (live): ${currentlyIndex}`);
 
-  console.log(`   Already correct: ${alreadyCorrect.length}`);
-  console.log(`   Need update: ${needsUpdate.length}`);
+  const currentlyNoindex = await prisma.deal.count({
+    where: {
+      indexingStatus: 'NOINDEX',
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    }
+  });
+  console.log(`📊 Currently NOINDEX (live): ${currentlyNoindex}`);
 
-  // Missing slugs (in cohort but not in DB)
-  const foundSlugs = new Set(cohortCurrentState.map(d => d.slug.toLowerCase()));
-  const missingSlugs = cohortSlugs.filter(s => !foundSlugs.has(s));
-  if (missingSlugs.length > 0) {
-    console.log(`   ⚠️  Missing from DB (${missingSlugs.length}): ${missingSlugs.slice(0, 5).join(', ')}${missingSlugs.length > 5 ? '...' : ''}`);
+  // ========================================
+  // IDENTIFY CHANGES NEEDED
+  // ========================================
+  console.log('\n=== CHANGES TO MAKE ===\n');
+
+  // Find cohort deals that need INDEX
+  const cohortDeals = await prisma.deal.findMany({
+    where: {
+      slug: { in: [...cohortSlugs] },
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    },
+    select: { id: true, slug: true, indexingStatus: true, indexing: true }
+  });
+
+  const cohortNeedingIndex = cohortDeals.filter(d => d.indexingStatus !== 'INDEX');
+  console.log(`📊 Cohort deals found in DB (live): ${cohortDeals.length}`);
+  console.log(`📊 Cohort deals needing INDEX flip: ${cohortNeedingIndex.length}`);
+
+  // Find non-cohort live deals that need NOINDEX
+  const nonCohortLiveDeals = await prisma.deal.findMany({
+    where: {
+      slug: { notIn: [...cohortSlugs] },
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    },
+    select: { id: true, slug: true, indexingStatus: true, indexing: true }
+  });
+
+  const nonCohortNeedingNoindex = nonCohortLiveDeals.filter(d => d.indexingStatus === 'INDEX');
+  console.log(`📊 Non-cohort live deals: ${nonCohortLiveDeals.length}`);
+  console.log(`📊 Non-cohort deals needing NOINDEX flip: ${nonCohortNeedingNoindex.length}`);
+
+  // ========================================
+  // EXPECTED AFTER COUNTS
+  // ========================================
+  console.log('\n=== EXPECTED AFTER COUNTS ===\n');
+  console.log(`📊 INDEX (cohort, live): ${cohortDeals.length}`);
+  console.log(`📊 NOINDEX (non-cohort, live): ${nonCohortLiveDeals.length}`);
+  console.log(`📊 Retired/GONE (unchanged): ${retiredDeals}`);
+  console.log(`📊 Total: ${cohortDeals.length + nonCohortLiveDeals.length + retiredDeals}`);
+
+  // ========================================
+  // SAFETY CHECKS
+  // ========================================
+  if (cohortDeals.length !== 101) {
+    console.error(`\n❌ SAFETY FAIL: Expected 101 cohort deals in DB, found ${cohortDeals.length}`);
+    console.error('   Missing cohort slugs in DB:');
+    const dbSlugs = new Set(cohortDeals.map(d => d.slug));
+    [...cohortSlugs].filter(s => !dbSlugs.has(s)).forEach(s => console.error(`   - ${s}`));
+    await prisma.$disconnect();
+    process.exit(1);
   }
 
-  // Step 3: Apply or preview
-  console.log('');
+  // ========================================
+  // DRY RUN OUTPUT
+  // ========================================
   if (isDryRun) {
-    console.log('3️⃣ DRY RUN - No changes will be made');
-    console.log('');
-    console.log('Would update the following:');
-    console.log(`   • Set indexingStatus = 'INDEX' for ${cohortSlugs.length} slugs`);
-    console.log(`   • Set retired = false for ${cohortSlugs.length} slugs`);
-    console.log(`   • Set retirement = 'NONE' for ${cohortSlugs.length} slugs`);
-    console.log('');
-    console.log('After applying:');
-    console.log(`   Expected INDEX count: ~${currentIndexCount + needsUpdate.length}`);
-    console.log(`   Expected NOINDEX count: ~${currentNoindexCount - needsUpdate.filter(d => d.indexingStatus === 'NOINDEX').length}`);
+    console.log('\n=== DRY RUN SUMMARY ===\n');
+    console.log(`Will set INDEX for ${cohortDeals.length} cohort deals`);
+    console.log(`Will set NOINDEX for ${nonCohortLiveDeals.length} non-cohort live deals`);
+    console.log(`Retired/GONE deals: ${retiredDeals} (untouched)`);
+    console.log('\n✅ DRY RUN COMPLETE — no changes made');
+    console.log('   Run with --apply to execute changes.');
+    await prisma.$disconnect();
+    process.exit(0);
+  }
+
+  // ========================================
+  // APPLY CHANGES
+  // ========================================
+  console.log('\n=== APPLYING CHANGES ===\n');
+
+  // Step 1: Set INDEX for cohort deals (also set indexing enum field)
+  console.log('📝 Setting INDEX for cohort deals...');
+  const cohortIds = cohortDeals.map(d => d.id);
+  const cohortUpdateResult = await prisma.deal.updateMany({
+    where: { id: { in: cohortIds } },
+    data: {
+      indexingStatus: 'INDEX',
+      indexing: 'INDEX'
+    }
+  });
+  console.log(`   Updated: ${cohortUpdateResult.count} deals`);
+
+  // Step 2: Set NOINDEX for non-cohort live deals (also set indexing enum field)
+  console.log('📝 Setting NOINDEX for non-cohort live deals...');
+  const nonCohortIds = nonCohortLiveDeals.map(d => d.id);
+  const nonCohortUpdateResult = await prisma.deal.updateMany({
+    where: { id: { in: nonCohortIds } },
+    data: {
+      indexingStatus: 'NOINDEX',
+      indexing: 'NOINDEX'
+    }
+  });
+  console.log(`   Updated: ${nonCohortUpdateResult.count} deals`);
+
+  // ========================================
+  // VERIFICATION COUNTS
+  // ========================================
+  console.log('\n=== VERIFICATION (AFTER COUNTS) ===\n');
+
+  const afterIndexLive = await prisma.deal.count({
+    where: {
+      indexingStatus: 'INDEX',
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    }
+  });
+  console.log(`📊 INDEX (live, non-retired): ${afterIndexLive}`);
+
+  const afterCohortIndex = await prisma.deal.count({
+    where: {
+      slug: { in: [...cohortSlugs] },
+      indexingStatus: 'INDEX',
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    }
+  });
+  console.log(`📊 Cohort deals with INDEX: ${afterCohortIndex}`);
+
+  const afterNonCohortIndex = await prisma.deal.count({
+    where: {
+      slug: { notIn: [...cohortSlugs] },
+      indexingStatus: 'INDEX',
+      retired: false,
+      NOT: { retirement: 'GONE' }
+    }
+  });
+  console.log(`📊 Non-cohort live deals with INDEX: ${afterNonCohortIndex}`);
+
+  const afterRetired = await prisma.deal.count({
+    where: {
+      OR: [
+        { retired: true },
+        { retirement: 'GONE' }
+      ]
+    }
+  });
+  console.log(`📊 Retired/GONE (unchanged): ${afterRetired}`);
+
+  // Write audit report
+  const report = {
+    timestamp: new Date().toISOString(),
+    mode: 'apply',
+    before: {
+      totalDeals,
+      retiredDeals,
+      liveDeals,
+      currentlyIndex,
+      currentlyNoindex
+    },
+    changes: {
+      cohortSlugsCount: cohortSlugs.size,
+      cohortDealsInDb: cohortDeals.length,
+      cohortNeedingIndex: cohortNeedingIndex.length,
+      nonCohortLiveDeals: nonCohortLiveDeals.length,
+      nonCohortNeedingNoindex: nonCohortNeedingNoindex.length,
+      cohortUpdated: cohortUpdateResult.count,
+      nonCohortUpdated: nonCohortUpdateResult.count
+    },
+    after: {
+      indexLive: afterIndexLive,
+      cohortIndex: afterCohortIndex,
+      nonCohortIndex: afterNonCohortIndex,
+      retired: afterRetired
+    }
+  };
+
+  const reportPath = join(__dirname, '..', 'data', 'index-flip-report.json');
+  writeFileSync(reportPath, JSON.stringify(report, null, 2));
+  console.log(`\n📄 Audit report: data/index-flip-report.json`);
+
+  // Final assertions
+  console.log('\n=== FINAL ASSERTIONS ===\n');
+
+  let allPass = true;
+
+  if (afterIndexLive === 101) {
+    console.log('✅ INDEX count is exactly 101 for non-retired');
   } else {
-    console.log('3️⃣ APPLYING changes...');
+    console.error(`❌ INDEX count is ${afterIndexLive}, expected 101`);
+    allPass = false;
+  }
 
-    // Use updateMany for atomic operation
-    const result = await prisma.deal.updateMany({
-      where: { slug: { in: cohortSlugs } },
-      data: {
-        indexingStatus: 'INDEX',
-        retired: false,
-        retirement: 'NONE'
-      }
-    });
+  if (afterCohortIndex === 101) {
+    console.log('✅ All 101 cohort slugs are INDEX');
+  } else {
+    console.error(`❌ Cohort INDEX count is ${afterCohortIndex}, expected 101`);
+    allPass = false;
+  }
 
-    console.log(`   ✅ Updated ${result.count} rows`);
+  if (afterNonCohortIndex === 0) {
+    console.log('✅ No non-cohort live slugs are INDEX');
+  } else {
+    console.error(`❌ ${afterNonCohortIndex} non-cohort live slugs still INDEX`);
+    allPass = false;
+  }
 
-    // Verify final state
-    const finalIndexCount = await prisma.deal.count({
-      where: { indexingStatus: 'INDEX' }
-    });
-
-    const finalNoindexCount = await prisma.deal.count({
-      where: { indexingStatus: 'NOINDEX' }
-    });
-
-    console.log('');
-    console.log('4️⃣ Final state:');
-    console.log(`   INDEX count: ${finalIndexCount}`);
-    console.log(`   NOINDEX count: ${finalNoindexCount}`);
-
-    // Write audit report
-    const report = {
-      timestamp: new Date().toISOString(),
-      mode: 'apply',
-      cohortSlugsCount: cohortSlugs.length,
-      cohortSlugs: cohortSlugs,
-      beforeState: {
-        indexCount: currentIndexCount,
-        noindexCount: currentNoindexCount,
-        cohortFoundInDb: cohortCurrentState.length,
-        alreadyCorrect: alreadyCorrect.length,
-        needsUpdate: needsUpdate.length
-      },
-      afterState: {
-        indexCount: finalIndexCount,
-        noindexCount: finalNoindexCount,
-        rowsUpdated: result.count
-      },
-      missingSlugs: missingSlugs
-    };
-
-    const reportPath = path.join(__dirname, '..', 'data', 'index-flip-report.json');
-    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    console.log(`   📄 Audit report written to: data/index-flip-report.json`);
+  if (afterRetired === retiredDeals) {
+    console.log('✅ Retired/GONE not accidentally promoted');
+  } else {
+    console.error(`❌ Retired count changed from ${retiredDeals} to ${afterRetired}`);
+    allPass = false;
   }
 
   console.log('');
-  console.log('✅ Done!');
+  if (allPass) {
+    console.log('✅ ALL ASSERTIONS PASSED — DB indexing is now exactly 101 INDEX');
+  } else {
+    console.error('❌ SOME ASSERTIONS FAILED — review output above');
+  }
+
+  await prisma.$disconnect();
+  process.exit(allPass ? 0 : 1);
 }
 
-main()
-  .catch(err => {
-    console.error('❌ Error:', err);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch(async (e) => {
+  console.error('❌ Error:', e);
+  await prisma.$disconnect();
+  process.exit(1);
+});
