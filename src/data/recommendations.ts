@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { loadNeighbors, getNeighborSlugsFor, getExploreFor } from '@/lib/graph';
 import { normalizeSlug } from '@/lib/slug-normalize';
 import { isOfferLaunchEligible, LAUNCH_MODE } from '@/lib/launch-cohort';
+import { getCohortFallbackSlugs, MIN_INTERNAL_LINKS } from '@/lib/cohort-fallback-links';
 
 interface PromoCode {
   id: string;
@@ -19,33 +20,12 @@ interface OfferItem {
   logo: string | null;
   description: string | null;
   aboutContent: string | null;
-  blurb: string | null; // Second sentence from aboutContent for preview
+  blurb: string | null;
   category: string | null;
   price: string | null;
   rating: number | null;
   ratingCount: number;
   promoCodes: PromoCode[];
-}
-
-/**
- * Extract the second sentence from text content.
- * Falls back to first sentence if only one exists, or null if empty.
- */
-function getSecondSentence(text: string | null | undefined): string | null {
-  if (!text || !text.trim()) return null;
-
-  // Split on sentence-ending punctuation followed by space or end
-  const sentences = text
-    .replace(/\s+/g, ' ')
-    .trim()
-    .split(/(?<=[.!?])\s+/)
-    .filter(s => s.trim().length > 0);
-
-  if (sentences.length === 0) return null;
-  if (sentences.length === 1) return sentences[0];
-
-  // Return second sentence, trimmed
-  return sentences[1].trim();
 }
 
 interface ExploreLink {
@@ -59,303 +39,306 @@ interface ExploreLink {
 }
 
 /**
- * Server-side fetch for recommendations using graph neighbors
+ * Extract the second sentence from text content.
+ */
+function getSecondSentence(text: string | null | undefined): string | null {
+  if (!text || !text.trim()) return null;
+  const sentences = text
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(/(?<=[.!?])\s+/)
+    .filter(s => s.trim().length > 0);
+  if (sentences.length === 0) return null;
+  if (sentences.length === 1) return sentences[0];
+  return sentences[1].trim();
+}
+
+// ============================================================================
+// UNIFIED RENDER-TIME ASSEMBLY (CRITICAL: NO DUPLICATES ALLOWED)
+// ============================================================================
+
+/**
+ * HARD RULE: A slug may appear AT MOST ONCE per offer page.
+ *
+ * This function builds both recommendations and alternatives together,
+ * using a shared usedSlugs set to guarantee zero overlap.
+ *
+ * If uniqueness cannot be satisfied, we REDUCE COUNT rather than duplicate.
+ */
+export async function getRecsAndAlts(currentOfferSlug: string): Promise<{
+  recommendations: { items: OfferItem[]; explore: ExploreLink | null };
+  alternatives: { items: OfferItem[]; explore: ExploreLink | null };
+}> {
+  const canonicalSlug = normalizeSlug(currentOfferSlug);
+
+  // Global exclusion set - once a slug is here, it cannot appear anywhere else on this page
+  const usedSlugs = new Set<string>();
+  usedSlugs.add(canonicalSlug); // Always exclude current page
+
+  try {
+    const neighbors = await loadNeighbors();
+
+    // ========================================================================
+    // STEP 1: Build recommendations (first priority)
+    // ========================================================================
+    const recItems = await buildSection(
+      canonicalSlug,
+      neighbors,
+      'recommendations',
+      usedSlugs,
+      4 // target count
+    );
+
+    // ========================================================================
+    // STEP 2: Build alternatives (second priority, MUST NOT overlap with recs)
+    // ========================================================================
+    const altItems = await buildSection(
+      canonicalSlug,
+      neighbors,
+      'alternatives',
+      usedSlugs, // recs already added to usedSlugs
+      4 // target count
+    );
+
+    // ========================================================================
+    // STEP 3: Build explore link (if not already used)
+    // ========================================================================
+    const explore = await buildExploreLink(canonicalSlug, neighbors, usedSlugs);
+
+    return {
+      recommendations: { items: recItems, explore: null },
+      alternatives: { items: altItems, explore }, // explore shown with alts (matches original)
+    };
+  } catch (error) {
+    console.error('Error fetching recs/alts:', error);
+    return {
+      recommendations: { items: [], explore: null },
+      alternatives: { items: [], explore: null },
+    };
+  }
+}
+
+/**
+ * Build a single section (recs or alts) with global deduplication.
+ *
+ * CRITICAL: This function MUTATES usedSlugs to track what's been used.
+ * Each slug added to the section is also added to usedSlugs.
+ */
+async function buildSection(
+  canonicalSlug: string,
+  neighbors: Record<string, { recommendations?: string[]; alternatives?: string[] }>,
+  kind: 'recommendations' | 'alternatives',
+  usedSlugs: Set<string>,
+  targetCount: number
+): Promise<OfferItem[]> {
+  // Get candidate slugs from graph
+  let candidateSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, kind);
+
+  // Filter: launch cohort + not already used
+  candidateSlugs = candidateSlugs
+    .filter(Boolean)
+    .filter(isOfferLaunchEligible)
+    .filter(slug => !usedSlugs.has(slug));
+
+  // Fallback 1: category-based if graph has nothing
+  if (candidateSlugs.length === 0) {
+    const currentOffer = await prisma.deal.findFirst({
+      where: { slug: canonicalSlug },
+      select: { category: true }
+    });
+
+    if (currentOffer?.category) {
+      const categoryWhops = await prisma.deal.findMany({
+        where: {
+          category: currentOffer.category,
+          slug: { notIn: Array.from(usedSlugs) }
+        },
+        select: { slug: true },
+        orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
+        take: 20
+      });
+
+      candidateSlugs = categoryWhops
+        .map(w => w.slug)
+        .filter(isOfferLaunchEligible)
+        .filter(slug => !usedSlugs.has(slug));
+    }
+  }
+
+  // Fallback 2: cohort fallback if still not enough
+  if (LAUNCH_MODE && candidateSlugs.length < MIN_INTERNAL_LINKS) {
+    const fallbackSlugs = getCohortFallbackSlugs(
+      canonicalSlug,
+      targetCount - candidateSlugs.length,
+      usedSlugs // Pass the GLOBAL usedSlugs set
+    );
+    candidateSlugs = [...candidateSlugs, ...fallbackSlugs];
+  }
+
+  // Take only what we need
+  const slugsToFetch = candidateSlugs.slice(0, targetCount);
+
+  if (slugsToFetch.length === 0) {
+    return [];
+  }
+
+  // Fetch from DB (filter out GONE pages)
+  const whops = await prisma.deal.findMany({
+    where: {
+      slug: { in: slugsToFetch },
+      NOT: { retirement: 'GONE' }
+    },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      logo: true,
+      description: true,
+      aboutContent: true,
+      category: true,
+      price: true,
+      rating: true,
+      _count: { select: { Review: true } },
+      PromoCode: {
+        where: { NOT: { id: { startsWith: 'community_' } } },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: { id: true, title: true, type: true, value: true, code: true }
+      }
+    },
+    take: targetCount
+  });
+
+  // Transform and ADD TO USED SLUGS
+  const items: OfferItem[] = whops.map(whop => {
+    const normalizedSlug = normalizeSlug(whop.slug);
+    usedSlugs.add(normalizedSlug); // CRITICAL: Mark as used
+
+    return {
+      id: whop.id,
+      name: whop.name,
+      slug: normalizedSlug,
+      logo: whop.logo,
+      description: whop.description,
+      aboutContent: whop.aboutContent,
+      blurb: getSecondSentence(whop.aboutContent) || whop.description,
+      category: whop.category,
+      price: whop.price,
+      rating: whop.rating,
+      ratingCount: whop._count?.Review ?? 0,
+      promoCodes: whop.PromoCode || []
+    };
+  });
+
+  return items;
+}
+
+/**
+ * Build explore link, checking against usedSlugs.
+ */
+async function buildExploreLink(
+  canonicalSlug: string,
+  neighbors: Record<string, { recommendations?: string[]; alternatives?: string[]; explore?: string }>,
+  usedSlugs: Set<string>
+): Promise<ExploreLink | null> {
+  try {
+    const exploreSlug = getExploreFor(neighbors, canonicalSlug);
+
+    if (!exploreSlug) return null;
+    if (usedSlugs.has(exploreSlug)) return null;
+    if (!isOfferLaunchEligible(exploreSlug)) return null;
+
+    const exploreWhop = await prisma.deal.findFirst({
+      where: {
+        slug: exploreSlug,
+        NOT: { retirement: 'GONE' }
+      },
+      select: {
+        slug: true,
+        name: true,
+        logo: true,
+        description: true,
+        aboutContent: true,
+        category: true,
+        rating: true,
+        _count: { select: { Review: true } }
+      }
+    });
+
+    if (!exploreWhop) return null;
+
+    const normalizedSlug = normalizeSlug(exploreWhop.slug);
+    usedSlugs.add(normalizedSlug); // Mark as used
+
+    return {
+      slug: normalizedSlug,
+      name: exploreWhop.name,
+      logo: exploreWhop.logo,
+      blurb: getSecondSentence(exploreWhop.aboutContent) || exploreWhop.description,
+      category: exploreWhop.category ?? undefined,
+      rating: exploreWhop.rating,
+      ratingCount: exploreWhop._count?.Review ?? 0
+    };
+  } catch {
+    return null;
+  }
+}
+
+// ============================================================================
+// LEGACY API (for backward compatibility - calls unified function internally)
+// ============================================================================
+
+// Cache to store the result of getRecsAndAlts for the same slug
+// This ensures both getRecommendations and getAlternatives return consistent data
+const pageCache = new Map<string, {
+  recommendations: { items: OfferItem[]; explore: ExploreLink | null };
+  alternatives: { items: OfferItem[]; explore: ExploreLink | null };
+  timestamp: number;
+}>();
+
+const CACHE_TTL = 5000; // 5 second cache
+
+async function getCachedRecsAndAlts(slug: string) {
+  const normalizedSlug = normalizeSlug(slug);
+  const cached = pageCache.get(normalizedSlug);
+  const now = Date.now();
+
+  if (cached && (now - cached.timestamp) < CACHE_TTL) {
+    return cached;
+  }
+
+  const result = await getRecsAndAlts(slug);
+  pageCache.set(normalizedSlug, { ...result, timestamp: now });
+
+  // Clean old cache entries
+  if (pageCache.size > 200) {
+    const oldestKey = pageCache.keys().next().value;
+    if (oldestKey) pageCache.delete(oldestKey);
+  }
+
+  return result;
+}
+
+/**
+ * Server-side fetch for recommendations.
+ * @deprecated Use getRecsAndAlts() for guaranteed deduplication
  */
 export async function getRecommendations(currentOfferSlug: string): Promise<{
   items: OfferItem[];
   explore: ExploreLink | null;
 }> {
-  try {
-    const canonicalSlug = normalizeSlug(currentOfferSlug);
-
-    // Load graph neighbors
-    const neighbors = await loadNeighbors();
-    const rawSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, 'recommendations');
-    // Launch cohort gate: Only include slugs that are launch-eligible
-    let slugs = Array.from(new Set(rawSlugs.filter(Boolean).filter(isOfferLaunchEligible))).slice(0, 4);
-
-    // Fallback: if graph has no neighbors, use category-based recommendations
-    if (slugs.length === 0) {
-      const currentOffer = await prisma.deal.findFirst({
-        where: { slug: canonicalSlug },
-        select: { category: true }
-      });
-
-      if (currentOffer?.category) {
-        const categoryWhops = await prisma.deal.findMany({
-          where: {
-            category: currentOffer.category,
-            slug: { not: canonicalSlug }
-          },
-          select: { slug: true },
-          orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
-          take: 20 // Fetch more to filter by launch cohort
-        });
-
-        // Launch cohort gate: Filter to only launch-eligible slugs
-        slugs = categoryWhops.map(w => w.slug).filter(isOfferLaunchEligible).slice(0, 4);
-      }
-
-      if (slugs.length === 0) {
-        return { items: [], explore: null };
-      }
-    }
-
-    // Fetch whop details from database - FILTER OUT GONE pages to prevent 404s
-    const whops = await prisma.deal.findMany({
-      where: {
-        slug: { in: slugs },
-        // Per ChatGPT fix: only exclude GONE pages (match whop detail page logic)
-        NOT: {
-          retirement: 'GONE'
-        }
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        logo: true,
-        description: true,
-        aboutContent: true,
-        category: true,
-        price: true,
-        rating: true,
-        _count: { select: { Review: true } },
-        PromoCode: {
-          where: {
-            NOT: { id: { startsWith: 'community_' } }
-          },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-          select: {
-            id: true,
-            title: true,
-            type: true,
-            value: true,
-            code: true
-          }
-        }
-      },
-      take: 4
-    });
-
-    // Transform to expected format - use second sentence from aboutContent as blurb
-    const items: OfferItem[] = whops.map(whop => ({
-      id: whop.id,
-      name: whop.name,
-      slug: normalizeSlug(whop.slug), // Ensure canonical slug for links
-      logo: whop.logo,
-      description: whop.description,
-      aboutContent: whop.aboutContent,
-      blurb: getSecondSentence(whop.aboutContent) || whop.description,
-      category: whop.category,
-      price: whop.price,
-      rating: whop.rating,
-      ratingCount: whop._count?.Review ?? 0,
-      promoCodes: whop.PromoCode || []
-    }));
-
-    // Fetch explore link
-    let explore: ExploreLink | null = null;
-    try {
-      const exploreSlug = getExploreFor(neighbors, canonicalSlug);
-      const shownSlugs = new Set(items.map(r => r.slug));
-
-      // Launch cohort gate: Only show explore link if slug is launch-eligible
-      if (exploreSlug && !shownSlugs.has(exploreSlug) && isOfferLaunchEligible(exploreSlug)) {
-        const exploreWhop = await prisma.deal.findFirst({
-          where: {
-            slug: exploreSlug,
-            // Filter out GONE pages to prevent 404s
-            NOT: {
-              retirement: 'GONE'
-            }
-          },
-          select: {
-            slug: true,
-            name: true,
-            logo: true,
-            description: true,
-            aboutContent: true,
-            category: true,
-            rating: true,
-            _count: { select: { Review: true } }
-          }
-        });
-
-        if (exploreWhop) {
-          explore = {
-            slug: normalizeSlug(exploreWhop.slug), // Ensure canonical slug
-            name: exploreWhop.name,
-            logo: exploreWhop.logo,
-            blurb: getSecondSentence(exploreWhop.aboutContent) || exploreWhop.description,
-            category: exploreWhop.category ?? undefined,
-            rating: exploreWhop.rating,
-            ratingCount: exploreWhop._count?.Review ?? 0
-          };
-        }
-      }
-    } catch {
-      // Silent fail for explore link
-    }
-
-    return { items, explore };
-  } catch (error) {
-    console.error('Error fetching recommendations:', error);
-    return { items: [], explore: null };
-  }
+  const result = await getCachedRecsAndAlts(currentOfferSlug);
+  return result.recommendations;
 }
 
 /**
- * Server-side fetch for alternatives using graph neighbors
+ * Server-side fetch for alternatives.
+ * @deprecated Use getRecsAndAlts() for guaranteed deduplication
  */
 export async function getAlternatives(currentOfferSlug: string): Promise<{
   items: OfferItem[];
   explore: ExploreLink | null;
 }> {
-  try {
-    const canonicalSlug = normalizeSlug(currentOfferSlug);
-
-    // Load graph neighbors
-    const neighbors = await loadNeighbors();
-    const rawAltSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, 'alternatives');
-
-    // Get recommended slugs to exclude them from alternatives (keep sections distinct)
-    const recSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, 'recommendations');
-    const recSet = new Set(recSlugs);
-
-    // Filter out any alternatives that appear in recommendations + launch cohort gate
-    let slugs = Array.from(new Set(rawAltSlugs.filter(Boolean).filter(slug => !recSet.has(slug)).filter(isOfferLaunchEligible))).slice(0, 5);
-
-    // Fallback: if graph has no alternatives, use category-based alternatives
-    if (slugs.length === 0) {
-      const currentOffer = await prisma.deal.findFirst({
-        where: { slug: canonicalSlug },
-        select: { category: true }
-      });
-
-      if (currentOffer?.category) {
-        const excludeSlugs = [canonicalSlug, ...Array.from(recSet)];
-        const categoryWhops = await prisma.deal.findMany({
-          where: {
-            category: currentOffer.category,
-            slug: { notIn: excludeSlugs } // Exclude current whop and recommendations
-          },
-          select: { slug: true },
-          orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
-          take: 20 // Fetch more to filter by launch cohort
-        });
-
-        // Launch cohort gate: Filter to only launch-eligible slugs
-        slugs = categoryWhops.map(w => w.slug).filter(isOfferLaunchEligible).slice(0, 5);
-      }
-
-      if (slugs.length === 0) {
-        return { items: [], explore: null };
-      }
-    }
-
-    // Fetch whop details from database - FILTER OUT GONE pages to prevent 404s
-    const whops = await prisma.deal.findMany({
-      where: {
-        slug: { in: slugs },
-        // Per ChatGPT fix: only exclude GONE pages (match whop detail page logic)
-        NOT: {
-          retirement: 'GONE'
-        }
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        logo: true,
-        description: true,
-        aboutContent: true,
-        category: true,
-        price: true,
-        rating: true,
-        _count: { select: { Review: true } },
-        PromoCode: {
-          where: {
-            NOT: { id: { startsWith: 'community_' } }
-          },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-          select: {
-            id: true,
-            title: true,
-            type: true,
-            value: true,
-            code: true
-          }
-        }
-      },
-      take: 5
-    });
-
-    // Transform to expected format - use second sentence from aboutContent as blurb
-    const items: OfferItem[] = whops.map(whop => ({
-      id: whop.id,
-      name: whop.name,
-      slug: normalizeSlug(whop.slug), // Ensure canonical slug for links
-      logo: whop.logo,
-      description: whop.description,
-      aboutContent: whop.aboutContent,
-      blurb: getSecondSentence(whop.aboutContent) || whop.description,
-      category: whop.category,
-      price: whop.price,
-      rating: whop.rating,
-      ratingCount: whop._count?.Review ?? 0,
-      promoCodes: whop.PromoCode || []
-    }));
-
-    // Fetch explore link
-    let explore: ExploreLink | null = null;
-    try {
-      const exploreSlug = getExploreFor(neighbors, canonicalSlug);
-      const shownSlugs = new Set(items.map(r => r.slug));
-
-      // Launch cohort gate: Only show explore link if slug is launch-eligible
-      if (exploreSlug && !shownSlugs.has(exploreSlug) && isOfferLaunchEligible(exploreSlug)) {
-        const exploreWhop = await prisma.deal.findFirst({
-          where: {
-            slug: exploreSlug,
-            // Filter out GONE pages to prevent 404s
-            NOT: {
-              retirement: 'GONE'
-            }
-          },
-          select: {
-            slug: true,
-            name: true,
-            logo: true,
-            description: true,
-            aboutContent: true,
-            category: true,
-            rating: true,
-            _count: { select: { Review: true } }
-          }
-        });
-
-        if (exploreWhop) {
-          explore = {
-            slug: normalizeSlug(exploreWhop.slug), // Ensure canonical slug
-            name: exploreWhop.name,
-            logo: exploreWhop.logo,
-            blurb: getSecondSentence(exploreWhop.aboutContent) || exploreWhop.description,
-            category: exploreWhop.category ?? undefined,
-            rating: exploreWhop.rating,
-            ratingCount: exploreWhop._count?.Review ?? 0
-          };
-        }
-      }
-    } catch {
-      // Silent fail for explore link
-    }
-
-    return { items, explore };
-  } catch (error) {
-    console.error('Error fetching alternatives:', error);
-    return { items: [], explore: null };
-  }
+  const result = await getCachedRecsAndAlts(currentOfferSlug);
+  return result.alternatives;
 }
