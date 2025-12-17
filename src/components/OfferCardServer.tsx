@@ -2,7 +2,9 @@
 // Server-first offer card - clickable IMMEDIATELY without hydration
 // NO 'use client' - this is a pure server component
 
-import Link from 'next/link';
+// NOTE: Using plain <a> tags instead of next/link to force hard navigation.
+// This bypasses the App Router client navigation which stalls on this page.
+// For content/SEO sites, hard navigation is the correct architecture.
 import InitialsAvatar from './InitialsAvatar';
 import { OfferLogoSSR } from './OfferLogoSSR';
 import { offerHref } from '@/lib/paths';
@@ -84,18 +86,17 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
       }}
     >
       {/*
-        IMPORTANT: This invisible Link covers the entire card.
-        It's positioned absolute with z-10, above the card background but below CTAs.
-        Works WITHOUT JavaScript/hydration - it's just HTML <a> tag.
-        The article is the positioning context (has relative).
+        IMPORTANT: Plain <a> tag (not next/link) for INSTANT hard navigation.
+        Bypasses App Router client navigation which stalls on homepage.
+        Positioned absolute with z-10, above card background but below CTAs.
       */}
-      <Link
+      <a
         href={detailHref}
         className="absolute inset-0 z-10 rounded-2xl focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--card-bg)]"
         title={`${promo.whopName} discount – ${promo.promoText}`}
       >
         <span className="sr-only">View {title} promo details</span>
-      </Link>
+      </a>
 
       {/* Content wrapper - z-20 pointer-events-none so clicks fall through to overlay */}
       <div className="relative z-20 pointer-events-none">
@@ -208,8 +209,8 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
           }}
         />
 
-        {/* Secondary CTA - explicit link for navigation */}
-        <Link
+        {/* Secondary CTA - plain <a> for instant hard navigation */}
+        <a
           href={detailHref}
           className="inline-flex items-center justify-center rounded-full px-3.5 py-2 text-xs md:text-sm font-medium border md:w-auto hover:opacity-90 transition-all"
           style={{
@@ -219,7 +220,7 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
           }}
         >
           View promo details
-        </Link>
+        </a>
       </div>
     </article>
   );
