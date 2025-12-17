@@ -1,69 +1,115 @@
-// src/data/whops.ts
+// src/data/offers.ts
+// Optimized caching for offer pages
 import { unstable_cache } from 'next/cache';
-import { tagForWhop, TAG_HUBS } from '@/lib/cacheTags';
 import { prisma } from '@/lib/prisma';
 import { whereIndexable } from '@/lib/where-indexable';
-import { canonicalSlugForDB } from '@/lib/slug-utils';
+import { TAG_HUBS } from '@/lib/cacheTags';
 
 // Optional: tiny debug helper (no-op unless env set)
 const logCache = (...args: any[]) => {
   if (process.env.DEBUG_CACHE === '1') {
-    // Avoid leaking secrets; only log harmless info
     console.log('[cache]', ...args);
   }
 };
 
-// Direct fetch without whereIndexable() to match page.tsx relaxed gate
+/**
+ * Direct fetch for a single offer by slug.
+ * Uses select instead of include to reduce payload size.
+ */
 async function fetchOfferDirect(slug: string) {
-  // Use lowercase decoded slug for DB lookup (DB stores literal colons, not %3a)
   const decoded = decodeURIComponent(slug);
   const dbSlug = decoded.toLowerCase();
+
+  const t0 = Date.now();
+
   const whop = await prisma.deal.findFirst({
     where: { slug: dbSlug },
-    include: {
-      PromoCode: true,
-      Review: true
-    }
+    select: {
+      // Core fields needed for render
+      id: true,
+      name: true,
+      slug: true,
+      logo: true,
+      description: true,
+      rating: true,
+      displayOrder: true,
+      affiliateLink: true,
+      website: true,
+      price: true,
+      category: true,
+      // Content fields
+      aboutContent: true,
+      howToRedeemContent: true,
+      promoDetailsContent: true,
+      featuresContent: true,
+      termsContent: true,
+      faqContent: true,
+      // Timestamps
+      createdAt: true,
+      updatedAt: true,
+      // Retirement/indexing status
+      retired: true,
+      retirement: true,
+      redirectToPath: true,
+      indexingStatus: true,
+      // Relations - only select needed fields
+      PromoCode: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          code: true,
+          type: true,
+          value: true,
+          createdAt: true,
+        },
+        take: 10, // Limit promo codes
+      },
+      Review: {
+        select: {
+          id: true,
+          author: true,
+          content: true,
+          rating: true,
+          createdAt: true,
+          verified: true,
+        },
+        take: 20, // Limit reviews
+      },
+    },
   });
+
+  console.log('[PERF] prisma.deal.findFirst', Date.now() - t0, 'ms', { slug: dbSlug });
+
   return whop ?? null;
 }
 
 /**
- * Cached, tagged fetch for a single whop by slug.
- * Tags: whop:<slug>
- * NOTE: Does NOT apply whereIndexable() - page.tsx applies relaxed gate allowing NOINDEX
+ * Cached fetch for a single offer by slug.
+ * FIX: unstable_cache wrapper is created once, not on every call.
+ * Tags: offers
  */
-export const getOfferBySlugCached = (slug: string) =>
-  unstable_cache(
-    async () => {
-      logCache('MISS fetchOfferDirect', { slug });
-      const whop = await fetchOfferDirect(slug);
-
-      // Preview debugging log
-      if (process.env.VERCEL_ENV === 'preview') {
-        console.log('[preview] whop data has usageStats?', !!(whop as any)?.usageStats, 'freshness?', !!(whop as any)?.freshnessData);
-      }
-
-      return whop;
-    },
-    // cache key must include slug for uniqueness - use decoded lowercase for consistency
-    [`whop:${decodeURIComponent(slug).toLowerCase()}`],
-    {
-      revalidate: 300 // 5 minutes
-    }
-  )();
+export const getOfferBySlugCached = unstable_cache(
+  async (slug: string) => {
+    logCache('MISS fetchOfferDirect', { slug });
+    return await fetchOfferDirect(slug);
+  },
+  ['offer-by-slug'],
+  {
+    revalidate: 300, // 5 minutes
+    tags: ['offers']
+  }
+);
 
 /**
  * Cached, tagged fetch for homepage/hubs list.
  * Tags: hubs
- * You can add pagination keys to cache different pages distinctly.
  */
 export const getOffersOptimizedCached = (page = 1, limit = 15) =>
   unstable_cache(
     async () => {
       logCache('MISS getOffersOptimized', { page, limit });
 
-      // Fetch whops with pagination
       const whops = await prisma.deal.findMany({
         where: whereIndexable(),
         select: {
@@ -102,16 +148,14 @@ export const getOffersOptimizedCached = (page = 1, limit = 15) =>
   )();
 
 /**
- * Cached, tagged fetch for ALL whops (no quality gate).
+ * Cached fetch for ALL offers (no quality gate).
  * Used for homepage to show total count and list.
- * Tags: hubs
  */
 export const getOffersAllCached = (page = 1, limit = 15) =>
   unstable_cache(
     async () => {
       logCache('MISS getOffersAll', { page, limit });
 
-      // NOTE: no whereIndexable() — show every whop in DB
       const whops = await prisma.deal.findMany({
         select: {
           id: true,

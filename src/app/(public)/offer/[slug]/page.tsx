@@ -56,10 +56,27 @@ import { LOCALES, isLocaleEnabled, getSchemaLocale } from '@/lib/schema-locale';
 import { offerAbsoluteUrl } from '@/lib/urls';
 import { getPageClassification, getRobotsForClassification, shouldIncludeInHreflang } from '@/lib/seo-classification';
 
-// On-demand ISR - don't prebuild at build time (too slow)
-// Pages will be cached after first hit
+// Pre-build top 50 offers at deploy time for instant navigation
 export async function generateStaticParams() {
-  return []; // on-demand ISR
+  // Only pre-build in production to speed up dev builds
+  if (process.env.NODE_ENV !== 'production') {
+    return [];
+  }
+
+  try {
+    const topOffers = await prisma.deal.findMany({
+      select: { slug: true },
+      take: 50,
+      orderBy: { displayOrder: 'asc' }, // Most important offers first
+    });
+
+    return topOffers.map((offer) => ({
+      slug: offer.slug,
+    }));
+  } catch (error) {
+    console.error('generateStaticParams error:', error);
+    return []; // Fallback to on-demand ISR
+  }
 }
 
 interface PromoCode {
