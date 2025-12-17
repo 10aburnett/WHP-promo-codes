@@ -37,8 +37,8 @@ async function tryReadGraphFromFS(): Promise<NeighborsMap | null> {
     const fs = await import('fs');
     const path = await import('path');
 
-    // Try public/data/graph/neighbors.json
-    const graphPath = path.join(process.cwd(), 'public', 'data', 'graph', 'neighbors.json');
+    // Try src/data/graph/neighbors.json (bundled with serverless functions)
+    const graphPath = path.join(process.cwd(), 'src', 'data', 'graph', 'neighbors.json');
 
     if (fs.existsSync(graphPath)) {
       const data = JSON.parse(fs.readFileSync(graphPath, 'utf8'));
