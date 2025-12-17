@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import HomePageServer from '@/components/HomePageServer';
 import StatisticsSectionServer from '@/components/StatisticsSectionServer';
 import CallToAction from '@/components/CallToAction';
@@ -52,16 +53,49 @@ interface InitialData {
   totalCount: number;
 }
 
-// Loading component for Suspense
-const HomePageLoading = () => (
-  <div className="text-center py-20">
-    <div
-      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-r-transparent"
-      style={{ borderColor: 'var(--accent-color)', borderRightColor: 'transparent' }}
-    ></div>
-    <p className="mt-4 text-lg" style={{ color: 'var(--text-secondary)' }}>
-      Loading...
-    </p>
+// Skeleton loading components for Suspense boundaries
+const OfferGridSkeleton = () => (
+  <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="rounded-2xl border p-4 md:p-5 animate-pulse"
+          style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--card-border)' }}
+        >
+          <div className="flex items-start gap-3 mb-3">
+            <div className="h-12 w-12 rounded-xl bg-gray-200 dark:bg-gray-700" />
+            <div className="flex-1">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+            </div>
+          </div>
+          <div className="flex gap-2 mb-3">
+            <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full" />
+            <div className="h-6 w-20 bg-gray-200 dark:bg-gray-700 rounded-full" />
+          </div>
+          <div className="pt-3 border-t flex gap-2" style={{ borderColor: 'var(--border-color)' }}>
+            <div className="h-9 flex-1 bg-gray-200 dark:bg-gray-700 rounded-full" />
+            <div className="h-9 w-32 bg-gray-200 dark:bg-gray-700 rounded-full" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const StatsSkeleton = () => (
+  <div className="py-12 animate-pulse">
+    <div className="container mx-auto max-w-4xl px-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="text-center">
+            <div className="h-8 w-20 mx-auto bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+            <div className="h-4 w-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 );
 
@@ -369,14 +403,16 @@ export default async function Home({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(offersSchema) }}
       />
 
-      {/* Server-rendered content - pure server component with key for remounting */}
-      <HomePageServer
-        key={`p-${page}`}
-        items={data.items}
-        currentPage={page}
-        totalPages={data.totalPages}
-        total={data.total}
-      />
+      {/* Server-rendered content with Suspense for faster hydration */}
+      <Suspense fallback={<OfferGridSkeleton />}>
+        <HomePageServer
+          key={`p-${page}`}
+          items={data.items}
+          currentPage={page}
+          totalPages={data.totalPages}
+          total={data.total}
+        />
+      </Suspense>
 
       {/* Marketing / trust section */}
       <div className="container mx-auto max-w-6xl px-3 sm:px-4 lg:px-0">
@@ -533,8 +569,10 @@ export default async function Home({
         </div>
       </div>
 
-      {/* Statistics Section - Server Rendered */}
-      <StatisticsSectionServer stats={statistics} />
+      {/* Statistics Section - Server Rendered with Suspense */}
+      <Suspense fallback={<StatsSkeleton />}>
+        <StatisticsSectionServer stats={statistics} />
+      </Suspense>
     </main>
   );
 }

@@ -1,9 +1,19 @@
 // src/components/HomePageServer.tsx
 // Server component for homepage - no client state, pure server rendering
+import { Suspense } from 'react';
 import Link from 'next/link';
 import OfferCard from '@/components/OfferCard';
 import FilterControlsWrapper from '@/components/FilterControlsWrapper';
 import { SITE_BRAND, SITE_TAGLINE } from '@/lib/brand';
+
+// Filter skeleton for Suspense fallback
+const FilterSkeleton = () => (
+  <div className="flex flex-wrap gap-3 animate-pulse">
+    <div className="h-10 w-48 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+    <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+    <div className="h-10 w-28 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+  </div>
+);
 
 interface PromoCode {
   id: string;
@@ -93,10 +103,12 @@ export default function HomePageServer({
         </div>
       </section>
 
-      {/* Search/Filter Section - Separate from hero */}
+      {/* Search/Filter Section - Separate from hero with Suspense for faster hydration */}
       <section className="pb-6 md:pb-8">
         <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
-          <FilterControlsWrapper />
+          <Suspense fallback={<FilterSkeleton />}>
+            <FilterControlsWrapper />
+          </Suspense>
         </div>
       </section>
 
