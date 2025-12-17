@@ -115,7 +115,7 @@
     "googleapis": "^153.0.0",
     "isomorphic-dompurify": "^2.26.0",
     "jsonwebtoken": "^9.0.2",
-    "next": "14.2.13",
+    "next": "14.2.35",
     "next-auth": "^4.24.11",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.10.1",
