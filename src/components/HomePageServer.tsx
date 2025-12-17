@@ -105,15 +105,17 @@ export default function HomePageServer({
 
       {/* Search/Filter Section - Separate from hero with Suspense for faster hydration */}
       <section className="pb-6 md:pb-8">
-        <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
-          <Suspense fallback={<FilterSkeleton />}>
-            <FilterControlsWrapper />
-          </Suspense>
+        <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px] pointer-events-none">
+          <div className="pointer-events-auto">
+            <Suspense fallback={<FilterSkeleton />}>
+              <FilterControlsWrapper />
+            </Suspense>
+          </div>
         </div>
       </section>
 
-      {/* Main content container */}
-      <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
+      {/* Main content container - pointer-events-none to prevent hit-testing on wrapper */}
+      <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px] pointer-events-none">
 
       {/* Top Pagination - Compact left-aligned bar */}
       {/* IMPORTANT: pointer-events-none on nav, pointer-events-auto only on actual links */}
@@ -227,8 +229,8 @@ export default function HomePageServer({
       )}
 
       {/* Offer Cards Grid - Using sm + xl breakpoints for fingerprint differentiation */}
-      {/* IMPORTANT: OfferCardServer is a server component - cards are clickable without JS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8">
+      {/* IMPORTANT: pointer-events-auto to re-enable clicks on the grid (parent has pointer-events-none) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8 pointer-events-auto">
         {items.map((whop) => (
           <OfferCardServer
             key={whop.id}
@@ -366,7 +368,7 @@ export default function HomePageServer({
 
       {/* No results message */}
       {items.length === 0 && (
-        <div className="col-span-full text-center py-16">
+        <div className="col-span-full text-center py-16 pointer-events-auto">
           <div className="max-w-md mx-auto space-y-4">
             <div
               className="h-12 w-12 mx-auto rounded-xl flex items-center justify-center"
