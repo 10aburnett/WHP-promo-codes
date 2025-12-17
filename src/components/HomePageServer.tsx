@@ -116,10 +116,10 @@ export default function HomePageServer({
       <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
 
       {/* Top Pagination - Compact left-aligned bar */}
-      {/* IMPORTANT: inline-flex + self-start + contain prevents hit-testing bleed over cards below */}
+      {/* IMPORTANT: pointer-events-none on nav, pointer-events-auto only on actual links */}
       {totalPages > 1 && (
         <nav
-          className="mb-6 inline-flex flex-col gap-3 md:flex-row md:items-center md:justify-between self-start"
+          className="mb-6 inline-flex flex-col gap-3 md:flex-row md:items-center md:justify-between self-start pointer-events-none"
           aria-label="Pagination"
           style={{ contain: 'layout paint' }}
         >
@@ -147,7 +147,7 @@ export default function HomePageServer({
               <Link
                 href={pageHref(currentPage - 1)}
                 prefetch={false}
-                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85 pointer-events-auto"
                 style={{
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
@@ -173,14 +173,14 @@ export default function HomePageServer({
             )}
 
             {/* Page numbers */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 pointer-events-none">
               {getPageNumbers().map((pageNum) => (
                 <Link
                   key={pageNum}
                   href={pageHref(pageNum)}
                   prefetch={false}
                   aria-current={pageNum === currentPage ? 'page' : undefined}
-                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs md:text-sm min-w-[28px] ${
+                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs md:text-sm min-w-[28px] pointer-events-auto ${
                     pageNum === currentPage ? 'font-semibold' : ''
                   }`}
                   style={{
@@ -198,7 +198,7 @@ export default function HomePageServer({
               <Link
                 href={pageHref(currentPage + 1)}
                 prefetch={false}
-                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85 pointer-events-auto"
                 style={{
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
@@ -254,10 +254,10 @@ export default function HomePageServer({
       </div>
 
       {/* Bottom Pagination - Compact left-aligned bar */}
-      {/* IMPORTANT: inline-flex + self-start + contain prevents hit-testing bleed */}
+      {/* IMPORTANT: pointer-events-none on nav, pointer-events-auto only on actual links */}
       {totalPages > 1 && (
         <nav
-          className="mt-4 mb-10 inline-flex flex-col gap-3 md:flex-row md:items-center md:justify-between self-start"
+          className="mt-4 mb-10 inline-flex flex-col gap-3 md:flex-row md:items-center md:justify-between self-start pointer-events-none"
           aria-label="Pagination"
           style={{ contain: 'layout paint' }}
         >
@@ -285,7 +285,7 @@ export default function HomePageServer({
               <Link
                 href={pageHref(currentPage - 1)}
                 prefetch={false}
-                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85 pointer-events-auto"
                 style={{
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
@@ -311,14 +311,14 @@ export default function HomePageServer({
             )}
 
             {/* Page numbers */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 pointer-events-none">
               {getPageNumbers().map((pageNum) => (
                 <Link
                   key={pageNum}
                   href={pageHref(pageNum)}
                   prefetch={false}
                   aria-current={pageNum === currentPage ? 'page' : undefined}
-                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs md:text-sm min-w-[28px] ${
+                  className={`inline-flex items-center justify-center rounded-full px-2.5 py-1 text-xs md:text-sm min-w-[28px] pointer-events-auto ${
                     pageNum === currentPage ? 'font-semibold' : ''
                   }`}
                   style={{
@@ -336,7 +336,7 @@ export default function HomePageServer({
               <Link
                 href={pageHref(currentPage + 1)}
                 prefetch={false}
-                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85"
+                className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs md:text-sm transition-all hover:opacity-85 pointer-events-auto"
                 style={{
                   borderColor: 'var(--border-color)',
                   color: 'var(--text-color)',
