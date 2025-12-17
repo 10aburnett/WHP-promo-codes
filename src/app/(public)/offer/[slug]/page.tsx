@@ -1311,18 +1311,34 @@ export default async function DealPage({ params }: { params: { slug: string } })
               )}
             </ServerSectionGuard>
 
-            {/* 7. Alternatives - Client-side fetch (removed from SSR critical path) */}
+            {/* 7. Alternatives - Server-rendered with Suspense for streaming */}
             <section id="alternatives" className="dpc-offer-alternatives">
-              <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}>
-                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading alternatives...</p>
-              </div>
+              <Suspense fallback={
+                <div className="rounded-2xl border p-4 animate-pulse" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}>
+                  <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded mb-3" />
+                  <div className="space-y-2">
+                    <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded" />
+                    <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded" />
+                  </div>
+                </div>
+              }>
+                <AlternativesSection currentOfferSlug={dbSlug} />
+              </Suspense>
             </section>
 
-            {/* 8. Recommendations - Client-side fetch (removed from SSR critical path) */}
+            {/* 8. Recommendations - Server-rendered with Suspense for streaming */}
             <section className="dpc-offer-recommended">
-              <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}>
-                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading recommendations...</p>
-              </div>
+              <Suspense fallback={
+                <div className="rounded-2xl border p-4 animate-pulse" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}>
+                  <div className="h-4 w-40 bg-gray-200 dark:bg-gray-700 rounded mb-3" />
+                  <div className="space-y-2">
+                    <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded" />
+                    <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded" />
+                  </div>
+                </div>
+              }>
+                <RecommendedSection currentOfferSlug={dbSlug} />
+              </Suspense>
             </section>
           </aside>
         </div>
