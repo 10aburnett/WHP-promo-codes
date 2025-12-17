@@ -83,25 +83,24 @@ export async function loadNeighbors(): Promise<NeighborsMap> {
     });
   }
 
-  // During build or SSR, try to read directly from filesystem first
-  // This avoids network fetches during `next build` which cause "dynamic server usage" warnings
+  // During build or SSR, read directly from filesystem ONLY
+  // NEVER do network fetch on server-side - it causes circular timeouts
   if (typeof window === 'undefined') {
     const fsData = await tryReadGraphFromFS();
     if (fsData) return fsData;
+
+    // File not found - return empty object, don't fetch from network
+    console.warn('[graph] neighbors.json not found on filesystem, returning empty graph');
+    return {};
   }
 
-  // Make URL absolute for server-side fetches (fallback if file not on disk)
-  const baseUrl = typeof window === 'undefined' ? siteOrigin() : '';
-  const graphUrl = GRAPH_URL.startsWith('http') ? GRAPH_URL : `${baseUrl}${GRAPH_URL}`;
-
+  // Client-side only: fetch from relative URL (same domain, no circular issue)
   const url = GRAPH_VER
-    ? `${graphUrl}${graphUrl.includes('?') ? '&' : '?'}v=${encodeURIComponent(GRAPH_VER)}`
-    : graphUrl;
+    ? `${GRAPH_URL}${GRAPH_URL.includes('?') ? '&' : '?'}v=${encodeURIComponent(GRAPH_VER)}`
+    : GRAPH_URL;
 
-  if (typeof window !== 'undefined') {
-    console.debug('[graph] url in browser:', url);
-    (window as any).__WHOP_GRAPH_URL = url;
-  }
+  console.debug('[graph] url in browser:', url);
+  (window as any).__WHOP_GRAPH_URL = url;
 
   // Use 'force-cache' for stable SSR/hydration - Next.js will use same cached data
   const res = await fetch(url, { cache: 'force-cache' });
@@ -123,15 +122,12 @@ export async function loadNeighbors(): Promise<NeighborsMap> {
     });
   }
 
-  // Production guard for debugging inconsistencies
-  if (typeof window !== 'undefined') {
-    (window as any).__graphDebug = {
-      url,
-      keys,
-      version: GRAPH_VER,
-      timestamp: new Date().toISOString()
-    };
-  }
+  (window as any).__graphDebug = {
+    url,
+    keys,
+    version: GRAPH_VER,
+    timestamp: new Date().toISOString()
+  };
 
   return data;
 }
