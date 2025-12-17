@@ -2,7 +2,7 @@
 // Server component for homepage - no client state, pure server rendering
 import { Suspense } from 'react';
 import Link from 'next/link';
-import OfferCard from '@/components/OfferCard';
+import OfferCardServer from '@/components/OfferCardServer';
 import FilterControlsWrapper from '@/components/FilterControlsWrapper';
 import { SITE_BRAND, SITE_TAGLINE } from '@/lib/brand';
 
@@ -225,9 +225,10 @@ export default function HomePageServer({
       )}
 
       {/* Offer Cards Grid - Using sm + xl breakpoints for fingerprint differentiation */}
+      {/* IMPORTANT: OfferCardServer is a server component - cards are clickable without JS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8">
         {items.map((whop) => (
-          <OfferCard
+          <OfferCardServer
             key={whop.id}
             promo={{
               id: whop.id,
