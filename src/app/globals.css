@@ -104,7 +104,10 @@
 }
 
 html {
-  transition: var(--theme-transition);
+  /* REMOVED: transition: var(--theme-transition);
+     Global transitions on html/body block paint during navigation,
+     causing perceived click delay. Use .theme-transition class on
+     specific containers instead. */
 }
 
 body {
@@ -116,7 +119,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: var(--theme-transition);
+  /* REMOVED: transition: var(--theme-transition); - blocks paint during navigation */
 }
 
 .container {
