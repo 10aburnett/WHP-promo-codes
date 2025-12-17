@@ -1,4 +1,5 @@
 // src/data/recommendations.ts
+import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { loadNeighbors, getNeighborSlugsFor, getExploreFor } from '@/lib/graph';
 import { normalizeSlug } from '@/lib/slug-normalize';
@@ -285,60 +286,47 @@ async function buildExploreLink(
 }
 
 // ============================================================================
-// LEGACY API (for backward compatibility - calls unified function internally)
+// CACHED API - Uses unstable_cache for ISR caching across serverless invocations
 // ============================================================================
 
-// Cache to store the result of getRecsAndAlts for the same slug
-// This ensures both getRecommendations and getAlternatives return consistent data
-const pageCache = new Map<string, {
-  recommendations: { items: OfferItem[]; explore: ExploreLink | null };
-  alternatives: { items: OfferItem[]; explore: ExploreLink | null };
-  timestamp: number;
-}>();
-
-const CACHE_TTL = 5000; // 5 second cache
-
-async function getCachedRecsAndAlts(slug: string) {
-  const normalizedSlug = normalizeSlug(slug);
-  const cached = pageCache.get(normalizedSlug);
-  const now = Date.now();
-
-  if (cached && (now - cached.timestamp) < CACHE_TTL) {
-    return cached;
+/**
+ * ISR-cached fetch for recommendations and alternatives.
+ * This is the primary API - uses Next.js unstable_cache for proper caching.
+ */
+export const getRecsAndAltsCached = unstable_cache(
+  async (slug: string) => {
+    const t0 = Date.now();
+    const result = await getRecsAndAlts(slug);
+    console.log('[PERF] getRecsAndAlts', Date.now() - t0, 'ms', { slug });
+    return result;
+  },
+  ['recs-alts'],
+  {
+    revalidate: 300, // 5 minutes
+    tags: ['recommendations']
   }
-
-  const result = await getRecsAndAlts(slug);
-  pageCache.set(normalizedSlug, { ...result, timestamp: now });
-
-  // Clean old cache entries
-  if (pageCache.size > 200) {
-    const oldestKey = pageCache.keys().next().value;
-    if (oldestKey) pageCache.delete(oldestKey);
-  }
-
-  return result;
-}
+);
 
 /**
  * Server-side fetch for recommendations.
- * @deprecated Use getRecsAndAlts() for guaranteed deduplication
+ * @deprecated Use getRecsAndAltsCached() for guaranteed deduplication
  */
 export async function getRecommendations(currentOfferSlug: string): Promise<{
   items: OfferItem[];
   explore: ExploreLink | null;
 }> {
-  const result = await getCachedRecsAndAlts(currentOfferSlug);
+  const result = await getRecsAndAltsCached(currentOfferSlug);
   return result.recommendations;
 }
 
 /**
  * Server-side fetch for alternatives.
- * @deprecated Use getRecsAndAlts() for guaranteed deduplication
+ * @deprecated Use getRecsAndAltsCached() for guaranteed deduplication
  */
 export async function getAlternatives(currentOfferSlug: string): Promise<{
   items: OfferItem[];
   explore: ExploreLink | null;
 }> {
-  const result = await getCachedRecsAndAlts(currentOfferSlug);
+  const result = await getRecsAndAltsCached(currentOfferSlug);
   return result.alternatives;
 }
