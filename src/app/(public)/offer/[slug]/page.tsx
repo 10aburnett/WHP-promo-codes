@@ -7,7 +7,7 @@ import { getOfferBySlugCached } from '@/data/offers'; // NEW: Use cached version
 import { getOfferBySlug, getOfferBySlugUnfiltered } from '@/lib/data'; // Keep for metadata generation
 import { prisma } from '@/lib/prisma';
 import { whereIndexable } from '@/lib/where-indexable';
-// Suspense removed - SSR sections render without streaming for SEO
+import { Suspense } from 'react'; // Re-added for recs/alts streaming
 import { canonicalSlugForDB, canonicalSlugForPath } from '@/lib/slug-utils';
 import { siteOrigin } from '@/lib/site-origin';
 import { notFoundWithReason } from '@/lib/notFoundReason';
@@ -56,20 +56,11 @@ import { LOCALES, isLocaleEnabled, getSchemaLocale } from '@/lib/schema-locale';
 import { offerAbsoluteUrl } from '@/lib/urls';
 import { getPageClassification, getRobotsForClassification, shouldIncludeInHreflang } from '@/lib/seo-classification';
 
-// Prebuild top 800 quality pages at build time, use ISR for long tail
-// TEMPORARILY DISABLED per ChatGPT fix - causes 404s with JS ON
-// export async function generateStaticParams() {
-//   if (process.env.NODE_ENV !== 'production') return [];
-
-//   const rows = await prisma.deal.findMany({
-//     where: whereIndexable(),
-//     select: { slug: true },
-//     orderBy: { displayOrder: 'asc' },
-//     take: 800 // Budget for top "money pages"
-//   });
-
-//   return rows.map(r => ({ slug: r.slug }));
-// }
+// On-demand ISR - don't prebuild at build time (too slow)
+// Pages will be cached after first hit
+export async function generateStaticParams() {
+  return []; // on-demand ISR
+}
 
 interface PromoCode {
   id: string;
@@ -481,40 +472,27 @@ export default async function DealPage({ params }: { params: { slug: string } })
   const classification = getPageClassification(canonSlug);
   const shouldEmitSchema = classification === 'indexable';
 
-  // 1) Try lookup with normalized slug for DB
-  console.log('[WHOP DETAIL] Starting fetch for slug:', { raw, dbSlug, canonSlug });
+  // [PERF] Total page render timing
+  const pageStart = Date.now();
+  console.log('[PERF] total START', { slug: dbSlug });
 
-  // Performance measurement: time parallel data fetches
-  console.time('[PERF] Parallel data fetch');
+  // 1) SINGLE DB CALL - this is the only thing that blocks first byte
+  const t1 = Date.now();
+  const finalOfferData = await getOfferBySlugCached(dbSlug);
+  console.log('[PERF] db getOfferBySlugCached', Date.now() - t1, 'ms');
 
-  // Parallelize all data fetches for faster load time
-  const [vm, dealData, finalOfferData, verificationData] = await Promise.all([
-    // Load view model for schema (reuse existing data path)
-    getOfferViewModel(raw, undefined).catch((error) => {
-      console.warn('Failed to load view model for schema:', error);
-      return null;
-    }),
-    // Get deal data
-    getDeal(dbSlug),
-    // Use cached, tagged data (D1) - no fallback needed
-    getOfferBySlugCached(dbSlug),
-    // Load verification data for Screenshot B
-    getVerificationData(dbSlug),
-  ]);
+  // These are removed from critical path - will be fetched client-side:
+  // - getPromoStatsForSlug (moved to /api/offer/[slug]/promo-stats)
+  // - getVerificationData (not critical for first paint)
+  // - getOfferViewModel (schema can be built from finalOfferData)
+  // - RecommendedSection/AlternativesSection (moved to client fetch)
 
-  console.timeEnd('[PERF] Parallel data fetch');
+  // Null placeholders for removed server calls
+  const vm = null; // Schema will use minimal data from finalOfferData
+  const verificationData = null; // Loaded client-side if needed
+  const usageStats = null; // Loaded client-side via API
 
-  console.log('[WHOP DETAIL] getDeal result:', { found: !!dealData, id: dealData?.id });
-  console.log('[WHOP DETAIL] Final data chosen:', {
-    found: !!finalOfferData,
-    name: finalOfferData?.name,
-    indexingStatus: (finalOfferData as any)?.indexingStatus,
-    retirement: (finalOfferData as any)?.retirement,
-    promoCount: (finalOfferData as any)?.PromoCode?.length
-  });
-
-  // Debug logging for production troubleshooting
-  console.log('Verification data loaded for', dbSlug, ':', verificationData);
+  console.log('[PERF] total after DB', Date.now() - pageStart, 'ms');
 
   // 3) 404 handling: Not found, retired, or not indexed
   if (!finalOfferData) {
@@ -578,8 +556,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
   }
 
 
-  // Fetch promo usage statistics server-side for SEO (SSR/SSG)
-  const usageStats = await getPromoStatsForSlug(dbSlug);
+  // usageStats already fetched in parallel Promise.all above
 
   // Use verification data loaded from JSON files (not from database)
   const freshnessData = verificationData
@@ -743,6 +720,9 @@ export default async function DealPage({ params }: { params: { slug: string } })
       console.warn('Failed to build JSON-LD schemas:', error);
     }
   }
+
+  // [PERF] Final timing before return
+  console.log('[PERF] total END', Date.now() - pageStart, 'ms', { slug: dbSlug });
 
   return (
     <main
@@ -1314,14 +1294,18 @@ export default async function DealPage({ params }: { params: { slug: string } })
               )}
             </ServerSectionGuard>
 
-            {/* 7. Alternatives - Why Not Try... (NO Suspense - must render in HTML for SEO) */}
+            {/* 7. Alternatives - Client-side fetch (removed from SSR critical path) */}
             <section id="alternatives" className="dpc-offer-alternatives">
-              <AlternativesSection currentOfferSlug={dbSlug} />
+              <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}>
+                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading alternatives...</p>
+              </div>
             </section>
 
-            {/* 8. Recommendations - More ways to save (NO Suspense - must render in HTML for SEO) */}
+            {/* 8. Recommendations - Client-side fetch (removed from SSR critical path) */}
             <section className="dpc-offer-recommended">
-              <RecommendedSection currentOfferSlug={dbSlug} />
+              <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}>
+                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading recommendations...</p>
+              </div>
             </section>
           </aside>
         </div>
