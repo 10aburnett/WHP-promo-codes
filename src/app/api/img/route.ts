@@ -13,6 +13,7 @@ const ALLOWED_DOMAINS = [
   'img-v2-stage.whop.com',
   'img.whop.com',
   'assets.whop.com',
+  'assets-2-prod.whop.com',
   'cdn.whop.com',
   'images.whop.com',
   'static.whop.xyz',
@@ -23,9 +24,25 @@ const ALLOWED_DOMAINS = [
   'media.discordapp.net'
 ];
 
+// IMPORTANT:
+// S3 is path-style here (s3.amazonaws.com/bucket-name/*)
+// We restrict bucket prefixes to avoid open proxy abuse
+const S3_HOSTS = ['s3.us-east-2.amazonaws.com', 's3.amazonaws.com'];
+const ALLOWED_S3_BUCKET_PREFIXES = [
+  '/assets.whop.com/',
+  '/assets-2-prod.whop.com/'
+];
+
 function isAllowedDomain(url: string): boolean {
   try {
-    const { hostname } = new URL(url);
+    const { hostname, pathname } = new URL(url);
+
+    // Check if it's an S3 host - require bucket prefix restriction
+    if (S3_HOSTS.includes(hostname)) {
+      return ALLOWED_S3_BUCKET_PREFIXES.some(prefix => pathname.startsWith(prefix));
+    }
+
+    // Standard domain check for non-S3 hosts
     return ALLOWED_DOMAINS.some(allowed => hostname === allowed || hostname.endsWith(`.${allowed}`));
   } catch {
     return false;

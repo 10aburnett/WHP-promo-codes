@@ -42,6 +42,22 @@ const nextConfig = {
         hostname: 'assets.whop.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'assets-2-prod.whop.com',
+        pathname: '/**',
+      },
+      // AWS S3 buckets (Whop stores assets on S3)
+      {
+        protocol: 'https',
+        hostname: 's3.us-east-2.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 's3.amazonaws.com',
+        pathname: '/**',
+      },
       // Common CDN hosts for whop logos
       {
         protocol: 'https',
