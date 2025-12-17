@@ -2,12 +2,6 @@
 // Safe, server-friendly logo URL resolver (NO event handlers needed on server)
 
 import { coerceOfferLogoUrl } from './offerImage';
-import { siteOrigin } from './site-origin';
-
-// Asset origin for production - matches next.config.js ASSET_ORIGIN
-const ASSET_ORIGIN = process.env.NODE_ENV === 'production'
-  ? siteOrigin()
-  : '';
 
 export function resolveLogoUrl(input?: string | null): string {
   // Return fallback for empty/null input
@@ -33,16 +27,17 @@ export function resolveLogoUrl(input?: string | null): string {
     return '/logo.png';
   }
 
-  // If path starts with known directories (uploads/, data/, logos/), build absolute URL
+  // IMPORTANT: Keep local paths relative (no origin prefix) so they work on any host
+  // (vercel.app previews, production domain, localhost, etc.)
+  // The browser/proxy will resolve them against the current host.
+
+  // If path starts with known directories, return as relative path
   if (cleanPath.startsWith('uploads/') ||
       cleanPath.startsWith('data/') ||
       cleanPath.startsWith('logos/')) {
-    return ASSET_ORIGIN ? `${ASSET_ORIGIN}/${cleanPath}` : `/${cleanPath}`;
+    return `/${cleanPath}`;
   }
 
   // For paths that don't start with known directories, assume they're in data/logos/
-  // This handles cases like "foo.png" -> "${ASSET_ORIGIN}/data/logos/foo.png"
-  return ASSET_ORIGIN
-    ? `${ASSET_ORIGIN}/data/logos/${cleanPath}`
-    : `/data/logos/${cleanPath}`;
+  return `/data/logos/${cleanPath}`;
 }
