@@ -49,11 +49,11 @@ export default function FilterControls({
       onSubmit={onSubmit}
       method="GET"
       action="/"
-      className={`w-full ${className}`}
+      className={`w-full pointer-events-none ${className}`}
     >
-      {/* Card-style container */}
+      {/* Card-style container - pointer-events-auto to re-enable clicks inside */}
       <div
-        className="rounded-2xl border px-4 py-4 md:px-6 md:py-5 shadow-sm"
+        className="rounded-2xl border px-4 py-4 md:px-6 md:py-5 shadow-sm pointer-events-auto"
         style={{
           backgroundColor: 'var(--background-secondary)',
           borderColor: 'var(--border-color)',
