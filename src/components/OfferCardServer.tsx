@@ -76,32 +76,31 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
   const discountLabel = getDiscountBadge({ discountPercent });
 
   return (
-    <div className="relative h-full">
-      <article
-        className="group h-full rounded-2xl border p-4 md:p-5 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 cursor-pointer"
-        style={{
-          backgroundColor: 'var(--card-bg)',
-          borderColor: 'var(--card-border)',
-        }}
+    <article
+      className="relative group h-full rounded-2xl border p-4 md:p-5 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 cursor-pointer"
+      style={{
+        backgroundColor: 'var(--card-bg)',
+        borderColor: 'var(--card-border)',
+      }}
+    >
+      {/*
+        IMPORTANT: This invisible Link covers the entire card.
+        It's positioned absolute with z-10, above the card background but below CTAs.
+        Works WITHOUT JavaScript/hydration - it's just HTML <a> tag.
+        The article is the positioning context (has relative).
+      */}
+      <Link
+        href={detailHref}
+        className="absolute inset-0 z-10 rounded-2xl focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--card-bg)]"
+        title={`${promo.whopName} discount – ${promo.promoText}`}
       >
-        {/*
-          IMPORTANT: This invisible Link covers the entire card.
-          It's positioned absolute with z-0, making the whole card clickable.
-          Works WITHOUT JavaScript/hydration - it's just HTML <a> tag.
-          Focus-visible ring for keyboard accessibility.
-        */}
-        <Link
-          href={detailHref}
-          className="absolute inset-0 z-0 rounded-2xl pointer-events-auto focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--card-bg)]"
-          title={`${promo.whopName} discount – ${promo.promoText}`}
-        >
-          <span className="sr-only">View {title} promo details</span>
-        </Link>
+        <span className="sr-only">View {title} promo details</span>
+      </Link>
 
-        {/* Header row: accent bar + logo + title
-            pointer-events-none ensures clicks fall through to the overlay link.
-            Trade-off: text not selectable, but full-card is clickable without hydration. */}
-        <div className="flex items-start gap-3 mb-3 relative z-10 pointer-events-none">
+      {/* Content wrapper - z-20 pointer-events-none so clicks fall through to overlay */}
+      <div className="relative z-20 pointer-events-none">
+        {/* Header row: accent bar + logo + title */}
+        <div className="flex items-start gap-3 mb-3">
           {/* Accent bar + logo */}
           <div className="flex items-center gap-2">
             <span
@@ -156,8 +155,8 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
           </div>
         </div>
 
-        {/* Meta strip - pointer-events-none for click-through to overlay */}
-        <div className="flex flex-wrap items-center gap-2 mb-3 relative z-10 pointer-events-none">
+        {/* Meta strip */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
           {/* Discount badge */}
           {discountLabel && (
             <span
@@ -185,43 +184,43 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
             </span>
           )}
         </div>
+      </div>
 
-        {/* CTA row - pointer-events-auto so buttons are clickable above overlay */}
-        <div
-          className="mt-auto pt-3 border-t flex flex-col gap-2 md:flex-row md:items-center md:justify-between relative z-20 pointer-events-auto"
-          style={{ borderColor: 'var(--border-color)' }}
+      {/* CTA row - z-30 pointer-events-auto so buttons are clickable above overlay */}
+      <div
+        className="mt-auto pt-3 border-t flex flex-col gap-2 md:flex-row md:items-center md:justify-between relative z-30 pointer-events-auto"
+        style={{ borderColor: 'var(--border-color)' }}
+      >
+        {/* Primary CTA - Client island for tracking */}
+        <GetPromoButton
+          affiliateLink={promo.affiliateLink}
+          offerId={promo.offerId}
+          promoCodeId={promo.promoCodeId}
+          whopName={promo.whopName}
+          promoCode={promo.promoCode}
+          promoValue={promo.promoValue}
+          promoType={promo.promoType}
+          promoText={promo.promoText}
+          className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs md:text-sm font-semibold shadow-sm hover:shadow-md transition flex-1 md:flex-none"
+          style={{
+            backgroundColor: 'var(--accent-color)',
+            color: '#ffffff',
+          }}
+        />
+
+        {/* Secondary CTA - explicit link for navigation */}
+        <Link
+          href={detailHref}
+          className="inline-flex items-center justify-center rounded-full px-3.5 py-2 text-xs md:text-sm font-medium border md:w-auto hover:opacity-90 transition-all"
+          style={{
+            backgroundColor: 'rgba(5,150,105,0.06)',
+            borderColor: 'rgba(5,150,105,0.2)',
+            color: 'var(--accent-color)',
+          }}
         >
-          {/* Primary CTA - Client island for tracking, sits above the card link */}
-          <GetPromoButton
-            affiliateLink={promo.affiliateLink}
-            offerId={promo.offerId}
-            promoCodeId={promo.promoCodeId}
-            whopName={promo.whopName}
-            promoCode={promo.promoCode}
-            promoValue={promo.promoValue}
-            promoType={promo.promoType}
-            promoText={promo.promoText}
-            className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs md:text-sm font-semibold shadow-sm hover:shadow-md transition flex-1 md:flex-none relative z-20 pointer-events-auto"
-            style={{
-              backgroundColor: 'var(--accent-color)',
-              color: '#ffffff',
-            }}
-          />
-
-          {/* Secondary CTA - explicit link for navigation (above overlay) */}
-          <Link
-            href={detailHref}
-            className="inline-flex items-center justify-center rounded-full px-3.5 py-2 text-xs md:text-sm font-medium border md:w-auto hover:opacity-90 transition-all relative z-20 pointer-events-auto"
-            style={{
-              backgroundColor: 'rgba(5,150,105,0.06)',
-              borderColor: 'rgba(5,150,105,0.2)',
-              color: 'var(--accent-color)',
-            }}
-          >
-            View promo details
-          </Link>
-        </div>
-      </article>
-    </div>
+          View promo details
+        </Link>
+      </div>
+    </article>
   );
 }
