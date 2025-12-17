@@ -116,10 +116,12 @@ export default function HomePageServer({
       <div className="mx-auto w-[90%] md:w-[95%] max-w-[1200px]">
 
       {/* Top Pagination - Compact left-aligned bar */}
+      {/* IMPORTANT: inline-flex + self-start + contain prevents hit-testing bleed over cards below */}
       {totalPages > 1 && (
         <nav
-          className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+          className="mb-6 inline-flex flex-col gap-3 md:flex-row md:items-center md:justify-between self-start"
           aria-label="Pagination"
+          style={{ contain: 'layout paint' }}
         >
           {/* Left: summary */}
           <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -252,10 +254,12 @@ export default function HomePageServer({
       </div>
 
       {/* Bottom Pagination - Compact left-aligned bar */}
+      {/* IMPORTANT: inline-flex + self-start + contain prevents hit-testing bleed */}
       {totalPages > 1 && (
         <nav
-          className="mt-4 mb-10 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+          className="mt-4 mb-10 inline-flex flex-col gap-3 md:flex-row md:items-center md:justify-between self-start"
           aria-label="Pagination"
+          style={{ contain: 'layout paint' }}
         >
           {/* Left: summary */}
           <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
