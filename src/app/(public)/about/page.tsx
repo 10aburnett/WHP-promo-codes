@@ -130,7 +130,7 @@ export default function AboutPage() {
                   </svg>
                   <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>Catalogue size</span>
                 </div>
-                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Over 8,000 entries</p>
+                <p className="text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>Over 100 entries</p>
               </div>
 
               <div className="py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
