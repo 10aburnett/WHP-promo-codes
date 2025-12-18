@@ -95,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     verification: {
-      google: 'your-google-verification-code',
+      google: 'oznYkbOdYzQFT2YwQpfLswKFGdBeVKrPKWj5RiYKG4s',
     },
     icons: {
       icon: [

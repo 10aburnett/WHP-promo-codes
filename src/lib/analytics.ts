@@ -1,5 +1,6 @@
 // Google Analytics configuration
-export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-HK4S4718K1';
+// GA ID must be set via NEXT_PUBLIC_GA_ID environment variable
+export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID || '';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url: string) => {
