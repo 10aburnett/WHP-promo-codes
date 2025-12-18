@@ -211,14 +211,14 @@ async function buildSection(
   });
 
   // Transform and ADD TO USED SLUGS
+  // Use raw DB slug - don't normalize (preserves trailing hyphens like 'tms-heavy-hitters-')
   const items: OfferItem[] = whops.map(whop => {
-    const normalizedSlug = normalizeSlug(whop.slug);
-    usedSlugs.add(normalizedSlug); // CRITICAL: Mark as used
+    usedSlugs.add(whop.slug); // CRITICAL: Mark as used
 
     return {
       id: whop.id,
       name: whop.name,
-      slug: normalizedSlug,
+      slug: whop.slug,
       logo: whop.logo,
       description: whop.description,
       aboutContent: whop.aboutContent,
@@ -268,11 +268,11 @@ async function buildExploreLink(
 
     if (!exploreWhop) return null;
 
-    const normalizedSlug = normalizeSlug(exploreWhop.slug);
-    usedSlugs.add(normalizedSlug); // Mark as used
+    // Use raw DB slug - don't normalize (preserves trailing hyphens)
+    usedSlugs.add(exploreWhop.slug); // Mark as used
 
     return {
-      slug: normalizedSlug,
+      slug: exploreWhop.slug,
       name: exploreWhop.name,
       logo: exploreWhop.logo,
       blurb: getSecondSentence(exploreWhop.aboutContent) || exploreWhop.description,
