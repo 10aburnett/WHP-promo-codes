@@ -1,11 +1,10 @@
 // src/lib/graph.ts
 import { normalizeSlug } from './slug-normalize';
-import { siteOrigin } from './site-origin';
+// Import JSON directly - bundled with serverless functions, no filesystem read needed
+import neighborsData from '@/data/graph/neighbors.json';
 
 export type NeighborData = { recommendations: string[]; alternatives: string[]; explore?: string };
 export type NeighborsMap = Record<string, NeighborData>;
-
-const cache: { neighbors?: NeighborsMap } = {};
 
 const GRAPH_URL =
   (process.env.NEXT_PUBLIC_GRAPH_URL && process.env.NEXT_PUBLIC_GRAPH_URL.trim()) ||
@@ -24,33 +23,6 @@ const DEV_MOCK_SLUGS = [
   'high-ticket-incubator',
   'the-ai-agency-launchpad',
 ];
-
-/**
- * Try to read graph data directly from filesystem (build-time or SSR).
- * Falls back to null if file not found or not in Node environment.
- */
-async function tryReadGraphFromFS(): Promise<NeighborsMap | null> {
-  // Only works on server-side with Node.js fs module
-  if (typeof window !== 'undefined') return null;
-
-  try {
-    const fs = await import('fs');
-    const path = await import('path');
-
-    // Try src/data/graph/neighbors.json (bundled with serverless functions)
-    const graphPath = path.join(process.cwd(), 'src', 'data', 'graph', 'neighbors.json');
-
-    if (fs.existsSync(graphPath)) {
-      const data = JSON.parse(fs.readFileSync(graphPath, 'utf8'));
-      console.log('[graph] Loaded from filesystem:', Object.keys(data).length, 'entries');
-      return data;
-    }
-  } catch (e) {
-    // fs not available or file not found - fall through to network fetch
-  }
-
-  return null;
-}
 
 export async function loadNeighbors(): Promise<NeighborsMap> {
   // In development, return mock data so we can style recs/alternatives without network timeouts
@@ -83,15 +55,11 @@ export async function loadNeighbors(): Promise<NeighborsMap> {
     });
   }
 
-  // During build or SSR, read directly from filesystem ONLY
-  // NEVER do network fetch on server-side - it causes circular timeouts
+  // Server-side: use imported JSON (bundled with serverless function)
+  // This guarantees data is available on every cold start
   if (typeof window === 'undefined') {
-    const fsData = await tryReadGraphFromFS();
-    if (fsData) return fsData;
-
-    // File not found - return empty object, don't fetch from network
-    console.warn('[graph] neighbors.json not found on filesystem, returning empty graph');
-    return {};
+    console.log('[graph] Using bundled neighbors data:', Object.keys(neighborsData).length, 'entries');
+    return neighborsData as NeighborsMap;
   }
 
   // Client-side only: fetch from relative URL (same domain, no circular issue)
