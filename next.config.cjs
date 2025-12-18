@@ -256,6 +256,11 @@ const nextConfig = {
   // Rewrites for data directory and asset proxying
   async rewrites() {
     return [
+      // Rewrite /sitemap.xml to /sitemap-index.xml for GSC compatibility
+      {
+        source: '/sitemap.xml',
+        destination: '/sitemap-index.xml',
+      },
       {
         source: '/data/:path*',
         destination: '/api/data/:path*',
