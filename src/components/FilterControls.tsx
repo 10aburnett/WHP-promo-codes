@@ -75,7 +75,7 @@ export default function FilterControls({
         <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] items-start">
           {/* Left: Search input */}
           <div
-            className="flex items-center rounded-full px-3 py-2.5 md:px-4 md:py-3 border"
+            className="relative flex items-center rounded-full px-3 py-2.5 md:px-4 md:py-3 border"
             style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}
           >
             <div className="pl-1 pr-3 flex items-center pointer-events-none">
@@ -104,9 +104,28 @@ export default function FilterControls({
                   ? (e) => onFilterChange({ searchTerm: e.target.value })
                   : undefined
               }
-              className="w-full bg-transparent border-0 text-sm md:text-base focus:outline-none"
+              className="w-full bg-transparent border-0 text-sm md:text-base focus:outline-none [&::-webkit-search-cancel-button]:hidden [&::-ms-clear]:hidden"
               style={{ color: 'var(--text-color)' }}
             />
+            {/* Custom green clear button */}
+            {filters.searchTerm && (
+              <button
+                type="button"
+                onClick={() => {
+                  onFilterChange({ searchTerm: '' });
+                  const input = document.getElementById('main-search-input') as HTMLInputElement;
+                  if (input) input.value = '';
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--accent-color)' }}
+                aria-label="Clear search"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Right: Category + Sort in 2-column grid */}

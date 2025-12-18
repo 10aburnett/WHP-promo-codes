@@ -40,7 +40,7 @@ const CommunityPromoSection = dynamicImport(() => import('@/components/Community
 import { parseFaqContent } from '@/lib/faq-types';
 import RenderPlain from '@/components/RenderPlain';
 import { looksLikeHtml, isMeaningful, escapeHtml, toPlainText } from '@/lib/textRender';
-import PromoStatsDisplay from '@/components/PromoStatsDisplay';
+import PromoStatsServer from '@/components/PromoStatsServer';
 import VerificationStatus from '@/components/VerificationStatus';
 import HowToSection from '@/components/offer/HowToSection';
 import HowToSchema from '@/components/offer/HowToSchema';
@@ -499,15 +499,16 @@ export default async function DealPage({ params }: { params: { slug: string } })
   console.log('[PERF] db getOfferBySlugCached', Date.now() - t1, 'ms');
 
   // These are removed from critical path - will be fetched client-side:
-  // - getPromoStatsForSlug (moved to /api/offer/[slug]/promo-stats)
   // - getVerificationData (not critical for first paint)
   // - getOfferViewModel (schema can be built from finalOfferData)
-  // - RecommendedSection/AlternativesSection (moved to client fetch)
+  // - RecommendedSection/AlternativesSection (moved to Suspense)
 
   // Null placeholders for removed server calls
   const vm = null; // Schema will use minimal data from finalOfferData
   const verificationData = null; // Loaded client-side if needed
-  const usageStats = null; // Loaded client-side via API
+
+  // Fetch usage stats server-side for SEO (Googlebot needs to see this)
+  const usageStats = await getPromoStatsForSlug(dbSlug);
 
   console.log('[PERF] total after DB', Date.now() - pageStart, 'ms');
 
@@ -1201,13 +1202,8 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 backgroundColor: 'var(--background-secondary)',
               }}
             >
-              <ServerSectionGuard label="PromoUsageStats">
-                <PromoStatsDisplay
-                  offerId={offerFormatted.id}
-                  slug={params.slug}
-                  initialStats={offerFormatted.usageStats}
-                />
-              </ServerSectionGuard>
+              {/* Server-rendered for SEO - Googlebot sees this in initial HTML */}
+              <PromoStatsServer stats={usageStats} />
             </section>
 
             {/* 3. Submit Code Card */}
