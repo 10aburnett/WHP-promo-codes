@@ -105,7 +105,8 @@ export function getNeighborSlugsFor(
   slug: string,
   kind: 'recommendations'|'alternatives'
 ): string[] {
-  const s = normalizeSlug(slug);
+  // Just lowercase, don't strip hyphens - graph keys may have trailing hyphens
+  const s = slug.toLowerCase();
   const entry = neighbors[s] || neighbors[decodeURIComponent(s)] || neighbors[s.replace(/\s+/g,'-')];
   if (!entry) return [];
   const arr = (entry[kind] || []).filter(Boolean);
@@ -116,7 +117,8 @@ export function getExploreFor(
   neighbors: Record<string, { recommendations?: string[]; alternatives?: string[]; explore?: string }>,
   slug: string
 ): string | null {
-  const s = normalizeSlug(slug);
+  // Just lowercase, don't strip hyphens - graph keys may have trailing hyphens
+  const s = slug.toLowerCase();
   const entry = neighbors[s] || neighbors[decodeURIComponent(s)] || neighbors[s.replace(/\s+/g,'-')];
   return entry?.explore || null;
 }

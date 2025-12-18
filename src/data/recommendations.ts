@@ -70,7 +70,8 @@ export async function getRecsAndAlts(currentOfferSlug: string): Promise<{
   recommendations: { items: OfferItem[]; explore: ExploreLink | null };
   alternatives: { items: OfferItem[]; explore: ExploreLink | null };
 }> {
-  const canonicalSlug = normalizeSlug(currentOfferSlug);
+  // Just lowercase, don't strip hyphens - graph keys may have trailing hyphens
+  const canonicalSlug = currentOfferSlug.toLowerCase();
 
   // Global exclusion set - once a slug is here, it cannot appear anywhere else on this page
   const usedSlugs = new Set<string>();
