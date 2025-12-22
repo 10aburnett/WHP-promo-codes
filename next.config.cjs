@@ -251,6 +251,12 @@ const nextConfig = {
         destination: '/offer/ayecon-academy-lifetime-membership',
         permanent: true, // 301 redirect
       },
+      // External broken link redirect to homepage
+      {
+        source: '/maddenlegends/sweepstakes',
+        destination: '/',
+        permanent: true, // 301 redirect
+      },
     ];
   },
   // Rewrites for data directory and asset proxying
