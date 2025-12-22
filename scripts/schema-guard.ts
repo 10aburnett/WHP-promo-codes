@@ -149,27 +149,36 @@ async function run() {
       });
     }
 
-    // (c) Offers: if present, must have price (string) + priceCurrency (ISO 4217)
+    // (c) Offers: if present, must have price (number) + priceCurrency (ISO 4217) + priceValidUntil
+    // Google schema.org requires price to be numeric, not a string
     if ((primary as any).offers) {
       const offs = (primary as any).offers as any[];
       assert(Array.isArray(offs) && offs.length > 0,
              `offers must be non-empty array for "${slug}"`);
       for (const off of offs) {
         assert(off['@type'] === 'Offer', `Offer @type incorrect for "${slug}"`);
-        assert(typeof off.price === 'string' && off.price.length > 0,
-               `Offer.price must be string for "${slug}"`);
+        assert(typeof off.price === 'number' && off.price >= 0,
+               `Offer.price must be a non-negative number for "${slug}"`);
         assert(typeof off.priceCurrency === 'string' && off.priceCurrency.length === 3,
                `Offer.priceCurrency missing/invalid for "${slug}"`);
+        assert(typeof off.priceValidUntil === 'string' && /^\d{4}-\d{2}-\d{2}/.test(off.priceValidUntil),
+               `Offer.priceValidUntil missing/invalid for "${slug}"`);
         checkUrl(off.url, 'Offer.url');
       }
     }
 
-    // (d) AggregateRating only when BOTH > 0
+    // (d) AggregateRating: only present when valid, must include bestRating/worstRating
     const ar = (primary as any).aggregateRating;
     if (ar != null) {
       assert(ar['@type'] === 'AggregateRating', `aggregateRating @type incorrect for "${slug}"`);
-      assert(Number(ar.ratingValue) > 0 && Number(ar.reviewCount) > 0,
-             `aggregateRating must have >0 ratingValue and reviewCount for "${slug}"`);
+      assert(typeof ar.ratingValue === 'number' && ar.ratingValue > 0,
+             `aggregateRating.ratingValue must be > 0 for "${slug}"`);
+      assert(typeof ar.reviewCount === 'number' && ar.reviewCount > 0,
+             `aggregateRating.reviewCount must be > 0 for "${slug}"`);
+      assert(ar.bestRating === 5 && ar.worstRating === 1,
+             `aggregateRating must have bestRating=5, worstRating=1 for "${slug}"`);
+      assert(ar.ratingValue >= ar.worstRating && ar.ratingValue <= ar.bestRating,
+             `aggregateRating.ratingValue must be between worstRating and bestRating for "${slug}"`);
     }
 
     // (e) FAQ & HowTo: if present, must be non-empty

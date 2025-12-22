@@ -99,10 +99,13 @@ export function buildPrimaryEntity(vm: OfferViewModel) {
   if (brand) entity.brand = brand;
 
   // Ratings: only if both > 0 and visibly rendered
+  // Google requires bestRating, worstRating, and either reviewCount or ratingCount
   if (vm.reviewCount && vm.reviewCount > 0 && vm.ratingValue && vm.ratingValue > 0) {
     entity.aggregateRating = {
       "@type": "AggregateRating",
-      ratingValue: Number(vm.ratingValue).toFixed(1),
+      ratingValue: Math.round(Number(vm.ratingValue) * 10) / 10, // Keep as number, round to 1 decimal
+      bestRating: 5,
+      worstRating: 1,
       reviewCount: vm.reviewCount
     };
   }
@@ -143,16 +146,17 @@ export function buildOffers(vm: OfferViewModel) {
 
   if (!hasRegular && !hasPromo) return undefined;
 
-  // Helper to stringify price
-  const money = (n: number) => String(n);
+  // Default priceValidUntil: 1 year from now (ISO 8601 date)
+  const defaultValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   // Regular price (only if UI shows it)
   if (hasRegular) {
     const regular: any = {
       "@type": "Offer",
       url: vm.url,                       // absolute URL to this page
-      price: money(vm.price as number),
+      price: vm.price as number,         // Must be numeric, not string
       priceCurrency: vm.currency,
+      priceValidUntil: vm.promoValidUntil || defaultValidUntil, // Required by Google
     };
     // Availability: only if reliable & shown
     if (vm.availability) {
@@ -173,8 +177,9 @@ export function buildOffers(vm: OfferViewModel) {
     const promo: any = {
       "@type": "Offer",
       url: vm.url,
-      price: money(vm.promoPrice as number),
+      price: vm.promoPrice as number,    // Must be numeric, not string
       priceCurrency: vm.currency,
+      priceValidUntil: vm.promoValidUntil || defaultValidUntil, // Required by Google
     };
     // Availability mirrors the same logic
     if (vm.availability) {
@@ -182,10 +187,6 @@ export function buildOffers(vm: OfferViewModel) {
       if (vm.availability === 'PreOrder' && vm.availabilityStarts) {
         promo.availabilityStarts = vm.availabilityStarts;
       }
-    }
-    // If a real, visible end date exists, include it
-    if (vm.promoValidUntil) {
-      promo.priceValidUntil = vm.promoValidUntil;
     }
     if (vm.priceNote) {
       promo.description = vm.priceNote;
