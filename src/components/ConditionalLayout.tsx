@@ -4,7 +4,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import LanguageSelector from './LanguageSelector';
 import ThemeToggle from './ThemeToggle';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SocialProofProvider, useSocialProof } from '@/contexts/SocialProofContext';
@@ -96,7 +95,6 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
 
             {/* Right: controls cluster (desktop) */}
             <div className="hidden md:flex items-center gap-2 lg:gap-3">
-              <LanguageSelector />
               <ThemeToggle />
               <GeneralPromoSubmissionButton
                 className="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all cursor-pointer"
@@ -113,7 +111,6 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
 
             {/* Mobile: controls + menu toggle */}
             <div className="flex md:hidden items-center gap-1.5">
-              <LanguageSelector />
               <ThemeToggle />
               <button
                 type="button"
