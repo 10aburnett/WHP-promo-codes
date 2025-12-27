@@ -154,8 +154,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 />
               )}
             </Link>
-            {/* NOTE: /offers is a UX hub (noindex, follow). Do not add to sitemap without SEO review. */}
-            <Link
+                        <Link
               href="/offers"
               className={`relative pb-2 text-sm font-medium transition-colors ${
                 pathname === '/offers'
@@ -292,8 +291,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                   >
                     {t('nav.home')}
                   </Link>
-                  {/* NOTE: /offers is a UX hub (noindex, follow). Do not add to sitemap without SEO review. */}
-                  <Link
+                                    <Link
                     href="/offers"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="block py-2 text-sm font-medium"
@@ -386,8 +384,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 <div>
                   <div className="font-semibold mb-2" style={{ color: 'var(--text-color)' }}>Explore</div>
                   <ul className="space-y-1">
-                    {/* NOTE: /offers is a UX hub (noindex, follow). Do not add to sitemap without SEO review. */}
-                    <li>
+                                        <li>
                       <Link href="/offers" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
                         All offers
                       </Link>
@@ -519,8 +516,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 style={{ backgroundColor: 'var(--border-color)' }}
               />
               <div className="mt-4 grid grid-cols-2 gap-3 text-center">
-                {/* NOTE: /offers is a UX hub (noindex, follow). Do not add to sitemap without SEO review. */}
-                <Link
+                                <Link
                   href="/offers"
                   onClick={() => setIsMobileFooterOpen(false)}
                   className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"

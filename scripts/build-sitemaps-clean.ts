@@ -28,10 +28,11 @@ const EXPECTED_COHORT_COUNT = 101;
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
 // NO BLOG. NO /whop/. NO dynamically discovered routes.
-// NOTE: /offers is intentionally EXCLUDED - it's a noindex UX hub, not a ranking target.
+// NOTE: /offers is intentionally EXCLUDED - noindex hub during launch phase.
+// Revisit in 4-6 weeks once individual pages have authority.
 const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changefreq: 'daily' },
-  // /offers intentionally excluded - noindex hub page, discoverable via nav only
+  // /offers excluded - noindex hub page, revisit post-launch
   { path: '/privacy', priority: 0.5, changefreq: 'yearly' },
   { path: '/terms', priority: 0.5, changefreq: 'yearly' },
   { path: '/contact', priority: 0.6, changefreq: 'monthly' },

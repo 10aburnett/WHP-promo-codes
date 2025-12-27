@@ -7,8 +7,8 @@ export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidate every hour
 
 // NOTE: /offers is a UX hub (noindex, follow).
-// Do not add to sitemap or convert to indexable page without SEO review.
-// This prevents thin hub cannibalisation of leaf pages during launch.
+// Revisit indexability in 4-6 weeks once individual pages have authority.
+// This prevents hub cannibalization of leaf pages during launch phase.
 export const metadata: Metadata = {
   title: 'All Promo Codes & Offers | DigitalPromoCodes',
   description: 'Browse our complete directory of verified promo codes and exclusive offers. Find discounts on courses, trading tools, and digital products.',
