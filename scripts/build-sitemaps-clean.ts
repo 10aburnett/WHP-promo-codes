@@ -32,6 +32,7 @@ const EXPECTED_COHORT_COUNT = 101;
 // Revisit in 4-6 weeks once individual pages have authority.
 const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changefreq: 'daily' },
+  { path: '/about', priority: 0.7, changefreq: 'monthly' },
   // /offers excluded - noindex hub page, revisit post-launch
   { path: '/privacy', priority: 0.5, changefreq: 'yearly' },
   { path: '/terms', priority: 0.5, changefreq: 'yearly' },

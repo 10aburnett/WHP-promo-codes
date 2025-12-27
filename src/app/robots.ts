@@ -27,7 +27,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/', '/_next/', '/static/'],
       },
     ],
-    // Always use canonical domain for sitemap
-    sitemap: `${SITE_URL}/sitemap-index.xml`,
+    // Always use canonical domain for sitemap (matches GSC submission)
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }
