@@ -335,7 +335,8 @@ async function main() {
   const staticEntries: string[] = [];
 
   for (const route of STATIC_ROUTES) {
-    const url = route.path === '/' ? SITE_URL : `${SITE_URL}${route.path}`;
+    // Homepage needs trailing slash to match Google's crawled URL
+    const url = route.path === '/' ? `${SITE_URL}/` : `${SITE_URL}${route.path}`;
     staticUrls.push(url);
     staticEntries.push(generateUrlEntry(
       url,

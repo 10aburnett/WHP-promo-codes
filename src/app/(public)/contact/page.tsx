@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: {
-// PHASE1-DEINDEX:     canonical: `${siteOrigin()}/contact`,
+    canonical: 'https://digitalpromocodes.com/contact',
   },
   robots: {
     index: true,

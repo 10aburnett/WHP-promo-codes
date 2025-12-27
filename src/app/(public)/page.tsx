@@ -240,7 +240,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: {
-      // PHASE1-DEINDEX:       canonical: absoluteUrl('/')
+      canonical: 'https://digitalpromocodes.com/',
     },
     robots: {
       index: true,

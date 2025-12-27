@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description,
   keywords: 'about, promo codes, digital products, software discounts, affiliate disclosure, offer verification',
   alternates: {
-// PHASE1-DEINDEX:     canonical: `${siteOrigin()}/about`,
+    canonical: 'https://digitalpromocodes.com/about',
   },
   robots: {
     index: true,
