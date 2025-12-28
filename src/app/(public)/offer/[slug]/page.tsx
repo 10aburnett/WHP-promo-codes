@@ -49,7 +49,7 @@ import ServerSectionGuard from '@/components/ServerSectionGuard';
 import { djb2 } from '@/lib/hydration-debug';
 import 'server-only';
 import { jsonLdScript } from '@/lib/jsonld';
-import { buildPrimaryEntity, buildBreadcrumbList, buildOffers, buildFAQ, buildHowTo, buildItemList, buildReviews } from '@/lib/buildSchema';
+import { buildPrimaryEntity, buildBreadcrumbList, buildOffers, buildFAQ, buildHowTo, buildReviews } from '@/lib/buildSchema';
 import type { OfferViewModel } from '@/lib/buildSchema';
 import { getOfferViewModel } from './vm';
 import { LOCALES, isLocaleEnabled, getSchemaLocale } from '@/lib/schema-locale';
@@ -715,22 +715,17 @@ export default async function DealPage({ params }: { params: { slug: string } })
       const faqNode = buildFAQ(vm);     // undefined if no visible FAQ
       const howtoNode = buildHowTo(vm); // undefined if no real steps
 
-      // Step 5: Build ItemList schemas for recommendations and alternatives
-      const recommendedNode  = buildItemList('recommended',  vm.recommendedUrls, vm.url);
-      const alternativesNode = buildItemList('alternatives', vm.alternativeUrls, vm.url);
+      // NOTE: ItemList schemas for recommendations/alternatives removed - they're optional
+      // and were causing "Multiple ListItem elements" validation errors in GSC.
+      // The visual carousels still work; they just don't have structured data.
 
-      jsonLdSchemas = [primary, breadcrumbs, faqNode, howtoNode, recommendedNode, alternativesNode].filter(Boolean);
+      jsonLdSchemas = [primary, breadcrumbs, faqNode, howtoNode].filter(Boolean);
 
       // Log schema emission (one-line, prod-only)
       console.info('[schema-log-probe]', process.env.NODE_ENV, process.env.LOG_SCHEMA);
       if (process.env.NODE_ENV === 'production' && process.env.LOG_SCHEMA === '1') {
         const nodeLabels = jsonLdSchemas.map(n => {
           const t = (n as any)['@type'];
-          if (t === 'ItemList') {
-            const id = String((n as any)['@id'] || '');
-            if (id.endsWith('#recommended')) return 'ItemList(reco)';
-            if (id.endsWith('#alternatives')) return 'ItemList(alt)';
-          }
           return Array.isArray(t) ? t[0] : t; // handle array @type defensively
         });
 

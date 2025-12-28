@@ -43,7 +43,6 @@ function getFaqAnswerType(answerText: string): { text: string; isHtml: boolean }
 
 export default function FAQSectionServer({ faqs = [], faqContent, whopName, compact = false }: FAQSectionServerProps) {
   let displayFaqs: Array<{ question: string; answer: string; isHtml: boolean }> = [];
-  let jsonLd: any = null;
 
   // Priority 1: Use structured FAQ content if available
   if (faqContent && faqContent.trim() !== '') {
@@ -60,20 +59,8 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName, comp
         };
       });
 
-      // Generate JSON-LD for structured FAQs (use plain text for schema)
-      jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: parsed.map(faq => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            // For JSON-LD, always use plain text
-            text: toPlainText(faq.answerHtml)
-          }
-        }))
-      };
+      // NOTE: JSON-LD for FAQPage is handled by buildFAQ() in buildSchema.ts
+      // (which adds @id and inLanguage). Do NOT duplicate here.
     } else if (typeof parsed === 'string') {
       // Legacy text content
       displayFaqs = [{
@@ -111,16 +98,7 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName, comp
   // Compact mode: sidebar-friendly with smaller padding and fonts
   if (compact) {
     return (
-      <>
-        {/* JSON-LD for structured FAQs - only in compact mode since it's in sidebar */}
-        {jsonLd && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          />
-        )}
-
-        <section
+      <section
           className="dpc-faq-card rounded-3xl border p-4 sm:p-5 transition-theme"
           style={{
             backgroundColor: 'var(--background-secondary)',
@@ -184,24 +162,14 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName, comp
             ))}
           </div>
         </section>
-      </>
     );
   }
 
   // Standard mode: full-width FAQ section
   return (
-    <>
-      {/* JSON-LD for structured FAQs */}
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-
-      <section
-        className="dpc-faq-card rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
-        style={{
+    <section
+      className="dpc-faq-card rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
+      style={{
           backgroundColor: 'var(--background-secondary)',
           borderColor: 'var(--border-color)',
         }}
@@ -272,6 +240,5 @@ export default function FAQSectionServer({ faqs = [], faqContent, whopName, comp
           ))}
         </div>
       </section>
-    </>
   );
 }
