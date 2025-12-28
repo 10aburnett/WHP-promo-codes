@@ -97,43 +97,51 @@ export async function getOfferViewModel(slug: string, localeParam?: string): Pro
   let currency: string | null = null;
 
   // Parse price string to extract numeric value and currency
+  // IMPORTANT: Only set price if we have a REAL monetary value, not just "15% off"
   if (priceStr && priceStr !== 'N/A' && priceStr !== 'Free') {
-    // Extract currency from price string (e.g., "$99/month" -> USD, "£49" -> GBP)
-    if (priceStr.includes('$')) {
-      currency = 'USD';
-    } else if (priceStr.includes('£')) {
-      currency = 'GBP';
-    } else if (priceStr.includes('€')) {
-      currency = 'EUR';
-    } else {
-      currency = 'USD'; // Default fallback
-    }
+    // Check if this is a percentage-only string (no real price)
+    const isPercentageOnly = /^\d+%\s*(off)?$/i.test(priceStr.trim());
 
-    // Extract numeric price (handle formats like "$99", "$99/month", "£49.99")
-    const priceMatch = priceStr.match(/[\d,]+\.?\d*/);
-    if (priceMatch) {
-      const numStr = priceMatch[0].replace(',', '');
-      const parsedPrice = parseFloat(numStr);
-      if (!isNaN(parsedPrice)) {
-        price = parsedPrice;
+    // Only extract price if we have a currency symbol (indicates real monetary value)
+    const hasCurrency = priceStr.includes('$') || priceStr.includes('£') || priceStr.includes('€');
 
-        // Check if there's a promo discount from the first promo code
-        const firstPromo = offerFormatted.promoCodes?.[0];
-        if (firstPromo?.value && firstPromo.value !== '0') {
-          const discount = parseFloat(firstPromo.value);
-          if (!isNaN(discount)) {
-            // Calculate promo price (assuming percentage discount)
-            if (firstPromo.value.includes('%') || !firstPromo.value.includes('$')) {
-              promoPrice = price * (1 - discount / 100);
-            } else {
-              // Fixed discount amount
-              promoPrice = price - discount;
+    if (hasCurrency && !isPercentageOnly) {
+      // Extract currency from price string (e.g., "$99/month" -> USD, "£49" -> GBP)
+      if (priceStr.includes('$')) {
+        currency = 'USD';
+      } else if (priceStr.includes('£')) {
+        currency = 'GBP';
+      } else if (priceStr.includes('€')) {
+        currency = 'EUR';
+      }
+
+      // Extract numeric price (handle formats like "$99", "$99/month", "£49.99")
+      const priceMatch = priceStr.match(/[\d,]+\.?\d*/);
+      if (priceMatch) {
+        const numStr = priceMatch[0].replace(',', '');
+        const parsedPrice = parseFloat(numStr);
+        if (!isNaN(parsedPrice) && parsedPrice > 0) {
+          price = parsedPrice;
+
+          // Check if there's a promo discount from the first promo code
+          const firstPromo = offerFormatted.promoCodes?.[0];
+          if (firstPromo?.value && firstPromo.value !== '0') {
+            const discount = parseFloat(firstPromo.value);
+            if (!isNaN(discount) && discount > 0 && discount < 100) {
+              // Calculate promo price (assuming percentage discount)
+              if (firstPromo.value.includes('%') || !firstPromo.value.includes('$')) {
+                promoPrice = Math.round(price * (1 - discount / 100) * 100) / 100;
+              } else {
+                // Fixed discount amount
+                promoPrice = price - discount;
+              }
+              if (promoPrice < 0) promoPrice = null; // Invalid promo price
             }
-            if (promoPrice < 0) promoPrice = 0;
           }
         }
       }
     }
+    // If no currency symbol or percentage-only, leave price as null (won't output Offers schema)
   } else if (priceStr === 'Free') {
     price = 0;
     currency = 'USD';

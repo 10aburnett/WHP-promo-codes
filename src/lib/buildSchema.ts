@@ -140,9 +140,10 @@ export function buildBreadcrumbList(vm: OfferViewModel) {
 export function buildOffers(vm: OfferViewModel) {
   const offers: any[] = [];
 
-  // Guard: need currency + at least one visible price
-  const hasRegular = vm.price != null && vm.currency;
-  const hasPromo   = vm.promoPrice != null && vm.currency;
+  // Guard: need currency + at least one visible NUMERIC price
+  // Price must be a number (not string like "15% off")
+  const hasRegular = vm.price != null && typeof vm.price === 'number' && vm.currency;
+  const hasPromo   = vm.promoPrice != null && typeof vm.promoPrice === 'number' && vm.currency;
 
   if (!hasRegular && !hasPromo) return undefined;
 

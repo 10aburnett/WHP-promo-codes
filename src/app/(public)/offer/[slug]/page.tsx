@@ -500,12 +500,20 @@ export default async function DealPage({ params }: { params: { slug: string } })
 
   // These are removed from critical path - will be fetched client-side:
   // - getVerificationData (not critical for first paint)
-  // - getOfferViewModel (schema can be built from finalOfferData)
   // - RecommendedSection/AlternativesSection (moved to Suspense)
 
-  // Null placeholders for removed server calls
-  const vm = null; // Schema will use minimal data from finalOfferData
-  const verificationData = null; // Loaded client-side if needed
+  // Null placeholder for verification data (loaded client-side if needed)
+  const verificationData = null;
+
+  // Build view model for JSON-LD schema (required for SEO - Product schema)
+  let vm = null;
+  if (finalOfferData) {
+    try {
+      vm = await getOfferViewModel(dbSlug);
+    } catch (e) {
+      console.warn('[SCHEMA] Failed to build view model:', e);
+    }
+  }
 
   // Fetch usage stats server-side for SEO (Googlebot needs to see this)
   const usageStats = await getPromoStatsForSlug(dbSlug);
