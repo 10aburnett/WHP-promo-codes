@@ -336,48 +336,19 @@ export default async function Home({
     },
   };
 
+  // Simple ItemList with URLs only - individual offer pages have full Product schemas
+  // This avoids duplicate/invalid Product schemas on homepage
   const offersSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     '@id': `${siteUrl}#dpc-featured-list`,
-    name: `Highlighted Digital Offers ${currentYear}`,
+    name: `Featured Digital Offers ${currentYear}`,
     description: `A curated selection of digital product discounts available in ${currentYear}`,
-    numberOfItems: data.total,
+    numberOfItems: Math.min(data.items.length, 10),
     itemListElement: data.items.slice(0, 10).map((whop, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      item: {
-        '@type': 'Product',
-        name: whop.name,
-        description: whop.description,
-        url: offerAbsoluteUrl(whop.slug.toLowerCase()),
-        image: whop.logo,
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: whop.rating,
-          bestRating: 5,
-          worstRating: 1,
-        },
-        offers: whop.promoCodes.map((promo) => ({
-          '@type': 'Offer',
-          name: promo.title,
-          description: promo.description,
-          url: offerAbsoluteUrl(whop.slug.toLowerCase()),
-          availability: 'https://schema.org/InStock',
-          validFrom: new Date().toISOString(),
-          priceSpecification: {
-            '@type': 'PriceSpecification',
-            price:
-              promo.value && promo.value !== '0'
-                ? promo.value.includes('$') ||
-                  promo.value.includes('%') ||
-                  promo.value.includes('off')
-                  ? promo.value
-                  : `${promo.value}% off`
-                : 'Promotional access',
-          },
-        })),
-      },
+      url: offerAbsoluteUrl(whop.slug.toLowerCase()),
     })),
   };
 
