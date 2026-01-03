@@ -233,8 +233,8 @@ async function getPagedWhops({
 // Metadata for SEO
 export async function generateMetadata(): Promise<Metadata> {
   const currentYear = new Date().getFullYear();
-  const title = `Promo Codes for Online Courses & Memberships | ${SITE_BRAND}`; // 64 chars
-  const description = `Browse promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`;
+  const title = `Whop Promo Codes for Online Courses & Memberships ${currentYear}`;
+  const description = `Browse Whop promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`;
 
   return {
     title,
