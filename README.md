@@ -2,7 +2,7 @@
 
 A modern web application for discovering and comparing cryptocurrency casino bonuses. Built with Next.js, TypeScript, and Tailwind CSS.
 
-<!-- Deployment trigger: Phase 1 NOINDEX deindexing deployed 2025-11-16 -->
+<!-- Deployment trigger: whoppromocodes.com launch 2025-01-03 -->
 
 ## 🔒 Golden Playbooks (Do This, Not That)
 
