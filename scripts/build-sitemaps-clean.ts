@@ -256,8 +256,8 @@ async function main() {
   }
 
   // Remove any legacy sitemap files from public/
+  // Note: sitemap.xml is NOT in this list because the script generates it
   const legacyFiles = [
-    'sitemap.xml',
     'sitemap-index.xml',
     'sitemap-whops-1.xml',
     'sitemap-static.xml',
@@ -354,16 +354,16 @@ async function main() {
   writeFileSync(join(publicDir, 'sitemap-static.xml'), staticSitemap);
   console.log(`   ✅ Generated sitemap-static.xml with ${staticEntries.length} URLs\n`);
 
-  // Step 6: Generate sitemap index
-  console.log('📝 Generating sitemap-index.xml...');
+  // Step 6: Generate sitemap index (as sitemap.xml for GSC compatibility)
+  console.log('📝 Generating sitemap.xml (index)...');
 
   const sitemapIndex = generateSitemapIndex([
     `${SITE_URL}/sitemap-offers.xml`,
     `${SITE_URL}/sitemap-static.xml`,
   ]);
 
-  writeFileSync(join(publicDir, 'sitemap-index.xml'), sitemapIndex);
-  console.log('   ✅ Generated sitemap-index.xml referencing 2 sitemaps\n');
+  writeFileSync(join(publicDir, 'sitemap.xml'), sitemapIndex);
+  console.log('   ✅ Generated sitemap.xml referencing 2 sitemaps\n');
 
   // Step 7: Final assertions
   console.log('🔒 Running final assertions...');
@@ -376,7 +376,7 @@ async function main() {
   console.log('═══════════════════════════════════════');
   console.log('');
   console.log('Generated files:');
-  console.log(`  • public/sitemap-index.xml (2 sitemaps)`);
+  console.log(`  • public/sitemap.xml (index, 2 sitemaps)`);
   console.log(`  • public/sitemap-offers.xml (${offerEntries.length} URLs)`);
   console.log(`  • public/sitemap-static.xml (${staticEntries.length} URLs)`);
   console.log('');
