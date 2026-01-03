@@ -29,7 +29,7 @@ export async function GET() {
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: 'whoppromocodescontact@gmail.com',
+        user: 'whoppromocodes@gmail.com',
         clientId: process.env.GMAIL_CLIENT_ID,
         clientSecret: process.env.GMAIL_CLIENT_SECRET,
         refreshToken: process.env.GMAIL_REFRESH_TOKEN,

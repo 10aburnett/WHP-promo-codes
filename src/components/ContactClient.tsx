@@ -308,11 +308,11 @@ export default function ContactClient() {
                       {t('contact.emailSupport')}
                     </h3>
                     <a
-                      href="mailto:whoppromocodescontact@gmail.com"
+                      href="mailto:whoppromocodes@gmail.com"
                       className="text-sm hover:opacity-80 transition-opacity"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      whoppromocodescontact@gmail.com
+                      whoppromocodes@gmail.com
                     </a>
                   </div>
                 </div>

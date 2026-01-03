@@ -92,7 +92,7 @@ const legalPages = [
 <div class="section">
   <h2>Contact Us</h2>
   <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
-  <p>Email: <a href="mailto:whoppromocodescontact@gmail.com">whoppromocodescontact@gmail.com</a></p>
+  <p>Email: <a href="mailto:whoppromocodes@gmail.com">whoppromocodes@gmail.com</a></p>
   <p>Website: <a href="../contact">Contact Form</a></p>
 </div>
 `
@@ -141,7 +141,7 @@ const legalPages = [
 <div class="section">
   <h2>Contact Information</h2>
   <p>If you have any questions about these Terms of Service, please contact us:</p>
-  <p>Email: <a href="mailto:whoppromocodescontact@gmail.com">whoppromocodescontact@gmail.com</a></p>
+  <p>Email: <a href="mailto:whoppromocodes@gmail.com">whoppromocodes@gmail.com</a></p>
   <p>Website: <a href="../contact">Contact Form</a></p>
 </div>
 `

@@ -47,4 +47,4 @@ export const SOCIAL_HANDLES = {
 /**
  * Contact email
  */
-export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'whoppromocodescontact@gmail.com';
+export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'whoppromocodes@gmail.com';
