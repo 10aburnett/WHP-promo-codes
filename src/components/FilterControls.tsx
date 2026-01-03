@@ -63,7 +63,7 @@ export default function FilterControls({
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
             <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: 'var(--text-muted)' }}>
-              Browse digital offers
+              Browse Whop offers
             </p>
             <p className="text-xs md:text-sm" style={{ color: 'var(--text-secondary)' }}>
               Filter by category or sort to find the right deal faster.
@@ -97,7 +97,7 @@ export default function FilterControls({
               id="main-search-input"
               name="search"
               type="search"
-              placeholder="Find digital products and deals"
+              placeholder="Find Whop products and deals"
               defaultValue={filters.searchTerm}
               onChange={
                 submitMode === 'auto'

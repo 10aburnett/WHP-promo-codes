@@ -78,7 +78,7 @@ export default function AboutPage() {
               About this platform
             </span>
             <h1 className="text-3xl md:text-4xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
-              A structured way to find digital discounts
+              A structured way to find Whop discounts
             </h1>
             <p className="text-lg max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
               We track promotional deals for software, online courses, and membership communities, presenting clear pricing information and straightforward affiliate disclosures.
@@ -91,11 +91,11 @@ export default function AboutPage() {
             {/* LEFT: Mission Narrative */}
             <div className="space-y-8">
               <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Locating reliable discounts for digital products often takes longer than it should. Codes lapse, conditions are revised, and many deal pages are never updated. {SITE_BRAND} exists to reduce that friction.
+                Locating reliable discounts for Whop products often takes longer than it should. Codes lapse, conditions are revised, and many deal pages are never updated. {SITE_BRAND} exists to reduce that friction.
               </p>
 
               <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                We maintain a large catalogue of current digital offers. Each entry is designed to show the live price, any available reduction, and a concise overview of the product or service behind the code.
+                We maintain a large catalogue of current Whop offers. Each entry is designed to show the live price, any available reduction, and a concise overview of the product or service behind the code.
               </p>
 
               {/* Horizontal Mission Banner */}
@@ -245,6 +245,16 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+          </section>
+
+          {/* Disclaimer */}
+          <section className="mb-12 p-6 rounded-lg" style={{ backgroundColor: 'var(--background-secondary)', borderLeft: '4px solid var(--accent-color)' }}>
+            <h2 className="text-base font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+              Disclaimer
+            </h2>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              {SITE_BRAND} is an independent project and is <strong>not officially affiliated with, endorsed by, or sponsored by Whop Inc.</strong> or any of its subsidiaries. &quot;Whop&quot; is a trademark of Whop Inc. We are an independent affiliate directory that aggregates publicly available promo codes and offers for products sold on the Whop marketplace. All product names, logos, and brands are property of their respective owners.
+            </p>
           </section>
 
           {/* Footer Links */}

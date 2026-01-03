@@ -63,10 +63,10 @@ export default async function BlogPage() {
                     WhopPromoCodes Insights
                   </p>
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                    Guides, updates & playbooks for smarter digital spending.
+                    Guides, updates & playbooks for smarter Whop spending.
                   </h1>
                   <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                    Long-form guides and analysis on digital products, online communities and promo tactics from the team behind WhopPromoCodes.
+                    Long-form guides and analysis on Whop products, online communities and promo tactics from the team behind WhopPromoCodes.
                   </p>
                 </div>
 
@@ -75,10 +75,10 @@ export default async function BlogPage() {
                   style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
                 >
                   <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                    Stay ahead of new digital offers
+                    Stay ahead of new Whop offers
                   </h2>
                   <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                    Occasional roundups of new digital products, notable promo codes and strategy breakdowns. No clutter or spam.
+                    Occasional roundups of new Whop products, notable promo codes and strategy breakdowns. No clutter or spam.
                   </p>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                     New articles are usually published a few times each month.
@@ -152,10 +152,10 @@ export default async function BlogPage() {
                   WhopPromoCodes Insights
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                  Guides, updates & playbooks for smarter digital spending.
+                  Guides, updates & playbooks for smarter Whop spending.
                 </h1>
                 <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind WhopPromoCodes.
+                  Long-form guides and analysis on Whop products, online communities and promo tactics from the team behind WhopPromoCodes.
                 </p>
               </div>
 
@@ -164,10 +164,10 @@ export default async function BlogPage() {
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Stay ahead of new digital offers
+                  Stay ahead of new Whop offers
                 </h2>
                 <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Occasional roundups of new digital products, notable promo codes and strategy breakdowns. No clutter or spam.
+                  Occasional roundups of new Whop products, notable promo codes and strategy breakdowns. No clutter or spam.
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                   New articles are usually published a few times each month.
@@ -280,10 +280,10 @@ export default async function BlogPage() {
                   WhopPromoCodes Insights
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
-                  Guides, updates & playbooks for smarter digital spending.
+                  Guides, updates & playbooks for smarter Whop spending.
                 </h1>
                 <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind WhopPromoCodes.
+                  Long-form guides and analysis on Whop products, online communities and promo tactics from the team behind WhopPromoCodes.
                 </p>
               </div>
 
@@ -292,10 +292,10 @@ export default async function BlogPage() {
                 style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
               >
                 <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Stay ahead of new digital offers
+                  Stay ahead of new Whop offers
                 </h2>
                 <p className="text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
-                  Occasional roundups of new digital products, notable promo codes and strategy breakdowns. No clutter or spam.
+                  Occasional roundups of new Whop products, notable promo codes and strategy breakdowns. No clutter or spam.
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                   New articles are usually published a few times each month.

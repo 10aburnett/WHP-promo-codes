@@ -82,14 +82,14 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 aria-label={`${SITE_BRAND} home`}
               >
                 <span className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--accent-color)' }}>
-                  Digital
+                  Whop
                 </span>
                 <span className="text-xl md:text-2xl font-semibold" style={{ color: 'var(--text-color)' }}>
                   PromoCodes
                 </span>
               </Link>
               <p className="hidden md:block mt-0.5 text-xs" style={{ color: 'var(--text-secondary)' }}>
-                Verified promo codes for digital tools, courses &amp; memberships.
+                Verified Whop promo codes for digital tools, courses &amp; memberships.
               </p>
             </div>
 
@@ -263,7 +263,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                     className="flex items-baseline gap-0.5"
                   >
                     <span className="text-xl font-semibold" style={{ color: 'var(--accent-color)' }}>
-                      Digital
+                      Whop
                     </span>
                     <span className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>
                       PromoCodes
@@ -372,10 +372,10 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
               {/* Brand + description */}
               <div className="max-w-sm">
                 <div className="text-base font-semibold mb-1" style={{ color: 'var(--text-color)' }}>
-                  <span style={{ color: 'var(--accent-color)' }}>Digital</span>PromoCodes
+                  <span style={{ color: 'var(--accent-color)' }}>Whop</span>PromoCodes
                 </div>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  Curated promo codes and offers for digital tools, courses, and communities.
+                  Curated Whop promo codes and offers for digital tools, courses, and communities.
                 </p>
               </div>
 
@@ -467,7 +467,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 className="select-none text-base font-semibold tracking-tight"
                 aria-label={`${SITE_BRAND} home`}
               >
-                <span style={{ color: 'var(--accent-color)' }}>Digital</span>
+                <span style={{ color: 'var(--accent-color)' }}>Whop</span>
                 <span style={{ color: 'var(--text-color)' }}>PromoCodes</span>
               </Link>
 

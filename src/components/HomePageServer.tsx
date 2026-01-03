@@ -91,7 +91,7 @@ export default function HomePageServer({
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3"
               style={{ color: 'var(--text-color)', lineHeight: 1.1 }}
             >
-              Promo codes for digital tools, courses &amp; memberships.
+              Whop promo codes for digital tools, courses &amp; memberships.
             </h1>
             <p
               className="text-sm md:text-base max-w-2xl"
@@ -139,7 +139,7 @@ export default function HomePageServer({
             <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
               {total}
             </span>{' '}
-            digital offers
+            Whop offers
           </p>
 
           {/* Right: controls */}
@@ -277,7 +277,7 @@ export default function HomePageServer({
             <span className="font-semibold" style={{ color: 'var(--text-color)' }}>
               {total}
             </span>{' '}
-            digital offers
+            Whop offers
           </p>
 
           {/* Right: controls */}

@@ -248,7 +248,7 @@ export default function HomePage({ initialOffers, initialTotal, totalUsers, key 
   return (
     <div className="mx-auto w-[90%] md:w-[95%] max-w-[1280px] mt-[50px] md:mt-0">
       <h1 className="text-4xl font-bold text-center mt-2 mb-12">
-        <span style={{ color: 'var(--accent-color)' }}>Digital</span>
+        <span style={{ color: 'var(--accent-color)' }}>Whop</span>
         <span style={{ color: 'var(--text-color)' }}>PromoCodes</span>
         <span style={{ color: 'var(--text-color)' }}> - Promo Codes, Coupons & Discounts</span>
       </h1>

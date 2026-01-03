@@ -43,6 +43,11 @@ export const metadata: Metadata = {
 
 // Default content if not found in database
 const defaultTermsContent = `
+<div class="section" style="background-color: rgba(5,150,105,0.05); padding: 1rem; border-left: 4px solid #059669; margin-bottom: 1.5rem;">
+  <h2>Trademark Disclaimer</h2>
+  <p>WhopPromoCodes is an independent project and is <strong>not officially affiliated with, endorsed by, or sponsored by Whop Inc.</strong> or any of its subsidiaries. "Whop" is a trademark of Whop Inc. We are an independent affiliate directory that aggregates publicly available promo codes and offers for products sold on the Whop marketplace. All product names, logos, and brands are property of their respective owners.</p>
+</div>
+
 <div class="section">
   <h2>Agreement to Terms</h2>
           <p>By accessing and using this website ("we," "our," or "us"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
