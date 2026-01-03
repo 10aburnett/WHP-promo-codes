@@ -84,7 +84,7 @@ export default function AboutPage() {
               className="inline-block text-xs font-medium tracking-wider uppercase px-3 py-1 rounded-full mb-4"
               style={{ backgroundColor: 'rgba(22, 101, 52, 0.08)', color: 'var(--accent-color)' }}
             >
-              About DigitalPromoCodes
+              About WhopPromoCodes
             </span>
             <h1 className="text-3xl md:text-4xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>
               Verified savings for digital products
@@ -745,7 +745,7 @@ export default function UnsubscribePage() {
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             Need help?{' '}
             <a
-              href="mailto:digitalpromocodescontact@gmail.com"
+              href="mailto:whoppromocodescontact@gmail.com"
               className="hover:opacity-80 transition-opacity underline"
               style={{ color: 'var(--text-muted)' }}
             >
@@ -1043,11 +1043,11 @@ export default function ContactClient() {
                       {t('contact.emailSupportDesc')}
                     </p>
                     <a
-                      href="mailto:digitalpromocodescontact@gmail.com"
+                      href="mailto:whoppromocodescontact@gmail.com"
                       className="text-sm hover:opacity-80 transition-opacity"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      digitalpromocodescontact@gmail.com
+                      whoppromocodescontact@gmail.com
                     </a>
                   </div>
                 </div>

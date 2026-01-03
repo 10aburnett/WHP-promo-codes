@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: {
-    canonical: 'https://digitalpromocodes.com/contact',
+    canonical: 'https://whoppromocodes.com/contact',
   },
   robots: {
     index: true,

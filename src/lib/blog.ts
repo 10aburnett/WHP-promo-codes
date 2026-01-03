@@ -100,7 +100,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPostFull | nu
   };
 }
 
-/** Normalize admin blog post for DigitalPromoCodes blog listing */
+/** Normalize admin blog post for WhopPromoCodes blog listing */
 function normalizeAdminPost(p: any): AdminPost {
   return {
     id: p.id,

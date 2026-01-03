@@ -152,7 +152,7 @@ export default function UnsubscribePage() {
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             Questions?{' '}
             <a
-              href="mailto:digitalpromocodescontact@gmail.com"
+              href="mailto:whoppromocodescontact@gmail.com"
               className="hover:opacity-80 transition-opacity underline"
               style={{ color: 'var(--text-muted)' }}
             >

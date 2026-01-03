@@ -10,7 +10,7 @@ export const revalidate = 3600; // Revalidate every hour
 // Revisit indexability in 4-6 weeks once individual pages have authority.
 // This prevents hub cannibalization of leaf pages during launch phase.
 export const metadata: Metadata = {
-  title: 'All Promo Codes & Offers | DigitalPromoCodes',
+  title: 'All Promo Codes & Offers | WhopPromoCodes',
   description: 'Browse our complete directory of verified promo codes and exclusive offers. Find discounts on courses, trading tools, and digital products.',
   robots: {
     index: false,

@@ -240,7 +240,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: {
-      canonical: 'https://digitalpromocodes.com/',
+      canonical: 'https://whoppromocodes.com/',
     },
     robots: {
       index: true,

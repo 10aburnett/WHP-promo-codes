@@ -12,7 +12,7 @@
  * NO chunked sitemaps.
  * NO dynamic discovery of static routes.
  *
- * This is the CANONICAL sitemap generation script for digitalpromocodes.com launch.
+ * This is the CANONICAL sitemap generation script for whoppromocodes.com launch.
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -22,7 +22,7 @@ import { join } from 'path';
 const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
-const SITE_URL = 'https://digitalpromocodes.com';
+const SITE_URL = 'https://whoppromocodes.com';
 const EXPECTED_COHORT_COUNT = 101;
 
 // === STATIC ROUTES ALLOWLIST ===

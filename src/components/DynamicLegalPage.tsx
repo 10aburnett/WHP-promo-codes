@@ -83,7 +83,7 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
 
   // Key points for sidebar
   const privacyKeyPoints = [
-    'We only collect information necessary to operate DigitalPromoCodes.',
+    'We only collect information necessary to operate WhopPromoCodes.',
     'We never sell your personal data to third parties.',
     'You can request access, correction, or deletion of your information.',
     'We use industry-standard security practices to safeguard your data.',
@@ -100,7 +100,7 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
 
   // Summary text for hero
   const privacySummary = 'How we collect, use, and protect your information when you use our platform.';
-  const termsSummary = 'The rules and guidelines for using DigitalPromoCodes and our affiliate services.';
+  const termsSummary = 'The rules and guidelines for using WhopPromoCodes and our affiliate services.';
   const summaryText = isPrivacyPage ? privacySummary : termsSummary;
 
   return (
@@ -167,7 +167,7 @@ export default function DynamicLegalPage({ title, content, lastUpdated }: Dynami
               className="text-[11px] md:text-xs"
               style={{ color: 'var(--text-muted)' }}
             >
-              Please read this page carefully before using DigitalPromoCodes.
+              Please read this page carefully before using WhopPromoCodes.
             </p>
           </div>
         </section>

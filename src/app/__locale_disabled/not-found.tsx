@@ -5,7 +5,7 @@ export default function NotFound() {
     <ErrorState
       variant="not-found"
       title="We couldn't find that page"
-      description="This link doesn't match any promo or product on DigitalPromoCodes. It might have moved, expired, or never existed."
+      description="This link doesn't match any promo or product on WhopPromoCodes. It might have moved, expired, or never existed."
       primaryCta={{ href: '/', label: 'Back to homepage' }}
       secondaryCta={{ href: '/blog', label: 'Read our blog' }}
     />

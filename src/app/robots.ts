@@ -1,9 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/brand';
 
-// Production robots.txt for DigitalPromoCodes
+// Production robots.txt for WhopPromoCodes
 // Env-based: blocks indexing on non-production Vercel deployments (preview, dev aliases)
-// Uses VERCEL env vars which are available at build time - no dynamic needed
 
 export default function robots(): MetadataRoute.Robots {
   // VERCEL === '1' on all Vercel deployments
@@ -14,7 +13,6 @@ export default function robots(): MetadataRoute.Robots {
   if (isVercelPreview) {
     return {
       rules: [{ userAgent: '*', disallow: '/' }],
-      // No sitemap on preview - prevents accidental discovery
     };
   }
 
@@ -27,7 +25,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/', '/_next/', '/static/'],
       },
     ],
-    // Always use canonical domain for sitemap (matches GSC submission)
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

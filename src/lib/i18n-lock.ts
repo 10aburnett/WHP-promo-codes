@@ -115,7 +115,7 @@ export function shouldIncludeHreflang(): boolean {
 /**
  * Get the canonical URL (always EN, no locale prefix)
  */
-export function getCanonicalUrl(path: string, baseUrl: string = 'https://digitalpromocodes.com'): string {
+export function getCanonicalUrl(path: string, baseUrl: string = 'https://whoppromocodes.com'): string {
   // Strip any locale prefix from the path
   const locale = getLocaleFromPathname(path);
   let cleanPath = path;

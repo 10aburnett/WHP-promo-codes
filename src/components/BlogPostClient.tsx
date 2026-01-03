@@ -86,7 +86,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em]"
                 style={{ color: 'var(--accent-color)' }}
               >
-                DigitalPromoCodes blog
+                WhopPromoCodes blog
               </p>
 
               <h1

@@ -1,7 +1,7 @@
-# DigitalPromoCodes Fingerprint Reset - Static Pages & Forms
+# WhopPromoCodes Fingerprint Reset - Static Pages & Forms
 
 ## Context
-We're rebranding DigitalPromoCodes.com and need to completely redesign the following sections to remove any old layout fingerprints and create a fresh, unique visual identity. The site uses:
+We're rebranding WhopPromoCodes.com and need to completely redesign the following sections to remove any old layout fingerprints and create a fresh, unique visual identity. The site uses:
 - Next.js 14 App Router
 - Tailwind CSS
 - CSS Variables for theming (e.g., `var(--accent-color)`, `var(--background-secondary)`, etc.)
@@ -753,11 +753,11 @@ export default function ContactClient() {
                       {t('contact.emailSupportDesc')}
                     </p>
                     <a
-                      href="mailto:digitalpromocodescontact@gmail.com"
+                      href="mailto:whoppromocodescontact@gmail.com"
                       className="transition-colors duration-200 hover:opacity-80"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      digitalpromocodescontact@gmail.com
+                      whoppromocodescontact@gmail.com
                     </a>
                   </div>
                 </div>
@@ -777,11 +777,11 @@ export default function ContactClient() {
                       {t('contact.businessInquiriesDesc')}
                     </p>
                     <a
-                      href="mailto:digitalpromocodescontact@gmail.com"
+                      href="mailto:whoppromocodescontact@gmail.com"
                       className="transition-colors duration-200 hover:opacity-80"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      digitalpromocodescontact@gmail.com
+                      whoppromocodescontact@gmail.com
                     </a>
                   </div>
                 </div>
@@ -997,11 +997,11 @@ export default function UnsubscribePage() {
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
               Having trouble? Contact us at{' '}
               <a
-                href="mailto:digitalpromocodescontact@gmail.com"
+                href="mailto:whoppromocodescontact@gmail.com"
                 className="hover:opacity-80 transition-opacity"
                 style={{ color: 'var(--accent-color)' }}
               >
-                digitalpromocodescontact@gmail.com
+                whoppromocodescontact@gmail.com
               </a>
             </p>
           </div>
@@ -2094,4 +2094,4 @@ Please provide a complete redesign for all these pages that:
 4. Maintains the CSS variable theming system
 5. Uses the deep green (#166534) accent color appropriately
 6. Creates a cohesive but distinct visual identity for each section
-7. Updates all copy to be DigitalPromoCodes-focused (digital products, verified promo codes, savings)
+7. Updates all copy to be WhopPromoCodes-focused (digital products, verified promo codes, savings)

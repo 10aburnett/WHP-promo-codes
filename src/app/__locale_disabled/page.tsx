@@ -134,14 +134,14 @@ export default async function LocalizedHome({ params }: { params: { locale: stri
       <Script id="homepage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        'name': `DigitalPromoCodes - Best Promo Codes ${currentYear}`,
+        'name': `WhopPromoCodes - Best Promo Codes ${currentYear}`,
         'description': `Discover the best promo codes and digital product discounts in ${currentYear}. Our expertly curated list includes trusted digital products offering exclusive access, courses, communities, and more.`,
-        'url': 'https://digitalpromocodes.com',
+        'url': 'https://whoppromocodes.com',
         'potentialAction': {
           '@type': 'SearchAction',
           'target': {
             '@type': 'EntryPoint',
-            'urlTemplate': 'https://digitalpromocodes.com/?searchTerm={search_term_string}'
+            'urlTemplate': 'https://whoppromocodes.com/?searchTerm={search_term_string}'
           },
           'query-input': 'required name=search_term_string'
         }
@@ -151,8 +151,8 @@ export default async function LocalizedHome({ params }: { params: { locale: stri
       <Script id="organization-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        'name': 'DigitalPromoCodes',
-        'url': 'https://digitalpromocodes.com',
+        'name': 'WhopPromoCodes',
+        'url': 'https://whoppromocodes.com',
         'logo': '/logo.png',
         'description': `We review and compare the best promo codes and digital product discounts in ${currentYear}.`,
         'sameAs': []
@@ -191,7 +191,7 @@ export default async function LocalizedHome({ params }: { params: { locale: stri
             </div>
             
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r bg-clip-text text-transparent leading-tight py-2" style={{ backgroundImage: `linear-gradient(to right, var(--text-color), var(--text-secondary))` }}>
-              DigitalPromoCodes
+              WhopPromoCodes
             </h2>
             
             <p className="max-w-3xl mx-auto text-lg md:text-xl leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>

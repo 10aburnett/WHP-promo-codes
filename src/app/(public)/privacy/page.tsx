@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: `Privacy Policy - ${SITE_BRAND}`,
   description: `Understand how ${SITE_BRAND} handles your data when you browse our promo code directory and use site features.`,
   alternates: {
-    canonical: 'https://digitalpromocodes.com/privacy',
+    canonical: 'https://whoppromocodes.com/privacy',
   },
   robots: {
     index: true,

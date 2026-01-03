@@ -85,13 +85,11 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ['/og.png'],
     },
     robots: {
-      index: false,
-      follow: false,
-      nocache: true,
+      index: true,
+      follow: true,
       googleBot: {
-        index: false,
-        follow: false,
-        noimageindex: false,
+        index: true,
+        follow: true,
       },
     },
     verification: {

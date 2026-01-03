@@ -118,7 +118,7 @@ export function middleware(request: NextRequest) {
   }
 
   // ========================================
-  // PRODUCTION MODE: Normal SEO handling for DigitalPromoCodes
+  // PRODUCTION MODE: Normal SEO handling for WhopPromoCodes
   // ========================================
 
   // SEO LOGIC FIRST (for offer routes)

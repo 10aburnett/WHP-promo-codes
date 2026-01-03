@@ -44,7 +44,7 @@ async function generateStaticSitemaps() {
     }
 
     const totalPages = Math.ceil(filteredWhops.length / WHOPS_PER_SITEMAP);
-    const baseUrl = 'https://digitalpromocodes.com';
+    const baseUrl = 'https://whoppromocodes.com';
     const publicDir = path.join(process.cwd(), 'public');
 
     // Ensure public directory exists
@@ -95,7 +95,7 @@ ${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `  <sitemap>
     console.log(`   - sitemap-whops-1.xml to sitemap-whops-${totalPages}.xml`);
     console.log('\n📋 Next steps:');
     console.log('1. Deploy these files to your site');
-    console.log('2. Submit https://digitalpromocodes.com/sitemap-index.xml to Google Search Console');
+    console.log('2. Submit https://whoppromocodes.com/sitemap-index.xml to Google Search Console');
     console.log(`3. Google will discover ${filteredWhops.length + 5} pages`);
 
   } catch (error) {

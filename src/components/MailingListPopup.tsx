@@ -125,7 +125,7 @@ export default function MailingListPopup({
 
             <div className="space-y-3 mb-6">
               <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-                <strong style={{ color: 'var(--accent-color)' }}>Success!</strong> We've added <strong>{userEmail}</strong> to receive DigitalPromoCodes updates.
+                <strong style={{ color: 'var(--accent-color)' }}>Success!</strong> We've added <strong>{userEmail}</strong> to receive WhopPromoCodes updates.
               </p>
 
               <div

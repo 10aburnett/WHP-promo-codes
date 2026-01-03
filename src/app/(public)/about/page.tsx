@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description,
   keywords: 'about, promo codes, digital products, software discounts, affiliate disclosure, offer verification',
   alternates: {
-    canonical: 'https://digitalpromocodes.com/about',
+    canonical: 'https://whoppromocodes.com/about',
   },
   robots: {
     index: true,

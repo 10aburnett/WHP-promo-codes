@@ -60,13 +60,13 @@ export default async function BlogPage() {
               <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
                 <div>
                   <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
-                    DigitalPromoCodes Insights
+                    WhopPromoCodes Insights
                   </p>
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
                     Guides, updates & playbooks for smarter digital spending.
                   </h1>
                   <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                    Long-form guides and analysis on digital products, online communities and promo tactics from the team behind DigitalPromoCodes.
+                    Long-form guides and analysis on digital products, online communities and promo tactics from the team behind WhopPromoCodes.
                   </p>
                 </div>
 
@@ -149,13 +149,13 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
-                  DigitalPromoCodes Insights
+                  WhopPromoCodes Insights
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
                   Guides, updates & playbooks for smarter digital spending.
                 </h1>
                 <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind DigitalPromoCodes.
+                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind WhopPromoCodes.
                 </p>
               </div>
 
@@ -236,7 +236,7 @@ export default async function BlogPage() {
                       <div className="mt-auto flex items-center justify-between gap-3 pt-3 border-t"
                            style={{ borderColor: 'var(--border-color)' }}>
                         <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                          {(post.authorName ?? post.author?.name) || 'DigitalPromoCodes team'}
+                          {(post.authorName ?? post.author?.name) || 'WhopPromoCodes team'}
                         </span>
 
                         <span
@@ -277,13 +277,13 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
-                  DigitalPromoCodes Insights
+                  WhopPromoCodes Insights
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
                   Guides, updates & playbooks for smarter digital spending.
                 </h1>
                 <p className="text-sm md:text-base max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind DigitalPromoCodes.
+                  Long-form guides and analysis on digital products, online communities and promo tactics from the team behind WhopPromoCodes.
                 </p>
               </div>
 

@@ -167,7 +167,7 @@ export default function StatisticsSectionServer({ stats }: StatisticsServerProps
             className="mt-2 text-sm sm:text-base max-w-2xl mx-auto"
             style={{ color: 'var(--text-secondary)' }}
           >
-            How the DigitalPromoCodes community saves on digital products and memberships.
+            How the WhopPromoCodes community saves on digital products and memberships.
           </p>
         </div>
 

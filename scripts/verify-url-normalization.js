@@ -8,7 +8,7 @@
 const https = require('https');
 const http = require('http');
 
-const BASE_URL = process.env.SITE_URL || 'https://digitalpromocodes.com';
+const BASE_URL = process.env.SITE_URL || 'https://whoppromocodes.com';
 
 // Test cases for verification
 const TEST_CASES = [
@@ -112,7 +112,7 @@ async function verifySitemap() {
   console.log('🗺️ Verifying sitemap contains lowercase URLs...');
 
   try {
-    const response = await makeRequest('/sitemaps/index-1.xml');
+    const response = await makeRequest('/sitemap-offers.xml');
 
     if (response.statusCode !== 200) {
       console.log(`❌ Sitemap not accessible (${response.statusCode})`);
@@ -120,7 +120,7 @@ async function verifySitemap() {
     }
 
     console.log('✅ Sitemap accessible');
-    console.log('ℹ️  Manual verification needed: Check that all whop URLs in sitemap are lowercase');
+    console.log('ℹ️  Manual verification needed: Check that all offer URLs in sitemap are lowercase');
     console.log('');
     return true;
 

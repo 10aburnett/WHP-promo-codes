@@ -21,7 +21,7 @@ interface FreshnessFile {
   ledger: FreshnessEntry[]
 }
 
-const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://digitalpromocodes.com'
+const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://whoppromocodes.com'
 const INCLUDE_TEMP_SITEMAPS = process.env.INCLUDE_TEMP_SITEMAPS === '1'
 const MAX_URLS_PER_FILE = 45000
 

@@ -18,7 +18,7 @@ export default function GlobalError({
     <ErrorState
       variant="error"
       title="Something went wrong while loading this page"
-      description="We ran into an unexpected issue loading this area of DigitalPromoCodes. Our team has been alerted so we can investigate."
+      description="We ran into an unexpected issue loading this area of WhopPromoCodes. Our team has been alerted so we can investigate."
       onRetry={reset}
       secondaryCta={{ href: '/', label: 'Return to the main page' }}
     />

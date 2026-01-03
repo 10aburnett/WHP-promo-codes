@@ -439,7 +439,7 @@ export default function EditOfferPage({
 
             <div className="form-group">
               <label htmlFor="affiliateLink" className="form-label">Affiliate Link</label>
-              <input {...register("affiliateLink")} type="url" id="affiliateLink" placeholder="https://digitalpromocodes.com/go/deal-name" />
+              <input {...register("affiliateLink")} type="url" id="affiliateLink" placeholder="https://whoppromocodes.com/go/deal-name" />
               {errors.affiliateLink && <p className="admin-error">{errors.affiliateLink.message}</p>}
             </div>
 

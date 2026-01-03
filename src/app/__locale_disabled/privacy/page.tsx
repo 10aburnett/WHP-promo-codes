@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 const defaultPrivacyContent = `
 <div class="section">
   <h2>Introduction</h2>
-  <p>DigitalPromoCodes ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website digitalpromocodes.com and use our services.</p>
+  <p>WhopPromoCodes ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website whoppromocodes.com and use our services.</p>
 </div>
 
 <div class="section">
@@ -55,7 +55,7 @@ const defaultPrivacyContent = `
 <div class="section">
   <h2>Contact Us</h2>
   <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
-  <p>Email: <a href="mailto:digitalpromocodescontact@gmail.com">digitalpromocodescontact@gmail.com</a></p>
+  <p>Email: <a href="mailto:whoppromocodescontact@gmail.com">whoppromocodescontact@gmail.com</a></p>
   <p>Website: <a href="../contact">Contact Form</a></p>
 </div>
 `;

@@ -1,6 +1,6 @@
-# DigitalPromoCodes - Complete Rebrand Differentiation Checklist
+# WhopPromoCodes - Complete Rebrand Differentiation Checklist
 
-> **Goal:** Launch DigitalPromoCodes as a completely new entity in Google's eyes, avoiding algorithmic suppression and duplicate detection from WHPCodes.
+> **Goal:** Launch WhopPromoCodes as a completely new entity in Google's eyes, avoiding algorithmic suppression and duplicate detection from WHPCodes.
 
 **Status:** IN PROGRESS
 **Started:** 2024-12-03
@@ -37,7 +37,7 @@
 
 ## Pre-Deployment Status
 
-- [x] Repo renamed to DigitalPromoCodes
+- [x] Repo renamed to WhopPromoCodes
 - [x] Git disconnected from old WHP Vercel project
 - [x] Brand constants updated (SITE_BRAND, SITE_URL, etc.)
 - [x] Prisma model renamed (Whop → Deal)
@@ -297,7 +297,7 @@ These pages require complete content rewrites because Google saw them:
 ## DAY C — Metadata & JSON-LD Regeneration
 
 ### C1 — Organization Schema
-- [ ] New @id URI (https://digitalpromocodes.com/#organization)
+- [ ] New @id URI (https://whoppromocodes.com/#organization)
 - [ ] New description text
 - [ ] New sameAs links (new social profiles)
 - [ ] Update logo URL
@@ -329,7 +329,7 @@ These pages require complete content rewrites because Google saw them:
 - [ ] Update blog meta descriptions
 
 ### C7 — Canonical URLs
-- [ ] Verify all canonical tags point to digitalpromocodes.com
+- [ ] Verify all canonical tags point to whoppromocodes.com
 - [ ] No references to whpcodes.com anywhere
 
 **DAY C STATUS:** [ ] NOT STARTED / [ ] IN PROGRESS / [ ] COMPLETE
@@ -421,13 +421,13 @@ These pages require complete content rewrites because Google saw them:
 
 ### F1 — Create New Vercel Project
 - [ ] Go to Vercel → New Project
-- [ ] Import from GitHub: 10aburnett/DigitalPromoCodes
+- [ ] Import from GitHub: 10aburnett/WhopPromoCodes
 - [ ] Select branch: main
-- [ ] Project name: digitalpromocodes
+- [ ] Project name: whoppromocodes
 
 ### F2 — Environment Variables
 - [ ] Set DATABASE_URL
-- [ ] Set SITE_ORIGIN=https://digitalpromocodes.com
+- [ ] Set SITE_ORIGIN=https://whoppromocodes.com
 - [ ] Set AUTH_SECRET
 - [ ] Set all other required env vars
 - [ ] DO NOT reuse old WHP env var values for tracking
@@ -451,14 +451,14 @@ These pages require complete content rewrites because Google saw them:
 ## DAY G — Go Live & GSC Setup
 
 ### G1 — Connect Domain
-- [ ] Add digitalpromocodes.com to Vercel project
+- [ ] Add whoppromocodes.com to Vercel project
 - [ ] Configure DNS (A record / CNAME)
 - [ ] Verify SSL certificate is active
-- [ ] Test https://digitalpromocodes.com loads
+- [ ] Test https://whoppromocodes.com loads
 
 ### G2 — Create New Google Search Console Property
 - [ ] Go to search.google.com/search-console
-- [ ] Add property: digitalpromocodes.com
+- [ ] Add property: whoppromocodes.com
 - [ ] Verify ownership (DNS or HTML file)
 - [ ] DO NOT import from old WHP property
 
@@ -568,7 +568,7 @@ Options:
 
 - Old WHP Vercel project is frozen (Git disconnected)
 - whpcodes.com still serving 410/noindex (leave it)
-- New repo: https://github.com/10aburnett/DigitalPromoCodes
+- New repo: https://github.com/10aburnett/WhopPromoCodes
 - DO NOT deploy until ALL differentiation steps are complete
 - Content rewrites are MORE important than visual changes for Google
 - Textual content is Google's PRIMARY duplication detector

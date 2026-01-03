@@ -18,7 +18,7 @@ export default function OfferError({
     <ErrorState
       variant="error"
       title="We were unable to load this offer"
-      description="Something went wrong while loading this offer page on DigitalPromoCodes. Our team has been notified to review it."
+      description="Something went wrong while loading this offer page on WhopPromoCodes. Our team has been notified to review it."
       onRetry={reset}
       secondaryCta={{ href: '/', label: 'View all current deals' }}
     />

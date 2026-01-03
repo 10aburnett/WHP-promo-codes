@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     if (!post || !post.published) {
       return {
         title: `Article not available - ${SITE_BRAND}`,
-        description: 'This article is not currently available. Browse other content on DigitalPromoCodes.',
+        description: 'This article is not currently available. Browse other content on WhopPromoCodes.',
         robots: { index: false, follow: true }
       }
     }

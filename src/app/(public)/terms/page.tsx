@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: `Terms of Service - ${SITE_BRAND}`,
   description: `Review the usage terms and conditions that apply when you access ${SITE_BRAND} and interact with listed offers.`,
   alternates: {
-    canonical: 'https://digitalpromocodes.com/terms',
+    canonical: 'https://whoppromocodes.com/terms',
   },
   robots: {
     index: true,

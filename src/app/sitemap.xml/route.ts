@@ -19,6 +19,6 @@ export async function GET() {
     });
   } catch (error) {
     // Fallback: redirect to sitemap-index.xml
-    return NextResponse.redirect(new URL('/sitemap-index.xml', 'https://digitalpromocodes.com'), 301);
+    return NextResponse.redirect(new URL('/sitemap-index.xml', 'https://whoppromocodes.com'), 301);
   }
 }

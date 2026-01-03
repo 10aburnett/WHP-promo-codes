@@ -2,19 +2,19 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us - DigitalPromoCodes',
-  description: 'Learn about DigitalPromoCodes - your go-to hub for exclusive promo codes, discounts, and digital product insights. We curate 8,000+ verified listings with daily updates.',
-  keywords: ['about digitalpromocodes', 'promo codes', 'digital product discounts', 'affiliate', 'product reviews'],
+  title: 'About Us - WhopPromoCodes',
+  description: 'Learn about WhopPromoCodes - your go-to hub for exclusive promo codes, discounts, and digital product insights. We curate 8,000+ verified listings with daily updates.',
+  keywords: ['about whoppromocodes', 'promo codes', 'digital product discounts', 'affiliate', 'product reviews'],
   openGraph: {
-    title: 'About Us - DigitalPromoCodes',
-    description: 'Learn about DigitalPromoCodes - your go-to hub for exclusive promo codes, discounts, and digital product insights.',
-    url: 'https://digitalpromocodes.com/about',
+    title: 'About Us - WhopPromoCodes',
+    description: 'Learn about WhopPromoCodes - your go-to hub for exclusive promo codes, discounts, and digital product insights.',
+    url: 'https://whoppromocodes.com/about',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About Us - DigitalPromoCodes',
-    description: 'Learn about DigitalPromoCodes - your go-to hub for exclusive promo codes, discounts, and digital product insights.',
+    title: 'About Us - WhopPromoCodes',
+    description: 'Learn about WhopPromoCodes - your go-to hub for exclusive promo codes, discounts, and digital product insights.',
   },
 };
 
@@ -36,7 +36,7 @@ export default function AboutPage() {
           <div className="prose prose-lg max-w-none space-y-6" style={{ color: 'var(--text-color)' }}>
             <div className="text-center mb-8">
               <p className="text-xl leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Welcome to <strong style={{ color: 'var(--accent-color)' }}>DigitalPromoCodes</strong> — your go-to hub for exclusive promo codes, discounts, and digital product insights.
+                Welcome to <strong style={{ color: 'var(--accent-color)' }}>WhopPromoCodes</strong> — your go-to hub for exclusive promo codes, discounts, and digital product insights.
               </p>
             </div>
 

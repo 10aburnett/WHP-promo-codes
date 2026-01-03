@@ -144,7 +144,7 @@ async function getVerificationData(slug: string) {
     return null;
   }
 
-  const origin = process.env.SITE_ORIGIN ?? 'https://digitalpromocodes.com';
+  const origin = process.env.SITE_ORIGIN ?? 'https://whoppromocodes.com';
 
   try {
     const res = await fetch(
@@ -422,7 +422,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       currentYear.toString()
     ].filter(Boolean).join(', '),
     alternates: {
-      canonical: `https://digitalpromocodes.com/offer/${canon}`,
+      canonical: `https://whoppromocodes.com/offer/${canon}`,
       ...(isLocaleEnabled() && shouldIncludeInHreflang(classification) && {
         languages: (() => {
           const languages: Record<string, string> = {};

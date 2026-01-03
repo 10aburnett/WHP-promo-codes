@@ -4,22 +4,22 @@
 /**
  * Site brand name - used in titles, metadata, and JSON-LD
  */
-export const SITE_BRAND = 'DigitalPromoCodes';
+export const SITE_BRAND = 'WhopPromoCodes';
 
 /**
  * Site name (alias for SITE_BRAND)
  */
-export const SITE_NAME = 'DigitalPromoCodes';
+export const SITE_NAME = 'WhopPromoCodes';
 
 /**
  * Site domain (without protocol)
  */
-export const SITE_DOMAIN = 'digitalpromocodes.com';
+export const SITE_DOMAIN = 'whoppromocodes.com';
 
 /**
  * Full site URL with protocol
  */
-export const SITE_URL = 'https://digitalpromocodes.com';
+export const SITE_URL = 'https://whoppromocodes.com';
 
 /**
  * Short tagline for the site - used in descriptions
@@ -34,7 +34,7 @@ export const SITE_DESCRIPTION = 'Browse thousands of checked promo codes for sof
 /**
  * Default author/publisher name for content
  */
-export const SITE_AUTHOR = 'DigitalPromoCodes Team';
+export const SITE_AUTHOR = 'WhopPromoCodes Team';
 
 /**
  * Social media handles (without @)
@@ -47,4 +47,4 @@ export const SOCIAL_HANDLES = {
 /**
  * Contact email
  */
-export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'digitalpromocodescontact@gmail.com';
+export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'whoppromocodescontact@gmail.com';
