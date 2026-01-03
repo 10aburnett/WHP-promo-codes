@@ -2,9 +2,9 @@
   <!-- Green rounded square background -->
   <rect x="0" y="0" width="512" height="512" rx="112" fill="#059669"></rect>
 
-  <!-- Centered "DPC" in white -->
+  <!-- Centered "WPC" in white -->
   <text x="50%" y="52%" text-anchor="middle" dominant-baseline="middle" fill="#FFFFFF" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-weight="700" font-size="190">
-    DPC
+    WPC
   </text>
 </svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
 @media (prefers-color-scheme: dark) { :root { filter: none; } }
