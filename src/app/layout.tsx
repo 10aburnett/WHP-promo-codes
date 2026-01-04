@@ -59,13 +59,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const origin = siteOrigin();
 
   return {
-    title: `${SITE_BRAND} - Promo Codes for Digital Products ${currentYear}`,
-    description: `Find working promo codes for software, courses, and memberships. ${SITE_DESCRIPTION}`,
+    title: `Whop Promo Codes for Online Courses & Memberships ${currentYear}`,
+    description: `Browse Whop promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`,
     keywords: 'promo codes, digital discounts, software savings, course deals, membership offers, online tools',
     metadataBase: new URL(origin),
     openGraph: {
-      title: `${SITE_BRAND} - Promo Codes for Digital Products ${currentYear}`,
-      description: `Find working promo codes for software, courses, and memberships. ${SITE_DESCRIPTION}`,
+      title: `Whop Promo Codes for Online Courses & Memberships ${currentYear}`,
+      description: `Browse Whop promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`,
       url: origin,
       type: 'website',
       siteName: SITE_BRAND,
@@ -80,8 +80,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${SITE_BRAND} - Promo Codes for Digital Products ${currentYear}`,
-      description: `Find working promo codes for software, courses, and memberships. ${SITE_DESCRIPTION}`,
+      title: `Whop Promo Codes for Online Courses & Memberships ${currentYear}`,
+      description: `Browse Whop promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`,
       images: ['/og.png'],
     },
     robots: {

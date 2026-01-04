@@ -48,8 +48,8 @@ export async function generateMetadata(): Promise<Metadata> {
     faviconUrl = `/favicon.ico?v=${STATIC_VERSION}`;
   }
 
-  const title = `${SITE_BRAND} - Checked Promo Codes for Digital Products ${currentYear}`;
-  const description = `${SITE_DESCRIPTION} Explore up-to-date discount codes for software tools, learning platforms, and online communities.`;
+  const title = `Whop Promo Codes for Online Courses & Memberships ${currentYear}`;
+  const description = `Browse Whop promo codes for digital products and services. Compare pricing on software, courses, and communities with regularly checked offers for ${currentYear}.`;
 
   return {
     title,
@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${SITE_BRAND} - Checked Promo Codes for Digital Products ${currentYear}`,
+      title: `Whop Promo Codes for Online Courses & Memberships ${currentYear}`,
       description,
       images: ['/og.png'],
     },
