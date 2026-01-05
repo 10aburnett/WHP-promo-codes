@@ -290,6 +290,105 @@ WHERE id = 'your-id';
 
 ---
 
+## 🔄 PRODUCTION WINS - Full Content Mirroring (Jan 2025)
+
+### ⚠️ IMPORTANT: Old Scripts ONLY APPEND, They Don't Overwrite
+
+The original golden scripts (`GOLDEN-CONTENT-SYNC-BULLETPROOF.js`, `GOLDEN-SAFE-PROMO-SYNC-BY-SLUG.mjs`, etc.) are designed to:
+- ✅ **ADD** missing records
+- ✅ **UPDATE** fields only if target field is **empty/null**
+- ❌ **DO NOT** overwrite existing content with different content
+
+**This means:** If you edit content on production (e.g., hand-write better descriptions), those edits WON'T automatically sync to backup because backup already has content in those fields.
+
+### When You Need Exact Mirroring
+
+Use these scripts when you want backup to be an **exact mirror** of production:
+
+#### `PRODUCTION-WINS-CONTENT-SYNC.mjs`
+**Purpose:** Overwrites ALL Deal content fields in backup with production values
+```bash
+# Dry run first
+node golden-scripts/PRODUCTION-WINS-CONTENT-SYNC.mjs --dry
+
+# Live sync
+node golden-scripts/PRODUCTION-WINS-CONTENT-SYNC.mjs
+```
+
+**Fields synced:**
+- `aboutContent`, `promoDetailsContent`, `faqContent`
+- `howToRedeemContent`, `featuresContent`, `termsContent`
+- `description`, `name`
+
+#### `PRODUCTION-WINS-PROMO-SYNC.mjs`
+**Purpose:** Overwrites ALL PromoCode fields in backup with production values
+```bash
+# Dry run first
+node golden-scripts/PRODUCTION-WINS-PROMO-SYNC.mjs --dry
+
+# Live sync
+node golden-scripts/PRODUCTION-WINS-PROMO-SYNC.mjs
+```
+
+**Fields synced:** `type`, `value`, `title`, `description`
+
+### Full Mirror Sync Procedure (Production → Backup)
+
+When you've made edits on production and want backup to be identical:
+
+```bash
+cd /path/to/project
+
+# 1. Verify what's different first
+node golden-scripts/verify-content-match.mjs
+
+# 2. Sync Deal content (production wins)
+node golden-scripts/PRODUCTION-WINS-CONTENT-SYNC.mjs --dry  # preview
+node golden-scripts/PRODUCTION-WINS-CONTENT-SYNC.mjs        # execute
+
+# 3. Sync PromoCode content (production wins)
+node golden-scripts/PRODUCTION-WINS-PROMO-SYNC.mjs --dry    # preview
+node golden-scripts/PRODUCTION-WINS-PROMO-SYNC.mjs          # execute
+
+# 4. Verify everything matches
+node golden-scripts/verify-content-match.mjs
+```
+
+### Analysis Scripts
+
+#### `verify-content-match.mjs`
+Shows exact comparison of content between production and backup:
+- Lists deals with different content
+- Lists promo codes with different fields
+- Shows character-level differences
+
+#### `analyze-content-differences.mjs`
+Categorizes differences:
+- **Identical** - no changes needed
+- **Ampersand-only** - just `&amp;` vs `&` encoding (cosmetic)
+- **Major differences** - genuinely different content
+
+#### `list-big-diffs.mjs`
+Lists all deals with >100 character content differences (likely hand-written content)
+
+### Common Difference Types
+
+| Type | Example | Cause |
+|------|---------|-------|
+| Ampersand encoding | `Q&amp;A` vs `Q&A` | HTML entity encoding differences |
+| Hand-written content | 487 chars vs 935 chars | Production has manually edited, better content |
+| Percent format | `"25"` vs `"25%"` | Both display same (UI normalizes) |
+
+### ⚠️ Safety Notes
+
+- **PRODUCTION-WINS scripts only write to BACKUP** - Production is read-only
+- Always run `--dry` first to preview changes
+- The `.env.sync` file controls which database is which:
+  - `PRODUCTION_DATABASE_URL` = ep-noisy-hat (main site)
+  - `BACKUP_DATABASE_URL` = ep-rough-rain (backup)
+
+---
+
 **Created**: 2025-08-10
-**Last Updated**: 2025-10-25 (Added dedupe, title normalization, and verification scripts)
+**Last Updated**: 2025-01-05 (Added PRODUCTION-WINS mirroring scripts and documentation)
 **Status**: Battle Tested & Production Ready ✅

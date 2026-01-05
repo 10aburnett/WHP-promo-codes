@@ -104,10 +104,10 @@ async function analyzeDataDifferences() {
   
   try {
     // Check Whops
-    const backupWhops = await backupDb.whop.findMany({
+    const backupWhops = await backupDb.deal.findMany({
       select: { id: true, name: true, slug: true }
     });
-    const productionWhops = await productionDb.whop.findMany({
+    const productionWhops = await productionDb.deal.findMany({
       select: { id: true, name: true, slug: true }
     });
 
@@ -212,13 +212,13 @@ async function syncWhops(analysis) {
       console.log(`🔹 Adding ${analysis.whops.onlyInBackup.length} whops to PRODUCTION...`);
       
       for (const whopSummary of analysis.whops.onlyInBackup) {
-        const fullWhop = await backupDb.whop.findUnique({
+        const fullWhop = await backupDb.deal.findUnique({
           where: { slug: whopSummary.slug }
         });
         
         if (fullWhop) {
           const { createdAt, ...whopData } = fullWhop;
-          await productionDb.whop.create({ data: whopData });
+          await productionDb.deal.create({ data: whopData });
           console.log(`   ✅ Added: ${fullWhop.name}`);
         }
       }
@@ -229,13 +229,13 @@ async function syncWhops(analysis) {
       console.log(`🔹 Adding ${analysis.whops.onlyInProduction.length} whops to BACKUP...`);
       
       for (const whopSummary of analysis.whops.onlyInProduction) {
-        const fullWhop = await productionDb.whop.findUnique({
+        const fullWhop = await productionDb.deal.findUnique({
           where: { slug: whopSummary.slug }
         });
         
         if (fullWhop) {
           // Keep all data including timestamps to preserve exact state
-          await backupDb.whop.create({ data: fullWhop });
+          await backupDb.deal.create({ data: fullWhop });
           console.log(`   ✅ Added: ${fullWhop.name}`);
         }
       }
@@ -317,17 +317,17 @@ async function verifySync() {
 
   try {
     const backupCounts = {
-      whops: await backupDb.whop.count(),
+      whops: await backupDb.deal.count(),
       promos: await backupDb.promoCode.count(),
-      // indexedWhops: await backupDb.whop.count({ where: { indexing: 'INDEX' } }),
-      // noindexedWhops: await backupDb.whop.count({ where: { indexing: 'NOINDEX' } })
+      // indexedWhops: await backupDb.deal.count({ where: { indexing: 'INDEX' } }),
+      // noindexedWhops: await backupDb.deal.count({ where: { indexing: 'NOINDEX' } })
     };
 
     const productionCounts = {
-      whops: await productionDb.whop.count(),
+      whops: await productionDb.deal.count(),
       promos: await productionDb.promoCode.count(),
-      // indexedWhops: await productionDb.whop.count({ where: { indexing: 'INDEX' } }),
-      // noindexedWhops: await productionDb.whop.count({ where: { indexing: 'NOINDEX' } })
+      // indexedWhops: await productionDb.deal.count({ where: { indexing: 'INDEX' } }),
+      // noindexedWhops: await productionDb.deal.count({ where: { indexing: 'NOINDEX' } })
     };
 
     console.log('📊 FINAL COUNTS:');

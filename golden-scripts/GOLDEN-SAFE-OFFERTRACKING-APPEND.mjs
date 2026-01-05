@@ -60,7 +60,7 @@ const secondKey = (createdAt) => {
     src.promoCode.findMany({
       select: { id: true, code: true, whopId: true },
     }),
-    src.whop.findMany({
+    src.deal.findMany({
       select: { id: true, slug: true },
     }),
   ]);
@@ -75,7 +75,7 @@ const secondKey = (createdAt) => {
 
   // 3) Load TARGET lookup tables: slug -> whopId, (whopId, code) -> promoId
   console.log("🔍 Resolving TARGET FK mappings (slug & code)...");
-  const tgtWhops = await tgt.whop.findMany({ select: { id: true, slug: true } });
+  const tgtWhops = await tgt.deal.findMany({ select: { id: true, slug: true } });
   const slugToTgtWhopId = new Map(tgtWhops.map((w) => [w.slug, w.id]));
 
   const tgtPromos = await tgt.promoCode.findMany({ select: { id: true, code: true, whopId: true } });

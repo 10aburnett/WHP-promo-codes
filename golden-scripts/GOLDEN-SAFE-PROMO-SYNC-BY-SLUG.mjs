@@ -122,7 +122,7 @@ async function inBatches(items, size, fn) {
         whopId: true,
       },
     }),
-    source.whop.findMany({
+    source.deal.findMany({
       select: { id: true, slug: true },
     }),
   ]);
@@ -136,7 +136,7 @@ async function inBatches(items, size, fn) {
   // 2) collect slugs and resolve to target whopIds in one go
   console.log('\n🔍 Resolving Whop slugs on TARGET database...');
   const slugs = Array.from(new Set(promos.map(p => p.slug).filter(Boolean)));
-  const targetWhops = await target.whop.findMany({
+  const targetWhops = await target.deal.findMany({
     where: { slug: { in: slugs } },
     select: { id: true, slug: true },
   });
