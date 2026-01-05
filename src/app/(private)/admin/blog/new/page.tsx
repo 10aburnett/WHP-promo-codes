@@ -1,367 +1,205 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { SeoSettings, DEFAULT_SEO_SETTINGS } from '@/types/seo'
+import { serializeContentWithSeo } from '@/lib/seo-parser'
+import { SeoPanel } from '@/components/admin/SeoPanel'
 
-// Custom Editor Component
+type SeoTabType = 'basic' | 'social' | 'schema' | 'advanced' | 'toc'
+
+// Custom Editor Component with HTML/WYSIWYG Toggle
 function CustomEditor({ value, onChange }: { value: string, onChange: (value: string) => void }) {
   const editorRef = useRef<HTMLDivElement>(null)
-  const [showColorPicker, setShowColorPicker] = useState(false)
-  const [showBgColorPicker, setShowBgColorPicker] = useState(false)
-  
+  const [mode, setMode] = useState<'wysiwyg' | 'html'>('wysiwyg')
+  const [localHtml, setLocalHtml] = useState(value)
+
+  // Sync external value changes
   useEffect(() => {
-    if (editorRef.current && editorRef.current.innerHTML !== value) {
+    setLocalHtml(value)
+    if (mode === 'wysiwyg' && editorRef.current && editorRef.current.innerHTML !== value) {
       editorRef.current.innerHTML = value
     }
-  }, [value])
+  }, [value, mode])
 
-  const insertBulletAtCaret = () => {
-    if (!editorRef.current) return
-    editorRef.current.focus()
-    
-    const sel = window.getSelection()
-    if (!sel?.rangeCount) return
-    
-    const range = sel.getRangeAt(0)
-    const bulletNode = document.createTextNode('• ')
-    range.insertNode(bulletNode)
-    
-    // Move caret after bullet
-    range.setStartAfter(bulletNode)
-    range.collapse(true)
-    sel.removeAllRanges()
-    sel.addRange(range)
-    
-    // Update content
-    onChange(editorRef.current.innerHTML)
-  }
-
-  const formatText = (command: string, value?: string) => {
-    document.execCommand(command, false, value)
+  // Handle WYSIWYG input
+  const handleWysiwygInput = () => {
     if (editorRef.current) {
-      onChange(editorRef.current.innerHTML)
+      const newContent = editorRef.current.innerHTML
+      setLocalHtml(newContent)
+      onChange(newContent)
     }
   }
 
-  const insertOrderedList = () => {
-    if (!editorRef.current) return
-    editorRef.current.focus()
-    
-    const sel = window.getSelection()
-    if (!sel?.rangeCount) return
-    
-    const range = sel.getRangeAt(0)
-    const numberNode = document.createTextNode('1. ')
-    range.insertNode(numberNode)
-    
-    range.setStartAfter(numberNode)
-    range.collapse(true)
-    sel.removeAllRanges()
-    sel.addRange(range)
-    
-    onChange(editorRef.current.innerHTML)
+  // Handle HTML textarea input
+  const handleHtmlInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value
+    setLocalHtml(newContent)
+    onChange(newContent)
+  }
+
+  // Switch modes and sync content
+  const switchMode = (newMode: 'wysiwyg' | 'html') => {
+    if (newMode === 'wysiwyg' && editorRef.current) {
+      // Switching to WYSIWYG - update the contenteditable
+      editorRef.current.innerHTML = localHtml
+    }
+    setMode(newMode)
+  }
+
+  // Toolbar actions for WYSIWYG mode
+  const execCommand = (command: string, cmdValue?: string) => {
+    document.execCommand(command, false, cmdValue)
+    editorRef.current?.focus()
+    handleWysiwygInput()
+  }
+
+  const insertHeading = (level: number) => {
+    const selection = window.getSelection()
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0)
+      const selectedText = range.toString() || 'Heading'
+      const heading = document.createElement(`h${level}`)
+      heading.textContent = selectedText
+      range.deleteContents()
+      range.insertNode(heading)
+      handleWysiwygInput()
+    }
   }
 
   const insertLink = () => {
     const url = prompt('Enter URL:')
-    if (!url) return
-    
-    const text = prompt('Enter link text:') || url
-    if (!editorRef.current) return
-    
-    editorRef.current.focus()
-    const sel = window.getSelection()
-    if (!sel?.rangeCount) return
-    
-    const range = sel.getRangeAt(0)
-    const link = document.createElement('a')
-    link.href = url
-    link.textContent = text
-    link.style.color = '#0066cc'
-    link.style.textDecoration = 'underline'
-    
-    range.insertNode(link)
-    range.setStartAfter(link)
-    range.collapse(true)
-    sel.removeAllRanges()
-    sel.addRange(range)
-    
-    onChange(editorRef.current.innerHTML)
-  }
-
-  const insertBlockquote = () => {
-    if (!editorRef.current) return
-    editorRef.current.focus()
-    
-    const sel = window.getSelection()
-    if (!sel?.rangeCount) return
-    
-    const range = sel.getRangeAt(0)
-    const blockquote = document.createElement('blockquote')
-    blockquote.style.borderLeft = '4px solid #ccc'
-    blockquote.style.paddingLeft = '1rem'
-    blockquote.style.margin = '1rem 0'
-    blockquote.style.fontStyle = 'italic'
-    blockquote.innerHTML = 'Quote text here...'
-    
-    range.insertNode(blockquote)
-    range.selectNodeContents(blockquote)
-    sel.removeAllRanges()
-    sel.addRange(range)
-    
-    onChange(editorRef.current.innerHTML)
-  }
-
-  const applyTextColor = (color: string) => {
-    formatText('foreColor', color)
-    setShowColorPicker(false)
-  }
-
-  const applyBackgroundColor = (color: string) => {
-    formatText('backColor', color)
-    setShowBgColorPicker(false)
-  }
-
-  const appleNotesFormat = () => {
-    if (!editorRef.current) return
-    
-    const selection = window.getSelection()
-    if (!selection?.rangeCount) return
-    
-    const range = selection.getRangeAt(0)
-    
-    if (range.collapsed) {
-      // No selection - apply to entire editor content
-      editorRef.current.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif'
-      editorRef.current.style.fontSize = '13px'
-      editorRef.current.style.letterSpacing = '0.005em'
-    } else {
-      // Apply to selected text only
-      const selectedContent = range.extractContents()
-      const span = document.createElement('span')
-      span.style.fontFamily = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif'
-      span.style.fontSize = '13px'
-      span.style.letterSpacing = '0.005em'
-      span.appendChild(selectedContent)
-      range.insertNode(span)
-      
-      // Clear selection
-      selection.removeAllRanges()
-    }
-    
-    onChange(editorRef.current.innerHTML)
-  }
-
-  const formatHeader = (level: number) => {
-    if (!editorRef.current) return
-    
-    const tag = `h${level}`
-    const sel = window.getSelection()
-    if (!sel?.rangeCount) return
-    
-    const range = sel.getRangeAt(0)
-    const header = document.createElement(tag)
-    header.style.fontWeight = 'bold'
-    header.style.fontSize = level === 1 ? '2rem' : level === 2 ? '1.75rem' : '1.5rem'
-    header.style.marginTop = '2rem'
-    header.style.marginBottom = '1rem'
-    
-    if (range.collapsed) {
-      header.innerHTML = `Header ${level} text`
-      range.insertNode(header)
-    } else {
-      const contents = range.extractContents()
-      header.appendChild(contents)
-      range.insertNode(header)
-    }
-    
-    onChange(editorRef.current.innerHTML)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      const sel = window.getSelection()
-      if (!sel?.rangeCount) return
-      
-      const range = sel.getRangeAt(0)
-      const br = document.createElement('br')
-      range.insertNode(br)
-      
-      const zwsp = document.createTextNode('\u200B') // zero-width space
-      br.parentNode?.insertBefore(zwsp, br.nextSibling)
-      
-      const newRange = document.createRange()
-      newRange.setStartAfter(zwsp)
-      newRange.collapse(true)
-      sel.removeAllRanges()
-      sel.addRange(newRange)
-      
-      e.preventDefault()
-      if (editorRef.current) {
-        onChange(editorRef.current.innerHTML)
-      }
+    if (url) {
+      execCommand('createLink', url)
     }
   }
-
-  const addZeroWidthSpacing = (text: string) => {
-    // Add zero-width space (U+200B) after each character for minimal spacing
-    return text.replace(/(.)/g, '$1\u200B')
-  }
-
-  const handleInput = () => {
-    if (editorRef.current) {
-      onChange(editorRef.current.innerHTML)
-    }
-  }
-
-  const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault()
-    
-    if (!editorRef.current) return
-    
-    // Get the pasted data
-    const clipboardData = e.clipboardData
-    const htmlData = clipboardData.getData('text/html')
-    const textData = clipboardData.getData('text/plain')
-    
-    // Use HTML data if available (preserves formatting), otherwise use plain text
-    const contentToInsert = htmlData || textData
-    
-    if (contentToInsert) {
-      // Insert the content at the current cursor position
-      const selection = window.getSelection()
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0)
-        range.deleteContents()
-        
-        if (htmlData) {
-          // Create a temporary div to parse the HTML
-          const tempDiv = document.createElement('div')
-          tempDiv.innerHTML = htmlData
-          
-          // Insert each node from the parsed HTML
-          const fragment = document.createDocumentFragment()
-          while (tempDiv.firstChild) {
-            fragment.appendChild(tempDiv.firstChild)
-          }
-          range.insertNode(fragment)
-        } else {
-          // Insert plain text
-          const textNode = document.createTextNode(textData)
-          range.insertNode(textNode)
-        }
-        
-        // Move cursor to end of inserted content
-        range.collapse(false)
-        selection.removeAllRanges()
-        selection.addRange(range)
-        
-        // Update content
-        onChange(editorRef.current.innerHTML)
-      }
-    }
-  }
-
-  const colors = ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080', '#008000']
 
   return (
-    <div className="border border-gray-300 rounded-md">
-      {/* Toolbar */}
-      <div className="border-b border-gray-200 p-2 bg-gray-50">
-        {/* Row 1 - Headers */}
-        <div className="flex gap-1 mb-2">
-          <button type="button" onClick={() => formatHeader(1)} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold">H1</button>
-          <button type="button" onClick={() => formatHeader(2)} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold">H2</button>
-          <button type="button" onClick={() => formatHeader(3)} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold">H3</button>
+    <div className="border border-gray-300 rounded-lg overflow-hidden">
+      {/* Mode Toggle + Toolbar */}
+      <div className="flex items-center justify-between p-2 border-b border-gray-200 bg-gray-50">
+        {/* Left: Mode Toggle */}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => switchMode('wysiwyg')}
+            className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+              mode === 'wysiwyg'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+          >
+            WYSIWYG
+          </button>
+          <button
+            type="button"
+            onClick={() => switchMode('html')}
+            className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+              mode === 'html'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+          >
+            HTML
+          </button>
         </div>
-        
-        {/* Row 2 - Basic Formatting */}
-        <div className="flex gap-1 mb-2">
-          <button type="button" onClick={() => formatText('bold')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 font-bold text-black">B</button>
-          <button type="button" onClick={() => formatText('italic')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 italic text-black">I</button>
-          <button type="button" onClick={() => formatText('underline')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 underline text-black">U</button>
-          <button type="button" onClick={() => formatText('strikeThrough')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 line-through text-black">S</button>
-        </div>
-        
-        {/* Row 3 - Colors */}
-        <div className="flex gap-1 mb-2">
-          <div className="relative">
-            <button type="button" onClick={() => setShowColorPicker(!showColorPicker)} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold">A</button>
-            {showColorPicker && (
-              <div className="absolute top-8 left-0 bg-white border rounded shadow-lg p-4 z-10">
-                <div className="grid grid-cols-5 gap-6">
-                  {colors.map(color => (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => applyTextColor(color)}
-                      className="w-8 h-8 border-2 rounded hover:scale-110 transition-transform cursor-pointer"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
+
+        {/* Right: Formatting Toolbar (only in WYSIWYG mode) */}
+        {mode === 'wysiwyg' && (
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => execCommand('bold')}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+              title="Bold"
+            >
+              <strong>B</strong>
+            </button>
+            <button
+              type="button"
+              onClick={() => execCommand('italic')}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+              title="Italic"
+            >
+              <em>I</em>
+            </button>
+            <button
+              type="button"
+              onClick={() => execCommand('underline')}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+              title="Underline"
+            >
+              <u>U</u>
+            </button>
+            <span className="w-px h-4 mx-1 bg-gray-300" />
+            <button
+              type="button"
+              onClick={() => insertHeading(2)}
+              className="px-1.5 py-1 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900 text-xs"
+              title="Heading 2"
+            >
+              H2
+            </button>
+            <button
+              type="button"
+              onClick={() => insertHeading(3)}
+              className="px-1.5 py-1 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900 text-xs"
+              title="Heading 3"
+            >
+              H3
+            </button>
+            <span className="w-px h-4 mx-1 bg-gray-300" />
+            <button
+              type="button"
+              onClick={() => execCommand('insertUnorderedList')}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+              title="Bullet List"
+            >
+              •
+            </button>
+            <button
+              type="button"
+              onClick={() => execCommand('insertOrderedList')}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+              title="Numbered List"
+            >
+              1.
+            </button>
+            <span className="w-px h-4 mx-1 bg-gray-300" />
+            <button
+              type="button"
+              onClick={insertLink}
+              className="p-1.5 rounded hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+              title="Insert Link"
+            >
+              🔗
+            </button>
           </div>
-          <div className="relative">
-            <button type="button" onClick={() => setShowBgColorPicker(!showBgColorPicker)} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">⬛</button>
-            {showBgColorPicker && (
-              <div className="absolute top-8 left-0 bg-white border rounded shadow-lg p-4 z-10">
-                <div className="grid grid-cols-5 gap-6">
-                  {colors.map(color => (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => applyBackgroundColor(color)}
-                      className="w-8 h-8 border-2 rounded hover:scale-110 transition-transform cursor-pointer"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        {/* Row 4 - Lists and Others */}
-        <div className="flex gap-1 mb-2">
-          <button type="button" onClick={insertOrderedList} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold">1.</button>
-          <button type="button" onClick={insertBulletAtCaret} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold">•</button>
-          <button type="button" onClick={insertLink} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">🔗</button>
-          <button type="button" onClick={insertBlockquote} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">❝</button>
-        </div>
-        
-        {/* Row 5 - Alignment & Apple Notes */}
-        <div className="flex gap-1">
-          <button type="button" onClick={() => formatText('justifyLeft')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">⬅️</button>
-          <button type="button" onClick={() => formatText('justifyCenter')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">⬇️</button>
-          <button type="button" onClick={() => formatText('justifyRight')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">➡️</button>
-          <button type="button" onClick={() => formatText('removeFormat')} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black">🧹</button>
-          <button type="button" onClick={appleNotesFormat} className="px-2 py-1 text-sm border rounded hover:bg-gray-100 text-black font-semibold" title="Apply Apple Notes font (SF 13px)">📝</button>
-        </div>
+        )}
       </div>
-      
-      {/* Editor */}
-      <div
-        ref={editorRef}
-        contentEditable
-        dir="ltr"
-        onKeyDown={handleKeyDown}
-        onInput={handleInput}
-        onPaste={handlePaste}
-        className="p-4 min-h-96 focus:outline-none"
-        style={{
-          color: '#000000',
-          backgroundColor: '#ffffff',
-          fontSize: '13px',
-          lineHeight: '1.5',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif',
-          letterSpacing: '0.005em', // Subtle spacing similar to zero-width space effect
-          direction: 'ltr',
-          textAlign: 'left',
-          unicodeBidi: 'plaintext'
-        }}
-        suppressContentEditableWarning={true}
-      />
+
+      {/* Editor Area */}
+      {mode === 'wysiwyg' ? (
+        <div
+          ref={editorRef}
+          contentEditable
+          onInput={handleWysiwygInput}
+          className="min-h-[400px] p-4 focus:outline-none prose prose-lg max-w-none"
+          style={{
+            backgroundColor: '#ffffff',
+            color: '#000000',
+          }}
+          suppressContentEditableWarning
+        />
+      ) : (
+        <textarea
+          value={localHtml}
+          onChange={handleHtmlInput}
+          className="w-full min-h-[400px] p-4 font-mono text-sm resize-y focus:outline-none bg-white text-gray-900"
+          style={{ border: 'none' }}
+          placeholder="<p>Enter your HTML content here...</p>"
+          spellCheck={false}
+        />
+      )}
     </div>
   )
 }
@@ -378,6 +216,16 @@ export default function NewBlogPostPage() {
     pinned: false,
     authorName: ''
   })
+
+  // SEO state
+  const [seoSettings, setSeoSettings] = useState<SeoSettings>(DEFAULT_SEO_SETTINGS)
+  const [seoExpanded, setSeoExpanded] = useState(true)
+  const [seoTab, setSeoTab] = useState<SeoTabType>('basic')
+
+  // Helper to update single SEO field
+  const updateSeoField = <K extends keyof SeoSettings>(field: K, value: SeoSettings[K]) => {
+    setSeoSettings(prev => ({ ...prev, [field]: value }))
+  }
 
   const generateSlug = (title: string) => {
     return title
@@ -399,11 +247,14 @@ export default function NewBlogPostPage() {
     setLoading(true)
 
     try {
+      // Serialize SEO settings into content before saving
+      const finalContent = serializeContentWithSeo(seoSettings, formData.content)
+
       const payload = {
         title: formData.title,
         slug: formData.slug || undefined, // let server generate from title if empty
         excerpt: formData.excerpt || undefined,
-        content: formData.content,
+        content: finalContent, // Content WITH SEO block
         published: formData.published,
         pinned: formData.pinned,
         authorName: formData.authorName || undefined,
@@ -539,6 +390,23 @@ export default function NewBlogPostPage() {
               Use the toolbar above to format your text. What you see is exactly what will appear on the frontend.
             </p>
           </div>
+
+          {/* SEO Settings Panel */}
+          <SeoPanel
+            seoSettings={seoSettings}
+            onUpdate={updateSeoField}
+            post={{
+              title: formData.title,
+              excerpt: formData.excerpt,
+              slug: formData.slug,
+              authorName: formData.authorName,
+            }}
+            expanded={seoExpanded}
+            onToggleExpanded={() => setSeoExpanded(!seoExpanded)}
+            activeTab={seoTab}
+            onTabChange={setSeoTab}
+            content={formData.content}
+          />
 
           <div className="mt-6 space-y-3">
             <div className="flex items-center">

@@ -8,6 +8,9 @@ import BlogPostClient from '@/components/BlogPostClient'
 import { generateArticleSchema, generateBreadcrumbSchema, calculateReadingTime, extractHeadings, processContentWithHeadingIds, optimizeInternalLinkingServer, optimizeImageAltText } from '@/lib/blog-utils'
 import { siteOrigin } from '@/lib/site-origin'
 import { SITE_BRAND, SITE_AUTHOR } from '@/lib/brand'
+import { parseContentWithSeo, getComputedSeo } from '@/lib/seo-parser'
+import { generateToc, injectTocIntoContent } from '@/lib/toc-generator'
+import { SchemaMarkup } from '@/components/SchemaMarkup'
 
 // SSG + ISR configuration
 export const dynamic = 'force-static'
@@ -56,6 +59,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       select: {
         title: true,
         excerpt: true,
+        content: true,
         published: true,
         updatedAt: true,
         publishedAt: true,
@@ -73,38 +77,48 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       }
     }
 
-    const canonical = `${siteOrigin()}/blog/${post.slug}`;
-    const currentYear = new Date().getFullYear();
-    const metaDescription = post.excerpt ?? `Analysis and practical information on digital tools and online services from the ${SITE_BRAND} editorial team.`;
-    const publishedDate = post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined;
+    // Parse SEO settings from content
+    const { seoSettings } = parseContentWithSeo(post.content);
+    const computed = getComputedSeo(seoSettings, {
+      title: post.title,
+      excerpt: post.excerpt,
+      slug: post.slug,
+    });
 
+    const publishedDate = post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined;
     const authorName = post.User?.name || post.authorName || SITE_AUTHOR;
 
+    // Use SEO settings for robots, with fallback to noindex during launch phase
+    const shouldIndex = seoSettings.noIndex ? false : false; // Keep noindex for now during launch
+    const shouldFollow = seoSettings.noFollow ? false : true;
+
     return {
-      title: `${post.title} - ${SITE_BRAND} Articles`,
-      description: metaDescription,
-      keywords: `${post.title}, software reviews, digital products, online tools, ${authorName}`,
+      title: computed.title,
+      description: computed.description,
+      keywords: seoSettings.keywords || `${post.title}, software reviews, digital products, online tools, ${authorName}`,
       authors: [{ name: authorName }],
       alternates: {
-        canonical
+        canonical: computed.canonical
       },
       robots: {
-        index: false,
-        follow: true,
+        index: shouldIndex,
+        follow: shouldFollow,
       },
       openGraph: {
-        title: `${post.title} - ${SITE_BRAND} Articles`,
-        description: metaDescription,
+        title: computed.ogTitle,
+        description: computed.ogDescription,
         type: 'article',
-        url: canonical,
+        url: computed.canonical,
         publishedTime: publishedDate,
         authors: [authorName],
-        siteName: SITE_BRAND
+        siteName: SITE_BRAND,
+        images: seoSettings.featuredImage ? [{ url: seoSettings.featuredImage }] : undefined,
       },
       twitter: {
-        card: 'summary_large_image',
-        title: `${post.title} - ${SITE_BRAND} Articles`,
-        description: metaDescription,
+        card: seoSettings.twitterCard,
+        title: computed.ogTitle,
+        description: computed.ogDescription,
+        images: seoSettings.featuredImage ? [seoSettings.featuredImage] : undefined,
       }
     }
   } catch (error) {
@@ -129,25 +143,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const authorName = post.User?.name || post.authorName || SITE_AUTHOR;
 
-  // Server-rendered BlogPosting schema (minimal, truthful)
-  const articleLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    '@id': `${siteOrigin()}/blog/${post.slug}#dpc-article`,
-    headline: post.title,
-    description: post.excerpt ?? undefined,
-    datePublished: post.publishedAt?.toISOString?.(),
-    dateModified: post.updatedAt?.toISOString?.(),
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${siteOrigin()}/blog/${post.slug}#dpc-page`
-    },
-    author: authorName
-      ? { '@type': 'Person', name: authorName }
-      : { '@type': 'Organization', name: SITE_BRAND },
-  };
+  // Parse SEO settings from content
+  const { seoSettings, content: cleanContent } = parseContentWithSeo(post.content);
 
-  // Breadcrumb schema
+  // Breadcrumb schema (always include)
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -173,38 +172,56 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       }
     ]
   }
-  
+
   // Get all blog posts for internal linking optimization
   const allPosts = await prisma.blogPost.findMany({
     where: { published: true },
     select: { id: true, title: true, slug: true }
   })
-  
-  // Process content with all optimizations
-  let optimizedContent = post.content
-  
+
+  // Process content with all optimizations (using clean content without SEO block)
+  let optimizedContent = cleanContent
+
   // 1. Optimize image alt text
   optimizedContent = optimizeImageAltText(optimizedContent, post.title)
-  
+
   // 2. Add internal links to other blog posts
   optimizedContent = await optimizeInternalLinkingServer(optimizedContent, post.id, allPosts)
-  
-  // 3. Add IDs to headings for table of contents
-  optimizedContent = processContentWithHeadingIds(optimizedContent)
-  
+
+  // 3. Generate TOC and add heading IDs if enabled, otherwise just add IDs
+  if (seoSettings.autoToc) {
+    const { toc, contentWithIds } = generateToc(optimizedContent, {
+      includeH3: seoSettings.tocIncludeH3,
+    });
+    optimizedContent = contentWithIds; // Content now has IDs
+    if (toc) {
+      optimizedContent = injectTocIntoContent(optimizedContent, toc, seoSettings.tocPosition);
+    }
+  } else {
+    // Still add heading IDs for anchor links even without TOC
+    optimizedContent = processContentWithHeadingIds(optimizedContent);
+  }
+
   const processedPost = {
     ...post,
     content: optimizedContent,
-    readingTime: calculateReadingTime(post.content),
+    readingTime: calculateReadingTime(cleanContent),
     headings: extractHeadings(optimizedContent)
   }
 
   return (
     <>
-      {/* Server-rendered Article Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      {/* Schema Markup from SEO settings */}
+      <SchemaMarkup
+        seoSettings={seoSettings}
+        post={{
+          title: post.title,
+          excerpt: post.excerpt,
+          slug: post.slug,
+          authorName,
+          publishedAt: post.publishedAt,
+          updatedAt: post.updatedAt,
+        }}
       />
 
       {/* Server-rendered Breadcrumb Schema */}
@@ -212,7 +229,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      
+
       {/* Pass the processed post data to the client component */}
       <BlogPostClient post={processedPost} />
     </>
