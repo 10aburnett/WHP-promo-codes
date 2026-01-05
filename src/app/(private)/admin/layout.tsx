@@ -131,7 +131,7 @@ export default function AdminLayout({
               </div>
               <div className="ml-8 flex space-x-6 items-center">
                 <Link href="/admin" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Dashboard</Link>
-                <Link href="/admin/offers" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Whops</Link>
+                <Link href="/admin/offers" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Offers</Link>
                 <Link href="/admin/promo-submissions" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Promo Submissions</Link>
                 <Link href="/admin/promos/import" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Promo Import</Link>
                 <Link href="/admin/blog" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Blog</Link>
