@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +9,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { SocialProofProvider, useSocialProof } from '@/contexts/SocialProofContext';
 import SocialProofPopupManager from './SocialProofPopup';
 import GeneralPromoSubmissionButton from './GeneralPromoSubmissionButton';
-import { useIsMobile } from '@/hooks/use-is-mobile';
 import { SITE_BRAND } from '@/lib/brand';
 
 interface ConditionalLayoutProps {
@@ -19,12 +18,10 @@ interface ConditionalLayoutProps {
 
 function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { language, t } = useLanguage();
   const { notifications, removeNotification } = useSocialProof();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileFooterOpen, setIsMobileFooterOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   const currentYear = new Date().getFullYear();
 
@@ -34,22 +31,6 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
       return path; // English uses root paths
     }
     return `/${language}${path}`; // Other languages use language prefix
-  };
-
-  // Handler for mobile Submit Code button
-  const handleMobileSubmitCode = () => {
-    // Always close the sheet first
-    setIsMobileMenuOpen(false);
-    setIsMobileFooterOpen(false);
-
-    // Mobile: navigate to the dedicated page so it always works
-    if (isMobile) {
-      router.push('/submit-code');
-      return;
-    }
-
-    // Desktop: fallback to page navigation (modal behavior handled elsewhere)
-    router.push('/submit-code');
   };
 
   // Check if we're in the admin panel - ONLY exclude admin routes from header/footer
@@ -334,15 +315,15 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 </nav>
 
                 {/* CTA button */}
-                <button
-                  type="button"
-                  onClick={handleMobileSubmitCode}
+                <Link
+                  href="/submit-code"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="w-full inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold shadow-sm"
                   style={{ backgroundColor: 'var(--accent-color)', color: '#ffffff' }}
                 >
                   Share a promo
                   <span className="ml-1" aria-hidden="true">↗</span>
-                </button>
+                </Link>
               </div>
             </div>
           </>
@@ -540,9 +521,9 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                 >
                   Blog
                 </Link>
-                <button
-                  type="button"
-                  onClick={handleMobileSubmitCode}
+                <Link
+                  href="/submit-code"
+                  onClick={() => setIsMobileFooterOpen(false)}
                   className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200 cursor-pointer"
                   style={{
                     borderColor: 'var(--border-color)',
@@ -551,7 +532,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                   }}
                 >
                   Submit Code
-                </button>
+                </Link>
                 <Link
                   href="/subscribe"
                   onClick={() => setIsMobileFooterOpen(false)}

@@ -19,6 +19,7 @@ interface PromoCodeSubmissionFormProps {
   preselectedOfferName?: string;
   onClose?: () => void;
   onSuccess?: () => void;
+  inline?: boolean; // When true, renders as inline form instead of modal
 }
 
 export default function PromoCodeSubmissionForm({
@@ -26,6 +27,7 @@ export default function PromoCodeSubmissionForm({
   preselectedOfferName,
   onClose,
   onSuccess,
+  inline = false,
 }: PromoCodeSubmissionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchResults, setSearchResults] = useState<DealSearchResult[]>([]);
@@ -220,20 +222,15 @@ export default function PromoCodeSubmissionForm({
     onSuccess?.();
   };
 
-  // Success Modal
+  // Success Modal/Message
   if (showSuccessMessage) {
-    return (
+    const successContent = (
       <div
-        className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-        style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
-        role="dialog"
-        aria-modal="true"
+        className={`relative w-full max-w-sm p-8 text-center shadow-lg rounded-2xl ${inline ? 'mx-auto' : ''}`}
+        style={{ backgroundColor: 'var(--background-color)' }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="relative w-full max-w-sm p-8 text-center shadow-lg rounded-2xl"
-          style={{ backgroundColor: 'var(--background-color)' }}
-          onClick={(e) => e.stopPropagation()}
-        >
+        {!inline && (
           <button
             onClick={handleCloseSuccess}
             className="absolute top-3 right-3 p-1 hover:opacity-70"
@@ -244,54 +241,63 @@ export default function PromoCodeSubmissionForm({
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
+        )}
 
-          <div className="mb-6">
-            <svg
-              className="w-12 h-12 mx-auto mb-4"
-              style={{ color: 'var(--accent-color)' }}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-
-            <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-              You're a legend
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              We'll review your submission and add it if it checks out. Thanks for helping the community save.
-            </p>
-          </div>
-
-          <button
-            onClick={handleCloseSuccess}
-            className="px-6 py-2 text-sm font-medium rounded-full"
-            style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+        <div className="mb-6">
+          <svg
+            className="w-12 h-12 mx-auto mb-4"
+            style={{ color: 'var(--accent-color)' }}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
           >
-            Done
-          </button>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+
+          <h3 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
+            You're a legend
+          </h3>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            We'll review your submission and add it if it checks out. Thanks for helping the community save.
+          </p>
         </div>
+
+        <button
+          onClick={handleCloseSuccess}
+          className="px-6 py-2 text-sm font-medium rounded-full"
+          style={{ backgroundColor: 'var(--accent-color)', color: 'white' }}
+        >
+          {inline ? 'Submit Another' : 'Done'}
+        </button>
+      </div>
+    );
+
+    if (inline) {
+      return successContent;
+    }
+
+    return (
+      <div
+        className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+        style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
+        role="dialog"
+        aria-modal="true"
+      >
+        {successContent}
       </div>
     );
   }
 
-  // Main Form Modal
-  return (
+  // Main Form
+  const formContent = (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
-      style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
-      role="dialog"
-      aria-modal="true"
-      onClick={() => onClose?.()}
+      className={`relative w-full max-w-xl ${inline ? 'mx-auto' : 'max-h-[90vh] overflow-y-auto'} shadow-lg rounded-2xl`}
+      style={{ backgroundColor: 'var(--background-color)', border: inline ? '1px solid var(--border-color)' : 'none' }}
+      onClick={(e) => e.stopPropagation()}
     >
-      <div
-        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-lg rounded-2xl"
-        style={{ backgroundColor: 'var(--background-color)' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header with close button */}
+      {/* Header with close button */}
+      {!inline && (
         <div className="flex items-start justify-between px-6 pt-6 pb-4">
           <div>
             <h2 className="text-xl font-bold" style={{ color: 'var(--text-color)' }}>
@@ -314,13 +320,14 @@ export default function PromoCodeSubmissionForm({
             </button>
           )}
         </div>
+      )}
 
         {/* Form Body */}
         <div className="px-6 pb-6">
           <form onSubmit={handleSubmit} className="space-y-5">
 
             {/* SECTION 1: About You (moved to top) */}
-            <div className="p-4 rounded-xl" style={{ backgroundColor: 'var(--background-secondary)' }}>
+            <div className="p-4 rounded-xl border" style={{ borderColor: 'var(--border-color)' }}>
               <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: 'var(--text-muted)' }}>
                 About you
               </p>
@@ -624,6 +631,22 @@ export default function PromoCodeSubmissionForm({
           </form>
         </div>
       </div>
+  );
+
+  // Return inline version or modal wrapper
+  if (inline) {
+    return formContent;
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center px-4"
+      style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}
+      role="dialog"
+      aria-modal="true"
+      onClick={() => onClose?.()}
+    >
+      {formContent}
     </div>
   );
 }

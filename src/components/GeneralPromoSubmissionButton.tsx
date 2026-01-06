@@ -1,8 +1,5 @@
-'use client';
-
-import { useState, useEffect, type CSSProperties, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
-import PromoCodeSubmissionForm from './PromoCodeSubmissionForm';
+import Link from 'next/link';
+import type { CSSProperties, ReactNode } from 'react';
 
 interface GeneralPromoSubmissionButtonProps {
   className?: string;
@@ -15,38 +12,13 @@ export default function GeneralPromoSubmissionButton({
   style,
   children,
 }: GeneralPromoSubmissionButtonProps) {
-  const [showForm, setShowForm] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Ensure we only portal on the client
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleClose = () => setShowForm(false);
-  const handleSuccess = () => setShowForm(false);
-
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setShowForm(true)}
-        className={className}
-        style={style}
-        aria-haspopup="dialog"
-        aria-expanded={showForm}
-      >
-        {children || 'Submit Code'}
-      </button>
-
-      {showForm && mounted &&
-        createPortal(
-          <PromoCodeSubmissionForm
-            onClose={handleClose}
-            onSuccess={handleSuccess}
-          />,
-          document.body
-        )}
-    </>
+    <Link
+      href="/submit-code"
+      className={className}
+      style={style}
+    >
+      {children || 'Submit Code'}
+    </Link>
   );
 }
