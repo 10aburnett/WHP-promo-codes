@@ -50,9 +50,6 @@ export async function generateStaticParams() {
   return posts.map(p => ({ slug: p.slug }));
 }
 
-// NOTE: Blog posts are intentionally noindex during launch phase.
-// Do not make indexable or add to sitemap without explicit SEO review.
-// This prevents topical dilution and crawl surface expansion during trust-building.
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
     const post = await prisma.blogPost.findUnique({
@@ -89,8 +86,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     const publishedDate = post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined;
     const authorName = post.User?.name || post.authorName || SITE_AUTHOR;
 
-    // Use SEO settings for robots, with fallback to noindex during launch phase
-    const shouldIndex = seoSettings.noIndex ? false : false; // Keep noindex for now during launch
+    // Use SEO settings for robots - index by default unless explicitly set to noindex
+    const shouldIndex = seoSettings.noIndex ? false : true;
     const shouldFollow = seoSettings.noFollow ? false : true;
 
     return {
