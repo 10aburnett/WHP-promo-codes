@@ -37,6 +37,14 @@ export default function PromoCodeSubmissionForm({
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const searchController = useRef<AbortController | null>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to success message when it appears (for inline mode)
+  useEffect(() => {
+    if (showSuccessMessage && inline && successRef.current) {
+      successRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [showSuccessMessage, inline]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -226,8 +234,9 @@ export default function PromoCodeSubmissionForm({
   if (showSuccessMessage) {
     const successContent = (
       <div
+        ref={inline ? successRef : undefined}
         className={`relative w-full max-w-sm p-8 text-center shadow-lg rounded-2xl ${inline ? 'mx-auto' : ''}`}
-        style={{ backgroundColor: 'var(--background-color)' }}
+        style={{ backgroundColor: 'var(--background-color)', border: inline ? '1px solid var(--border-color)' : 'none' }}
         onClick={(e) => e.stopPropagation()}
       >
         {!inline && (

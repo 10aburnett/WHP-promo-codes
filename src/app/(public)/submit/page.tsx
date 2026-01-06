@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'Submit Your Promo Code | Get Your Whop Discount Featured',
     description: 'Share your Whop promo code with thousands of deal-seekers. Free submission, fast review, and instant exposure.',
     type: 'website',
-    url: 'https://whoppromocodes.com/submit-code',
+    url: 'https://whoppromocodes.com/submit',
   },
   twitter: {
     card: 'summary_large_image',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: 'Share your Whop discount with thousands of buyers actively looking for deals.',
   },
   alternates: {
-    canonical: '/submit-code',
+    canonical: '/submit',
   },
   robots: {
     index: true,
@@ -43,7 +43,7 @@ const jsonLd = {
   '@type': 'WebPage',
   name: 'Submit Your Promo Code',
   description: 'Share your Whop promo code with thousands of deal-seekers. Free submission for creators.',
-  url: 'https://whoppromocodes.com/submit-code',
+  url: 'https://whoppromocodes.com/submit',
   mainEntity: {
     '@type': 'Service',
     name: 'Promo Code Submission',

@@ -37,7 +37,7 @@ const STATIC_ROUTES = [
   { path: '/privacy', priority: 0.5, changefreq: 'yearly' },
   { path: '/terms', priority: 0.5, changefreq: 'yearly' },
   { path: '/contact', priority: 0.6, changefreq: 'monthly' },
-  { path: '/submit-code', priority: 0.7, changefreq: 'monthly' },
+  { path: '/submit', priority: 0.7, changefreq: 'monthly' },
 ];
 
 // === COHORT SLUGS (101 curated offers) ===

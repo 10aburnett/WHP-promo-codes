@@ -14,7 +14,7 @@ export default function GeneralPromoSubmissionButton({
 }: GeneralPromoSubmissionButtonProps) {
   return (
     <Link
-      href="/submit-code"
+      href="/submit"
       className={className}
       style={style}
     >
