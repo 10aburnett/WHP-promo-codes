@@ -418,3 +418,18 @@ details summary::marker {
   display: none;
   content: '';
 }
+
+/* Fix anchor links scrolling behind fixed navbar */
+[id] {
+  scroll-margin-top: 140px;
+}
+
+/* More specific for blog content headings */
+.prose h2[id],
+.prose h3[id],
+.prose h4[id],
+article h2[id],
+article h3[id],
+article h4[id] {
+  scroll-margin-top: 140px;
+}
