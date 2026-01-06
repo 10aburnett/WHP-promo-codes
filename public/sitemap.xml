@@ -2,10 +2,14 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://whoppromocodes.com/sitemap-offers.xml</loc>
-    <lastmod>2026-01-06T19:04:25.329Z</lastmod>
+    <lastmod>2026-01-06T22:11:38.134Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://whoppromocodes.com/sitemap-static.xml</loc>
-    <lastmod>2026-01-06T19:04:25.329Z</lastmod>
+    <lastmod>2026-01-06T22:11:38.134Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://whoppromocodes.com/sitemap-blog.xml</loc>
+    <lastmod>2026-01-06T22:11:38.134Z</lastmod>
   </sitemap>
 </sitemapindex>

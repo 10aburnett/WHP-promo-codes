@@ -1,12 +1,12 @@
 /**
  * CLEAN SITEMAP GENERATOR
  *
- * Generates ONLY these files:
+ * Generates these files:
  * - public/sitemap-offers.xml (exactly 101 /offer/<slug> URLs in launch mode)
  * - public/sitemap-static.xml (hardcoded allowlist of static routes)
- * - public/sitemap-index.xml (references only the above two)
+ * - public/sitemap-blog.xml (published blog posts)
+ * - public/sitemap.xml (index referencing the above)
  *
- * NO blog sitemap.
  * NO noindex sitemap.
  * NO legacy /whop/ routes.
  * NO chunked sitemaps.
@@ -191,12 +191,12 @@ ${entries.join('\n')}
 // Locale pattern to detect locale-prefixed paths (EN-only invariant)
 const LOCALE_PATH_PATTERN = /\/(en|es|fr|de|it|pt|nl|zh|ja|ko|ru|ar)\//i;
 
-function assertNoBadUrls(urls: string[]): void {
+function assertNoBadUrls(urls: string[], allowBlog = false): void {
   for (const url of urls) {
     if (url.includes('/whop/')) {
       throw new Error(`FATAL: URL contains /whop/: ${url}`);
     }
-    if (url.includes('/blog/')) {
+    if (!allowBlog && url.includes('/blog/')) {
       throw new Error(`FATAL: URL contains /blog/: ${url}`);
     }
     if (url.includes('?')) {
@@ -213,24 +213,44 @@ function assertNoBadUrls(urls: string[]): void {
 }
 
 function assertNoLegacyFiles(publicDir: string): void {
-  const legacyPatterns = [
-    'sitemap-whops',
-    'blog.xml',
-    'noindex.xml',
-    'index-1.xml',
-    'gone.xml',
+  // Files the script legitimately generates (whitelist)
+  const allowedFiles = [
+    'sitemap.xml',
+    'sitemap-offers.xml',
+    'sitemap-static.xml',
+    'sitemap-blog.xml',
+  ];
+
+  // Exact filenames that should never exist
+  const legacyExactFiles = [
+    'sitemap-index.xml',
+  ];
+
+  // Prefixes - any file starting with these is legacy
+  const legacyPrefixes = [
+    'sitemap-whops',    // catches sitemap-whops-1.xml, sitemap-whops-2.xml, etc.
+    'sitemap-noindex',  // catches sitemap-noindex.xml, sitemap-noindex-old.xml, etc.
+    'sitemap-gone',     // catches any gone variants
   ];
 
   const files = existsSync(publicDir) ? readdirSync(publicDir) : [];
-  const sitemapsDir = join(publicDir, 'sitemaps');
-  const sitemapFiles = existsSync(sitemapsDir) ? readdirSync(sitemapsDir) : [];
 
-  const allFiles = [...files, ...sitemapFiles];
+  for (const file of files) {
+    // Only check sitemap files
+    if (!file.startsWith('sitemap')) continue;
 
-  for (const file of allFiles) {
-    for (const pattern of legacyPatterns) {
-      if (file.includes(pattern)) {
-        throw new Error(`FATAL: Legacy sitemap file exists: ${file}`);
+    // Skip files we legitimately generate
+    if (allowedFiles.includes(file)) continue;
+
+    // Check exact matches
+    if (legacyExactFiles.includes(file)) {
+      throw new Error(`FATAL: Legacy sitemap file found: ${file} - delete this file`);
+    }
+
+    // Check prefix matches
+    for (const prefix of legacyPrefixes) {
+      if (file.startsWith(prefix)) {
+        throw new Error(`FATAL: Legacy sitemap file found: ${file} - delete this file`);
       }
     }
   }
@@ -257,13 +277,11 @@ async function main() {
   }
 
   // Remove any legacy sitemap files from public/
-  // Note: sitemap.xml is NOT in this list because the script generates it
+  // Note: sitemap.xml, sitemap-static.xml, sitemap-offers.xml, sitemap-blog.xml
+  // are NOT in this list because the script generates them fresh
   const legacyFiles = [
     'sitemap-index.xml',
     'sitemap-whops-1.xml',
-    'sitemap-static.xml',
-    'sitemap-offers.xml',
-    'sitemap-blog.xml',
   ];
 
   for (const file of legacyFiles) {
@@ -355,34 +373,73 @@ async function main() {
   writeFileSync(join(publicDir, 'sitemap-static.xml'), staticSitemap);
   console.log(`   ✅ Generated sitemap-static.xml with ${staticEntries.length} URLs\n`);
 
-  // Step 6: Generate sitemap index (as sitemap.xml for GSC compatibility)
+  // Step 6: Generate blog sitemap
+  console.log('📝 Generating sitemap-blog.xml...');
+
+  const publishedPosts = await prisma.blogPost.findMany({
+    where: { published: true },
+    select: { slug: true, updatedAt: true, publishedAt: true },
+    orderBy: { publishedAt: 'desc' },
+  });
+
+  const blogUrls: string[] = [];
+  const blogEntries: string[] = [];
+
+  for (const post of publishedPosts) {
+    const url = `${SITE_URL}/blog/${post.slug}`;
+    blogUrls.push(url);
+    blogEntries.push(generateUrlEntry(
+      url,
+      (post.updatedAt || post.publishedAt || new Date()).toISOString(),
+      'monthly',
+      0.7
+    ));
+  }
+
+  // Assert no bad URLs (allow blog URLs for this sitemap)
+  assertNoBadUrls(blogUrls, true);
+
+  const blogSitemap = wrapUrlset(blogEntries);
+  writeFileSync(join(publicDir, 'sitemap-blog.xml'), blogSitemap);
+  console.log(`   ✅ Generated sitemap-blog.xml with ${blogEntries.length} URLs\n`);
+
+  // Step 7: Generate sitemap index (as sitemap.xml for GSC compatibility)
   console.log('📝 Generating sitemap.xml (index)...');
 
-  const sitemapIndex = generateSitemapIndex([
+  const sitemapList = [
     `${SITE_URL}/sitemap-offers.xml`,
     `${SITE_URL}/sitemap-static.xml`,
-  ]);
+  ];
+
+  // Only include blog sitemap if there are published posts
+  if (blogEntries.length > 0) {
+    sitemapList.push(`${SITE_URL}/sitemap-blog.xml`);
+  }
+
+  const sitemapIndex = generateSitemapIndex(sitemapList);
 
   writeFileSync(join(publicDir, 'sitemap.xml'), sitemapIndex);
-  console.log('   ✅ Generated sitemap.xml referencing 2 sitemaps\n');
+  console.log(`   ✅ Generated sitemap.xml referencing ${sitemapList.length} sitemaps\n`);
 
-  // Step 7: Final assertions
+  // Step 8: Final assertions
   console.log('🔒 Running final assertions...');
   assertNoLegacyFiles(publicDir);
   console.log('   ✅ No legacy sitemap files found\n');
 
-  // Step 8: Summary
+  // Step 9: Summary
   console.log('═══════════════════════════════════════');
   console.log('✅ CLEAN SITEMAP GENERATION COMPLETE');
   console.log('═══════════════════════════════════════');
   console.log('');
   console.log('Generated files:');
-  console.log(`  • public/sitemap.xml (index, 2 sitemaps)`);
+  console.log(`  • public/sitemap.xml (index, ${sitemapList.length} sitemaps)`);
   console.log(`  • public/sitemap-offers.xml (${offerEntries.length} URLs)`);
   console.log(`  • public/sitemap-static.xml (${staticEntries.length} URLs)`);
+  if (blogEntries.length > 0) {
+    console.log(`  • public/sitemap-blog.xml (${blogEntries.length} URLs)`);
+  }
   console.log('');
   console.log('NOT generated (by design):');
-  console.log('  • NO blog sitemap');
   console.log('  • NO noindex sitemap');
   console.log('  • NO /whop/ URLs');
   console.log('  • NO chunked sitemaps');
