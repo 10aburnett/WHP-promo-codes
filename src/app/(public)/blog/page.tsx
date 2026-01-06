@@ -109,6 +109,24 @@ export default async function BlogPage() {
                   </p>
                 </div>
               </div>
+
+              {/* Contextual CTA */}
+              <div
+                className="mt-10 p-6 rounded-xl border text-center"
+                style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}
+              >
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  Ready to save on your next purchase? Browse our{' '}
+                  <Link href="/offers" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+                    verified promo codes
+                  </Link>
+                  {' '}or{' '}
+                  <Link href="/submit" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+                    submit your own code
+                  </Link>
+                  {' '}to help others save.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -262,6 +280,24 @@ export default async function BlogPage() {
                   </article>
                 </Link>
               ))}
+            </div>
+
+            {/* Contextual CTA */}
+            <div
+              className="mt-10 p-6 rounded-xl border text-center"
+              style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}
+            >
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Ready to save on your next purchase? Browse our{' '}
+                <Link href="/offers" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+                  verified promo codes
+                </Link>
+                {' '}or{' '}
+                <Link href="/submit" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+                  submit your own code
+                </Link>
+                {' '}to help others save.
+              </p>
             </div>
           </div>
         </div>

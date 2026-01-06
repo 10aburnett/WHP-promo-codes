@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Script from 'next/script'
+import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { getBlogPostBySlug } from '@/lib/blog'
 import BlogPostClient from '@/components/BlogPostClient'
@@ -229,6 +230,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Pass the processed post data to the client component */}
       <BlogPostClient post={processedPost} />
+
+      {/* SSR Contextual CTA - Natural internal links for SEO */}
+      <div className="mx-auto w-[90%] md:w-[94%] max-w-[1100px] pb-12">
+        <div
+          className="p-6 rounded-xl border text-center"
+          style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--background-secondary)' }}
+        >
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Looking for discounts on Whop products? Browse our{' '}
+            <Link href="/offers" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+              latest promo codes
+            </Link>
+            {' '}or{' '}
+            <Link href="/submit" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+              submit your own code
+            </Link>
+            {' '}to get featured.
+          </p>
+        </div>
+      </div>
     </>
   )
 }

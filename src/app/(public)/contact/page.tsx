@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { siteOrigin } from '@/lib/site-origin';
 import ContactClient from '@/components/ContactClient';
 import { SITE_BRAND, CONTACT_EMAIL } from '@/lib/brand';
@@ -75,6 +76,22 @@ export default function ContactPage() {
       />
 
       <ContactClient />
+
+      {/* SSR Contextual Links for SEO */}
+      <div className="mx-auto w-[90%] md:w-[92%] max-w-[1040px] pb-12">
+        <div className="pt-6 text-center">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Want to learn more about us? Visit our{' '}
+            <Link href="/about" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+              About page
+            </Link>
+            {' '}or read the latest on our{' '}
+            <Link href="/blog" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+              Blog
+            </Link>.
+          </p>
+        </div>
+      </div>
     </>
   );
 }

@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2025-12-13T14:42:51.734Z",
+  "count": 2,
+  "description": "Deals still thin/empty - do not revive yet",
+  "criteria": {
+    "aboutContentBelow": 150
+  },
+  "slugs": [
+    "-1-on-1-oa-mastery-coaching",
+    "-builder-plan"
+  ],
+  "deals": [
+    {
+      "slug": "-1-on-1-oa-mastery-coaching",
+      "name": "🌠 1-on-1 OA Mastery Coaching",
+      "retired": true,
+      "retirement": "GONE",
+      "indexingStatus": "NOINDEX",
+      "aboutContentLen": 0,
+      "faqLen": 0,
+      "termsLen": 0,
+      "howToRedeemLen": 0,
+      "featuresLen": 0,
+      "promoDetailsLen": 0,
+      "otherSectionsCount": 0,
+      "otherSections": [],
+      "promoCodeCount": 0,
+      "nonEmptyCodeCount": 0,
+      "hasPromoCodes": false,
+      "classification": "blocked",
+      "reasons": [
+        "aboutContent only 0 chars (need >= 150)",
+        "no aboutContent"
+      ]
+    },
+    {
+      "slug": "-builder-plan",
+      "name": "🏗️ Builder Plan",
+      "retired": true,
+      "retirement": "GONE",
+      "indexingStatus": "NOINDEX",
+      "aboutContentLen": 0,
+      "faqLen": 0,
+      "termsLen": 0,
+      "howToRedeemLen": 0,
+      "featuresLen": 0,
+      "promoDetailsLen": 0,
+      "otherSectionsCount": 0,
+      "otherSections": [],
+      "promoCodeCount": 0,
+      "nonEmptyCodeCount": 0,
+      "hasPromoCodes": false,
+      "classification": "blocked",
+      "reasons": [
+        "aboutContent only 0 chars (need >= 150)",
+        "no aboutContent"
+      ]
+    }
+  ]
+}

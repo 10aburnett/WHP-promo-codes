@@ -187,18 +187,31 @@ export default async function OffersHubPage() {
           })}
         </div>
 
-        {/* Back to Home */}
+        {/* Footer Navigation */}
         <nav className="mt-12 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
-            style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
-          >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Back to home
-          </Link>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+              style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Back to home
+            </Link>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              Have a promo code to share?{' '}
+              <Link
+                href="/submit"
+                className="font-medium underline hover:opacity-80 transition-opacity"
+                style={{ color: 'var(--accent-color)' }}
+              >
+                Submit it here
+              </Link>
+              {' '}to help others save.
+            </p>
+          </div>
         </nav>
       </div>
     </main>

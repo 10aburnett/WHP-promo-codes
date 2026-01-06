@@ -1,67 +1,61 @@
-'use client'
-import { useState } from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import SubscribeFormClient from '@/components/SubscribeFormClient'
+import { SITE_BRAND } from '@/lib/brand'
+import { siteOrigin } from '@/lib/site-origin'
+
+// SSG configuration
+export const dynamic = 'force-static'
+export const revalidate = 86400 // 24h
+
+const title = `Subscribe to ${SITE_BRAND} Newsletter | Get Promo Code Alerts`
+const description = `Receive periodic emails featuring recently added promo codes, seasonal discounts, and useful buying guides. No spam, unsubscribe anytime.`
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: {
+    canonical: 'https://whoppromocodes.com/subscribe',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title,
+    description,
+    url: `${siteOrigin()}/subscribe`,
+    type: 'website',
+    siteName: SITE_BRAND,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+  },
+}
+
+const faqs = [
+  {
+    question: 'How often do you send emails?',
+    answer: 'Typically once a week with a digest of new codes. During busy promotional seasons, you might see up to two or three emails per week.'
+  },
+  {
+    question: 'Can I opt out later?',
+    answer: 'Yes. Every email contains an unsubscribe link, or you can use the opt-out page on this site whenever you like.'
+  },
+  {
+    question: 'Will my email be shared?',
+    answer: "No. We never sell or share your address with third parties. It's used only for sending deal updates."
+  }
+]
 
 export default function SubscribePage() {
-  const [formData, setFormData] = useState({
-    email: '',
-    name: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setMessage(null)
-
-    try {
-      const response = await fetch('/api/mailing-list/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          name: formData.name,
-          source: 'subscribe_page'
-        })
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setMessage({ type: 'success', text: data.message })
-        setFormData({ email: '', name: '' })
-      } else {
-        setMessage({ type: 'error', text: data.error || 'Failed to subscribe' })
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to subscribe. Please try again.' })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const faqs = [
-    {
-      question: 'How often do you send emails?',
-      answer: 'Typically once a week with a digest of new codes. During busy promotional seasons, you might see up to two or three emails per week.'
-    },
-    {
-      question: 'Can I opt out later?',
-      answer: 'Yes. Every email contains an unsubscribe link, or you can use the opt-out page on this site whenever you like.'
-    },
-    {
-      question: 'Will my email be shared?',
-      answer: "No. We never sell or share your address with third parties. It's used only for sending deal updates."
-    }
-  ]
-
   return (
     <div className="min-h-screen py-16 transition-theme" style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}>
       <div className="mx-auto w-[90%] md:w-[95%] max-w-[640px]">
 
-        {/* Left-aligned Header */}
+        {/* SSR Header */}
         <header className="mb-12">
           <span className="text-xs font-medium tracking-wider uppercase mb-3 block" style={{ color: 'var(--text-muted)' }}>
             Newsletter
@@ -74,7 +68,7 @@ export default function SubscribePage() {
           </p>
         </header>
 
-        {/* Benefits - Horizontal Layout */}
+        {/* SSR Benefits */}
         <div className="mb-12 space-y-4">
           <div className="flex items-start gap-4">
             <div
@@ -106,7 +100,7 @@ export default function SubscribePage() {
             <div>
               <h3 className="text-sm font-medium mb-1" style={{ color: 'var(--text-color)' }}>Timely alerts</h3>
               <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Hear about time-sensitive promotions while they're still active.
+                Hear about time-sensitive promotions while they&apos;re still active.
               </p>
             </div>
           </div>
@@ -129,105 +123,10 @@ export default function SubscribePage() {
           </div>
         </div>
 
-        {/* Form Container */}
-        <div
-          className="p-8 mb-12"
-          style={{ backgroundColor: 'var(--background-secondary)' }}
-        >
-          {/* Inline Alert */}
-          {message && (
-            <div
-              className="mb-6 py-3 px-4 border-l-2"
-              style={{
-                borderLeftColor: message.type === 'success' ? 'var(--accent-color)' : '#ef4444',
-                backgroundColor: message.type === 'success' ? 'rgba(22, 101, 52, 0.05)' : 'rgba(239, 68, 68, 0.05)'
-              }}
-            >
-              <p className="text-sm" style={{ color: message.type === 'success' ? 'var(--accent-color)' : '#ef4444' }}>
-                {message.text}
-              </p>
-            </div>
-          )}
+        {/* Client-side Form */}
+        <SubscribeFormClient />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Field - Underline Style */}
-            <div className="relative">
-              <input
-                type="text"
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full bg-transparent border-0 border-b-2 px-0 py-3 text-base focus:outline-none focus:ring-0 peer transition-colors"
-                style={{
-                  borderBottomColor: 'var(--border-color)',
-                  color: 'var(--text-color)'
-                }}
-                placeholder=" "
-                required
-                disabled={isSubmitting}
-              />
-              <label
-                htmlFor="name"
-                className="absolute left-0 top-3 text-sm transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-xs"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Name
-              </label>
-              <div
-                className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 peer-focus:w-full"
-                style={{ backgroundColor: 'var(--accent-color)' }}
-              />
-            </div>
-
-            {/* Email Field - Underline Style */}
-            <div className="relative">
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full bg-transparent border-0 border-b-2 px-0 py-3 text-base focus:outline-none focus:ring-0 peer transition-colors"
-                style={{
-                  borderBottomColor: 'var(--border-color)',
-                  color: 'var(--text-color)'
-                }}
-                placeholder=" "
-                required
-                disabled={isSubmitting}
-              />
-              <label
-                htmlFor="email"
-                className="absolute left-0 top-3 text-sm transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:text-xs"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Email
-              </label>
-              <div
-                className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 peer-focus:w-full"
-                style={{ backgroundColor: 'var(--accent-color)' }}
-              />
-            </div>
-
-            {/* Submit Button - Wide Pill */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3.5 rounded-full font-medium text-base transition-all duration-200 disabled:opacity-50 shadow-sm hover:shadow-md"
-              style={{
-                backgroundColor: 'var(--accent-color)',
-                color: 'white'
-              }}
-            >
-              {isSubmitting ? 'Subscribing...' : 'Join the mailing list'}
-            </button>
-
-            <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
-              You can unsubscribe at any time. No spam, ever.
-            </p>
-          </form>
-        </div>
-
-        {/* FAQ Accordion */}
+        {/* SSR FAQ - Using native details/summary for no-JS accessibility */}
         <section>
           <h2 className="text-lg font-semibold mb-6" style={{ color: 'var(--text-color)' }}>
             Frequently asked
@@ -235,21 +134,20 @@ export default function SubscribePage() {
 
           <div className="space-y-0">
             {faqs.map((faq, index) => (
-              <div
+              <details
                 key={index}
-                className="border-b"
+                className="border-b group"
                 style={{ borderColor: 'var(--border-color)' }}
               >
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full py-4 flex items-center justify-between text-left transition-colors"
+                <summary
+                  className="w-full py-4 flex items-center justify-between text-left cursor-pointer list-none"
+                  style={{ color: 'var(--text-color)' }}
                 >
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-color)' }}>
+                  <span className="text-sm font-medium pr-4">
                     {faq.question}
                   </span>
                   <svg
-                    className={`w-4 h-4 flex-shrink-0 transition-transform duration-200 ${openFaq === index ? 'rotate-180' : ''}`}
+                    className="w-4 h-4 flex-shrink-0 transition-transform duration-200 group-open:rotate-180"
                     style={{ color: 'var(--text-muted)' }}
                     fill="none"
                     stroke="currentColor"
@@ -258,20 +156,18 @@ export default function SubscribePage() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
-                </button>
-                <div
-                  className={`overflow-hidden transition-all duration-200 ${openFaq === index ? 'max-h-40 pb-4' : 'max-h-0'}`}
-                >
+                </summary>
+                <div className="pb-4">
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                     {faq.answer}
                   </p>
                 </div>
-              </div>
+              </details>
             ))}
           </div>
         </section>
 
-        {/* Footer Link */}
+        {/* SSR Footer Links */}
         <div className="mt-12 pt-8 border-t" style={{ borderColor: 'var(--border-color)' }}>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             Already on the list?{' '}
@@ -282,6 +178,17 @@ export default function SubscribePage() {
             >
               Manage your subscription
             </Link>
+          </p>
+          <p className="text-sm mt-3" style={{ color: 'var(--text-secondary)' }}>
+            Can&apos;t wait? Browse{' '}
+            <Link
+              href="/offers"
+              className="font-medium underline hover:opacity-80 transition-opacity"
+              style={{ color: 'var(--accent-color)' }}
+            >
+              all available promo codes
+            </Link>
+            {' '}now.
           </p>
         </div>
 

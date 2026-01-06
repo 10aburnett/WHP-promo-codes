@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import HomePageServer from '@/components/HomePageServer';
 import StatisticsSectionServer from '@/components/StatisticsSectionServer';
 import CallToAction from '@/components/CallToAction';
@@ -544,6 +545,22 @@ export default async function Home({
       <Suspense fallback={<StatsSkeleton />}>
         <StatisticsSectionServer stats={statistics} />
       </Suspense>
+
+      {/* Contextual Links */}
+      <div className="container mx-auto max-w-6xl px-3 sm:px-4 lg:px-0 pb-12">
+        <div className="text-center">
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            Learn more{' '}
+            <Link href="/about" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+              about us
+            </Link>
+            {' '}or read tips and guides on our{' '}
+            <Link href="/blog" className="font-medium underline" style={{ color: 'var(--accent-color)' }}>
+              blog
+            </Link>.
+          </p>
+        </div>
+      </div>
     </main>
   );
 }

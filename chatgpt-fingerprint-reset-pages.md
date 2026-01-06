@@ -753,11 +753,11 @@ export default function ContactClient() {
                       {t('contact.emailSupportDesc')}
                     </p>
                     <a
-                      href="mailto:whoppromocodescontact@gmail.com"
+                      href="mailto:whoppromocodes@gmail.com"
                       className="transition-colors duration-200 hover:opacity-80"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      whoppromocodescontact@gmail.com
+                      whoppromocodes@gmail.com
                     </a>
                   </div>
                 </div>
@@ -777,11 +777,11 @@ export default function ContactClient() {
                       {t('contact.businessInquiriesDesc')}
                     </p>
                     <a
-                      href="mailto:whoppromocodescontact@gmail.com"
+                      href="mailto:whoppromocodes@gmail.com"
                       className="transition-colors duration-200 hover:opacity-80"
                       style={{ color: 'var(--accent-color)' }}
                     >
-                      whoppromocodescontact@gmail.com
+                      whoppromocodes@gmail.com
                     </a>
                   </div>
                 </div>
@@ -997,11 +997,11 @@ export default function UnsubscribePage() {
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
               Having trouble? Contact us at{' '}
               <a
-                href="mailto:whoppromocodescontact@gmail.com"
+                href="mailto:whoppromocodes@gmail.com"
                 className="hover:opacity-80 transition-opacity"
                 style={{ color: 'var(--accent-color)' }}
               >
-                whoppromocodescontact@gmail.com
+                whoppromocodes@gmail.com
               </a>
             </p>
           </div>
