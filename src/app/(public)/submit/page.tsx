@@ -3,7 +3,7 @@ import Link from 'next/link';
 import PromoCodeSubmissionForm from '@/components/PromoCodeSubmissionForm';
 
 export const metadata: Metadata = {
-  title: 'Submit Your Promo Code | Get Your Whop Discount Featured',
+  title: 'Submit Your Whop Promo Code | Get Your Discount Featured',
   description: 'Share your Whop promo code with thousands of deal-seekers. Free submission, fast review, and instant exposure for creators in trading, sports betting, and reselling niches.',
   keywords: [
     'submit promo code',
@@ -18,14 +18,14 @@ export const metadata: Metadata = {
     'digital product promo code',
   ],
   openGraph: {
-    title: 'Submit Your Promo Code | Get Your Whop Discount Featured',
+    title: 'Submit Your Whop Promo Code | Get Your Discount Featured',
     description: 'Share your Whop promo code with thousands of deal-seekers. Free submission, fast review, and instant exposure.',
     type: 'website',
     url: 'https://whoppromocodes.com/submit',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Submit Your Promo Code | WhopPromoCodes',
+    title: 'Submit Your Whop Promo Code | WhopPromoCodes',
     description: 'Share your Whop discount with thousands of buyers actively looking for deals.',
   },
   alternates: {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'Submit Your Promo Code',
+  name: 'Submit Your Whop Promo Code',
   description: 'Share your Whop promo code with thousands of deal-seekers. Free submission for creators.',
   url: 'https://whoppromocodes.com/submit',
   mainEntity: {
@@ -78,7 +78,7 @@ export default function SubmitCodePage() {
               className="text-3xl md:text-4xl font-bold mb-3"
               style={{ color: 'var(--text-color)' }}
             >
-              Submit Your Promo Code
+              Submit Your Whop Promo Code
             </h1>
             <p
               className="text-base md:text-lg mb-4"
@@ -101,7 +101,7 @@ export default function SubmitCodePage() {
               className="text-xl font-bold text-center mb-6"
               style={{ color: 'var(--text-color)' }}
             >
-              Why Share Your Promo Code With Us?
+              Why Share Your Whop Promo Code With Us?
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {/* Benefit 1 - Instant Exposure */}
@@ -296,7 +296,7 @@ export default function SubmitCodePage() {
               className="text-xl font-bold text-center mb-4"
               style={{ color: 'var(--text-color)' }}
             >
-              Submit Your Promo Code Now
+              Submit Your Whop Promo Code Now
             </h2>
             {/* Only this component is client-side */}
             <PromoCodeSubmissionForm inline />
