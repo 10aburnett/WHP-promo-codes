@@ -16,7 +16,7 @@ export default function NotFound() {
       title="This page could not be found"
       description="This address doesn't correspond to any current page on WhopPromoCodes. It may have changed, expired, or been entered incorrectly."
       primaryCta={{ href: '/', label: 'Go to the main page' }}
-      secondaryCta={{ href: '/blog', label: 'Browse our articles' }}
+      secondaryCta={{ href: '/blog', label: 'Browse our blog' }}
     />
   );
 }

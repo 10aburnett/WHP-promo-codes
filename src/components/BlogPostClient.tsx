@@ -68,7 +68,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
               <li aria-hidden="true">/</li>
               <li>
                 <Link href="/blog" className="hover:opacity-80 transition-opacity" style={{ color: 'var(--accent-color)' }}>
-                  Insights
+                  Blog
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
@@ -295,7 +295,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                 color: 'white',
               }}
             >
-              Browse all articles
+              Browse all posts
             </Link>
           </div>
         </div>

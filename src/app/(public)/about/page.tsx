@@ -275,7 +275,7 @@ export default function AboutPage() {
                 className="text-sm font-medium hover:opacity-80 transition-opacity"
                 style={{ color: 'var(--accent-color)' }}
               >
-                View articles and updates <span aria-hidden="true">→</span>
+                View blog <span aria-hidden="true">→</span>
               </Link>
             </div>
           </footer>

@@ -70,7 +70,7 @@ export function getComputedSeo(
   const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL || 'https://whoppromocodes.com';
 
   return {
-    title: seoSettings.seoTitle || `${post.title} - WhopPromoCodes Articles`,
+    title: seoSettings.seoTitle || `${post.title} - WhopPromoCodes Blog`,
     description: seoSettings.seoDescription || post.excerpt || '',
     canonical: seoSettings.canonicalUrl || `${siteOrigin}/blog/${post.slug}`,
     ogTitle: seoSettings.ogTitle || seoSettings.seoTitle || post.title,

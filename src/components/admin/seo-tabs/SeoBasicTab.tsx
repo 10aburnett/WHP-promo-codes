@@ -11,7 +11,7 @@ interface Props {
 export function SeoBasicTab({ seoSettings, onUpdate, post }: Props) {
   // Computed values for preview
   const effectiveTitle =
-    seoSettings.seoTitle || `${post.title} - WhopPromoCodes Articles`;
+    seoSettings.seoTitle || `${post.title} - WhopPromoCodes Blog`;
   const effectiveDescription = seoSettings.seoDescription || post.excerpt;
   const effectiveUrl =
     seoSettings.canonicalUrl ||
@@ -41,7 +41,7 @@ export function SeoBasicTab({ seoSettings, onUpdate, post }: Props) {
       <SeoField
         label="SEO Title"
         value={seoSettings.seoTitle}
-        placeholder={`${post.title} - WhopPromoCodes Articles`}
+        placeholder={`${post.title} - WhopPromoCodes Blog`}
         onChange={(val) => onUpdate('seoTitle', val || null)}
         maxLength={60}
         showCount

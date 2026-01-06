@@ -161,7 +161,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Articles',
+        name: 'Blog',
         item: `${siteOrigin()}/blog`
       },
       {

@@ -153,7 +153,7 @@ export function generateBreadcrumbSchema(postTitle: string, slug: string) {
       {
         '@type': 'ListItem',
         'position': 2,
-        'name': 'Articles',
+        'name': 'Blog',
         'item': `${origin}/blog`
       },
       {

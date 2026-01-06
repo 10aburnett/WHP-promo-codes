@@ -16,7 +16,7 @@ export default function OfferNotFound() {
       title="We can't locate this offer"
       description="There's no active promo page for this product on WhopPromoCodes. It may have ended, been removed by the creator, or the link may be inaccurate."
       primaryCta={{ href: '/', label: 'See available deals' }}
-      secondaryCta={{ href: '/blog', label: 'Visit our insights' }}
+      secondaryCta={{ href: '/blog', label: 'Visit our blog' }}
     />
   );
 }

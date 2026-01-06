@@ -24,7 +24,7 @@ const currentYear = new Date().getFullYear()
 // Do not make indexable or add to sitemap without explicit SEO review.
 // This prevents topical dilution and crawl surface expansion during trust-building.
 export const metadata: Metadata = {
-  title: `${SITE_BRAND} Articles - Reviews, Guides & Product Analysis ${currentYear}`,
+  title: `${SITE_BRAND} Blog - Reviews, Guides & Product Analysis ${currentYear}`,
   description: `Read in-depth coverage of digital tools, software platforms, and online services. Practical breakdowns and independent reviews updated for ${currentYear}.`,
   keywords: `articles, reviews ${currentYear}, software analysis, digital tools, online services, product guides, technology insights`,
   alternates: {
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: `${SITE_BRAND} Articles - Software Reviews & Digital Product Analysis ${currentYear}`,
+    title: `${SITE_BRAND} Blog - Software Reviews & Digital Product Analysis ${currentYear}`,
     description: `Browse detailed guides on digital products and services. Independent analysis of tools, platforms, and online communities for ${currentYear}.`,
     type: 'website',
     url: `${siteOrigin()}/blog`
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_BRAND} Articles - Digital Product Reviews ${currentYear}`,
+    title: `${SITE_BRAND} Blog - Digital Product Reviews ${currentYear}`,
     description: `Coverage of software, online tools, and digital services. Analysis and guides to help you make informed decisions in ${currentYear}.`
   }
 }
@@ -60,7 +60,7 @@ export default async function BlogPage() {
               <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
                 <div>
                   <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
-                    WhopPromoCodes Insights
+                    WhopPromoCodes Blog
                   </p>
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
                     Guides, updates & playbooks for smarter Whop spending.
@@ -81,7 +81,7 @@ export default async function BlogPage() {
                     Occasional roundups of new Whop products, notable promo codes and strategy breakdowns. No clutter or spam.
                   </p>
                   <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    New articles are usually published a few times each month.
+                    New posts are usually published a few times each month.
                   </p>
                 </aside>
               </div>
@@ -102,10 +102,10 @@ export default async function BlogPage() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                    There are no published articles yet
+                    There are no published posts yet
                   </h2>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    We&apos;re currently preparing in-depth guides and examples. Check back soon for new articles.
+                    We&apos;re currently preparing in-depth guides and examples. Check back soon for new posts.
                   </p>
                 </div>
               </div>
@@ -149,7 +149,7 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
-                  WhopPromoCodes Insights
+                  WhopPromoCodes Blog
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
                   Guides, updates & playbooks for smarter Whop spending.
@@ -170,7 +170,7 @@ export default async function BlogPage() {
                   Occasional roundups of new Whop products, notable promo codes and strategy breakdowns. No clutter or spam.
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  New articles are usually published a few times each month.
+                  New posts are usually published a few times each month.
                 </p>
               </aside>
             </div>
@@ -277,7 +277,7 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)] gap-8 items-start mb-10">
               <div>
                 <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: 'var(--accent-color)' }}>
-                  WhopPromoCodes Insights
+                  WhopPromoCodes Blog
                 </p>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3" style={{ color: 'var(--text-color)', lineHeight: 1.2 }}>
                   Guides, updates & playbooks for smarter Whop spending.
@@ -298,7 +298,7 @@ export default async function BlogPage() {
                   Occasional roundups of new Whop products, notable promo codes and strategy breakdowns. No clutter or spam.
                 </p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                  New articles are usually published a few times each month.
+                  New posts are usually published a few times each month.
                 </p>
               </aside>
             </div>
@@ -318,7 +318,7 @@ export default async function BlogPage() {
                   </svg>
                 </div>
                 <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-color)' }}>
-                  Blog articles could not be loaded
+                  Blog posts could not be loaded
                 </h2>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                   An issue occurred while retrieving blog content. Please refresh the page or try again shortly.
