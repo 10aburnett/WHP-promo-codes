@@ -46,27 +46,31 @@ export function extractHeadings(content: string): Array<{
   level: number
 }> {
   const headings: Array<{ id: string; text: string; level: number }> = []
-  
-  // Match h1-h6 tags
-  const headingRegex = /<h([1-6])[^>]*?(?:id="([^"]*)")?[^>]*>(.*?)<\/h[1-6]>/gi
+
+  // Match h1-h6 tags - capture level, all attributes, and content
+  const headingRegex = /<h([1-6])([^>]*)>(.*?)<\/h[1-6]>/gi
   let match
-  
+
   while ((match = headingRegex.exec(content)) !== null) {
     const level = parseInt(match[1])
-    const existingId = match[2]
+    const attrs = match[2]
     const rawText = match[3].replace(/<[^>]*>/g, '').trim() // Remove HTML tags from heading text
     const text = decodeHtmlEntities(rawText) // Decode HTML entities like &amp; to &
-    
-    // Generate ID if not exists
+
+    // Extract existing id from attributes if present
+    const idMatch = attrs.match(/id="([^"]*)"/i)
+    const existingId = idMatch ? idMatch[1] : null
+
+    // Use existing ID if present, otherwise generate from text
     const id = existingId || text.toLowerCase()
       .replace(/[^\w\s-]/g, '') // Remove special characters
       .replace(/\s+/g, '-') // Replace spaces with hyphens
       .replace(/-+/g, '-') // Replace multiple hyphens with single
       .trim()
-    
+
     headings.push({ id, text, level })
   }
-  
+
   return headings
 }
 
