@@ -153,7 +153,7 @@ export default async function LocalizedHome({ params }: { params: { locale: stri
         '@type': 'Organization',
         'name': 'WhopPromoCodes',
         'url': 'https://whoppromocodes.com',
-        'logo': '/logo.png',
+        'logo': '/logo.svg',
         'description': `We review and compare the best promo codes and digital product discounts in ${currentYear}.`,
         'sameAs': []
       })}} />

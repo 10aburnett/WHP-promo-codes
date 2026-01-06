@@ -33,7 +33,7 @@ export default function AltsIsland({ items, exploreHref, replaceId }: { items: I
               className="flex gap-3 items-center focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
             >
               <img
-                src={w.logo || '/logo.png'}
+                src={w.logo || '/logo.svg'}
                 alt={w.name}
                 width={48}
                 height={48}

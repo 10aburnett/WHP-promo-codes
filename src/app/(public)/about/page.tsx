@@ -59,7 +59,7 @@ export default function AboutPage() {
             "@id": `${origin}#dpc-org`,
             name: SITE_BRAND,
             url: origin,
-            logo: `${origin}/logo.png`,
+            logo: `${origin}/logo.svg`,
             description: "A directory platform that catalogues promotional codes and pricing for digital tools and services.",
             contactPoint: { "@type": "ContactPoint", contactType: "customer support", url: `${origin}/contact` }
           })

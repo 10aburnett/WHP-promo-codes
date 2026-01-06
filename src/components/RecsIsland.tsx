@@ -32,7 +32,7 @@ export default function RecsIsland({ items, replaceId }: { items: Item[]; replac
             className="flex gap-3 items-center focus-visible:ring-2 focus-visible:ring-[var(--accent-color)]"
           >
             <img
-              src={w.logo || '/logo.png'}
+              src={w.logo || '/logo.svg'}
               alt={w.name}
               width={48}
               height={48}

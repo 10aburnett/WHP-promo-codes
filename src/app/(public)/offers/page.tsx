@@ -142,7 +142,7 @@ export default async function OffersHubPage() {
                     >
                       {/* Logo */}
                       <img
-                        src={offer.logo || '/logo.png'}
+                        src={offer.logo || '/logo.svg'}
                         alt={`${offer.name} logo`}
                         width={40}
                         height={40}

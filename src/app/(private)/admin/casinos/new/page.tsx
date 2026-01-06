@@ -114,7 +114,7 @@ export default function NewCasinoPage() {
                 value={casinoData.logo}
                 onChange={handleChange}
                 className="w-full bg-[#1E1E27] border border-[#404055] rounded-md px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#68D08B]"
-                placeholder="/images/casino-logo.png"
+                placeholder="/images/casino-logo.svg"
               />
             </div>
             

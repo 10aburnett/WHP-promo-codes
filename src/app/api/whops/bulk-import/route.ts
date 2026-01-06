@@ -59,7 +59,7 @@ async function downloadAndStoreImage(imageUrl: string, whopName: string): Promis
     return `/uploads/${fileName}`;
   } catch (error) {
     console.error(`Error downloading image for ${whopName}:`, error);
-    return '/images/default-logo.png';
+    return '/images/default-logo.svg';
   }
 }
 

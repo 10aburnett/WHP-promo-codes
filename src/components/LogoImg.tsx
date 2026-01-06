@@ -21,7 +21,7 @@ export default function LogoImg({
   className,
   loading,
   decoding = 'async',
-  fallbackSrc = '/logo.png',
+  fallbackSrc = '/logo.svg',
 }: Props) {
   const [current, setCurrent] = React.useState(src || fallbackSrc);
   return (

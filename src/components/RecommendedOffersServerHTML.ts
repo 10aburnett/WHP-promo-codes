@@ -24,7 +24,7 @@ export function renderRecommendedHTML(items: DealData[]) {
 
   const lis = items.map((w) => {
     const href = `/offer/${encodeURIComponent(w.slug)}`;
-    const logo = w.logo || '/logo.png';
+    const logo = w.logo || '/logo.svg';
     const desc = w.description || '&nbsp;';
     const cat  = w.category || '&nbsp;';
     const rating = typeof w.rating === 'number' ? `★ ${w.rating.toFixed(1)}` : '&nbsp;';

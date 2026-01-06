@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Green background for social sharing -->
+  <rect width="1200" height="630" fill="#089669"/>
+  
+  <!-- WPC text centered for social media -->
+  <text x="600" y="330"
+        font-family="Arial, -apple-system, BlinkMacSystemFont, sans-serif"
+        font-size="180"
+        font-weight="bold"
+        text-anchor="middle"
+        fill="white"
+        letter-spacing="8px">WPC</text>
+  
+  <!-- Subtitle for social sharing -->
+  <text x="600" y="420"
+        font-family="Arial, -apple-system, BlinkMacSystemFont, sans-serif"
+        font-size="50"
+        font-weight="normal"
+        text-anchor="middle"
+        fill="white"
+        opacity="0.9">Whop Promo Codes</text>
+</svg>

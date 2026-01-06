@@ -324,7 +324,7 @@ export default async function Home({
     url: siteUrl,
     logo: {
       '@type': 'ImageObject',
-      url: absoluteUrl('/logo.png'),
+      url: absoluteUrl('/logo.svg'),
       width: 400,
       height: 400,
     },

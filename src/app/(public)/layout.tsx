@@ -118,7 +118,7 @@ export default async function PublicLayout({
     org: {
       name: SITE_BRAND,
       url: absoluteUrl(),
-      logo: absoluteUrl('/logo.png'),
+      logo: absoluteUrl('/logo.svg'),
       // sameAs removed until new brand social accounts exist
     },
     site: {

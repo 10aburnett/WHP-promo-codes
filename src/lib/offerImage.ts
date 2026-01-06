@@ -55,7 +55,7 @@ export function isAllowedOfferHost(u?: string | null): boolean {
  * Safely resolve a Whop logo URL for rendering
  * Returns the coerced URL if it's from an allowed host, otherwise returns a fallback
  */
-export function resolveOfferLogoUrl(src?: string | null, fallback: string = '/logo.png'): string {
+export function resolveOfferLogoUrl(src?: string | null, fallback: string = '/logo.svg'): string {
   const coerced = coerceOfferLogoUrl(src);
 
   if (!coerced) return fallback;

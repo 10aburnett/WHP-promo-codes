@@ -47,7 +47,7 @@ export default function OfferMiniPreview({
 
         {/* Thumbnail */}
         <img
-          src={logo || '/logo.png'}
+          src={logo || '/logo.svg'}
           alt={`${name} logo`}
           width={44}
           height={44}

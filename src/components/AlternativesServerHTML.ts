@@ -49,7 +49,7 @@ function getPromoText(whop: Alternative): string {
 }
 
 function resolveLogoUrl(logo: string | null | undefined): string {
-  if (!logo) return '/logo.png';
+  if (!logo) return '/logo.svg';
 
   // If it's already a full URL, return as-is
   if (logo.startsWith('http://') || logo.startsWith('https://')) {

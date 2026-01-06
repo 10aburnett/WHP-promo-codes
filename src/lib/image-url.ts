@@ -6,7 +6,7 @@ import { coerceOfferLogoUrl } from './offerImage';
 export function resolveLogoUrl(input?: string | null): string {
   // Return fallback for empty/null input
   if (!input || input.trim() === '') {
-    return '/logo.png';
+    return '/logo.svg';
   }
 
   // Remove leading/trailing whitespace
@@ -24,7 +24,7 @@ export function resolveLogoUrl(input?: string | null): string {
 
   // Handle empty result after cleaning
   if (!cleanPath) {
-    return '/logo.png';
+    return '/logo.svg';
   }
 
   // IMPORTANT: Keep local paths relative (no origin prefix) so they work on any host
