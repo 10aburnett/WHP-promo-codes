@@ -9,7 +9,7 @@ import { generateArticleSchema, generateBreadcrumbSchema, calculateReadingTime, 
 import { siteOrigin } from '@/lib/site-origin'
 import { SITE_BRAND, SITE_AUTHOR } from '@/lib/brand'
 import { parseContentWithSeo, getComputedSeo } from '@/lib/seo-parser'
-import { generateToc, injectTocIntoContent } from '@/lib/toc-generator'
+import { generateToc } from '@/lib/toc-generator'
 import { SchemaMarkup } from '@/components/SchemaMarkup'
 
 // SSG + ISR configuration
@@ -188,15 +188,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // 2. Add internal links to other blog posts
   optimizedContent = await optimizeInternalLinkingServer(optimizedContent, post.id, allPosts)
 
-  // 3. Generate TOC and add heading IDs if enabled, otherwise just add IDs
+  // 3. Add heading IDs for anchor links (sidebar TOC handles display, no inline injection)
   if (seoSettings.autoToc) {
-    const { toc, contentWithIds } = generateToc(optimizedContent, {
+    const { contentWithIds } = generateToc(optimizedContent, {
       includeH3: seoSettings.tocIncludeH3,
     });
-    optimizedContent = contentWithIds; // Content now has IDs
-    if (toc) {
-      optimizedContent = injectTocIntoContent(optimizedContent, toc, seoSettings.tocPosition);
-    }
+    optimizedContent = contentWithIds; // Content now has IDs (no inline TOC injection - sidebar handles it)
   } else {
     // Still add heading IDs for anchor links even without TOC
     optimizedContent = processContentWithHeadingIds(optimizedContent);

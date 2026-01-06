@@ -174,59 +174,67 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
               </div>
             )}
 
-            {/* Content layout: TOC rail + full-width article band */}
-            <div className="mt-8 grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
-              {/* Table of Contents - left rail (desktop) */}
-              {shouldShowToc && (
-                <div className="hidden lg:block">
-                  <div
-                    className="sticky top-8 rounded-xl border p-5 shadow-sm"
-                    style={{
-                      backgroundColor: 'var(--background-secondary)',
-                      borderColor: 'var(--border-color)',
-                    }}
-                  >
-                    <h3
-                      className="mb-3 text-sm font-semibold uppercase tracking-wide"
-                      style={{ color: 'var(--text-muted)' }}
-                    >
-                      On this page
-                    </h3>
-                    <nav className="space-y-1.5">
-                      {post.headings.map((heading, index) => (
-                        <a
-                          key={index}
-                          href={`#${heading.id}`}
-                          className="block text-sm transition-opacity hover:opacity-80"
-                          style={{
-                            color: 'var(--text-secondary)',
-                            paddingLeft: `${(heading.level - 1) * 12}px`,
-                          }}
-                        >
-                          {heading.text}
-                        </a>
-                      ))}
-                    </nav>
-                  </div>
-                </div>
-              )}
+          </article>
 
-              {/* Main article - full-width band */}
-              <div className={shouldShowToc ? 'lg:col-start-2' : 'lg:col-span-2'}>
-                <section
-                  aria-label="Article content"
-                  className="py-10 md:py-14"
-                  style={{
-                    marginLeft: 'calc(50% - 50vw)',
-                    marginRight: 'calc(50% - 50vw)',
-                    background:
-                      'radial-gradient(circle at top left, rgba(8, 150, 105, 0.10), transparent 55%)',
-                    borderTop: '1px solid var(--border-color)',
-                    borderBottom: '1px solid var(--border-color)',
-                  }}
-                >
-                  {/* inner container aligned like the homepage/blog heroes */}
-                  <div className="mx-auto w-[90%] md:w-[95%] max-w-[820px]">
+          {/* Full-width green background band */}
+          <section
+            aria-label="Article content"
+            className="py-10 md:py-14 relative"
+            style={{
+              marginLeft: 'calc(50% - 50vw)',
+              marginRight: 'calc(50% - 50vw)',
+              background:
+                'radial-gradient(circle at 0% 0%, rgba(8, 150, 105, 0.10), transparent 55%)',
+              borderTop: '1px solid var(--border-color)',
+              borderBottom: '1px solid var(--border-color)',
+            }}
+          >
+            {/* Content container matching page width */}
+            <div className="mx-auto w-[90%] md:w-[94%] max-w-[1100px]">
+              <div className="grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
+                {/* Table of Contents - left rail (desktop) */}
+                {shouldShowToc && (
+                  <div className="hidden lg:block">
+                    <div
+                      className="sticky top-36 rounded-xl border p-5 shadow-sm"
+                      style={{
+                        backgroundColor: 'var(--background-secondary)',
+                        borderColor: 'var(--border-color)',
+                        maxHeight: 'calc(100vh - 160px)',
+                        overflowY: 'auto',
+                      }}
+                    >
+                      <h3
+                        className="mb-3 text-sm font-semibold uppercase tracking-wide sticky top-0 pb-2"
+                        style={{
+                          color: 'var(--text-muted)',
+                          backgroundColor: 'var(--background-secondary)',
+                        }}
+                      >
+                        On this page
+                      </h3>
+                      <nav className="space-y-1.5">
+                        {post.headings.map((heading, index) => (
+                          <a
+                            key={index}
+                            href={`#${heading.id}`}
+                            className="block text-sm transition-opacity hover:opacity-80"
+                            style={{
+                              color: 'var(--text-secondary)',
+                              paddingLeft: `${(heading.level - 1) * 12}px`,
+                            }}
+                          >
+                            {heading.text}
+                          </a>
+                        ))}
+                      </nav>
+                    </div>
+                  </div>
+                )}
+
+                {/* Main article content */}
+                <div className={shouldShowToc ? '' : 'lg:col-span-2'}>
+                  <div className="max-w-[820px]">
                     <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
                       Last updated for accuracy and clarity. Some details may change over time.
                     </p>
@@ -246,10 +254,10 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
                       />
                     </div>
                   </div>
-                </section>
+                </div>
               </div>
             </div>
-          </article>
+          </section>
 
           {/* Comments Section – full width */}
           <div className="mt-12 space-y-8">
