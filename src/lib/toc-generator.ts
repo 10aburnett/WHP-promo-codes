@@ -3,6 +3,21 @@
  * Generates TOC from HTML content headings
  */
 
+/**
+ * Decode HTML entities to their actual characters
+ */
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
+}
+
 interface TocOptions {
   includeH3?: boolean;
 }
@@ -39,7 +54,8 @@ export function extractTocHeadings(content: string, includeH3: boolean = false):
   while ((match = regex.exec(content)) !== null) {
     const level = parseInt(match[1]);
     const existingId = match[2];
-    const text = match[3].replace(/<[^>]*>/g, ''); // Strip inner tags
+    const rawText = match[3].replace(/<[^>]*>/g, ''); // Strip inner tags
+    const text = decodeHtmlEntities(rawText); // Decode HTML entities
     const id = existingId || slugify(text);
 
     if (level === 2 || (level === 3 && includeH3)) {
@@ -63,7 +79,8 @@ export function generateToc(content: string, options: TocOptions = {}): TocResul
     (match, level, attrs, text) => {
       const levelNum = parseInt(level);
       if (levelNum === 2 || (levelNum === 3 && includeH3)) {
-        const cleanText = text.replace(/<[^>]*>/g, '');
+        const rawText = text.replace(/<[^>]*>/g, '');
+        const cleanText = decodeHtmlEntities(rawText); // Decode HTML entities
         const existingIdMatch = attrs.match(/id="([^"]*)"/);
         const existingId = existingIdMatch ? existingIdMatch[1] : null;
         const id = existingId || slugify(cleanText);

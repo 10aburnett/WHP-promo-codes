@@ -5,6 +5,21 @@ import { siteOrigin } from '@/lib/site-origin';
 import { SITE_BRAND, SITE_AUTHOR } from '@/lib/brand';
 
 /**
+ * Decode HTML entities to their actual characters
+ */
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(parseInt(code, 10)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
+}
+
+/**
  * Calculate estimated reading time for blog content
  * Based on average reading speed of 200 words per minute
  */
@@ -39,7 +54,8 @@ export function extractHeadings(content: string): Array<{
   while ((match = headingRegex.exec(content)) !== null) {
     const level = parseInt(match[1])
     const existingId = match[2]
-    const text = match[3].replace(/<[^>]*>/g, '').trim() // Remove HTML tags from heading text
+    const rawText = match[3].replace(/<[^>]*>/g, '').trim() // Remove HTML tags from heading text
+    const text = decodeHtmlEntities(rawText) // Decode HTML entities like &amp; to &
     
     // Generate ID if not exists
     const id = existingId || text.toLowerCase()
