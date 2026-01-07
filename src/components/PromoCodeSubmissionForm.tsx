@@ -7,6 +7,7 @@ import {
   useCallback,
   useRef,
 } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface DealSearchResult {
   id: string;
@@ -29,6 +30,17 @@ export default function PromoCodeSubmissionForm({
   onSuccess,
   inline = false,
 }: PromoCodeSubmissionFormProps) {
+  // Read product name and slug from URL query params (for linking from offer pages)
+  const searchParams = useSearchParams();
+  const productFromUrl = searchParams.get('product');
+  const slugFromUrl = searchParams.get('slug');
+
+  // Use URL param as fallback if no prop is passed
+  const effectivePreselectedName = preselectedOfferName || productFromUrl || '';
+
+  // Track if we've already fetched the preselected deal
+  const hasFetchedPreselection = useRef(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchResults, setSearchResults] = useState<DealSearchResult[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,18 +66,43 @@ export default function PromoCodeSubmissionForm({
     submitterName: '',
     submitterEmail: '',
     submitterMessage: '',
-    isGeneral: !preselectedOfferId,
+    isGeneral: !preselectedOfferId && !slugFromUrl,
     offerId: preselectedOfferId || '',
     customCourseName: '',
     isNewCourse: false,
   });
 
   useEffect(() => {
-    if (preselectedOfferName && !searchTerm) {
-      setSearchTerm(preselectedOfferName);
-      setDebouncedSearchTerm(preselectedOfferName);
+    if (effectivePreselectedName && !searchTerm) {
+      setSearchTerm(effectivePreselectedName);
+      setDebouncedSearchTerm(effectivePreselectedName);
     }
-  }, [preselectedOfferName]);
+  }, [effectivePreselectedName]);
+
+  // Auto-fetch and select deal when slug is provided via URL
+  useEffect(() => {
+    if (slugFromUrl && !hasFetchedPreselection.current) {
+      hasFetchedPreselection.current = true;
+
+      fetch(`/api/whops/${encodeURIComponent(slugFromUrl)}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(deal => {
+          if (deal && deal.id && deal.name) {
+            // Auto-select this deal
+            setFormData(prev => ({
+              ...prev,
+              offerId: deal.id,
+              isGeneral: false,
+              isNewCourse: false,
+              customCourseName: '',
+            }));
+            setSearchTerm(deal.name);
+            setSearchResults([{ id: deal.id, name: deal.name, slug: deal.slug }]);
+          }
+        })
+        .catch(err => console.error('Failed to fetch preselected deal:', err));
+    }
+  }, [slugFromUrl]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

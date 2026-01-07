@@ -1233,6 +1233,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 <PromoCodeSubmissionButton
                   offerId={offerFormatted.id}
                   offerName={offerFormatted.name}
+                  offerSlug={dbSlug}
                 />
               </div>
             </section>

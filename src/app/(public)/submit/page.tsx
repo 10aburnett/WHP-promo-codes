@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import PromoCodeSubmissionForm from '@/components/PromoCodeSubmissionForm';
 
 export const metadata: Metadata = {
@@ -291,15 +292,17 @@ export default function SubmitCodePage() {
           </div>
 
           {/* Form Section */}
-          <div className="max-w-2xl mx-auto mb-14">
+          <div id="form" className="max-w-2xl mx-auto mb-14 scroll-mt-4">
             <h2
               className="text-xl font-bold text-center mb-4"
               style={{ color: 'var(--text-color)' }}
             >
               Submit Your Whop Promo Code Now
             </h2>
-            {/* Only this component is client-side */}
-            <PromoCodeSubmissionForm inline />
+            {/* Suspense boundary required for useSearchParams in client component */}
+            <Suspense fallback={<div className="p-8 text-center" style={{ color: 'var(--text-muted)' }}>Loading form...</div>}>
+              <PromoCodeSubmissionForm inline />
+            </Suspense>
           </div>
 
           {/* FAQ Section - SSR (great for SEO) */}
