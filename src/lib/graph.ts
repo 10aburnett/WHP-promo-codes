@@ -1,5 +1,4 @@
 // src/lib/graph.ts
-import { normalizeSlug } from './slug-normalize';
 // Import JSON directly - bundled with serverless functions, no filesystem read needed
 import neighborsData from '@/data/graph/neighbors.json';
 
@@ -12,51 +11,9 @@ const GRAPH_URL =
 
 const GRAPH_VER = process.env.NEXT_PUBLIC_GRAPH_VERSION || '';
 
-// Dev-only mock slugs for styling the recommendations/alternatives sections
-const DEV_MOCK_SLUGS = [
-  'ai-video-labs',
-  'korvato',
-  'goldboys-gold',
-  'deal-flip-formula-main',
-  'penny-stock-mafia',
-  'mf-capital',
-  'high-ticket-incubator',
-  'the-ai-agency-launchpad',
-];
-
 export async function loadNeighbors(): Promise<NeighborsMap> {
-  // In development, return mock data so we can style recs/alternatives without network timeouts
-  if (process.env.NODE_ENV === 'development') {
-    // Create a wildcard entry that getNeighborSlugsFor can match against any slug
-    // by using a Proxy that returns mock data for any key
-    const mockData: NeighborsMap = {};
-
-    // Pre-populate with known slugs, but also add a handler for unknown slugs
-    const baseMockEntry: NeighborData = {
-      recommendations: DEV_MOCK_SLUGS.slice(0, 4),
-      alternatives: DEV_MOCK_SLUGS.slice(4, 8),
-      explore: '/offers'
-    };
-
-    // Add mock entries for known slugs
-    DEV_MOCK_SLUGS.forEach(slug => {
-      mockData[slug] = baseMockEntry;
-    });
-
-    // Return a Proxy that returns mock data for ANY slug lookup
-    return new Proxy(mockData, {
-      get(target, prop: string) {
-        if (prop in target) {
-          return target[prop];
-        }
-        // Return mock data for any unknown slug too
-        return baseMockEntry;
-      }
-    });
-  }
-
-  // Server-side: use imported JSON (bundled with serverless function)
-  // This guarantees data is available on every cold start
+  // Server-side (including development): use imported JSON (bundled with serverless function)
+  // This guarantees data is available on every cold start and matches production behavior
   if (typeof window === 'undefined') {
     console.log('[graph] Using bundled neighbors data:', Object.keys(neighborsData).length, 'entries');
     return neighborsData as NeighborsMap;

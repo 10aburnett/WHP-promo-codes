@@ -80,6 +80,9 @@ export async function getRecsAndAlts(currentOfferSlug: string): Promise<{
   try {
     const neighbors = await loadNeighbors();
 
+    // DEBUG: Log what data we're receiving from the graph
+    console.log('[RECS DEBUG]', canonicalSlug, 'neighbors:', JSON.stringify(neighbors[canonicalSlug]));
+
     // ========================================================================
     // STEP 1: Build recommendations (first priority)
     // ========================================================================
