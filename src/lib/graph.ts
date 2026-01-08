@@ -78,4 +78,4 @@ export function getExploreFor(
   const s = slug.toLowerCase();
   const entry = neighbors[s] || neighbors[decodeURIComponent(s)] || neighbors[s.replace(/\s+/g,'-')];
   return entry?.explore || null;
-}// Build trigger: Thu Jan  8 13:40:18 GMT 2026
+}
