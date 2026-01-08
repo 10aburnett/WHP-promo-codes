@@ -187,6 +187,7 @@ async function buildSection(
 
   // Take only what we need
   const slugsToFetch = candidateSlugs.slice(0, targetCount);
+  console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - slugsToFetch:`, slugsToFetch);
 
   if (slugsToFetch.length === 0) {
     return [];
@@ -218,6 +219,7 @@ async function buildSection(
     },
     take: targetCount
   });
+  console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - DB returned:`, whops.map(w => w.slug));
 
   // Transform and ADD TO USED SLUGS
   // Use raw DB slug - don't normalize (preserves trailing hyphens like 'tms-heavy-hitters-')
