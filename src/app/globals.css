@@ -433,3 +433,81 @@ article h3[id],
 article h4[id] {
   scroll-margin-top: 140px;
 }
+
+/* Editorial Review Section Styling (.product-review from ChatGPT-generated HTML) */
+.product-review h2 {
+  display: none; /* Hide the redundant h2 since we have our own heading */
+}
+
+.product-review h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  margin: 24px 0 12px 0;
+  color: var(--text-color);
+}
+
+.product-review h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  margin: 18px 0 10px 0;
+  color: var(--text-color);
+}
+
+.product-review p {
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}
+
+.product-review ul,
+.product-review ol {
+  margin: 0 0 16px 0;
+  padding-left: 24px;
+}
+
+.product-review li {
+  margin: 0 0 6px 0;
+  line-height: 1.5;
+}
+
+.product-review ul li {
+  list-style-type: disc;
+}
+
+.product-review ol li {
+  list-style-type: decimal;
+}
+
+.product-review strong {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.product-review table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.875rem;
+}
+
+.product-review th,
+.product-review td {
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.product-review th {
+  background-color: var(--background-tertiary);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.product-review td {
+  background-color: var(--background-secondary);
+}

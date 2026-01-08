@@ -1132,7 +1132,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
                   <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
                     {looksLikeHtml(offerFormatted.featuresContent!) ? (
                       <div
-                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                        className="prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
                         dangerouslySetInnerHTML={{ __html: offerFormatted.featuresContent! }}
                       />
                     ) : (
