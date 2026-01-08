@@ -234,7 +234,15 @@ async function RecommendedSection({ currentOfferSlug }: { currentOfferSlug: stri
     .sort((a,b) => a.slug.localeCompare(b.slug));
 
   // Server-rendered recommendations with normal React hydration
-  return <RecommendedOffersServer items={frozen} />;
+  return (
+    <>
+      {/* TEMP DEBUG - DELETE LATER */}
+      <pre style={{background: 'yellow', padding: '10px', fontSize: '12px', margin: '10px 0'}}>
+        DEBUG RECS ({currentOfferSlug}): {JSON.stringify(frozen.map(r => r.slug))}
+      </pre>
+      <RecommendedOffersServer items={frozen} />
+    </>
+  );
 }
 
 async function AlternativesSection({ currentOfferSlug }: { currentOfferSlug: string }) {
@@ -254,7 +262,15 @@ async function AlternativesSection({ currentOfferSlug }: { currentOfferSlug: str
     .sort((a,b) => a.slug.localeCompare(b.slug));
 
   // Server-rendered alternatives with normal React hydration
-  return <AlternativesServer items={frozen} explore={explore} />;
+  return (
+    <>
+      {/* TEMP DEBUG - DELETE LATER */}
+      <pre style={{background: 'lime', padding: '10px', fontSize: '12px', margin: '10px 0'}}>
+        DEBUG ALTS ({currentOfferSlug}): {JSON.stringify(frozen.map(a => a.slug))}
+      </pre>
+      <AlternativesServer items={frozen} explore={explore} />
+    </>
+  );
 }
 
 // ReviewsSection removed - using ReviewsSectionServer directly for SSR
