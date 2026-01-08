@@ -138,15 +138,18 @@ async function buildSection(
 ): Promise<OfferItem[]> {
   // Get candidate slugs from graph
   let candidateSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, kind);
+  console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - from graph:`, candidateSlugs);
 
   // Filter: launch cohort + not already used
-  candidateSlugs = candidateSlugs
-    .filter(Boolean)
-    .filter(isOfferLaunchEligible)
-    .filter(slug => !usedSlugs.has(slug));
+  const afterCohortFilter = candidateSlugs.filter(Boolean).filter(isOfferLaunchEligible);
+  console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - after cohort filter:`, afterCohortFilter);
+
+  candidateSlugs = afterCohortFilter.filter(slug => !usedSlugs.has(slug));
+  console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - after usedSlugs filter:`, candidateSlugs, 'usedSlugs:', Array.from(usedSlugs));
 
   // Fallback 1: category-based if graph has nothing
   if (candidateSlugs.length === 0) {
+    console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - USING CATEGORY FALLBACK`);
     const currentOffer = await prisma.deal.findFirst({
       where: { slug: canonicalSlug },
       select: { category: true }
@@ -162,11 +165,13 @@ async function buildSection(
         orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
         take: 20
       });
+      console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - category ${currentOffer.category} returned:`, categoryWhops.map(w => w.slug));
 
       candidateSlugs = categoryWhops
         .map(w => w.slug)
         .filter(isOfferLaunchEligible)
         .filter(slug => !usedSlugs.has(slug));
+      console.log(`[BUILD DEBUG] ${canonicalSlug} ${kind} - after category cohort filter:`, candidateSlugs);
     }
   }
 
