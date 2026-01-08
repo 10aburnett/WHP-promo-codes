@@ -25,7 +25,7 @@ export const LAUNCH_MODE = process.env.NEXT_PUBLIC_LAUNCH_MODE === 'cohort';
  */
 // COHORT_START
 export const LAUNCH_COHORT_SLUGS = new Set<string>([
-  // === CURATED LAUNCH COHORT (121 slugs) - Top Whop Affiliates ===
+  // === CURATED LAUNCH COHORT (117 slugs) - Top Whop Affiliates ===
   // Source: data/launch-cohort-curated-101.json + top-100-rewritten-content.json (first 20)
   // Applied: 2025-12-16, Updated: 2026-01-08
   '-silver-tier-fyndit',
@@ -129,20 +129,17 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'your-first-dollar',
   'zth-player-accelerator',
   'zzz-money-club-vip',
-  // === NEW BATCH (20 slugs) - High-Value Rewritten Content ===
-  // Source: top-100-rewritten-content.json (first 20)
+  // === NEW BATCH (16 slugs) - High-Value Rewritten Content ===
+  // Source: top-100-rewritten-content.json (first 20, minus 4 deleted)
   // Added: 2026-01-08
+  // Removed: korvato-gold-rush, metatradingai, growthopia-fz-llc, liv-cam-paid (disabled on Whop)
   'airbnb-empire-builder',
-  'korvato-gold-rush',
   'm1-capital-accelerator',
-  'metatradingai',
   'alliance-group-coaching',
-  'growthopia-fz-llc',
   'the-8-figure-masterclass',
   'daniel-g-hubzome-lda-speaking',
   'minotaur-consulting-services',
   'omnifunds',
-  'liv-cam-paid',
   'million-dollar-brand-club',
   'global-wealth-mentorship',
   'asgard-bootcamp',

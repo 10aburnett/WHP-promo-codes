@@ -47,13 +47,13 @@ if (orphans.length > 0) {
   console.log('✅ ALL PAGES HAVE AT LEAST 1 INBOUND LINK');
 }
 
-// Also check the new 20 specifically
-const new20 = ['airbnb-empire-builder', 'korvato-gold-rush', 'm1-capital-accelerator', 'metatradingai', 'alliance-group-coaching', 'growthopia-fz-llc', 'the-8-figure-masterclass', 'daniel-g-hubzome-lda-speaking', 'minotaur-consulting-services', 'omnifunds', 'liv-cam-paid', 'million-dollar-brand-club', 'global-wealth-mentorship', 'asgard-bootcamp', 'youtube-consulting', 'lifetime-diamond-package-', '200k-500k-challenge', 'lux-nomads-essentials', 'innova-trade-ai', 'devvy'];
+// Also check the new 16 specifically (4 removed: korvato-gold-rush, metatradingai, growthopia-fz-llc, liv-cam-paid)
+const new16 = ['airbnb-empire-builder', 'm1-capital-accelerator', 'alliance-group-coaching', 'the-8-figure-masterclass', 'daniel-g-hubzome-lda-speaking', 'minotaur-consulting-services', 'omnifunds', 'million-dollar-brand-club', 'global-wealth-mentorship', 'asgard-bootcamp', 'youtube-consulting', 'lifetime-diamond-package-', '200k-500k-challenge', 'lux-nomads-essentials', 'innova-trade-ai', 'devvy'];
 
 console.log('');
-console.log('NEW 20 SLUGS INBOUND LINKS:');
+console.log('NEW 16 SLUGS INBOUND LINKS:');
 console.log('-'.repeat(60));
-new20.forEach(slug => {
+new16.forEach(slug => {
   const count = inboundCount[slug] || 0;
   const status = count > 0 ? '✅' : '❌';
   console.log(`  ${status} ${slug}: ${count} inbound`);

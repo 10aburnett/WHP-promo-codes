@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 121;
+const EXPECTED_COHORT_COUNT = 117;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -144,19 +144,16 @@ const LAUNCH_COHORT_SLUGS = [
   'your-first-dollar',
   'zth-player-accelerator',
   'zzz-money-club-vip',
-  // === NEW BATCH (20 slugs) - High-Value Rewritten Content ===
+  // === NEW BATCH (16 slugs) - High-Value Rewritten Content ===
   // Added: 2026-01-08
+  // Removed: korvato-gold-rush, metatradingai, growthopia-fz-llc, liv-cam-paid (disabled on Whop)
   'airbnb-empire-builder',
-  'korvato-gold-rush',
   'm1-capital-accelerator',
-  'metatradingai',
   'alliance-group-coaching',
-  'growthopia-fz-llc',
   'the-8-figure-masterclass',
   'daniel-g-hubzome-lda-speaking',
   'minotaur-consulting-services',
   'omnifunds',
-  'liv-cam-paid',
   'million-dollar-brand-club',
   'global-wealth-mentorship',
   'asgard-bootcamp',
