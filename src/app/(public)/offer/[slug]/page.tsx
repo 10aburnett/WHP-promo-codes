@@ -15,9 +15,9 @@ import { dlog } from '@/lib/debug';
 import { isOfferLaunchEligible } from '@/lib/launch-cohort';
 import { extractPercentOff, hasRealCode } from '@/lib/promo-label';
 
-// Static generation with ISR for stable SSR/CSR hydration
-export const dynamic = 'force-static';
-export const revalidate = 300; // 5 minute revalidation for freshness (optimal SEO balance)
+// TEMPORARY: Force dynamic to debug caching issue
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 export const dynamicParams = true; // Enable dynamic params for all slugs
 export const runtime = 'nodejs'; // required for Prisma database access
 
