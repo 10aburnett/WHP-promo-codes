@@ -25,9 +25,9 @@ export const LAUNCH_MODE = process.env.NEXT_PUBLIC_LAUNCH_MODE === 'cohort';
  */
 // COHORT_START
 export const LAUNCH_COHORT_SLUGS = new Set<string>([
-  // === CURATED LAUNCH COHORT (101 slugs) - Top Whop Affiliates ===
-  // Source: data/launch-cohort-curated-101.json (CANONICAL)
-  // Applied: 2025-12-16
+  // === CURATED LAUNCH COHORT (121 slugs) - Top Whop Affiliates ===
+  // Source: data/launch-cohort-curated-101.json + top-100-rewritten-content.json (first 20)
+  // Applied: 2025-12-16, Updated: 2026-01-08
   '-silver-tier-fyndit',
   '4orte-tiktok-upgrade',
   'ace-of-trades-',
@@ -129,6 +129,29 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'your-first-dollar',
   'zth-player-accelerator',
   'zzz-money-club-vip',
+  // === NEW BATCH (20 slugs) - High-Value Rewritten Content ===
+  // Source: top-100-rewritten-content.json (first 20)
+  // Added: 2026-01-08
+  'airbnb-empire-builder',
+  'korvato-gold-rush',
+  'm1-capital-accelerator',
+  'metatradingai',
+  'alliance-group-coaching',
+  'growthopia-fz-llc',
+  'the-8-figure-masterclass',
+  'daniel-g-hubzome-lda-speaking',
+  'minotaur-consulting-services',
+  'omnifunds',
+  'liv-cam-paid',
+  'million-dollar-brand-club',
+  'global-wealth-mentorship',
+  'asgard-bootcamp',
+  'youtube-consulting',
+  'lifetime-diamond-package-',
+  '200k-500k-challenge',
+  'lux-nomads-essentials',
+  'innova-trade-ai',
+  'devvy',
 ]);
 // COHORT_END
 

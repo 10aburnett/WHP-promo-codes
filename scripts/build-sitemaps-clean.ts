@@ -2,7 +2,7 @@
  * CLEAN SITEMAP GENERATOR
  *
  * Generates these files:
- * - public/sitemap-offers.xml (exactly 101 /offer/<slug> URLs in launch mode)
+ * - public/sitemap-offers.xml (exactly 121 /offer/<slug> URLs in launch mode)
  * - public/sitemap-static.xml (hardcoded allowlist of static routes)
  * - public/sitemap-blog.xml (published blog posts)
  * - public/sitemap.xml (index referencing the above)
@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 101;
+const EXPECTED_COHORT_COUNT = 121;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -40,8 +40,8 @@ const STATIC_ROUTES = [
   { path: '/submit', priority: 0.7, changefreq: 'monthly' },
 ];
 
-// === COHORT SLUGS (101 curated offers) ===
-// Source: data/launch-cohort-curated-101.json (CANONICAL)
+// === COHORT SLUGS (121 curated offers) ===
+// Source: data/launch-cohort-curated-101.json + top-100-rewritten-content.json (first 20)
 const LAUNCH_COHORT_SLUGS = [
   '-silver-tier-fyndit',
   '4orte-tiktok-upgrade',
@@ -144,6 +144,28 @@ const LAUNCH_COHORT_SLUGS = [
   'your-first-dollar',
   'zth-player-accelerator',
   'zzz-money-club-vip',
+  // === NEW BATCH (20 slugs) - High-Value Rewritten Content ===
+  // Added: 2026-01-08
+  'airbnb-empire-builder',
+  'korvato-gold-rush',
+  'm1-capital-accelerator',
+  'metatradingai',
+  'alliance-group-coaching',
+  'growthopia-fz-llc',
+  'the-8-figure-masterclass',
+  'daniel-g-hubzome-lda-speaking',
+  'minotaur-consulting-services',
+  'omnifunds',
+  'liv-cam-paid',
+  'million-dollar-brand-club',
+  'global-wealth-mentorship',
+  'asgard-bootcamp',
+  'youtube-consulting',
+  'lifetime-diamond-package-',
+  '200k-500k-challenge',
+  'lux-nomads-essentials',
+  'innova-trade-ai',
+  'devvy',
 ];
 
 // === XML GENERATION HELPERS ===
