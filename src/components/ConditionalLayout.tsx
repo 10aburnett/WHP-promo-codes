@@ -168,6 +168,22 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
               )}
             </Link>
             <Link
+              href="/how-to-redeem"
+              className={`relative pb-2 text-sm font-medium transition-colors ${
+                pathname === '/how-to-redeem'
+                  ? 'text-[var(--text-color)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-color)]'
+              }`}
+            >
+              How to Redeem
+              {pathname === '/how-to-redeem' && (
+                <span
+                  className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full"
+                  style={{ backgroundColor: 'var(--accent-color)' }}
+                />
+              )}
+            </Link>
+            <Link
               href="/subscribe"
               className={`relative pb-2 text-sm font-medium transition-colors ${
                 pathname === '/subscribe'
@@ -289,6 +305,14 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                     Blog
                   </Link>
                   <Link
+                    href="/how-to-redeem"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block py-2 text-sm font-medium"
+                    style={{ color: pathname === '/how-to-redeem' ? 'var(--text-color)' : 'var(--text-secondary)' }}
+                  >
+                    How to Redeem
+                  </Link>
+                  <Link
                     href="/subscribe"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="block py-2 text-sm font-medium"
@@ -373,6 +397,11 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                     <li>
                       <Link href={getLocalizedPath('/blog')} className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
                         Blog
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/how-to-redeem" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>
+                        How to Redeem
                       </Link>
                     </li>
                     <li>
@@ -520,6 +549,18 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
                   }}
                 >
                   Blog
+                </Link>
+                <Link
+                  href="/how-to-redeem"
+                  onClick={() => setIsMobileFooterOpen(false)}
+                  className="rounded-xl border px-3 py-2.5 text-sm font-medium active:scale-[0.98] transition-all duration-200"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--text-color)',
+                    backgroundColor: 'var(--background-color)',
+                  }}
+                >
+                  How to Redeem
                 </Link>
                 <Link
                   href="/submit"

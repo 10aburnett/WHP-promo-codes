@@ -42,7 +42,6 @@ import RenderPlain from '@/components/RenderPlain';
 import { looksLikeHtml, isMeaningful, escapeHtml, toPlainText } from '@/lib/textRender';
 import PromoStatsServer from '@/components/PromoStatsServer';
 import VerificationStatus from '@/components/VerificationStatus';
-import HowToSection from '@/components/offer/HowToSection';
 import HowToSchema from '@/components/offer/HowToSchema';
 import HydrationTripwire from '@/components/HydrationTripwire';
 import ServerSectionGuard from '@/components/ServerSectionGuard';
@@ -751,13 +750,14 @@ export default async function DealPage({ params }: { params: { slug: string } })
       className="dpc-offer-page min-h-screen pb-16 pt-8 transition-theme"
       style={{ backgroundColor: 'var(--background-color)', color: 'var(--text-color)' }}
     >
-      {/* HowTo Schema for SEO */}
+      {/* HowTo Schema for SEO - matches the visible "How to apply this promo code" section */}
       <HowToSchema
         slug={params.slug}
         brand={offerFormatted.name}
         currency={extractCurrency(offerFormatted.price)}
         hasTrial={hasTrial(offerFormatted.price)}
         siteOrigin={siteOrigin()}
+        hasRealCode={hasPromoCode(offerFormatted.name)}
       />
 
       {/* JSON-LD Structured Data */}
@@ -1112,14 +1112,6 @@ export default async function DealPage({ params }: { params: { slug: string } })
                   </div>
                 </section>
               )}
-
-              {/* Visual Guide Section */}
-              <section
-                className="dpc-offer-howto rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme"
-                style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
-              >
-                <HowToSection brand={offerFormatted.name} />
-              </section>
 
               {/* Fine Print Section */}
               <section
