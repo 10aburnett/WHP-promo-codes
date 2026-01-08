@@ -941,17 +941,6 @@ export default async function DealPage({ params }: { params: { slug: string } })
                     </a>
                   </li>
                 )}
-                {hasFeatures && (
-                  <li>
-                    <a
-                      href="#features"
-                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
-                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
-                    >
-                      What's included
-                    </a>
-                  </li>
-                )}
                 {hasTerms && (
                   <li>
                     <a
@@ -960,6 +949,17 @@ export default async function DealPage({ params }: { params: { slug: string } })
                       style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
                     >
                       Fine print
+                    </a>
+                  </li>
+                )}
+                {hasFeatures && (
+                  <li>
+                    <a
+                      href="#review"
+                      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 transition-colors hover:border-[var(--accent-color)] hover:text-[var(--accent-color)]"
+                      style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}
+                    >
+                      Review
                     </a>
                   </li>
                 )}
@@ -1092,27 +1092,6 @@ export default async function DealPage({ params }: { params: { slug: string } })
                 )}
               </section>
 
-              {/* What's Included Section */}
-              {isMeaningful(offerFormatted.featuresContent) && (
-                <section
-                  id="features"
-                  className="dpc-offer-features rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
-                  style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
-                >
-                  <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>What&apos;s included</h2>
-                  <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
-                    {looksLikeHtml(offerFormatted.featuresContent!) ? (
-                      <div
-                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
-                        dangerouslySetInnerHTML={{ __html: offerFormatted.featuresContent! }}
-                      />
-                    ) : (
-                      <RenderPlain text={offerFormatted.featuresContent!} />
-                    )}
-                  </div>
-                </section>
-              )}
-
               {/* Fine Print Section */}
               <section
                 id="terms"
@@ -1139,6 +1118,29 @@ export default async function DealPage({ params }: { params: { slug: string } })
                   </p>
                 )}
               </section>
+
+              {/* Editorial Review Section - SEO value-added content from featuresContent field */}
+              {isMeaningful(offerFormatted.featuresContent) && (
+                <section
+                  id="review"
+                  className="dpc-offer-review rounded-3xl border px-5 sm:px-6 py-5 sm:py-6 transition-theme scroll-mt-24"
+                  style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--border-color)' }}
+                >
+                  <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-color)' }}>
+                    {offerFormatted.name} Review {new Date().getFullYear()}
+                  </h2>
+                  <div className="prose prose-sm sm:prose-base max-w-none" style={{ color: 'var(--text-secondary)' }}>
+                    {looksLikeHtml(offerFormatted.featuresContent!) ? (
+                      <div
+                        className="whitespace-break-spaces prose-headings:text-current prose-p:text-current prose-ul:text-current prose-ol:text-current prose-li:text-current prose-strong:text-current prose-em:text-current prose-a:text-blue-600 hover:prose-a:text-blue-700"
+                        dangerouslySetInnerHTML={{ __html: offerFormatted.featuresContent! }}
+                      />
+                    ) : (
+                      <RenderPlain text={offerFormatted.featuresContent!} />
+                    )}
+                  </div>
+                </section>
+              )}
             </div>
           </article>
 
