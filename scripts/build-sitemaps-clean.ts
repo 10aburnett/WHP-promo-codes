@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 116;
+const EXPECTED_COHORT_COUNT = 146;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -145,12 +145,11 @@ const LAUNCH_COHORT_SLUGS = [
   'your-first-dollar',
   'zth-player-accelerator',
   'zzz-money-club-vip',
-  // === NEW BATCH (16 slugs) - High-Value Rewritten Content ===
-  // Added: 2026-01-08
-  // Removed: korvato-gold-rush, metatradingai, growthopia-fz-llc, liv-cam-paid (disabled on Whop)
+  // === EXPANDED BATCH (45 slugs) - High-Value Rewritten Content ===
+  // Updated: 2026-01-13
+  // Note: 5 slugs deleted from Whop (korvato-gold-rush, metatradingai, alliance-group-coaching, growthopia-fz-llc, liv-cam-paid)
   'airbnb-empire-builder',
   'm1-capital-accelerator',
-  // 'alliance-group-coaching', // Removed: no longer an affiliate
   'the-8-figure-masterclass',
   'daniel-g-hubzome-lda-speaking',
   'minotaur-consulting-services',
@@ -164,6 +163,37 @@ const LAUNCH_COHORT_SLUGS = [
   'lux-nomads-essentials',
   'innova-trade-ai',
   'devvy',
+  // === NEW ADDITIONS (30 slugs) - 2026-01-13 ===
+  'sober-living-riches',
+  'optinsio',
+  'fes-bootcamp',
+  'the-only-system-you-need',
+  'jlu-637',
+  'platinum-tier-fast-action',
+  'real-business-solutions',
+  'royalty-hero-elite',
+  'elite-coaching-academy',
+  'arbitrage-society',
+  'ttw-inner-circle',
+  'daniel-g-x-d2d-con',
+  'daniel-g-x-alkaline-electric',
+  'yellow-house-systems',
+  'capital-funding-accelerator',
+  'skillset-solutions',
+  'springboard-to-wealth',
+  'riverz-marketing',
+  'wall-street-academy',
+  'leadconsulting-ai',
+  'tms-spartan-ai-bot',
+  'great-energy-capital',
+  'just-funded',
+  'acquisition-network-',
+  'agency-partner-package',
+  'wholesale-to-millions',
+  'the-trading-apprentice',
+  'faceless-creator-club',
+  'career-evolved',
+  'lux-nomads-vip',
 ];
 
 // === XML GENERATION HELPERS ===
