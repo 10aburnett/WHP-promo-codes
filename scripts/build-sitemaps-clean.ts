@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 117;
+const EXPECTED_COHORT_COUNT = 116;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -150,7 +150,7 @@ const LAUNCH_COHORT_SLUGS = [
   // Removed: korvato-gold-rush, metatradingai, growthopia-fz-llc, liv-cam-paid (disabled on Whop)
   'airbnb-empire-builder',
   'm1-capital-accelerator',
-  'alliance-group-coaching',
+  // 'alliance-group-coaching', // Removed: no longer an affiliate
   'the-8-figure-masterclass',
   'daniel-g-hubzome-lda-speaking',
   'minotaur-consulting-services',

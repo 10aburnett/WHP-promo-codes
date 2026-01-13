@@ -135,7 +135,7 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   // Removed: korvato-gold-rush, metatradingai, growthopia-fz-llc, liv-cam-paid (disabled on Whop)
   'airbnb-empire-builder',
   'm1-capital-accelerator',
-  'alliance-group-coaching',
+  // 'alliance-group-coaching', // Removed: no longer an affiliate
   'the-8-figure-masterclass',
   'daniel-g-hubzome-lda-speaking',
   'minotaur-consulting-services',
