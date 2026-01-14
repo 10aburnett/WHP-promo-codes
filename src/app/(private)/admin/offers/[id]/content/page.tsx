@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import FaqEditor from "@/components/admin/FaqEditor";
+import { CustomEditor } from "@/components/admin/CustomEditor";
 import { FaqItem, parseFaqContent } from "@/lib/faq-types";
 import { isMeaningful } from "@/lib/textRender";
 
@@ -264,17 +265,17 @@ export default function OfferContentEditor() {
           </p>
         </div>
 
-        {/* Features Content */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold mb-4">Features Content</h2>
-          <textarea
+        {/* Features Content - WYSIWYG Editor */}
+        <div className="bg-white rounded-lg shadow-md p-6 col-span-1 lg:col-span-2">
+          <h2 className="text-lg font-semibold mb-4">Features Content (Editorial Review)</h2>
+          <CustomEditor
             value={featuresContent}
-            onChange={(e) => setFeaturesContent(e.target.value)}
-            placeholder="Enter features content..."
-            className="w-full h-40 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono whitespace-break-spaces"
+            onChange={setFeaturesContent}
+            placeholder="<section class='product-review'>Enter your editorial review HTML here...</section>"
+            minHeight="350px"
           />
           <p className="text-xs text-gray-500 mt-2">
-            Type plain text. Line breaks will be preserved.
+            Use WYSIWYG mode for visual editing or HTML mode to paste/edit raw HTML directly. Changes sync in real-time.
           </p>
         </div>
 
