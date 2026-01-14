@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 146;
+const EXPECTED_COHORT_COUNT = 144;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -177,7 +177,6 @@ const LAUNCH_COHORT_SLUGS = [
   'ttw-inner-circle',
   'daniel-g-x-d2d-con',
   'daniel-g-x-alkaline-electric',
-  'yellow-house-systems',
   'capital-funding-accelerator',
   'skillset-solutions',
   'springboard-to-wealth',
@@ -191,7 +190,6 @@ const LAUNCH_COHORT_SLUGS = [
   'agency-partner-package',
   'wholesale-to-millions',
   'the-trading-apprentice',
-  'faceless-creator-club',
   'career-evolved',
   'lux-nomads-vip',
 ];

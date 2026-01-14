@@ -161,7 +161,6 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'ttw-inner-circle',
   'daniel-g-x-d2d-con',
   'daniel-g-x-alkaline-electric',
-  'yellow-house-systems',
   'capital-funding-accelerator',
   'skillset-solutions',
   'springboard-to-wealth',
@@ -175,7 +174,6 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'agency-partner-package',
   'wholesale-to-millions',
   'the-trading-apprentice',
-  'faceless-creator-club',
   'career-evolved',
   'lux-nomads-vip',
 ]);
