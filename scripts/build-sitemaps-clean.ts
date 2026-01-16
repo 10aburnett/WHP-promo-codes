@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 144;
+const EXPECTED_COHORT_COUNT = 186;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -192,6 +192,49 @@ const LAUNCH_COHORT_SLUGS = [
   'the-trading-apprentice',
   'career-evolved',
   'lux-nomads-vip',
+  // === EDITORIAL REVIEWS BATCH (42 slugs) - 2026-01-16 ===
+  'the-godspeed-growth-system',
+  'section-8-cartel',
+  'affiniti-flow',
+  'swayer',
+  'listing-agent-accelerator',
+  'airflow',
+  'sovereign-man',
+  'momentum-circle',
+  'fernpicks-diamond-package',
+  'qa-automation-job-interviews',
+  'tech-sales-job-interviews',
+  'osa-gold-program',
+  'the-ai-incubator',
+  'acquisition-ace',
+  'learn-minerals',
+  'locatelli-acquisition',
+  'data-engineer-academy-fin',
+  'baller-package',
+  'the-high-ticket-ecom-program',
+  'electrin-group',
+  'consulting-utopia-dfy',
+  'fit-n-healthy',
+  'ai-profit-lab',
+  'formula-6',
+  'ayecon-academy-lifetime-membership',
+  'mdbc-tiktok-hop',
+  'amazon-inner-circle',
+  'the-real-sales-academy',
+  'digital-creator-university',
+  'gold-tier',
+  'exclusive-calls',
+  'beyond-clinical-care',
+  'info-scaler',
+  'diagofit',
+  'goodlife-brand-accelerator',
+  'accelerator-program',
+  'inovate',
+  'learn-airbnb-arbitrage',
+  'sickboytrades-mentorship',
+  'the-black-room',
+  'tiktok-shop-accelerator',
+  '7th-level-community',
 ];
 
 // === XML GENERATION HELPERS ===
