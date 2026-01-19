@@ -2,7 +2,7 @@
 
 A modern web application for discovering and comparing cryptocurrency casino bonuses. Built with Next.js, TypeScript, and Tailwind CSS.
 
-<!-- Deployment trigger: editorial reviews sync 2026-01-15 -->
+<!-- Deployment trigger: editorial reviews batch 2 sync 2026-01-19 -->
 
 ## 🔒 Golden Playbooks (Do This, Not That)
 
