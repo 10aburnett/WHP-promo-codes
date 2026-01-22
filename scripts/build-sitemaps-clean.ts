@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 253;
+const EXPECTED_COHORT_COUNT = 262;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -303,6 +303,16 @@ const LAUNCH_COHORT_SLUGS = [
   'uncle-shaundys-trading-den',
   'zeus-bets',
   'zoom-trading-vip',
+  // === EDITORIAL REVIEWS BATCH 3 (9 slugs) - 2026-01-22 ===
+  'resell-radar',
+  'tradialy',
+  'pikes-peak-trades-advantage',
+  'wave-maestro',
+  'remote-riches',
+  'opc-all-plays',
+  'sigmavue',
+  'exotic-fleet-formula',
+  'canary-chain',
 ];
 
 // === XML GENERATION HELPERS ===

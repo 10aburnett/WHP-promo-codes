@@ -287,6 +287,16 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'uncle-shaundys-trading-den',
   'zeus-bets',
   'zoom-trading-vip',
+  // === EDITORIAL REVIEWS BATCH 3 (9 slugs) - 2026-01-22 ===
+  'resell-radar',
+  'tradialy',
+  'pikes-peak-trades-advantage',
+  'wave-maestro',
+  'remote-riches',
+  'opc-all-plays',
+  'sigmavue',
+  'exotic-fleet-formula',
+  'canary-chain',
 ]);
 // COHORT_END
 
