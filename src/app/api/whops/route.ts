@@ -15,6 +15,56 @@ export const runtime = 'nodejs'; // Ensure Node.js runtime (not Edge)
 export const dynamic = 'force-dynamic'; // Explicitly mark this route as dynamic
 export const revalidate = 0; // Disable caching completely for debugging
 
+// Helper to normalize search terms (remove apostrophes, special chars)
+function normalizeSearchTerm(term: string): string {
+  return term.trim().replace(/[''`]/g, '').replace(/[^\w\s]/g, ' ');
+}
+
+// Generate search variations for possessives (caps -> [caps, cap])
+function getSearchWordVariations(word: string): string[] {
+  const variations = [word];
+  if (word.length > 2 && word.toLowerCase().endsWith('s')) {
+    variations.push(word.slice(0, -1));
+  }
+  return variations;
+}
+
+// Calculate relevance score: name (highest) > aboutContent > featuresContent (lowest)
+function calculateRelevanceScore(whop: any, searchWords: string[]): number {
+  let score = 0;
+  const nameLower = (whop.name || '').toLowerCase();
+  const aboutLower = (whop.aboutContent || '').toLowerCase();
+  const featuresLower = (whop.featuresContent || '').toLowerCase();
+
+  for (const word of searchWords) {
+    const wordLower = word.toLowerCase();
+    const variations = getSearchWordVariations(wordLower);
+
+    for (const variant of variations) {
+      // Name matches (highest priority)
+      if (nameLower === variant) {
+        score += 1000; // Exact name match
+      } else if (nameLower.startsWith(variant)) {
+        score += 500; // Name starts with term
+      } else if (nameLower.includes(variant)) {
+        score += 100; // Name contains term
+      }
+
+      // About content matches (second priority)
+      if (aboutLower.includes(variant)) {
+        score += 20;
+      }
+
+      // Features content matches (third priority)
+      if (featuresLower.includes(variant)) {
+        score += 5;
+      }
+    }
+  }
+
+  return score;
+}
+
 // Lightweight function for homepage list (only essential fields)
 const getOffersOptimized = async (isAdmin: boolean, whereClause: any, sortBy: string = '', page: number = 1, limit: number = 20) => {
   console.log('Fetching whops with optimized query for homepage');
@@ -805,12 +855,38 @@ export async function GET(request: Request) {
     }
 
     if (search) {
-      whereClause.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-        { PromoCode: { some: { title: { contains: search, mode: 'insensitive' } } } },
-        { PromoCode: { some: { code: { contains: search, mode: 'insensitive' } } } }
+      // Normalize: remove apostrophes and special characters, then split into words
+      const normalized = search.trim().replace(/[''`]/g, '').replace(/[^\w\s]/g, ' ');
+      const searchWords = normalized.split(/\s+/).filter(word => word.length >= 2);
+
+      // Generate search variations for each word (handles possessives like "cap's" matching "caps")
+      const getWordVariations = (word: string): string[] => {
+        const variations = [word];
+        // If word ends in 's', also search without it (caps -> cap, matches "cap's")
+        if (word.length > 2 && word.toLowerCase().endsWith('s')) {
+          variations.push(word.slice(0, -1));
+        }
+        return variations;
+      };
+
+      // Search name, aboutContent, featuresContent
+      const buildSearchConditions = (term: string) => [
+        { name: { contains: term, mode: 'insensitive' } },
+        { aboutContent: { contains: term, mode: 'insensitive' } },
+        { featuresContent: { contains: term, mode: 'insensitive' } },
       ];
+
+      if (searchWords.length > 1) {
+        whereClause.AND = searchWords.map(word => {
+          const variations = getWordVariations(word);
+          return {
+            OR: variations.flatMap(v => buildSearchConditions(v))
+          };
+        });
+      } else if (searchWords.length === 1) {
+        const variations = getWordVariations(searchWords[0]);
+        whereClause.OR = variations.flatMap(v => buildSearchConditions(v));
+      }
     }
     
     if (whopName) {
@@ -994,6 +1070,61 @@ export async function GET(request: Request) {
       return NextResponse.json(response, { headers });
     }
     
+    // If there's a search query and no explicit sort, use relevance sorting
+    if (search && (!sortBy || sortBy === 'default' || sortBy === 'relevance')) {
+      console.log(`Using relevance sorting for search: "${search}"`);
+
+      // Parse search words for scoring
+      const normalized = normalizeSearchTerm(search);
+      const searchWords = normalized.split(/\s+/).filter(word => word.length >= 2);
+
+      // Fetch matching results for relevance sorting (limit to 200 for performance)
+      const allWhops = await prisma.deal.findMany({
+        where: whereClause,
+        take: 200, // Limit for performance
+        include: { PromoCode: true }
+      });
+
+      // Calculate relevance scores and sort
+      const scoredWhops = allWhops.map(whop => ({
+        ...whop,
+        _relevanceScore: calculateRelevanceScore(whop, searchWords)
+      }));
+
+      // Sort by relevance (highest first), then by displayOrder as tiebreaker
+      scoredWhops.sort((a, b) => {
+        if (b._relevanceScore !== a._relevanceScore) {
+          return b._relevanceScore - a._relevanceScore;
+        }
+        return a.displayOrder - b.displayOrder;
+      });
+
+      // Apply pagination
+      const offset = (page - 1) * limit;
+      const paginatedWhops = scoredWhops.slice(offset, offset + limit);
+
+      // Transform for UI
+      let transformedWhops = paginatedWhops.map(whop => transformOfferDataForUI(whop)).filter(whop => whop !== null);
+
+      // Apply promo type filter
+      if (promoType) {
+        transformedWhops = transformedWhops.filter(whop => whop.promoType === promoType.toLowerCase());
+      }
+
+      console.log(`Relevance search found ${scoredWhops.length} total, returning ${transformedWhops.length} for page ${page}`);
+
+      return NextResponse.json({
+        data: transformedWhops,
+        pagination: {
+          page,
+          limit,
+          total: scoredWhops.length,
+          totalPages: Math.ceil(scoredWhops.length / limit),
+          hasMore: page * limit < scoredWhops.length
+        }
+      }, { headers });
+    }
+
     // For any remaining sorting methods, use the original pagination approach
     // Build orderBy clause (fallback, should rarely be used now)
     const orderBy: any = [
@@ -1001,12 +1132,12 @@ export async function GET(request: Request) {
       { rating: 'desc' },
       { createdAt: 'desc' }
     ];
-    
+
     // Calculate offset for pagination
     const offset = (page - 1) * limit;
-    
+
     console.log(`Fetching whops - page: ${page}, limit: ${limit}, offset: ${offset}, search: "${search}", whopCategory: "${whopCategory}"`);
-    
+
     // Get whops with pagination - use optimized query for better performance
     const whops = await getOffersOptimized(isAdmin, whereClause, sortBy, page, limit);
     

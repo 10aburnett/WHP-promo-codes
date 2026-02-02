@@ -99,11 +99,7 @@ export default function FilterControls({
               type="search"
               placeholder="Find Whop products and deals"
               defaultValue={filters.searchTerm}
-              onChange={
-                submitMode === 'auto'
-                  ? (e) => onFilterChange({ searchTerm: e.target.value })
-                  : undefined
-              }
+              onChange={(e) => onFilterChange({ searchTerm: e.target.value })}
               className="w-full bg-transparent border-0 text-sm md:text-base focus:outline-none [&::-webkit-search-cancel-button]:hidden [&::-ms-clear]:hidden"
               style={{ color: 'var(--text-color)' }}
             />
@@ -113,6 +109,7 @@ export default function FilterControls({
                 type="button"
                 onClick={() => {
                   onFilterChange({ searchTerm: '' });
+                  // Also clear the uncontrolled input
                   const input = document.getElementById('main-search-input') as HTMLInputElement;
                   if (input) input.value = '';
                 }}

@@ -44,6 +44,7 @@ interface HomePageServerProps {
   currentPage: number;
   totalPages: number;
   total: number;
+  searchParams?: { [key: string]: string | undefined };
 }
 
 export default function HomePageServer({
@@ -51,8 +52,20 @@ export default function HomePageServer({
   currentPage,
   totalPages,
   total,
+  searchParams = {},
 }: HomePageServerProps) {
-  const pageHref = (n: number) => `/?page=${n}`;
+  // Build page URL preserving all current search params
+  const pageHref = (n: number) => {
+    const params = new URLSearchParams();
+    // Preserve existing params (search, category, sort, etc.)
+    if (searchParams.search) params.set('search', searchParams.search);
+    if (searchParams.whopCategory) params.set('whopCategory', searchParams.whopCategory);
+    if (searchParams.sortBy) params.set('sortBy', searchParams.sortBy);
+    // Set the page number
+    if (n > 1) params.set('page', n.toString());
+    const queryString = params.toString();
+    return queryString ? `/?${queryString}` : '/';
+  };
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {

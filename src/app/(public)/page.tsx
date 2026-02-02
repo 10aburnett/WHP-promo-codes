@@ -100,6 +100,58 @@ const StatsSkeleton = () => (
   </div>
 );
 
+// Helper to normalize search terms (remove apostrophes, special chars)
+function normalizeSearchTerm(term: string): string {
+  return term.trim().replace(/[''`]/g, '').replace(/[^\w\s]/g, ' ');
+}
+
+// Generate search variations for possessives (caps -> [caps, cap])
+function getWordVariations(word: string): string[] {
+  const variations = [word];
+  if (word.length > 2 && word.toLowerCase().endsWith('s')) {
+    variations.push(word.slice(0, -1));
+  }
+  return variations;
+}
+
+// Calculate relevance score: name (highest) > aboutContent > featuresContent (lowest)
+// Normalizes text to handle apostrophes (Cap's -> caps matches "caps")
+function calculateRelevanceScore(whop: any, searchWords: string[]): number {
+  let score = 0;
+  // Normalize names and content - remove apostrophes and special chars for matching
+  const nameLower = normalizeSearchTerm((whop.name || '')).toLowerCase();
+  const aboutLower = (whop.aboutContent || '').toLowerCase();
+  const featuresLower = (whop.featuresContent || '').toLowerCase();
+
+  for (const word of searchWords) {
+    const wordLower = word.toLowerCase();
+    const variations = getWordVariations(wordLower);
+
+    for (const variant of variations) {
+      // Name matches (highest priority) - using normalized name
+      if (nameLower === variant) {
+        score += 1000; // Exact name match
+      } else if (nameLower.startsWith(variant)) {
+        score += 500; // Name starts with term
+      } else if (nameLower.includes(variant)) {
+        score += 100; // Name contains term
+      }
+
+      // About content matches (second priority)
+      if (aboutLower.includes(variant)) {
+        score += 20;
+      }
+
+      // Features content matches (third priority)
+      if (featuresLower.includes(variant)) {
+        score += 5;
+      }
+    }
+  }
+
+  return score;
+}
+
 // Server-side data fetching with search/filter/sort support
 async function getPagedWhops({
   page = 1,
@@ -114,7 +166,6 @@ async function getPagedWhops({
 }) {
   try {
     const limit = 15;
-    const skip = (page - 1) * limit;
 
     // Build where clause for filtering
     const where: any = {};
@@ -124,44 +175,115 @@ async function getPagedWhops({
       where.slug = { in: Array.from(LAUNCH_COHORT_SLUGS) };
     }
 
-    // Search filter
-    if (q) {
-      where.OR = [
-        { name: { contains: q, mode: 'insensitive' } },
-        { description: { contains: q, mode: 'insensitive' } },
-      ];
+    // Normalize and parse search terms
+    const normalized = normalizeSearchTerm(q);
+    const searchWords = normalized.split(/\s+/).filter(word => word.length >= 2);
+    const hasSearch = searchWords.length > 0;
+
+    // Build name-only search conditions (fast - uses indexed name column)
+    if (hasSearch) {
+      if (searchWords.length > 1) {
+        // Multi-word: ALL words must appear in name (AND logic)
+        where.AND = searchWords.map(word => {
+          const variations = getWordVariations(word);
+          return {
+            OR: variations.map(v => ({ name: { contains: v, mode: 'insensitive' as const } }))
+          };
+        });
+      } else {
+        // Single word: any variation must match
+        const variations = getWordVariations(searchWords[0]);
+        where.OR = variations.map(v => ({ name: { contains: v, mode: 'insensitive' as const } }));
+      }
     }
 
-    // Category filter - using whopCategory enum field
+    // Category filter
     if (category && category !== '' && category !== 'all') {
       where.whopCategory = category;
     }
 
-    // Build orderBy clause for sorting
-    let orderBy: any = { displayOrder: 'asc' }; // default
+    // For searches, fetch limited results to sort by relevance, then paginate
+    // For non-searches, use normal DB pagination
+    if (hasSearch) {
+      // Name-only search is fast and comprehensive - content search is disabled for performance
+      // (ILIKE queries on large text fields are slow without specialized indexes)
+      const allWhops = await prisma.deal.findMany({
+        where,
+        take: 200,
+        include: {
+          PromoCode: {
+            select: { id: true, title: true, description: true, code: true, type: true, value: true },
+          },
+        },
+      });
 
+      // Calculate relevance scores and sort
+      const scoredWhops = allWhops.map(whop => ({
+        ...whop,
+        _relevanceScore: calculateRelevanceScore(whop, searchWords)
+      }));
+
+      // Sort by relevance (highest first), then by displayOrder as tiebreaker
+      scoredWhops.sort((a, b) => {
+        if (b._relevanceScore !== a._relevanceScore) {
+          return b._relevanceScore - a._relevanceScore;
+        }
+        return a.displayOrder - b.displayOrder;
+      });
+
+      // Apply pagination in memory
+      const totalCount = scoredWhops.length;
+      const skip = (page - 1) * limit;
+      const paginatedWhops = scoredWhops.slice(skip, skip + limit);
+
+      // Get user count
+      const totalUsersDb = await prisma.user.count();
+      const marketingUsers = getMarketingUsers(totalUsersDb);
+
+      // Transform data
+      const formattedWhops = paginatedWhops.map((whop) => ({
+        id: whop.id,
+        name: whop.name,
+        slug: whop.slug,
+        logo: whop.logo,
+        description: whop.description,
+        rating: whop.rating,
+        displayOrder: whop.displayOrder,
+        affiliateLink: whop.affiliateLink,
+        promoCodes: whop.PromoCode.map((code) => ({
+          id: code.id,
+          title: code.title,
+          description: code.description,
+          code: code.code,
+          type: code.type,
+          value: code.value,
+        })),
+        priceText: (whop as any).price || 'Free',
+        price: (whop as any).price || 'Free',
+        priceBadge: (whop as any).price || 'Free',
+      }));
+
+      return {
+        items: formattedWhops,
+        totalPages: Math.ceil(totalCount / limit),
+        total: totalCount,
+        totalUsers: marketingUsers,
+      };
+    }
+
+    // Non-search: use normal DB sorting and pagination
+    let orderBy: any = { displayOrder: 'asc' };
     if (sort) {
       switch (sort) {
-        case 'newest':
-          orderBy = { createdAt: 'desc' };
-          break;
-        case 'highest-rated':
-          orderBy = { rating: 'desc' };
-          break;
-        case 'alpha-asc':
-          orderBy = { name: 'asc' };
-          break;
-        case 'alpha-desc':
-          orderBy = { name: 'desc' };
-          break;
-        case 'relevance':
-        default:
-          orderBy = { displayOrder: 'asc' };
-          break;
+        case 'newest': orderBy = { createdAt: 'desc' }; break;
+        case 'highest-rated': orderBy = { rating: 'desc' }; break;
+        case 'alpha-asc': orderBy = { name: 'asc' }; break;
+        case 'alpha-desc': orderBy = { name: 'desc' }; break;
+        default: orderBy = { displayOrder: 'asc' }; break;
       }
     }
 
-    // Fetch with filtering and sorting
+    const skip = (page - 1) * limit;
     const [whops, totalCount] = await Promise.all([
       prisma.deal.findMany({
         where,
@@ -170,14 +292,7 @@ async function getPagedWhops({
         orderBy,
         include: {
           PromoCode: {
-            select: {
-              id: true,
-              title: true,
-              description: true,
-              code: true,
-              type: true,
-              value: true,
-            },
+            select: { id: true, title: true, description: true, code: true, type: true, value: true },
           },
         },
       }),
@@ -383,6 +498,7 @@ export default async function Home({
           currentPage={page}
           totalPages={data.totalPages}
           total={data.total}
+          searchParams={{ search, whopCategory, sortBy }}
         />
       </Suspense>
 

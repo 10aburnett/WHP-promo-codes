@@ -16,13 +16,40 @@ export async function GET(request: Request) {
       return NextResponse.json([])
     }
 
-    // Build where clause with launch cohort gate at DB level
-    const whereClause: any = {
-      name: {
-        contains: query,
-        mode: 'insensitive' // Case insensitive search
+    // Normalize: remove apostrophes and special characters, then split into words
+    const normalized = query.trim().replace(/[''`]/g, '').replace(/[^\w\s]/g, ' ');
+    const searchWords = normalized.split(/\s+/).filter(word => word.length >= 2);
+
+    // Generate search variations for each word (handles possessives like "cap's" matching "caps")
+    const getWordVariations = (word: string): string[] => {
+      const variations = [word];
+      // If word ends in 's', also search without it (caps -> cap, matches "cap's")
+      if (word.length > 2 && word.toLowerCase().endsWith('s')) {
+        variations.push(word.slice(0, -1));
       }
+      return variations;
     };
+
+    // Build where clause - search name, aboutContent, featuresContent
+    const whereClause: any = {};
+
+    const buildSearchConditions = (term: string) => [
+      { name: { contains: term, mode: 'insensitive' } },
+      { aboutContent: { contains: term, mode: 'insensitive' } },
+      { featuresContent: { contains: term, mode: 'insensitive' } },
+    ];
+
+    if (searchWords.length > 1) {
+      whereClause.AND = searchWords.map(word => {
+        const variations = getWordVariations(word);
+        return {
+          OR: variations.flatMap(v => buildSearchConditions(v))
+        };
+      });
+    } else if (searchWords.length === 1) {
+      const variations = getWordVariations(searchWords[0]);
+      whereClause.OR = variations.flatMap(v => buildSearchConditions(v));
+    }
 
     // Launch cohort gate: Only search within cohort slugs
     if (LAUNCH_MODE && LAUNCH_COHORT_SLUGS.size > 0) {
@@ -34,7 +61,8 @@ export async function GET(request: Request) {
       select: {
         id: true,
         name: true,
-        slug: true
+        slug: true,
+        whopCategory: true
       },
       orderBy: { name: 'asc' },
       take: limit

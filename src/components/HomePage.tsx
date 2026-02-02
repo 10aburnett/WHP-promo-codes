@@ -55,15 +55,15 @@ export default function HomePage({ initialOffers, initialTotal, totalUsers, key 
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  
-  // Initialize filters from URL parameters - reset completely on key change
-  const [filters, setFilters] = useState<FilterState>({
-    searchTerm: '',
+
+  // Initialize filters DIRECTLY from URL parameters
+  const [filters, setFilters] = useState<FilterState>(() => ({
+    searchTerm: searchParams.get('search') || '',
     promoType: '',
-    whopCategory: '',
-    whop: '',
-    sortBy: ''
-  });
+    whopCategory: (searchParams.get('whopCategory') || '') as WhopCategory | "",
+    whop: searchParams.get('whop') || '',
+    sortBy: (searchParams.get('sortBy') || '') as "" | "highest" | "lowest" | "alpha-asc" | "alpha-desc" | "newest" | "highest-rated"
+  }));
   
   const [whops, setWhops] = useState<any[]>(initialOffers);
   const [pagination, setPagination] = useState({
@@ -175,7 +175,7 @@ export default function HomePage({ initialOffers, initialTotal, totalUsers, key 
       // Set new timeout for search
       const timeout = setTimeout(() => {
         fetchOffers(1, updatedFilters);
-      }, 300); // 300ms debounce
+      }, 150); // 150ms debounce - faster response
       
       setSearchTimeout(timeout);
     } else {
@@ -184,12 +184,12 @@ export default function HomePage({ initialOffers, initialTotal, totalUsers, key 
     }
   }, [filters, router, searchTimeout, fetchOffers]);
 
-  // Handle page changes
+  // Handle page changes - MUST pass current filters to preserve search state
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= pagination.totalPages && !loading) {
       // Scroll to top IMMEDIATELY before any DOM updates
       window.scrollTo({ top: 0, behavior: 'instant' });
-      fetchOffers(newPage);
+      fetchOffers(newPage, filters);
     }
   };
 
