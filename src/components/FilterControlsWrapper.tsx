@@ -1,9 +1,10 @@
 'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useCallback, Suspense, useEffect, useRef } from 'react';
+import { useCallback, Suspense, useEffect, useRef, useTransition } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import FilterControls from '@/components/FilterControls';
+import { useSearchLoading } from '@/context/SearchLoadingContext';
 import type { FilterState } from '@/types/offer';
 
 function FilterControlsInner() {
@@ -11,6 +12,13 @@ function FilterControlsInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const lastUrlSearchRef = useRef<string>('');
+  const [isPending, startTransition] = useTransition();
+  const { setIsSearching } = useSearchLoading();
+
+  // Sync loading state with context
+  useEffect(() => {
+    setIsSearching(isPending);
+  }, [isPending, setIsSearching]);
 
   // Get current filter values from URL (single source of truth)
   const urlSearchTerm = searchParams.get('search') || '';
@@ -49,7 +57,10 @@ function FilterControlsInner() {
     // Reset to page 1 when search changes
     params.delete('page');
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    // Use startTransition to track pending state
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   }, 300);
 
   // Handle all filter changes
@@ -82,7 +93,10 @@ function FilterControlsInner() {
     // Reset to page 1 when filters change
     params.delete('page');
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    // Use startTransition to track pending state
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   }, [router, pathname, searchParams, debouncedSearch]);
 
   // Handle form submit (Enter key)
@@ -100,7 +114,9 @@ function FilterControlsInner() {
     }
     params.delete('page');
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   }, [router, pathname, searchParams]);
 
   return (
@@ -110,6 +126,7 @@ function FilterControlsInner() {
       onSubmit={onSubmit}
       casinos={[]}
       submitMode="auto"
+      isLoading={isPending}
     />
   );
 }

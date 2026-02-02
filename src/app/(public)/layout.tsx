@@ -3,6 +3,7 @@ import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { SearchLoadingProvider } from '@/context/SearchLoadingContext';
 import { ConditionalLayout } from '@/components/ConditionalLayout';
 import { prisma } from '@/lib/prisma';
 import { unstable_cache } from 'next/cache';
@@ -135,9 +136,11 @@ export default async function PublicLayout({
       <AuthProvider>
         <LanguageProvider>
           <ThemeProvider>
-            <ConditionalLayout faviconUrl={faviconUrl}>
-              {children}
-            </ConditionalLayout>
+            <SearchLoadingProvider>
+              <ConditionalLayout faviconUrl={faviconUrl}>
+                {children}
+              </ConditionalLayout>
+            </SearchLoadingProvider>
           </ThemeProvider>
         </LanguageProvider>
       </AuthProvider>

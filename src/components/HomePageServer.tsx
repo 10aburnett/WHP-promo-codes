@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import OfferCardServer from '@/components/OfferCardServer';
 import FilterControlsWrapper from '@/components/FilterControlsWrapper';
+import SearchResultsOverlay from '@/components/SearchResultsOverlay';
 import { SITE_BRAND, SITE_TAGLINE } from '@/lib/brand';
 
 // Filter skeleton for Suspense fallback
@@ -243,30 +244,32 @@ export default function HomePageServer({
 
       {/* Offer Cards Grid - Using sm + xl breakpoints for fingerprint differentiation */}
       {/* IMPORTANT: pointer-events-auto to re-enable clicks on the grid (parent has pointer-events-none) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8 pointer-events-auto">
-        {items.map((whop) => (
-          <OfferCardServer
-            key={whop.id}
-            promo={{
-              id: whop.id,
-              whopName: whop.name,
-              slug: whop.slug,
-              promoType: whop.promoCodes[0]?.type || 'discount',
-              promoValue: parseInt(whop.promoCodes[0]?.value || '0'),
-              promoText: whop.promoCodes[0]?.title || 'Special access',
-              logoUrl: whop.logo || '',
-              promoCode: whop.promoCodes[0]?.code || null,
-              affiliateLink: whop.affiliateLink || '',
-              isActive: true,
-              price: whop.price,
-              priceText: whop.priceText,
-              priceBadge: whop.priceBadge,
-              offerId: whop.id,
-              promoCodeId: whop.promoCodes[0]?.id,
-            }}
-          />
-        ))}
-      </div>
+      <SearchResultsOverlay>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 lg:gap-6 mb-8 pointer-events-auto">
+          {items.map((whop) => (
+            <OfferCardServer
+              key={whop.id}
+              promo={{
+                id: whop.id,
+                whopName: whop.name,
+                slug: whop.slug,
+                promoType: whop.promoCodes[0]?.type || 'discount',
+                promoValue: parseInt(whop.promoCodes[0]?.value || '0'),
+                promoText: whop.promoCodes[0]?.title || 'Special access',
+                logoUrl: whop.logo || '',
+                promoCode: whop.promoCodes[0]?.code || null,
+                affiliateLink: whop.affiliateLink || '',
+                isActive: true,
+                price: whop.price,
+                priceText: whop.priceText,
+                priceBadge: whop.priceBadge,
+                offerId: whop.id,
+                promoCodeId: whop.promoCodes[0]?.id,
+              }}
+            />
+          ))}
+        </div>
+      </SearchResultsOverlay>
 
       {/* Bottom Pagination - Compact left-aligned bar */}
       {/* IMPORTANT: pointer-events-none on nav, pointer-events-auto only on actual links */}

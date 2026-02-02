@@ -9,7 +9,33 @@ interface FilterControlsProps {
   formRef?: React.RefObject<HTMLFormElement>;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
   submitMode?: 'manual' | 'auto';
+  isLoading?: boolean;
 }
+
+// Loading spinner component
+const LoadingSpinner = () => (
+  <svg
+    className="animate-spin h-5 w-5"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    style={{ color: 'var(--accent-color)' }}
+  >
+    <circle
+      className="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      strokeWidth="3"
+    />
+    <path
+      className="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    />
+  </svg>
+);
 
 // Categories ordered by user interest and engagement
 const WHOP_CATEGORIES: WhopCategory[] = [
@@ -42,6 +68,7 @@ export default function FilterControls({
   formRef,
   onSubmit,
   submitMode = 'auto',
+  isLoading = false,
 }: FilterControlsProps) {
   return (
     <form
@@ -75,23 +102,34 @@ export default function FilterControls({
         <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] items-start">
           {/* Left: Search input */}
           <div
-            className="relative flex items-center rounded-full px-3 py-2.5 md:px-4 md:py-3 border"
-            style={{ backgroundColor: 'var(--background-color)', borderColor: 'var(--border-color)' }}
+            className={`relative flex items-center rounded-full px-3 py-2.5 md:px-4 md:py-3 border transition-all duration-200 ${
+              isLoading ? 'ring-2 ring-offset-1' : ''
+            }`}
+            style={{
+              backgroundColor: 'var(--background-color)',
+              borderColor: isLoading ? 'var(--accent-color)' : 'var(--border-color)',
+              '--tw-ring-color': 'var(--accent-color)',
+              '--tw-ring-opacity': '0.3',
+            } as React.CSSProperties}
           >
             <div className="pl-1 pr-3 flex items-center pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-5 h-5"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
             </div>
             <input
               id="main-search-input"
@@ -103,8 +141,17 @@ export default function FilterControls({
               className="w-full bg-transparent border-0 text-sm md:text-base focus:outline-none [&::-webkit-search-cancel-button]:hidden [&::-ms-clear]:hidden"
               style={{ color: 'var(--text-color)' }}
             />
+            {/* Loading text indicator */}
+            {isLoading && (
+              <span
+                className="absolute right-12 top-1/2 -translate-y-1/2 text-xs font-medium animate-pulse"
+                style={{ color: 'var(--accent-color)' }}
+              >
+                Searching...
+              </span>
+            )}
             {/* Custom green clear button */}
-            {filters.searchTerm && (
+            {filters.searchTerm && !isLoading && (
               <button
                 type="button"
                 onClick={() => {
