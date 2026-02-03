@@ -87,16 +87,6 @@ export default function OfferCard({ promo, priority = false }: OfferCardProps) {
       ? rawPriceBadge
       : null;
 
-  // Temporary debug logging
-  console.log('CARD', {
-    slug: promo.slug || promo.id,
-    keys: Object.keys(promo),
-    priceText: (promo as any).priceText,
-    price: (promo as any).price,
-    rawPriceBadge,
-    priceBadge,
-  });
-
   // Helper function to get the correct detail page URL based on language
   const getDetailPageUrl = () => {
     // Use slug if available, otherwise fall back to id

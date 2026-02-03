@@ -6,6 +6,7 @@ import { LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '@/lib/launch-cohort'
 export const dynamic = "force-dynamic";
 
 // GET /api/whops/search?q=term&limit=20 - Server-side search for whops
+// OPTIMIZED: Only searches indexed fields (name, slug) for fast queries
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -30,13 +31,13 @@ export async function GET(request: Request) {
       return variations;
     };
 
-    // Build where clause - search name, aboutContent, featuresContent
+    // Build where clause - OPTIMIZED: only search indexed fields (name, slug)
+    // Removed aboutContent and featuresContent to avoid slow text field scans
     const whereClause: any = {};
 
     const buildSearchConditions = (term: string) => [
       { name: { contains: term, mode: 'insensitive' } },
-      { aboutContent: { contains: term, mode: 'insensitive' } },
-      { featuresContent: { contains: term, mode: 'insensitive' } },
+      { slug: { contains: term, mode: 'insensitive' } },
     ];
 
     if (searchWords.length > 1) {

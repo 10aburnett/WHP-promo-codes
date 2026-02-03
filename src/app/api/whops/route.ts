@@ -29,12 +29,12 @@ function getSearchWordVariations(word: string): string[] {
   return variations;
 }
 
-// Calculate relevance score: name (highest) > aboutContent > featuresContent (lowest)
+// OPTIMIZED: Calculate relevance score based on name and slug only
+// Removed aboutContent and featuresContent to avoid fetching large text fields
 function calculateRelevanceScore(whop: any, searchWords: string[]): number {
   let score = 0;
   const nameLower = (whop.name || '').toLowerCase();
-  const aboutLower = (whop.aboutContent || '').toLowerCase();
-  const featuresLower = (whop.featuresContent || '').toLowerCase();
+  const slugLower = (whop.slug || '').toLowerCase();
 
   for (const word of searchWords) {
     const wordLower = word.toLowerCase();
@@ -50,14 +50,9 @@ function calculateRelevanceScore(whop: any, searchWords: string[]): number {
         score += 100; // Name contains term
       }
 
-      // About content matches (second priority)
-      if (aboutLower.includes(variant)) {
-        score += 20;
-      }
-
-      // Features content matches (third priority)
-      if (featuresLower.includes(variant)) {
-        score += 5;
+      // Slug matches (secondary)
+      if (slugLower.includes(variant)) {
+        score += 50;
       }
     }
   }
@@ -869,11 +864,11 @@ export async function GET(request: Request) {
         return variations;
       };
 
-      // Search name, aboutContent, featuresContent
+      // OPTIMIZED: Search only indexed fields (name, slug) for fast queries
+      // Removed aboutContent and featuresContent to avoid slow text field scans
       const buildSearchConditions = (term: string) => [
         { name: { contains: term, mode: 'insensitive' } },
-        { aboutContent: { contains: term, mode: 'insensitive' } },
-        { featuresContent: { contains: term, mode: 'insensitive' } },
+        { slug: { contains: term, mode: 'insensitive' } },
       ];
 
       if (searchWords.length > 1) {

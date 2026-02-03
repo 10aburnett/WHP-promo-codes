@@ -32,7 +32,7 @@ import RecommendedOffersServer from '@/components/RecommendedOffersServer';
 import AlternativesServer from '@/components/AlternativesServer';
 import ReviewsSectionServer from '@/components/ReviewsSectionServer';
 import { getRecommendations, getAlternatives } from '@/data/recommendations'; // Data fetching for recommendations/alternatives
-import { getPromoStatsForSlug } from '@/data/promo-stats'; // Server-side promo usage statistics
+// Note: usageStats now come from getOfferBySlugCached, no separate promo-stats call needed
 const CommunityPromoSection = dynamicImport(() => import('@/components/CommunityPromoSection'), {
   loading: () => null, // Keep SSR for SEO-relevant content
 });
@@ -55,7 +55,7 @@ import { LOCALES, isLocaleEnabled, getSchemaLocale } from '@/lib/schema-locale';
 import { offerAbsoluteUrl } from '@/lib/urls';
 import { getPageClassification, getRobotsForClassification, shouldIncludeInHreflang } from '@/lib/seo-classification';
 
-// Pre-build top 50 offers at deploy time for instant navigation
+// Pre-build ALL indexable offers at deploy time for instant navigation
 export async function generateStaticParams() {
   // Only pre-build in production to speed up dev builds
   if (process.env.NODE_ENV !== 'production') {
@@ -63,13 +63,19 @@ export async function generateStaticParams() {
   }
 
   try {
-    const topOffers = await prisma.deal.findMany({
+    const offers = await prisma.deal.findMany({
+      where: {
+        indexingStatus: 'INDEX',
+        retirement: 'NONE',
+      },
       select: { slug: true },
-      take: 50,
-      orderBy: { displayOrder: 'asc' }, // Most important offers first
+      take: 5000, // Safety limit
+      orderBy: { displayOrder: 'asc' },
     });
 
-    return topOffers.map((offer) => ({
+    console.log(`[BUILD] Generating static params for ${offers.length} offers`);
+
+    return offers.map((offer) => ({
       slug: offer.slug,
     }));
   } catch (error) {
@@ -505,6 +511,7 @@ export default async function DealPage({ params }: { params: { slug: string } })
   const verificationData = null;
 
   // Build view model for JSON-LD schema (required for SEO - Product schema)
+  // Run in parallel with minimal blocking
   let vm = null;
   if (finalOfferData) {
     try {
@@ -514,8 +521,14 @@ export default async function DealPage({ params }: { params: { slug: string } })
     }
   }
 
-  // Fetch usage stats server-side for SEO (Googlebot needs to see this)
-  const usageStats = await getPromoStatsForSlug(dbSlug);
+  // OPTIMIZED: Use usageStats from finalOfferData (already fetched in getOfferBySlug)
+  // No need for separate getPromoStatsForSlug call - eliminates redundant DB query
+  const usageStats = finalOfferData?.usageStats ?? {
+    todayCount: 0,
+    totalCount: 0,
+    lastUsed: null,
+    verifiedDate: new Date().toISOString()
+  };
 
   console.log('[PERF] total after DB', Date.now() - pageStart, 'ms');
 

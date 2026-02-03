@@ -3,6 +3,10 @@ import Link from 'next/link';
 import { siteOrigin } from '@/lib/site-origin';
 import { SITE_BRAND } from '@/lib/brand';
 
+// Static generation with long cache - content rarely changes
+export const dynamic = 'force-static';
+export const revalidate = 86400; // 24h
+
 export const metadata: Metadata = {
   title: 'How to Redeem a Whop Promo Code | Step-by-Step Guide',
   description: 'Learn how to apply a promo code on Whop checkout. Our step-by-step guide covers finding the coupon field, entering your code, and troubleshooting common issues.',

@@ -12,9 +12,16 @@ const logCache = (...args: any[]) => {
   }
 };
 
+const startOfTodayUTC = () => {
+  const d = new Date();
+  d.setUTCHours(0, 0, 0, 0);
+  return d;
+};
+
 /**
  * Direct fetch for a single offer by slug.
  * Uses select instead of include to reduce payload size.
+ * Includes usage stats for SEO.
  */
 async function fetchOfferDirect(slug: string) {
   const decoded = decodeURIComponent(slug);
@@ -81,7 +88,34 @@ async function fetchOfferDirect(slug: string) {
 
   console.log('[PERF] prisma.deal.findFirst', Date.now() - t0, 'ms', { slug: dbSlug });
 
-  return whop ?? null;
+  if (!whop) return null;
+
+  // Fetch usage stats using whopId (fast indexed query)
+  const since = startOfTodayUTC();
+  const whereBase = { whopId: whop.id, actionType: 'code_copy' as const };
+
+  const [totalCount, todayCount, lastUsage] = await Promise.all([
+    prisma.offerTracking.count({ where: whereBase }).catch(() => 0),
+    prisma.offerTracking.count({ where: { ...whereBase, createdAt: { gte: since } } }).catch(() => 0),
+    prisma.offerTracking.findFirst({
+      where: whereBase,
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true }
+    }).catch(() => null)
+  ]);
+
+  const verifiedRaw = whop.updatedAt || whop.createdAt || new Date(0);
+  const usageStats = {
+    todayCount: todayCount ?? 0,
+    totalCount: totalCount ?? 0,
+    lastUsed: lastUsage?.createdAt ? lastUsage.createdAt.toISOString() : null,
+    verifiedDate: verifiedRaw.toISOString(),
+  };
+
+  return {
+    ...whop,
+    usageStats,
+  };
 }
 
 /**

@@ -3,6 +3,10 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import PromoCodeSubmissionForm from '@/components/PromoCodeSubmissionForm';
 
+// Static generation - form shell is static, submission is dynamic
+export const dynamic = 'force-static';
+export const revalidate = 86400; // 24h
+
 export const metadata: Metadata = {
   title: 'Submit Your Whop Promo Code | Get Your Discount Featured',
   description: 'Share your Whop promo code with thousands of deal-seekers. Free submission, fast review, and instant exposure for creators in trading, sports betting, and reselling niches.',

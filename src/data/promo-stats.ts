@@ -19,55 +19,30 @@ const startOfTodayUTC = () => {
 
 /**
  * Server-side helper to fetch promo usage statistics for a Whop by slug.
- * This mirrors the logic in /api/promo-stats but runs during SSR for SEO.
+ * OPTIMIZED: Uses whopId directly instead of slow path contains searches.
  * Cached with React cache() for deduplication within a single request.
  */
 export const getPromoStatsForSlug = cache(async (slug: string): Promise<PromoUsageStats> => {
   try {
-    // First, try to get the whop to find its ID
-    const whop = await prisma.deal.findUnique({
-      where: { slug: slug.toLowerCase() },
-      select: { id: true }
+    // Get the whop to find its ID
+    const whop = await prisma.deal.findFirst({
+      where: { slug: { equals: slug.toLowerCase(), mode: 'insensitive' } },
+      select: { id: true, updatedAt: true, createdAt: true }
     });
 
-    const whopId = whop?.id;
-    const since = startOfTodayUTC();
-
-    // Try whopId-based counting first (most accurate)
-    if (whopId) {
-      const whereBase = { whopId: whopId, actionType: 'code_copy' as const };
-
-      const [totalCount, todayCount, lastUsage] = await Promise.all([
-        prisma.offerTracking.count({ where: whereBase }),
-        prisma.offerTracking.count({ where: { ...whereBase, createdAt: { gte: since } } }),
-        prisma.offerTracking.findFirst({
-          where: whereBase,
-          orderBy: { createdAt: 'desc' },
-          select: { createdAt: true }
-        })
-      ]);
-
+    if (!whop?.id) {
       return {
-        todayCount,
-        totalCount,
-        lastUsed: lastUsage?.createdAt?.toISOString() ?? null,
+        todayCount: 0,
+        totalCount: 0,
+        lastUsed: null,
         verifiedDate: new Date().toISOString()
       };
     }
 
-    // Fallback to path-based matching (less accurate but works for older data)
-    // Note: Includes both old /whop/ and new /offer/ paths for backwards compatibility
-    const whereBase = {
-      actionType: 'code_copy' as const,
-      OR: [
-        { path: { contains: `/offer/${slug}`, mode: 'insensitive' as const } },
-        { path: { contains: `/en/offer/${slug}`, mode: 'insensitive' as const } },
-        // Legacy paths for historical data
-        { path: { contains: `/whop/${slug}`, mode: 'insensitive' as const } },
-        { path: { contains: `/en/whop/${slug}`, mode: 'insensitive' as const } }
-      ]
-    };
+    const since = startOfTodayUTC();
+    const whereBase = { whopId: whop.id, actionType: 'code_copy' as const };
 
+    // Fetch all stats in parallel using indexed whopId field
     const [totalCount, todayCount, lastUsage] = await Promise.all([
       prisma.offerTracking.count({ where: whereBase }),
       prisma.offerTracking.count({ where: { ...whereBase, createdAt: { gte: since } } }),
@@ -78,11 +53,13 @@ export const getPromoStatsForSlug = cache(async (slug: string): Promise<PromoUsa
       })
     ]);
 
+    const verifiedRaw = whop.updatedAt || whop.createdAt || new Date();
+
     return {
       todayCount,
       totalCount,
       lastUsed: lastUsage?.createdAt?.toISOString() ?? null,
-      verifiedDate: new Date().toISOString()
+      verifiedDate: verifiedRaw.toISOString()
     };
 
   } catch (error) {

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import HomePageServer from '@/components/HomePageServer';
+import HomePageHybrid from '@/components/HomePageHybrid';
 import StatisticsSectionServer from '@/components/StatisticsSectionServer';
 import CallToAction from '@/components/CallToAction';
 import { prisma } from '@/lib/prisma';
@@ -11,9 +11,8 @@ import { formatUserCount } from '@/config/platformMetrics';
 import type { Metadata } from 'next';
 import { isOfferLaunchEligible, LAUNCH_MODE, LAUNCH_COHORT_SLUGS } from '@/lib/launch-cohort';
 
-// Force dynamic rendering so ?page= works server-side (not statically cached)
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Cache pages for 60 seconds - pagination params still work dynamically
+export const revalidate = 60;
 export const dynamicParams = true;
 export const runtime = 'nodejs'; // Required for Prisma
 
@@ -490,9 +489,9 @@ export default async function Home({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(offersSchema) }}
       />
 
-      {/* Server-rendered content with Suspense for faster hydration */}
+      {/* Hybrid SSR/client component - hero is SSR, grid is client-side for fast interactions */}
       <Suspense fallback={<OfferGridSkeleton />}>
-        <HomePageServer
+        <HomePageHybrid
           key={`p-${page}`}
           items={data.items}
           currentPage={page}

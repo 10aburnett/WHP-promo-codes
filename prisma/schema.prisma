@@ -133,6 +133,9 @@ model OfferTracking {
   @@index([createdAt])
   @@index([promoCodeId])
   @@index([whopId])
+  // Composite indexes for efficient stats queries
+  @@index([whopId, actionType])
+  @@index([whopId, actionType, createdAt])
 }
 
 model PromoCode {
@@ -263,6 +266,10 @@ model Deal {
   @@index([retirement])
   @@index([updatedAt])
   @@index([whopCategory])
+  // Composite indexes for efficient filtered queries
+  @@index([indexingStatus, retirement])
+  @@index([indexingStatus, retirement, createdAt])
+  @@index([category, indexingStatus, retirement])
 }
 
 model playing_with_neon {

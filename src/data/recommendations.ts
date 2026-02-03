@@ -2,7 +2,6 @@
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { loadNeighbors, getNeighborSlugsFor, getExploreFor } from '@/lib/graph';
-import { normalizeSlug } from '@/lib/slug-normalize';
 import { isOfferLaunchEligible, LAUNCH_MODE } from '@/lib/launch-cohort';
 import { getCohortFallbackSlugs, MIN_INTERNAL_LINKS } from '@/lib/cohort-fallback-links';
 
@@ -55,61 +54,170 @@ function getSecondSentence(text: string | null | undefined): string | null {
 }
 
 // ============================================================================
-// UNIFIED RENDER-TIME ASSEMBLY (CRITICAL: NO DUPLICATES ALLOWED)
+// OPTIMIZED: Batch all DB queries to minimize round-trips
 // ============================================================================
 
 /**
- * HARD RULE: A slug may appear AT MOST ONCE per offer page.
+ * OPTIMIZED: Build recommendations and alternatives with minimal DB queries.
  *
- * This function builds both recommendations and alternatives together,
- * using a shared usedSlugs set to guarantee zero overlap.
- *
- * If uniqueness cannot be satisfied, we REDUCE COUNT rather than duplicate.
+ * Instead of 6-8 separate queries, this uses 2-3 queries max:
+ * 1. Get current offer category (if needed for fallbacks)
+ * 2. Batch fetch ALL candidate items for recs + alts in ONE query
+ * 3. Optionally fetch explore link
  */
 export async function getRecsAndAlts(currentOfferSlug: string): Promise<{
   recommendations: { items: OfferItem[]; explore: ExploreLink | null };
   alternatives: { items: OfferItem[]; explore: ExploreLink | null };
 }> {
-  // Just lowercase, don't strip hyphens - graph keys may have trailing hyphens
   const canonicalSlug = currentOfferSlug.toLowerCase();
-
-  // Global exclusion set - once a slug is here, it cannot appear anywhere else on this page
   const usedSlugs = new Set<string>();
-  usedSlugs.add(canonicalSlug); // Always exclude current page
+  usedSlugs.add(canonicalSlug);
 
   try {
     const neighbors = await loadNeighbors();
 
-    // ========================================================================
-    // STEP 1: Build recommendations (first priority)
-    // ========================================================================
-    const recItems = await buildSection(
-      canonicalSlug,
-      neighbors,
-      'recommendations',
-      usedSlugs,
-      4 // target count
-    );
+    // Get candidate slugs from graph for both sections
+    const recCandidates = getNeighborSlugsFor(neighbors, canonicalSlug, 'recommendations')
+      .filter(Boolean)
+      .filter(isOfferLaunchEligible)
+      .filter(slug => !usedSlugs.has(slug));
 
-    // ========================================================================
-    // STEP 2: Build alternatives (second priority, MUST NOT overlap with recs)
-    // ========================================================================
-    const altItems = await buildSection(
-      canonicalSlug,
-      neighbors,
-      'alternatives',
-      usedSlugs, // recs already added to usedSlugs
-      4 // target count
-    );
+    const altCandidates = getNeighborSlugsFor(neighbors, canonicalSlug, 'alternatives')
+      .filter(Boolean)
+      .filter(isOfferLaunchEligible)
+      .filter(slug => !usedSlugs.has(slug) && !recCandidates.includes(slug));
 
-    // ========================================================================
-    // STEP 3: Build explore link (if not already used)
-    // ========================================================================
-    const explore = await buildExploreLink(canonicalSlug, neighbors, usedSlugs);
+    // Get explore slug
+    const exploreSlug = getExploreFor(neighbors, canonicalSlug);
+    const validExploreSlug = exploreSlug &&
+      !usedSlugs.has(exploreSlug) &&
+      !recCandidates.includes(exploreSlug) &&
+      !altCandidates.includes(exploreSlug) &&
+      isOfferLaunchEligible(exploreSlug) ? exploreSlug : null;
+
+    // If we need category fallbacks, get current offer's category
+    let currentCategory: string | null = null;
+    if (recCandidates.length < 4 || altCandidates.length < 4) {
+      const currentOffer = await prisma.deal.findFirst({
+        where: { slug: canonicalSlug },
+        select: { category: true }
+      });
+      currentCategory = currentOffer?.category ?? null;
+    }
+
+    // Collect all slugs we need to fetch (recs + alts + explore + category fallbacks)
+    const allSlugsToFetch = new Set<string>();
+
+    // Add rec candidates
+    recCandidates.slice(0, 8).forEach(slug => allSlugsToFetch.add(slug));
+
+    // Add alt candidates
+    altCandidates.slice(0, 8).forEach(slug => allSlugsToFetch.add(slug));
+
+    // Add explore
+    if (validExploreSlug) allSlugsToFetch.add(validExploreSlug);
+
+    // Add cohort fallbacks if needed
+    if (LAUNCH_MODE && (recCandidates.length < MIN_INTERNAL_LINKS || altCandidates.length < MIN_INTERNAL_LINKS)) {
+      const neededFallbacks = Math.max(0, MIN_INTERNAL_LINKS * 2 - recCandidates.length - altCandidates.length);
+      const fallbackSlugs = getCohortFallbackSlugs(canonicalSlug, neededFallbacks, usedSlugs);
+      fallbackSlugs.forEach(slug => allSlugsToFetch.add(slug));
+    }
+
+    // SINGLE BATCH QUERY: Fetch all whops we need in ONE database call
+    const allWhops = allSlugsToFetch.size > 0 ? await prisma.deal.findMany({
+      where: {
+        slug: { in: Array.from(allSlugsToFetch) },
+        NOT: { retirement: 'GONE' }
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        logo: true,
+        description: true,
+        aboutContent: true,
+        category: true,
+        price: true,
+        rating: true,
+        _count: { select: { Review: true } },
+        PromoCode: {
+          where: { NOT: { id: { startsWith: 'community_' } } },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { id: true, title: true, type: true, value: true, code: true }
+        }
+      }
+    }) : [];
+
+    // Create lookup map for quick access
+    const whopMap = new Map(allWhops.map(w => [w.slug, w]));
+
+    // Build recommendation items
+    const recItems: OfferItem[] = [];
+    for (const slug of recCandidates) {
+      if (recItems.length >= 4) break;
+      const whop = whopMap.get(slug);
+      if (whop && !usedSlugs.has(whop.slug)) {
+        usedSlugs.add(whop.slug);
+        recItems.push(transformWhop(whop));
+      }
+    }
+
+    // If not enough recs, try category fallbacks from fetched whops
+    if (recItems.length < 4 && currentCategory) {
+      for (const whop of allWhops) {
+        if (recItems.length >= 4) break;
+        if (whop.category === currentCategory && !usedSlugs.has(whop.slug)) {
+          usedSlugs.add(whop.slug);
+          recItems.push(transformWhop(whop));
+        }
+      }
+    }
+
+    // Build alternative items
+    const altItems: OfferItem[] = [];
+    for (const slug of altCandidates) {
+      if (altItems.length >= 4) break;
+      const whop = whopMap.get(slug);
+      if (whop && !usedSlugs.has(whop.slug)) {
+        usedSlugs.add(whop.slug);
+        altItems.push(transformWhop(whop));
+      }
+    }
+
+    // If not enough alts, use remaining whops
+    if (altItems.length < 4) {
+      for (const whop of allWhops) {
+        if (altItems.length >= 4) break;
+        if (!usedSlugs.has(whop.slug)) {
+          usedSlugs.add(whop.slug);
+          altItems.push(transformWhop(whop));
+        }
+      }
+    }
+
+    // Build explore link
+    let explore: ExploreLink | null = null;
+    if (validExploreSlug) {
+      const exploreWhop = whopMap.get(validExploreSlug);
+      if (exploreWhop && !usedSlugs.has(exploreWhop.slug)) {
+        usedSlugs.add(exploreWhop.slug);
+        explore = {
+          slug: exploreWhop.slug,
+          name: exploreWhop.name,
+          logo: exploreWhop.logo,
+          blurb: getSecondSentence(exploreWhop.aboutContent) || exploreWhop.description,
+          category: exploreWhop.category ?? undefined,
+          rating: exploreWhop.rating,
+          ratingCount: exploreWhop._count?.Review ?? 0
+        };
+      }
+    }
 
     return {
       recommendations: { items: recItems, explore: null },
-      alternatives: { items: altItems, explore }, // explore shown with alts (matches original)
+      alternatives: { items: altItems, explore },
     };
   } catch (error) {
     console.error('Error fetching recs/alts:', error);
@@ -121,169 +229,35 @@ export async function getRecsAndAlts(currentOfferSlug: string): Promise<{
 }
 
 /**
- * Build a single section (recs or alts) with global deduplication.
- *
- * CRITICAL: This function MUTATES usedSlugs to track what's been used.
- * Each slug added to the section is also added to usedSlugs.
+ * Transform a whop DB result to OfferItem
  */
-async function buildSection(
-  canonicalSlug: string,
-  neighbors: Record<string, { recommendations?: string[]; alternatives?: string[] }>,
-  kind: 'recommendations' | 'alternatives',
-  usedSlugs: Set<string>,
-  targetCount: number
-): Promise<OfferItem[]> {
-  // Get candidate slugs from graph
-  let candidateSlugs = getNeighborSlugsFor(neighbors, canonicalSlug, kind);
-
-  // Filter: launch cohort + not already used
-  candidateSlugs = candidateSlugs
-    .filter(Boolean)
-    .filter(isOfferLaunchEligible)
-    .filter(slug => !usedSlugs.has(slug));
-
-  // Fallback 1: category-based if graph has nothing
-  if (candidateSlugs.length === 0) {
-    const currentOffer = await prisma.deal.findFirst({
-      where: { slug: canonicalSlug },
-      select: { category: true }
-    });
-
-    if (currentOffer?.category) {
-      const categoryWhops = await prisma.deal.findMany({
-        where: {
-          category: currentOffer.category,
-          slug: { notIn: Array.from(usedSlugs) }
-        },
-        select: { slug: true },
-        orderBy: [{ rating: 'desc' }, { createdAt: 'desc' }],
-        take: 20
-      });
-
-      candidateSlugs = categoryWhops
-        .map(w => w.slug)
-        .filter(isOfferLaunchEligible)
-        .filter(slug => !usedSlugs.has(slug));
-    }
-  }
-
-  // Fallback 2: cohort fallback if still not enough
-  if (LAUNCH_MODE && candidateSlugs.length < MIN_INTERNAL_LINKS) {
-    const fallbackSlugs = getCohortFallbackSlugs(
-      canonicalSlug,
-      targetCount - candidateSlugs.length,
-      usedSlugs // Pass the GLOBAL usedSlugs set
-    );
-    candidateSlugs = [...candidateSlugs, ...fallbackSlugs];
-  }
-
-  // Take only what we need
-  const slugsToFetch = candidateSlugs.slice(0, targetCount);
-
-  if (slugsToFetch.length === 0) {
-    return [];
-  }
-
-  // Fetch from DB (filter out GONE pages)
-  const whops = await prisma.deal.findMany({
-    where: {
-      slug: { in: slugsToFetch },
-      NOT: { retirement: 'GONE' }
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      logo: true,
-      description: true,
-      aboutContent: true,
-      category: true,
-      price: true,
-      rating: true,
-      _count: { select: { Review: true } },
-      PromoCode: {
-        where: { NOT: { id: { startsWith: 'community_' } } },
-        orderBy: { createdAt: 'desc' },
-        take: 1,
-        select: { id: true, title: true, type: true, value: true, code: true }
-      }
-    },
-    take: targetCount
-  });
-
-  // Transform and ADD TO USED SLUGS
-  // Use raw DB slug - don't normalize (preserves trailing hyphens like 'tms-heavy-hitters-')
-  const items: OfferItem[] = whops.map(whop => {
-    usedSlugs.add(whop.slug); // CRITICAL: Mark as used
-
-    return {
-      id: whop.id,
-      name: whop.name,
-      slug: whop.slug,
-      logo: whop.logo,
-      description: whop.description,
-      aboutContent: whop.aboutContent,
-      blurb: getSecondSentence(whop.aboutContent) || whop.description,
-      category: whop.category,
-      price: whop.price,
-      rating: whop.rating,
-      ratingCount: whop._count?.Review ?? 0,
-      promoCodes: whop.PromoCode || []
-    };
-  });
-
-  return items;
-}
-
-/**
- * Build explore link, checking against usedSlugs.
- */
-async function buildExploreLink(
-  canonicalSlug: string,
-  neighbors: Record<string, { recommendations?: string[]; alternatives?: string[]; explore?: string }>,
-  usedSlugs: Set<string>
-): Promise<ExploreLink | null> {
-  try {
-    const exploreSlug = getExploreFor(neighbors, canonicalSlug);
-
-    if (!exploreSlug) return null;
-    if (usedSlugs.has(exploreSlug)) return null;
-    if (!isOfferLaunchEligible(exploreSlug)) return null;
-
-    const exploreWhop = await prisma.deal.findFirst({
-      where: {
-        slug: exploreSlug,
-        NOT: { retirement: 'GONE' }
-      },
-      select: {
-        slug: true,
-        name: true,
-        logo: true,
-        description: true,
-        aboutContent: true,
-        category: true,
-        rating: true,
-        _count: { select: { Review: true } }
-      }
-    });
-
-    if (!exploreWhop) return null;
-
-    // Use raw DB slug - don't normalize (preserves trailing hyphens)
-    usedSlugs.add(exploreWhop.slug); // Mark as used
-
-    return {
-      slug: exploreWhop.slug,
-      name: exploreWhop.name,
-      logo: exploreWhop.logo,
-      blurb: getSecondSentence(exploreWhop.aboutContent) || exploreWhop.description,
-      category: exploreWhop.category ?? undefined,
-      rating: exploreWhop.rating,
-      ratingCount: exploreWhop._count?.Review ?? 0
-    };
-  } catch {
-    return null;
-  }
+function transformWhop(whop: {
+  id: string;
+  name: string;
+  slug: string;
+  logo: string | null;
+  description: string | null;
+  aboutContent: string | null;
+  category: string | null;
+  price: string | null;
+  rating: number | null;
+  _count: { Review: number } | null;
+  PromoCode: { id: string; title: string; type: string; value: string; code: string | null }[];
+}): OfferItem {
+  return {
+    id: whop.id,
+    name: whop.name,
+    slug: whop.slug,
+    logo: whop.logo,
+    description: whop.description,
+    aboutContent: whop.aboutContent,
+    blurb: getSecondSentence(whop.aboutContent) || whop.description,
+    category: whop.category,
+    price: whop.price,
+    rating: whop.rating,
+    ratingCount: whop._count?.Review ?? 0,
+    promoCodes: whop.PromoCode || []
+  };
 }
 
 // ============================================================================
@@ -296,10 +270,7 @@ async function buildExploreLink(
  */
 export const getRecsAndAltsCached = unstable_cache(
   async (slug: string) => {
-    const t0 = Date.now();
-    const result = await getRecsAndAlts(slug);
-    console.log('[PERF] getRecsAndAlts', Date.now() - t0, 'ms', { slug });
-    return result;
+    return getRecsAndAlts(slug);
   },
   ['recs-alts'],
   {

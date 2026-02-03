@@ -3,8 +3,19 @@ import { prisma } from '@/lib/prisma';
 import { whereIndexable } from '@/lib/where-indexable';
 import { toIso } from '@/lib/hydration-debug';
 
-function safeDecode(v: string) {
-  try { return decodeURIComponent(v); } catch { return v; }
+/**
+ * Normalize a slug for consistent lookup
+ * Handles URL encoding/decoding and case normalization
+ */
+function normalizeSlug(slug: string): string {
+  if (!slug) return '';
+  try {
+    // Decode any URL encoding, then lowercase
+    return decodeURIComponent(slug).toLowerCase().trim();
+  } catch {
+    // If decoding fails, just lowercase
+    return slug.toLowerCase().trim();
+  }
 }
 
 const startOfTodayUTC = () => {
@@ -16,29 +27,20 @@ const startOfTodayUTC = () => {
 export async function getOfferBySlug(slug: string, locale: string = 'en') {
   noStore();
 
-  // Try multiple slug variants to handle encoding mismatches
-  const raw = slug ?? '';
-  const decoded = safeDecode(raw);
-  const reEncoded = encodeURIComponent(decoded);
-  const colonSwap = decoded.replace(/:/g, '%3A');
-  const decolonSwap = decoded.replace(/%3A/gi, ':');
+  const normalizedSlug = normalizeSlug(slug);
 
+  // Simplified query: try exact match first, then case-insensitive
+  // Most slugs are already normalized in the database
   const whop = await prisma.deal.findFirst({
     where: {
       AND: [
         whereIndexable(),
         {
           OR: [
-            { slug: decoded },
-            { slug: raw },
-            { slug: reEncoded },
-            { slug: { equals: decoded, mode: 'insensitive' } },
-            { slug: { equals: reEncoded, mode: 'insensitive' } },
-            { slug: colonSwap },
-            { slug: decolonSwap },
-            // Sometimes cards link with an ID instead of slug
-            { id: decoded },
-            { id: raw },
+            { slug: normalizedSlug },
+            { slug: { equals: normalizedSlug, mode: 'insensitive' } },
+            // Fallback: sometimes cards link by ID
+            { id: slug },
           ],
         },
       ],
@@ -85,43 +87,46 @@ export async function getOfferBySlug(slug: string, locale: string = 'en') {
   if (!whop) return null;
 
   // Get community-submitted promo codes that have been approved for this whop
-  const communityPromoCodes = await prisma.promoCode.findMany({
-    where: {
-      whopId: whop.id,
-      id: { startsWith: 'community_' }
-    },
-    orderBy: { createdAt: 'desc' }
-  });
+  // Run in parallel with usage stats for better performance
+  const since = startOfTodayUTC();
+
+  const [communityPromoCodes, totalCount, todayCount, lastUsage] = await Promise.all([
+    prisma.promoCode.findMany({
+      where: {
+        whopId: whop.id,
+        id: { startsWith: 'community_' }
+      },
+      orderBy: { createdAt: 'desc' }
+    }),
+    // Use whopId directly instead of slow path contains search
+    prisma.offerTracking.count({
+      where: {
+        whopId: whop.id,
+        actionType: 'code_copy'
+      }
+    }).catch(() => 0),
+    prisma.offerTracking.count({
+      where: {
+        whopId: whop.id,
+        actionType: 'code_copy',
+        createdAt: { gte: since }
+      }
+    }).catch(() => 0),
+    prisma.offerTracking.findFirst({
+      where: {
+        whopId: whop.id,
+        actionType: 'code_copy'
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true }
+    }).catch(() => null)
+  ]);
 
   // Combine promo codes with community codes first, then original codes
   const allPromoCodes = [
     ...communityPromoCodes,
     ...whop.PromoCode.filter(code => !code.id.startsWith('community_'))
   ];
-
-  // Fetch usage stats for SEO (server-side)
-  const since = startOfTodayUTC();
-  const whereBase = {
-    actionType: 'code_copy' as const,
-    OR: [
-      // Current paths (/offer/)
-      { path: { contains: `/offer/${whop.slug}`, mode: 'insensitive' as const } },
-      { path: { contains: `/en/offer/${whop.slug}`, mode: 'insensitive' as const } },
-      // Legacy paths (/whop/) for historical analytics
-      { path: { contains: `/whop/${whop.slug}`, mode: 'insensitive' as const } },
-      { path: { contains: `/en/whop/${whop.slug}`, mode: 'insensitive' as const } },
-    ]
-  };
-
-  const [totalCount, todayCount, lastUsage] = await Promise.all([
-    prisma.offerTracking.count({ where: whereBase }).catch(() => 0),
-    prisma.offerTracking.count({ where: { ...whereBase, createdAt: { gte: since } } }).catch(() => 0),
-    prisma.offerTracking.findFirst({
-      where: whereBase,
-      orderBy: { createdAt: 'desc' },
-      select: { createdAt: true }
-    }).catch(() => null)
-  ]);
 
   // Fetch verification/freshness data (for Verification Status section)
   let freshnessData: any = null;
@@ -174,26 +179,16 @@ export async function getOfferBySlug(slug: string, locale: string = 'en') {
 export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'en') {
   noStore();
 
-  // Try multiple slug variants to handle encoding mismatches
-  const raw = slug ?? '';
-  const decoded = safeDecode(raw);
-  const reEncoded = encodeURIComponent(decoded);
-  const colonSwap = decoded.replace(/:/g, '%3A');
-  const decolonSwap = decoded.replace(/%3A/gi, ':');
+  const normalizedSlug = normalizeSlug(slug);
 
+  // Simplified query: try exact match first, then case-insensitive
   const whop = await prisma.deal.findFirst({
     where: {
       OR: [
-        { slug: decoded },
-        { slug: raw },
-        { slug: reEncoded },
-        { slug: { equals: decoded, mode: 'insensitive' } },
-        { slug: { equals: reEncoded, mode: 'insensitive' } },
-        { slug: colonSwap },
-        { slug: decolonSwap },
-        // Sometimes cards link with an ID instead of slug
-        { id: decoded },
-        { id: raw },
+        { slug: normalizedSlug },
+        { slug: { equals: normalizedSlug, mode: 'insensitive' } },
+        // Fallback: sometimes cards link by ID
+        { id: slug },
       ],
     },
     select: {
@@ -237,44 +232,46 @@ export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'e
 
   if (!whop) return null;
 
-  // Get community-submitted promo codes that have been approved for this whop
-  const communityPromoCodes = await prisma.promoCode.findMany({
-    where: {
-      whopId: whop.id,
-      id: { startsWith: 'community_' }
-    },
-    orderBy: { createdAt: 'desc' }
-  });
+  // Get community-submitted promo codes and usage stats in parallel
+  const since = startOfTodayUTC();
+
+  const [communityPromoCodes, totalCount, todayCount, lastUsage] = await Promise.all([
+    prisma.promoCode.findMany({
+      where: {
+        whopId: whop.id,
+        id: { startsWith: 'community_' }
+      },
+      orderBy: { createdAt: 'desc' }
+    }),
+    // Use whopId directly instead of slow path contains search
+    prisma.offerTracking.count({
+      where: {
+        whopId: whop.id,
+        actionType: 'code_copy'
+      }
+    }).catch(() => 0),
+    prisma.offerTracking.count({
+      where: {
+        whopId: whop.id,
+        actionType: 'code_copy',
+        createdAt: { gte: since }
+      }
+    }).catch(() => 0),
+    prisma.offerTracking.findFirst({
+      where: {
+        whopId: whop.id,
+        actionType: 'code_copy'
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true }
+    }).catch(() => null)
+  ]);
 
   // Combine promo codes with community codes first, then original codes
   const allPromoCodes = [
     ...communityPromoCodes,
     ...whop.PromoCode.filter(code => !code.id.startsWith('community_'))
   ];
-
-  // Fetch usage stats for SEO (server-side)
-  const since = startOfTodayUTC();
-  const whereBase = {
-    actionType: 'code_copy' as const,
-    OR: [
-      // Current paths (/offer/)
-      { path: { contains: `/offer/${whop.slug}`, mode: 'insensitive' as const } },
-      { path: { contains: `/en/offer/${whop.slug}`, mode: 'insensitive' as const } },
-      // Legacy paths (/whop/) for historical analytics
-      { path: { contains: `/whop/${whop.slug}`, mode: 'insensitive' as const } },
-      { path: { contains: `/en/whop/${whop.slug}`, mode: 'insensitive' as const } },
-    ]
-  };
-
-  const [totalCount, todayCount, lastUsage] = await Promise.all([
-    prisma.offerTracking.count({ where: whereBase }).catch(() => 0),
-    prisma.offerTracking.count({ where: { ...whereBase, createdAt: { gte: since } } }).catch(() => 0),
-    prisma.offerTracking.findFirst({
-      where: whereBase,
-      orderBy: { createdAt: 'desc' },
-      select: { createdAt: true }
-    }).catch(() => null)
-  ]);
 
   // Fetch verification/freshness data (for Verification Status section)
   let freshnessData: any = null;
@@ -321,15 +318,15 @@ export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'e
 
 export async function getIndexableWhops(limit = 5000) {
   return prisma.deal.findMany({
-    where: { 
-      indexingStatus: 'INDEX', 
+    where: {
+      indexingStatus: 'INDEX',
       retirement: 'NONE',
       publishedAt: { not: null }
     },
-    select: { 
-      slug: true, 
-      locale: true, 
-      updatedAt: true 
+    select: {
+      slug: true,
+      locale: true,
+      updatedAt: true
     },
     take: limit,
     orderBy: { updatedAt: 'desc' }
@@ -338,14 +335,14 @@ export async function getIndexableWhops(limit = 5000) {
 
 export async function getNoindexWhops(limit = 50000) {
   return prisma.deal.findMany({
-    where: { 
+    where: {
       indexingStatus: 'NOINDEX',
       retirement: 'NONE',
       publishedAt: { not: null }
     },
-    select: { 
-      slug: true, 
-      locale: true, 
+    select: {
+      slug: true,
+      locale: true,
       updatedAt: true
     },
     take: limit,
