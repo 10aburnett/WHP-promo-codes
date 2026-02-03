@@ -1,6 +1,6 @@
 'use client';
 
-// Client island for the "Get Promo" button - handles tracking + social proof
+// Client island for the "Go to Whop" button - handles tracking + social proof
 // This is a TINY client component to keep the parent card server-rendered
 
 import React from 'react';
@@ -83,7 +83,7 @@ export default function GetPromoButton({
       style={style}
       onClick={handleClick}
     >
-      Get Promo
+      Go to Whop
     </a>
   );
 }

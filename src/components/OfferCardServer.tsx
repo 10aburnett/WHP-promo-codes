@@ -202,25 +202,25 @@ export default function OfferCardServer({ promo, priority = false }: OfferCardSe
           promoValue={promo.promoValue}
           promoType={promo.promoType}
           promoText={promo.promoText}
-          className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs md:text-sm font-semibold shadow-sm hover:shadow-md transition flex-1 md:flex-none"
-          style={{
-            backgroundColor: 'var(--accent-color)',
-            color: '#ffffff',
-          }}
-        />
-
-        {/* Secondary CTA - Link with prefetch for instant navigation */}
-        <Link
-          href={detailHref}
-          prefetch={true}
-          className="inline-flex items-center justify-center rounded-full px-3.5 py-2 text-xs md:text-sm font-medium border md:w-auto hover:opacity-90 transition-all"
+          className="inline-flex items-center justify-center rounded-full px-4 py-2 text-xs md:text-sm font-medium border flex-1 md:flex-none hover:opacity-90 transition-all"
           style={{
             backgroundColor: 'rgba(5,150,105,0.06)',
             borderColor: 'rgba(5,150,105,0.2)',
             color: 'var(--accent-color)',
           }}
+        />
+
+        {/* Secondary CTA - Get Promo */}
+        <Link
+          href={detailHref}
+          prefetch={true}
+          className="inline-flex items-center justify-center rounded-full px-3.5 py-2 text-xs md:text-sm font-semibold shadow-sm hover:shadow-md transition md:w-auto"
+          style={{
+            backgroundColor: 'var(--accent-color)',
+            color: '#ffffff',
+          }}
         >
-          View promo details
+          Get Promo
         </Link>
       </div>
     </article>
