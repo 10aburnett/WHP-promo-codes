@@ -130,7 +130,7 @@ export default function OffersGridClient({
       setTotal(data.total || 0);
       setTotalPages(data.totalPages || 1);
 
-      // Update URL without triggering SSR
+      // Update URL with pushState to enable back button navigation
       const urlParams = new URLSearchParams();
       if (p > 1) urlParams.set('page', String(p));
       if (s) urlParams.set('search', s);
@@ -138,7 +138,8 @@ export default function OffersGridClient({
       if (sort) urlParams.set('sortBy', sort);
 
       const newUrl = urlParams.toString() ? `/?${urlParams.toString()}` : '/';
-      window.history.replaceState(null, '', newUrl);
+      // Use pushState to create history entries for back/forward navigation
+      window.history.pushState({ page: p, search: s, category: cat, sortBy: sort }, '', newUrl);
 
     } catch (err) {
       console.error('Failed to fetch offers:', err);
@@ -147,6 +148,53 @@ export default function OffersGridClient({
       setLoading(false);
     }
   }, []);
+
+  // Sync state from URL on mount and back/forward navigation
+  useEffect(() => {
+    // Function to read URL params and update state
+    const syncStateFromURL = () => {
+      const params = new URLSearchParams(window.location.search);
+      const urlPage = parseInt(params.get('page') || '1');
+      const urlSearch = params.get('search') || '';
+      const urlCategory = params.get('whopCategory') || params.get('category') || '';
+      const urlSortBy = params.get('sortBy') || '';
+
+      console.log('[OffersGridClient] syncStateFromURL:', { urlPage, urlSearch, urlCategory, urlSortBy });
+
+      setPage(urlPage);
+      setSearch(urlSearch);
+      setCategory(urlCategory);
+      setSortBy(urlSortBy);
+
+      // Fetch offers with URL params
+      fetchOffers(urlPage, urlSearch, urlCategory, urlSortBy);
+    };
+
+    // Check URL on mount - handles back navigation from offer pages
+    const params = new URLSearchParams(window.location.search);
+    const urlPage = parseInt(params.get('page') || '1');
+    const urlSearch = params.get('search') || '';
+    const urlCategory = params.get('whopCategory') || params.get('category') || '';
+    const urlSortBy = params.get('sortBy') || '';
+
+    // Only sync if URL differs from initial props (user navigated back)
+    if (urlPage !== initialPage || urlSearch !== initialSearch || urlCategory !== initialCategory || urlSortBy !== initialSort) {
+      console.log('[OffersGridClient] URL differs from initial props, syncing state');
+      syncStateFromURL();
+    }
+
+    // Listen for back/forward navigation
+    const handlePopState = () => {
+      console.log('[OffersGridClient] popstate event - back/forward navigation detected');
+      syncStateFromURL();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [fetchOffers, initialPage, initialSearch, initialCategory, initialSort]);
 
   // Debounced search (300ms delay)
   const debouncedSearch = useDebouncedCallback((term: string) => {
