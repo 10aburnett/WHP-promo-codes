@@ -69,7 +69,7 @@ export async function generateStaticParams() {
         retirement: 'NONE',
       },
       select: { slug: true },
-      take: 50, // QUICK BUILD - change back to 5000 for full pre-render
+      take: 5000, // Safety limit
       orderBy: { displayOrder: 'asc' },
     });
 
