@@ -52,6 +52,9 @@ export const translations = {
     'whop.goToOffer': 'Go to Offer',
     'whop.noCodeDisclosure': 'No code required – offer applied automatically',
     'whop.noCode': 'Creator doesn\'t allow promo codes at this time',
+    'whop.yourCode': 'Your code',
+    'whop.offerOpenedInTab': 'Offer opened in new tab',
+    'whop.codeCopied': 'Code copied!',
     'whop.getPromo': 'Go to Course',
     
     // Whop Page
@@ -211,6 +214,9 @@ export const translations = {
     'whop.goToOffer': 'Ir a la Oferta',
     'whop.noCodeDisclosure': 'No se requiere código – la oferta se aplica automáticamente',
     'whop.noCode': 'El creador no permite códigos promocionales en este momento',
+    'whop.yourCode': 'Tu código',
+    'whop.offerOpenedInTab': 'Oferta abierta en nueva pestaña',
+    'whop.codeCopied': '¡Código copiado!',
     'whop.getPromo': 'Ir al Curso',
     
     // Whop Page
@@ -370,6 +376,9 @@ export const translations = {
     'whop.goToOffer': 'Ga naar Aanbieding',
     'whop.noCodeDisclosure': 'Geen code nodig – aanbieding wordt automatisch toegepast',
     'whop.noCode': 'Maker staat geen promocodes toe op dit moment',
+    'whop.yourCode': 'Jouw code',
+    'whop.offerOpenedInTab': 'Aanbieding geopend in nieuw tabblad',
+    'whop.codeCopied': 'Code gekopieerd!',
     'whop.getPromo': 'Ga naar Cursus',
     
     // Whop Page
@@ -529,6 +538,9 @@ export const translations = {
     'whop.goToOffer': 'Accéder à l\'Offre',
     'whop.noCodeDisclosure': 'Aucun code requis – l\'offre s\'applique automatiquement',
     'whop.noCode': 'Le créateur n\'autorise pas les codes promo pour le moment',
+    'whop.yourCode': 'Votre code',
+    'whop.offerOpenedInTab': 'Offre ouverte dans un nouvel onglet',
+    'whop.codeCopied': 'Code copié !',
     'whop.getPromo': 'Aller au Cours',
     
     // Whop Page
@@ -688,6 +700,9 @@ export const translations = {
     'whop.goToOffer': 'Zum Angebot',
     'whop.noCodeDisclosure': 'Kein Code erforderlich – Angebot wird automatisch angewendet',
     'whop.noCode': 'Ersteller erlaubt derzeit keine Promo-Codes',
+    'whop.yourCode': 'Dein Code',
+    'whop.offerOpenedInTab': 'Angebot in neuem Tab geöffnet',
+    'whop.codeCopied': 'Code kopiert!',
     'whop.getPromo': 'Zum Kurs Gehen',
     
     // Whop Page
@@ -847,6 +862,9 @@ export const translations = {
     'whop.goToOffer': 'Vai all\'Offerta',
     'whop.noCodeDisclosure': 'Nessun codice richiesto – l\'offerta viene applicata automaticamente',
     'whop.noCode': 'Il creatore non consente codici promo al momento',
+    'whop.yourCode': 'Il tuo codice',
+    'whop.offerOpenedInTab': 'Offerta aperta in una nuova scheda',
+    'whop.codeCopied': 'Codice copiato!',
     'whop.getPromo': 'Vai al Corso',
     
     // Whop Page
@@ -1006,6 +1024,9 @@ export const translations = {
     'whop.goToOffer': 'Ir para Oferta',
     'whop.noCodeDisclosure': 'Nenhum código necessário – oferta aplicada automaticamente',
     'whop.noCode': 'Criador não permite códigos promocionais no momento',
+    'whop.yourCode': 'Seu código',
+    'whop.offerOpenedInTab': 'Oferta aberta em nova aba',
+    'whop.codeCopied': 'Código copiado!',
     'whop.getPromo': 'Ir para Curso',
     
     // Whop Page
@@ -1165,6 +1186,9 @@ export const translations = {
     'whop.goToOffer': '前往优惠',
     'whop.noCodeDisclosure': '无需代码 – 优惠自动应用',
     'whop.noCode': '创作者目前不允许促销代码',
+    'whop.yourCode': '你的代码',
+    'whop.offerOpenedInTab': '优惠已在新标签页中打开',
+    'whop.codeCopied': '代码已复制！',
     'whop.getPromo': '前往课程',
     
     // Whop Page

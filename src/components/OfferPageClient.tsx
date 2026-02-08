@@ -31,6 +31,7 @@ export default function OfferPageClient({
   onTrackingComplete,
 }: OfferPageClientProps) {
   const [codeRevealed, setCodeRevealed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const { addNotification, isHydrated } = useSocialProof();
   const { t } = useLanguage();
@@ -72,6 +73,21 @@ export default function OfferPageClient({
   useEffect(() => {
     setCodeRevealed(false);
   }, [offer.id, offer.name]);
+
+  // Auto-reveal code when page loads with ?revealed=true (from reverse redirect)
+  // Multiple OfferPageClient instances exist on the same page, so delay URL cleanup
+  // to ensure ALL instances read the param before it's removed
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('revealed') === 'true') {
+      setCodeRevealed(true);
+      setTimeout(() => {
+        if (window.location.search.includes('revealed=true')) {
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      }, 200);
+    }
+  }, []);
 
   const trackRevealCode = useCallback(
     async (offerId: string, promoCodeId: string | null): Promise<boolean> => {
@@ -125,29 +141,28 @@ export default function OfferPageClient({
       timestamp: new Date().toISOString(),
     });
 
-    // Open affiliate link (always - cookie drop happens here)
-    if (offer?.affiliateLink) {
-      window.open(offer.affiliateLink, '_blank', 'noopener,noreferrer');
-    }
-
-    // Always show reveal UI after click (shows code or "no code" message)
-    setCodeRevealed(true);
-
-    // Track the action - now works even without promo code ID
+    // Fire tracking BEFORE any navigation (use sendBeacon for reliability)
     if (offer) {
-      console.log('✅ OfferPageClient: Offer present, calling trackRevealCode');
-      const success = await trackRevealCode(offer.id, firstPromo?.id || null);
-
-      // Call the callback to refresh statistics if tracking was successful
-      if (success && onTrackingComplete) {
-        console.log('🔄 OfferPageClient: Calling onTrackingComplete to refresh stats');
-        onTrackingComplete();
+      const trackingData = JSON.stringify({
+        casinoId: offer.id,
+        bonusId: firstPromo?.id || null,
+        actionType: 'code_copy',
+      });
+      if (navigator.sendBeacon) {
+        const blob = new Blob([trackingData], { type: 'application/json' });
+        navigator.sendBeacon('/api/tracking', blob);
+      } else {
+        fetch('/api/tracking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: trackingData,
+          keepalive: true,
+        }).catch(() => {});
       }
-    } else {
-      console.warn('⚠️ OfferPageClient: Missing offer:', offer);
+      if (onTrackingComplete) onTrackingComplete();
     }
 
-    // Trigger social proof notification - only after mount and context is hydrated
+    // Trigger social proof notification before navigation
     if (hasMounted && isHydrated) {
       const socialProofData = createSocialProofFromOffer({
         whopName: offer.name,
@@ -157,6 +172,51 @@ export default function OfferPageClient({
         promoText: promoTitle,
       });
       addNotification(socialProofData);
+    }
+
+    // "Reverse redirect" pattern (industry standard for coupon sites):
+    // 1. Open a NEW tab with THIS page + ?revealed=true — browser gives it focus
+    // 2. Redirect the CURRENT tab to the affiliate link — now in background
+    // Result: user sees the revealed code in foreground, affiliate loads behind
+    if (offer?.affiliateLink) {
+      const revealUrl = `${window.location.pathname}?revealed=true`;
+      const codeTab = window.open(revealUrl, '_blank');
+
+      if (codeTab) {
+        // New tab has focus showing the code. Redirect this tab to affiliate.
+        setTimeout(() => {
+          window.location.href = offer.affiliateLink!;
+        }, 100);
+        return; // Stop here — this tab is navigating away
+      } else {
+        // Popup blocked: fall back to opening affiliate in new tab normally
+        window.open(offer.affiliateLink, '_blank', 'noopener,noreferrer');
+      }
+    }
+
+    // Fallback reveal (popup blocked or no affiliate link)
+    setCodeRevealed(true);
+  };
+
+  const handleCopyCode = async () => {
+    if (!promoCode) return;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(promoCode);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = promoCode;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy code:', error);
     }
   };
 
@@ -189,25 +249,65 @@ export default function OfferPageClient({
           {hasCode ? t('whop.revealCode') : t('whop.goToOffer')}
         </button>
       ) : promoCode ? (
-        // Has promo code - show the code pill
-        <div
-          className="w-full border-2 font-bold py-3.5 px-6 rounded-full text-center transition-all duration-200 hover:shadow-sm"
-          style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--accent-color)', color: 'var(--text-color)' }}
-        >
-          <div className="flex-1 min-w-0">
-            <span
-              className="block text-xs uppercase tracking-wide mb-1"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              {t('whop.yourCode')}
-            </span>
-            <span
-              className="text-lg sm:text-xl font-semibold break-all"
-              style={{ color: 'var(--accent-color)' }}
-            >
-              {promoCode}
-            </span>
-          </div>
+        // Has promo code - clickable copy button
+        <div className="w-full flex flex-col items-center gap-1.5">
+          <button
+            onClick={handleCopyCode}
+            className="w-full border-2 font-bold py-3.5 px-6 rounded-full text-center transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+            style={{ backgroundColor: 'var(--background-secondary)', borderColor: 'var(--accent-color)', color: 'var(--text-color)' }}
+            aria-label={copied ? 'Code copied to clipboard' : `Copy code ${promoCode}`}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <div className="flex-1 min-w-0">
+                <span
+                  className="block text-xs uppercase tracking-wide mb-1"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {t('whop.yourCode')}
+                </span>
+                <span
+                  className="text-lg sm:text-xl font-semibold break-all"
+                  style={{ color: 'var(--accent-color)' }}
+                >
+                  {promoCode}
+                </span>
+              </div>
+              <div className="flex-shrink-0">
+                {copied ? (
+                  <svg
+                    className="w-5 h-5"
+                    style={{ color: 'var(--success-color, #22c55e)' }}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-5 h-5"
+                    style={{ color: 'var(--text-secondary)' }}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                  </svg>
+                )}
+              </div>
+            </div>
+          </button>
+          <span
+            className="text-xs font-medium"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            {copied ? t('whop.codeCopied') : t('whop.offerOpenedInTab')}
+          </span>
         </div>
       ) : (
         // No promo code - show clean message card (not a giant pill)
