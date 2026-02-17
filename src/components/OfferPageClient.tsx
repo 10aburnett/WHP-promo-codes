@@ -74,6 +74,18 @@ export default function OfferPageClient({
     setCodeRevealed(false);
   }, [offer.id, offer.name]);
 
+  // Auto-hide revealed code after 10 seconds to force re-click (cookie re-drop cycle)
+  // When user returns from competitor sites, they must click "Reveal Code" again,
+  // which triggers the reverse redirect and re-drops our affiliate cookie
+  useEffect(() => {
+    if (codeRevealed) {
+      const hideTimer = setTimeout(() => {
+        setCodeRevealed(false);
+      }, 8_000);
+      return () => clearTimeout(hideTimer);
+    }
+  }, [codeRevealed]);
+
   // Auto-reveal code when page loads with ?revealed=true (from reverse redirect)
   // Multiple OfferPageClient instances exist on the same page, so delay URL cleanup
   // to ensure ALL instances read the param before it's removed
