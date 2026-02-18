@@ -69,7 +69,7 @@ export async function generateStaticParams() {
         retirement: 'NONE',
       },
       select: { slug: true },
-      take: 5000, // SLOW BUILD - full pre-render for production
+      take: 50, // QUICK BUILD
       orderBy: { displayOrder: 'asc' },
     });
 
