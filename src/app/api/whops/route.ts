@@ -261,11 +261,11 @@ const getOfferBySlug = async (slug: string, isAdmin: boolean) => {
     orderBy: { displayOrder: 'asc' }
   });
 
-  // Combine promo codes with community codes first, then original codes
+  // Combine all promo codes and sort by displayOrder
   const allPromoCodes = [
     ...communityPromoCodes,
     ...whop.PromoCode.filter(code => !code.id.startsWith('community_'))
-  ];
+  ].sort((a, b) => a.displayOrder - b.displayOrder);
 
   // Return whop with combined promo codes
   return {

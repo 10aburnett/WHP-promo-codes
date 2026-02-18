@@ -122,11 +122,11 @@ export async function getOfferBySlug(slug: string, locale: string = 'en') {
     }).catch(() => null)
   ]);
 
-  // Combine promo codes with community codes first, then original codes
+  // Combine all promo codes and sort by displayOrder
   const allPromoCodes = [
     ...communityPromoCodes,
     ...whop.PromoCode.filter(code => !code.id.startsWith('community_'))
-  ];
+  ].sort((a, b) => a.displayOrder - b.displayOrder);
 
   // Fetch verification/freshness data (for Verification Status section)
   let freshnessData: any = null;
@@ -267,11 +267,11 @@ export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'e
     }).catch(() => null)
   ]);
 
-  // Combine promo codes with community codes first, then original codes
+  // Combine all promo codes and sort by displayOrder
   const allPromoCodes = [
     ...communityPromoCodes,
     ...whop.PromoCode.filter(code => !code.id.startsWith('community_'))
-  ];
+  ].sort((a, b) => a.displayOrder - b.displayOrder);
 
   // Fetch verification/freshness data (for Verification Status section)
   let freshnessData: any = null;

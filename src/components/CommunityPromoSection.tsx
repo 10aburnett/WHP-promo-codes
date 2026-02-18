@@ -24,12 +24,8 @@ interface CommunityPromoSectionProps {
 
 export default function CommunityPromoSection({ offer, promoCodes, slug }: CommunityPromoSectionProps) {
 
-  // Separate community codes from original codes
-  const communityPromoCodes = promoCodes.filter(code => code.id.startsWith('community_'))
-  const originalPromoCodes = promoCodes.filter(code => !code.id.startsWith('community_'))
-
-  // Combine all codes: community first, then original
-  const allCodes = [...communityPromoCodes, ...originalPromoCodes]
+  // Use promoCodes as-is — already sorted by displayOrder from the server
+  const allCodes = promoCodes
 
   // Handle tracking completion to refresh stats
   const handleTrackingComplete = () => {

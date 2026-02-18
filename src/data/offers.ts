@@ -68,8 +68,10 @@ async function fetchOfferDirect(slug: string) {
           code: true,
           type: true,
           value: true,
+          displayOrder: true,
           createdAt: true,
         },
+        orderBy: { displayOrder: 'asc' },
         take: 10, // Limit promo codes
       },
       Review: {
@@ -163,8 +165,10 @@ export const getOffersOptimizedCached = (page = 1, limit = 15) =>
               description: true,
               code: true,
               type: true,
-              value: true
-            }
+              value: true,
+              displayOrder: true,
+            },
+            orderBy: { displayOrder: 'asc' }
           }
         },
         orderBy: { displayOrder: 'asc' },
@@ -208,8 +212,10 @@ export const getOffersAllCached = (page = 1, limit = 15) =>
               description: true,
               code: true,
               type: true,
-              value: true
-            }
+              value: true,
+              displayOrder: true,
+            },
+            orderBy: { displayOrder: 'asc' }
           }
         },
         orderBy: { displayOrder: 'asc' },
