@@ -81,7 +81,7 @@ export default function OfferPageClient({
     if (codeRevealed) {
       const hideTimer = setTimeout(() => {
         setCodeRevealed(false);
-      }, 8_000);
+      }, 10_000);
       return () => clearTimeout(hideTimer);
     }
   }, [codeRevealed]);
