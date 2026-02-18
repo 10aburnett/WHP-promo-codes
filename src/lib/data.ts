@@ -75,7 +75,7 @@ export async function getOfferBySlug(slug: string, locale: string = 'en') {
         where: {
           NOT: { id: { startsWith: 'community_' } }
         },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { displayOrder: 'asc' }
       },
       Review: {
         where: { verified: true },
@@ -96,7 +96,7 @@ export async function getOfferBySlug(slug: string, locale: string = 'en') {
         whopId: whop.id,
         id: { startsWith: 'community_' }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { displayOrder: 'asc' }
     }),
     // Use whopId directly instead of slow path contains search
     prisma.offerTracking.count({
@@ -221,7 +221,7 @@ export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'e
         where: {
           NOT: { id: { startsWith: 'community_' } }
         },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { displayOrder: 'asc' }
       },
       Review: {
         where: { verified: true },
@@ -241,7 +241,7 @@ export async function getOfferBySlugUnfiltered(slug: string, locale: string = 'e
         whopId: whop.id,
         id: { startsWith: 'community_' }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { displayOrder: 'asc' }
     }),
     // Use whopId directly instead of slow path contains search
     prisma.offerTracking.count({
