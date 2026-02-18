@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       data: {
         id: promoCodeId,
         whopId,
-        code: code || null, // Allow null for "NO CODE REQUIRED" cases
+        code: code ? code.toLowerCase() : null, // DB constraint requires lowercase
         title,
         description: description || '',
         type,
@@ -95,10 +95,10 @@ export async function POST(request: NextRequest) {
       success: true,
       promoCode
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating promo code:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to create promo code' },
+      { success: false, error: 'Failed to create promo code', details: error?.message || String(error) },
       { status: 500 }
     );
   }

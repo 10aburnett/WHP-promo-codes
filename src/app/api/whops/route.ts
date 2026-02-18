@@ -241,7 +241,7 @@ const getOfferBySlug = async (slug: string, isAdmin: boolean) => {
         where: {
           NOT: { id: { startsWith: 'community_' } } // Exclude community codes from main query
         },
-        orderBy: { createdAt: 'desc' } // Order by creation date (newest first)
+        orderBy: { displayOrder: 'asc' }
       },
       Review: {
         where: { verified: true },
@@ -258,7 +258,7 @@ const getOfferBySlug = async (slug: string, isAdmin: boolean) => {
       whopId: whop.id,
       id: { startsWith: 'community_' } // Community codes have this prefix
     },
-    orderBy: { createdAt: 'desc' } // Newest community codes first
+    orderBy: { displayOrder: 'asc' }
   });
 
   // Combine promo codes with community codes first, then original codes

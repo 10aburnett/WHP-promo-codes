@@ -45,7 +45,7 @@ export async function GET(
   const whop = await prisma.deal.findUnique({
     where: { slug },
     include: {
-      PromoCode: true,     // <- return promos unfiltered
+      PromoCode: { orderBy: { displayOrder: "asc" } },
     },
   });
 

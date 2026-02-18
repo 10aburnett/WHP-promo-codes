@@ -134,6 +134,7 @@ export default function AdminLayout({
                 <Link href="/admin/offers" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Offers</Link>
                 <Link href="/admin/promo-submissions" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Promo Submissions</Link>
                 <Link href="/admin/promos/import" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Promo Import</Link>
+                <Link href="/admin/promos" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Manage Promos</Link>
                 <Link href="/admin/blog" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Blog</Link>
                 <Link href="/admin/comments" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Comments</Link>
                 <Link href="/admin/mailing-list" className="text-[#a7a9b4] hover:text-[#68D08B] whitespace-nowrap text-sm">Mailing List</Link>
