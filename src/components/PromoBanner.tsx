@@ -37,7 +37,7 @@ export default function PromoBanner({ onDismiss }: PromoBannerProps) {
             className="flex-shrink-0 rounded-md"
           />
           <span className="text-white text-base font-semibold">
-            Codes found via Promo Drop — get every Whop Promo Code and Cashback with the Free Extension <span className="underline">here</span>
+            Never Search for Promo Codes Again — Get Them Automatically <span className="underline">here</span> (AND Cashback)
           </span>
           <span
             className="ml-2 flex-shrink-0 px-5 py-2 rounded-full text-sm font-bold transition-transform hover:scale-105"
@@ -79,7 +79,7 @@ export default function PromoBanner({ onDismiss }: PromoBannerProps) {
             className="flex-shrink-0 rounded"
           />
           <span className="text-white text-xs font-semibold leading-snug min-w-0">
-            Codes found via Promo Drop — every Whop Promo Code &amp; Cashback <span className="underline">here</span>
+            Never Search for Promo Codes Again — Get Them Automatically <span className="underline">here</span> (+ Cashback)
           </span>
           <span
             className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold"
