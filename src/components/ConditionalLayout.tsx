@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import PromoBanner from './PromoBanner';
 import Image from 'next/image';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
@@ -22,6 +23,7 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
   const { notifications, removeNotification } = useSocialProof();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileFooterOpen, setIsMobileFooterOpen] = useState(false);
+  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
 
   const currentYear = new Date().getFullYear();
 
@@ -44,12 +46,18 @@ function LayoutContent({ children, faviconUrl }: ConditionalLayoutProps) {
   // For ALL other pages (including offer pages), show the full layout with header and footer
   return (
     <>
+      {/* PROMO DROP EXTENSION BANNER */}
+      {!isBannerDismissed && (
+        <PromoBanner onDismiss={() => setIsBannerDismissed(true)} />
+      )}
+
       {/* HEADER - Two-row structure */}
       <header
-        className="sticky top-0 z-40 border-b backdrop-blur-md transition-theme"
+        className={`sticky ${isBannerDismissed ? 'top-0' : 'top-[44px] md:top-[52px]'} z-40 border-b backdrop-blur-md transition-theme`}
         style={{
           backgroundColor: 'var(--background-color)',
           borderColor: 'var(--border-color)',
+          transition: 'top 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div className="mx-auto w-[92%] max-w-6xl">

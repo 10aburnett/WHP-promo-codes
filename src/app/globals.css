@@ -104,6 +104,8 @@
 }
 
 html {
+  overflow-x: hidden;
+  width: 100%;
   /* REMOVED: transition: var(--theme-transition);
      Global transitions on html/body block paint during navigation,
      causing perceived click delay. Use .theme-transition class on
@@ -116,10 +118,39 @@ body {
   color: var(--text-color);
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   /* REMOVED: transition: var(--theme-transition); - blocks paint during navigation */
+}
+
+/* Mobile-only: prevent horizontal overflow on offer pages */
+@media (max-width: 767px) {
+  .dpc-offer-container {
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-top: 1rem;
+  }
+  .dpc-offer-layout,
+  .dpc-offer-sidebar {
+    overflow: hidden;
+    max-width: 100%;
+    min-width: 0;
+  }
+  /* Allow tables to scroll horizontally instead of being clipped */
+  .dpc-offer-main {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .product-review table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
 }
 
 .container {
