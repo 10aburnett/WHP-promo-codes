@@ -1035,6 +1035,8 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'bullish-premium-chat',
   'rfb-exclusivevip-package',
   'solo-vintedseekers',
+  // 2026-03-03 — Single addition
+  'team2trading-private-access',
 ]);
 // COHORT_END
 

@@ -4858,7 +4858,6 @@ export const NOINDEX_PATHS = new Set<string>([
   "/offer/team-bull-monthly",
   "/offer/team-100k-trading-group",
   "/offer/strike-access-full-access",
-  "/offer/team2trading-private-access",
   "/offer/swift-line-capital",
   "/offer/super-max-play-3-day",
   "/offer/straight-shooters",

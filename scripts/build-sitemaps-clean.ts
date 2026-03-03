@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 993;
+const EXPECTED_COHORT_COUNT = 994;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -1051,6 +1051,8 @@ const LAUNCH_COHORT_SLUGS = [
   'bullish-premium-chat',
   'rfb-exclusivevip-package',
   'solo-vintedseekers',
+  // 2026-03-03 — Single addition
+  'team2trading-private-access',
 ];
 
 // === XML GENERATION HELPERS ===
