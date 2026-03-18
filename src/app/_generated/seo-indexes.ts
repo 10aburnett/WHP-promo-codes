@@ -4171,7 +4171,6 @@ export const NOINDEX_PATHS = new Set<string>([
   "/offer/live-academy",
   "/offer/lifetime-mentorship",
   "/offer/lcapitan-lifetime",
-  "/offer/spy-essentials",
   "/offer/legacy-investing-deposit",
   "/offer/latenight",
   "/offer/lifetime-inner-circle",

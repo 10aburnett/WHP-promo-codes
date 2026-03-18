@@ -1087,6 +1087,17 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'the-market-lens',
   'impact-investments',
   'uncharted-vip-access',
+  // 2026-03-18 — New offer additions (10 slugs)
+  'black-tie-analytics',
+  'ghostsportzpickz',
+  'hidden-aio',
+  'hobbyhangout-discord',
+  'pokecop',
+  'shiny-town',
+  'toolsuite-vip',
+  'trade-pro-elite',
+  'tuscanyrose',
+  'spy-essentials',
 ]);
 // COHORT_END
 

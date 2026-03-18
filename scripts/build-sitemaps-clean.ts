@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 1043;
+const EXPECTED_COHORT_COUNT = 1053;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -1103,6 +1103,17 @@ const LAUNCH_COHORT_SLUGS = [
   'the-market-lens',
   'impact-investments',
   'uncharted-vip-access',
+  // 2026-03-18 — New offer additions (10 slugs)
+  'black-tie-analytics',
+  'ghostsportzpickz',
+  'hidden-aio',
+  'hobbyhangout-discord',
+  'pokecop',
+  'shiny-town',
+  'toolsuite-vip',
+  'trade-pro-elite',
+  'tuscanyrose',
+  'spy-essentials',
 ];
 
 // === XML GENERATION HELPERS ===
