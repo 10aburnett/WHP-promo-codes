@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 1122;
+const EXPECTED_COHORT_COUNT = 1127;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -1184,6 +1184,12 @@ const LAUNCH_COHORT_SLUGS = [
   'apprentice',
   'student',
   'rios-to-riches',
+  // 2026-03-18 — Final 5 new offers
+  'ecom-degree-university',
+  'frugal-season-black-box',
+  'spy-bank',
+  'sousa-vip-room',
+  'powertrades-membership',
 ];
 
 // === XML GENERATION HELPERS ===

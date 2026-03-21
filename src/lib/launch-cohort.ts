@@ -1168,6 +1168,12 @@ export const LAUNCH_COHORT_SLUGS = new Set<string>([
   'apprentice',
   'student',
   'rios-to-riches',
+  // 2026-03-18 — Final 5 new offers
+  'ecom-degree-university',
+  'frugal-season-black-box',
+  'spy-bank',
+  'sousa-vip-room',
+  'powertrades-membership',
 ]);
 // COHORT_END
 
