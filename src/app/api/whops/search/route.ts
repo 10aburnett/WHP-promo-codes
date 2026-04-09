@@ -65,7 +65,7 @@ export async function GET(request: Request) {
         slug: true,
         whopCategory: true
       },
-      orderBy: { name: 'asc' },
+      orderBy: [{ name: 'asc' }, { id: 'asc' }],
       take: limit
     })
 

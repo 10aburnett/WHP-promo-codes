@@ -111,27 +111,30 @@ const getOffersOptimized = async (isAdmin: boolean, whereClause: any, sortBy: st
   } else {
     // For database-level sorting with proper pagination
     let orderBy: any = [];
-    
+
+    // Always include `id` as a deterministic tiebreaker to prevent rows from
+    // shuffling between paginated requests when sort fields have duplicates.
     switch (sortBy) {
       case 'rating':
-        orderBy = [{ rating: 'desc' }, { createdAt: 'desc' }];
+        orderBy = [{ rating: 'desc' }, { createdAt: 'desc' }, { id: 'asc' }];
         break;
       case 'newest':
-        orderBy = [{ createdAt: 'desc' }];
+        orderBy = [{ createdAt: 'desc' }, { id: 'asc' }];
         break;
       case 'oldest':
-        orderBy = [{ createdAt: 'asc' }];
+        orderBy = [{ createdAt: 'asc' }, { id: 'asc' }];
         break;
       case 'highest-rated':
-        orderBy = [{ rating: 'desc' }, { createdAt: 'desc' }];
+        orderBy = [{ rating: 'desc' }, { createdAt: 'desc' }, { id: 'asc' }];
         break;
       case 'default':
       default:
-        // Default sorting: displayOrder, then rating, then createdAt
+        // Default sorting: displayOrder, then rating, then createdAt, then id
         orderBy = [
           { displayOrder: 'asc' },
           { rating: 'desc' },
-          { createdAt: 'desc' }
+          { createdAt: 'desc' },
+          { id: 'asc' }
         ];
         break;
     }

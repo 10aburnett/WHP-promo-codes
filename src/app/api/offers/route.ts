@@ -50,23 +50,25 @@ const fetchOffersCached = unstable_cache(
       where.category = category;
     }
 
-    // Build ORDER BY clause
-    let orderBy: any = [{ displayOrder: 'asc' }, { rating: 'desc' }];
+    // Build ORDER BY clause — always include `id` as a deterministic tiebreaker
+    // to prevent rows from shuffling between paginated requests when the
+    // primary sort field has duplicates (e.g. many rows share displayOrder=0).
+    let orderBy: any = [{ displayOrder: 'asc' }, { rating: 'desc' }, { id: 'asc' }];
     switch (sortBy) {
       case 'newest':
-        orderBy = [{ createdAt: 'desc' }];
+        orderBy = [{ createdAt: 'desc' }, { id: 'asc' }];
         break;
       case 'rating':
       case 'highest-rated':
-        orderBy = [{ rating: 'desc' }, { createdAt: 'desc' }];
+        orderBy = [{ rating: 'desc' }, { createdAt: 'desc' }, { id: 'asc' }];
         break;
       case 'alpha-asc':
-        orderBy = [{ name: 'asc' }];
+        orderBy = [{ name: 'asc' }, { id: 'asc' }];
         break;
       case 'alpha-desc':
-        orderBy = [{ name: 'desc' }];
+        orderBy = [{ name: 'desc' }, { id: 'asc' }];
         break;
-      // 'default' uses displayOrder + rating
+      // 'default' uses displayOrder + rating + id
     }
 
     // Parallel queries: fetch offers + count total
