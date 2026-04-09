@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 1381;
+const EXPECTED_COHORT_COUNT = 1410;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -1446,6 +1446,36 @@ const LAUNCH_COHORT_SLUGS = [
   'creator-cashflow',
   'arcane-society',
   'creator5',
+  // 2026-04-09 — Top earner activations from handoff (29 slugs)
+  'viral-vision-a-z-tiktok-kurs',
+  'exclusive-mastermind-members',
+  'official-picks-premium',
+  'alpine-premium-access',
+  'clutch-investments-monthly',
+  'full-package-exclusive-offer',
+  'amnotify-us-membership',
+  '-gold-tier-fyndit',
+  'plugged-inn-premium-membership',
+  'the-doc-prop-platinum',
+  'tsa-trading-investing-only',
+  'premium',
+  'hidden-society-full-membership',
+  'stock-hours-signals-chat',
+  'honey-drip-option-trading',
+  'cfu-full-membership',
+  'shocked',
+  'miles-high-club-card-pay',
+  'bandars-bounties-membership',
+  'private-mentorship',
+  'the-agent-accelerator-program',
+  'ecom-paradise-pro',
+  'peachy-trading-school',
+  'oasis-trading-vip',
+  'sniper-trades-premium',
+  'aurora-professional-zones',
+  'chart-hackers',
+  'promoguy-sportsbooks-ev',
+  'kckd-premium-access',
 ];
 
 // === XML GENERATION HELPERS ===
