@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 
 // === CONFIGURATION ===
 const SITE_URL = 'https://whoppromocodes.com';
-const EXPECTED_COHORT_COUNT = 1442;
+const EXPECTED_COHORT_COUNT = 1451;
 
 // === STATIC ROUTES ALLOWLIST ===
 // These are the ONLY static routes that will be included in the sitemap.
@@ -1509,6 +1509,16 @@ const LAUNCH_COHORT_SLUGS = [
   'prisma-trading-signals',
   'crypto-freedom-academy-6',
   'auto-flip-academy',
+  // 2026-04-14 — Final additions (new + dormant activations)
+  'uproas',
+  'qmm-indicators-academy',
+  '247-research',
+  'stocks-with-josh-swj-fam',
+  'potion-tracker-pro',
+  'stock-hours-vip-bundle',
+  'all-in',
+  'ecomessentials',
+  'market-masters',
 ];
 
 // === XML GENERATION HELPERS ===
